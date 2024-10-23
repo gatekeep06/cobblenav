@@ -16,6 +16,9 @@ import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.SavePreferencesPacket
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
+import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
+import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
+import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
@@ -79,6 +82,17 @@ class LocationScreen(
     override fun initScreen() {
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
         viewY = screenY + HORIZONTAL_BORDER_DEPTH + 20
+
+        RadialPopupMenu(
+            this,
+            screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
+            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
+        ).also { addUnblockableWidget(it) }
+
+        StatusBarWidget(
+            screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatusBarWidget.WIDTH - 2,
+            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - StatusBarWidget.HEIGHT
+        ).also { addUnblockableWidget(it) }
 
         sortButton = IconButton(
             pX = viewX + BucketSelectorWidget.WIDTH + BUTTON_BLOCK_SPACE,

@@ -58,17 +58,6 @@ abstract class PokenavScreen(makeOpeningSound: Boolean, animateOpening: Boolean,
         screenX = (width - WIDTH) / 2
         screenY = (height - HEIGHT) / 2
 
-        RadialPopupMenu(
-            this,
-            screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
-            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
-        ).also { addUnblockableWidget(it) }
-
-        StatusBarWidget(
-            screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatusBarWidget.WIDTH - 2,
-            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - StatusBarWidget.HEIGHT
-        ).also { addUnblockableWidget(it) }
-
         initScreen()
     }
 
