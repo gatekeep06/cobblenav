@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.client.gui.util.AnimationTimer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
+import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.gui.GuiGraphics
@@ -100,5 +101,10 @@ class FinderScreen(
             alpha = 1f - fadingTimer.getProgress()
         )
         poseStack.popPose()
+    }
+
+    private fun findPokemon() {
+        val pokemon = spawnData.pokemon
+        FindPokemonPacket(pokemon.species.name, pokemon.aspects)
     }
 }
