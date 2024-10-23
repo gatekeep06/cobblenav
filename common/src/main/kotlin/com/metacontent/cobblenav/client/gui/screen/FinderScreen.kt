@@ -61,7 +61,6 @@ class FinderScreen(
             closingTimer.tick(delta)
             if (!closingTimer.isOver()) return
             fadingTimer.tick(delta)
-            return
         }
     }
 
