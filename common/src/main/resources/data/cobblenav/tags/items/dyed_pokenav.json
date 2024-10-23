@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "cobblenav:pokenav_item_black",
+    "cobblenav:pokenav_item_blue",
+    "cobblenav:pokenav_item_brown",
+    "cobblenav:pokenav_item_cyan",
+    "cobblenav:pokenav_item_gray",
+    "cobblenav:pokenav_item_green",
+    "cobblenav:pokenav_item_light_blue",
+    "cobblenav:pokenav_item_light_gray",
+    "cobblenav:pokenav_item_lime",
+    "cobblenav:pokenav_item_magenta",
+    "cobblenav:pokenav_item_orange",
+    "cobblenav:pokenav_item_pink",
+    "cobblenav:pokenav_item_purple",
+    "cobblenav:pokenav_item_red",
+    "cobblenav:pokenav_item_white",
+    "cobblenav:pokenav_item_yellow",
+    "cobblenav:pokenav_item_gholdengo"
+  ]
+}

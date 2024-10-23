@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " R ",
+    "RCR",
+    "IEI"
+  ],
+  "key": {
+    "R": {
+      "item": "cobblemon:green_apricorn"
+    },
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "I": {
+      "item": "minecraft:copper_ingot"
+    },
+    "E": {
+      "item": "cobblemon:electirizer"
+    }
+  },
+  "result": {
+    "item": "cobblenav:pokefinder_item_green"
+  }
+}

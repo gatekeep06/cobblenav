@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "cobblenav:pokenav_item_invisible_gholdengo"
+    }
+  ],
+  "result": {
+    "item": "cobblenav:pokenav_item_gholdengo"
+  }
+}

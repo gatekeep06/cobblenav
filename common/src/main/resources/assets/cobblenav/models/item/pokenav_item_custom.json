@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "overrides": [
+    {"predicate": {"custom_model_data":0}, "model": "cobblenav:item/custom/legacy_pokenav_item"}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "#C#",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:netherite_scrap"
+    },
+    "C": {
+      "item": "cobblenav:pokenav_item_gholdengo"
+    }
+  },
+  "result": {
+    "item": "cobblenav:pokenav_item_netherite"
+  }
+}
