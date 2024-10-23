@@ -3,9 +3,6 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.google.common.collect.Lists
-import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
-import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
-import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
@@ -77,10 +74,9 @@ abstract class PokenavScreen(makeOpeningSound: Boolean, animateOpening: Boolean,
             screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
         )
         //render blockable widgets and the current screen's stuff
-        renderScreen(guiGraphics, mouseX, mouseY, delta)
+        renderOnBackLayer(guiGraphics, mouseX, mouseY, delta)
         renderWidgets(blockable, guiGraphics, mouseX, mouseY, delta)
-        // transparent tooltips and their consequences
-        renderOnTooltipLayer(guiGraphics, mouseX, mouseY, delta)
+        renderOnFrontLayer(guiGraphics, mouseX, mouseY, delta)
         // if true block widgets and screen
         poseStack.pushPose()
         poseStack.translate(0f, 0f, 500f)
@@ -112,7 +108,9 @@ abstract class PokenavScreen(makeOpeningSound: Boolean, animateOpening: Boolean,
 //        guiGraphics.fill((width.toFloat() / 2f).toInt() - 1, 0, (width.toFloat() / 2f).toInt() + 1, height, FastColor.ARGB32.color(255, 255, 255, 255))
     }
 
-    abstract fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float)
+    open fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
+
+    open fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
 
     private fun renderWidgets(widgets: List<AbstractWidget>, guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val iterator = widgets.iterator()
@@ -169,8 +167,6 @@ abstract class PokenavScreen(makeOpeningSound: Boolean, animateOpening: Boolean,
             blue = FastColor.ARGB32.blue(color) / 128f  ,
         )
     }
-
-    open fun renderOnTooltipLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
         if (!blockWidgets) {

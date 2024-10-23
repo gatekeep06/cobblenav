@@ -171,7 +171,7 @@ class LocationScreen(
         refreshButton.disabled = false
     }
 
-    override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
         guiGraphics.fillWithOutline(
             viewX, viewY,
@@ -188,7 +188,7 @@ class LocationScreen(
         }
     }
 
-    override fun renderOnTooltipLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         hoveredSpawnData?.let {
             guiGraphics.renderSpawnDataTooltip(
                 spawnData = it,

@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.client.gui.util.AnimationTimer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.gui.GuiGraphics
@@ -37,12 +38,20 @@ class FinderScreen(
     override fun initScreen() {
         pokemonX = screenX + WIDTH / 2f
         pokemonY = screenY + HEIGHT / 2f - POKEMON_OFFSET - if (spawnData.pose == PoseType.SWIM) 10 else 0
+
+        IconButton(
+            pX = screenX + VERTICAL_BORDER_DEPTH,
+            pY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BACK_BUTTON_SIZE,
+            pWidth = BACK_BUTTON_SIZE,
+            pHeight = BACK_BUTTON_SIZE,
+            texture = BACK_BUTTON,
+            action = { changeScreen(previousScreen ?: LocationScreen()) }
+        ).also { addBlockableWidget(it) }
     }
 
-    override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
 
-        // i actually cannot understand how these layouts work, but they do and do fine
         drawPokemon(
             poseStack = poseStack,
             pokemon = spawnData.pokemon,
@@ -55,7 +64,9 @@ class FinderScreen(
             scale = SCALE,
             obscured = !spawnData.encountered
         )
+    }
 
+    override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (!fadingTimer.isOver()) {
             renderPokeballAnimation(guiGraphics, mouseX, mouseY, delta)
             closingTimer.tick(delta)
