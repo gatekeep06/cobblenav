@@ -21,7 +21,7 @@ class FinderScreen(
         const val FADING_DURATION: Float = 5f
         const val POKEBALL_PART_WIDTH: Int = 308
         const val POKEBALL_PART_HEIGHT: Int = 134
-        const val POKEMON_BOX: Int = 80
+        const val POKEMON_OFFSET: Int = 45
         const val SCALE: Float = 40f
         val POKEBALL_TOP = cobblenavResource("textures/gui/pokeball_screen_top.png")
         val POKEBALL_BOTTOM = cobblenavResource("textures/gui/pokeball_screen_bottom.png")
@@ -36,7 +36,7 @@ class FinderScreen(
 
     override fun initScreen() {
         pokemonX = screenX + WIDTH / 2f
-        pokemonY = screenY + (HEIGHT - POKEMON_BOX) / 2f
+        pokemonY = screenY + HEIGHT / 2f - POKEMON_OFFSET - if (spawnData.pose == PoseType.SWIM) 10 else 0
     }
 
     override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
