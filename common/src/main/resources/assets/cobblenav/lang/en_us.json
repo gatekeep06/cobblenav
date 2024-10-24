@@ -33,11 +33,16 @@
   "gui.cobblenav.spawn_data.spawn_chance": "Chance: %s%%",
   "gui.cobblenav.spawn_data.encountered": "Encountered: %s",
   "gui.cobblenav.spawn_data.biome": "Habitat: %s",
+  "gui.cobblenav.spawn_data.conditions": "Activity Conditions: ",
 
   "bucket.cobblenav.common": "common",
   "bucket.cobblenav.uncommon": "uncommon",
   "bucket.cobblenav.rare": "rare",
   "bucket.cobblenav.ultra-rare": "ultra-rare",
+
+  "condition.cobblenav.rain": "Raining",
+  "condition.cobblenav.thunder": "Thundering",
+  "condition.cobblenav.clear": "Clear",
 
   "biome.cobblemon.is_arid": "Arid",
   "biome.cobblemon.is_badlands": "Badlands",
