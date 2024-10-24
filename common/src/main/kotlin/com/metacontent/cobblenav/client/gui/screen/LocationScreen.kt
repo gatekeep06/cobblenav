@@ -189,6 +189,7 @@ class LocationScreen(
     }
 
     override fun renderOnTooltipLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        if (blockWidgets) return
         hoveredSpawnData?.let {
             guiGraphics.renderSpawnDataTooltip(
                 spawnData = it,
