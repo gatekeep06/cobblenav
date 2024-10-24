@@ -10,6 +10,7 @@ import com.metacontent.cobblenav.util.SpawnData
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import org.joml.Quaternionf
@@ -38,14 +39,21 @@ fun GuiGraphics.renderSpawnDataTooltip(
 ) {
     val poseStack = this.pose()
 
-    val body = listOf(
+    val body = mutableListOf(
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance.toString()),
         Component.translatable("gui.cobblenav.spawn_data.encountered", spawnData.encountered.toString()),
         Component.translatable("gui.cobblenav.spawn_data.biome", Component.translatable(String.format("%s.%s.%s", "biome", spawnData.biome.namespace, spawnData.biome.path)).string)
     )
+    if (spawnData.additionalConditions.isNotEmpty()) {
+        val conditonsComponent = Component.translatable("gui.cobblenav.spawn_data.conditions")
+        spawnData.additionalConditions.forEach {
+            conditonsComponent.append(Component.translatable("condition.cobblenav.$it"))
+        }
+        body.add(conditonsComponent)
+    }
     val font = Minecraft.getInstance().font
     val width = max(font.width(body.maxBy { font.width(it) }) + 6, 80)
-    val bodyHeight = lineHeight * body.size + 1
+    val bodyHeight = lineHeight * body.size + 1 + if (spawnData.neededBlocks.isNotEmpty()) 16 else 0
 
     var x = mouseX + 5
     if (x < x1) {
@@ -76,16 +84,26 @@ fun GuiGraphics.renderSpawnDataTooltip(
         maxCharacterWidth = width - 6,
     )
     var lineY = y + lineHeight + 2
-    for (text in body) {
+    body.forEach {
         drawScaledText(
             context = this,
-            text = text,
+            text = it,
             x = x + 3,
             y = lineY,
             maxCharacterWidth = width - 6,
             colour = FastColor.ARGB32.color(255, 99, 125, 138)
         )
         lineY += lineHeight
+    }
+    if (spawnData.neededBlocks.isNotEmpty()) {
+        var blockX = x + 3
+        lineY -= 2
+        spawnData.neededBlocks.forEach {
+            BuiltInRegistries.BLOCK.getOptional(it).ifPresent { block ->
+                this.renderFakeItem(block.asItem().defaultInstance, blockX, lineY)
+                blockX += 16
+            }
+        }
     }
     poseStack.popPose()
 }
