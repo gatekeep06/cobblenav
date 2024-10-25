@@ -45,14 +45,9 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                 val contexts = Cobblenav.contextResolver.resolve(spawner, spawner.contextCalculators, slice)
                 val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, contexts)
 
-                val contextBiomeTags = contexts.map { context ->
-                    val registry = context.biomeRegistry
-                    registry.getResourceKey(context.biome).flatMap { registry.getHolder(it) }
-                }.filter { it.isPresent }.flatMap { it.get().tags().toList() }.toSet()
-
                 spawnProbabilities.forEach { (detail, spawnChance) ->
                     if (detail is PokemonSpawnDetail && detail.isValid()) {
-                        spawnDataList.add(SpawnData.collect(detail, spawnChance, contextBiomeTags, player))
+                        spawnDataList.add(SpawnData.collect(detail, spawnChance, contexts, player))
                     }
                 }
             }
