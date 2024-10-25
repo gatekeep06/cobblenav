@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.client.gui.util
 
+import com.cobblemon.mod.common.api.spawning.TimeRange
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
@@ -10,7 +11,6 @@ import com.metacontent.cobblenav.util.SpawnData
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import org.joml.Quaternionf
@@ -44,16 +44,19 @@ fun GuiGraphics.renderSpawnDataTooltip(
         Component.translatable("gui.cobblenav.spawn_data.encountered", spawnData.encountered.toString()),
         Component.translatable("gui.cobblenav.spawn_data.biome", Component.translatable(String.format("%s.%s.%s", "biome", spawnData.biome.namespace, spawnData.biome.path)).string)
     )
+    if (TimeRange.timeRanges["any"]?.ranges?.contains(spawnData.time) == false) {
+        body.add(Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(spawnData.time)))
+    }
     if (spawnData.additionalConditions.isNotEmpty()) {
-        val conditonsComponent = Component.translatable("gui.cobblenav.spawn_data.conditions")
+        val conditionsComponent = Component.translatable("gui.cobblenav.spawn_data.conditions")
         spawnData.additionalConditions.forEach {
-            conditonsComponent.append(Component.translatable("condition.cobblenav.$it"))
+            conditionsComponent.append(" ").append(Component.translatable("condition.cobblenav.$it"))
         }
-        body.add(conditonsComponent)
+        body.add(conditionsComponent)
     }
     val font = Minecraft.getInstance().font
     val width = max(font.width(body.maxBy { font.width(it) }) + 6, 80)
-    val bodyHeight = lineHeight * body.size + 1 + if (spawnData.neededBlocks.isNotEmpty()) 16 else 0
+    val bodyHeight = lineHeight * body.size + 1 //+ if (spawnData.neededBlocksAsItems!!.isNotEmpty()) 16 else 0
 
     var x = mouseX + 5
     if (x < x1) {
@@ -95,16 +98,14 @@ fun GuiGraphics.renderSpawnDataTooltip(
         )
         lineY += lineHeight
     }
-    if (spawnData.neededBlocks.isNotEmpty()) {
-        var blockX = x + 3
-        lineY -= 2
-        spawnData.neededBlocks.forEach {
-            BuiltInRegistries.BLOCK.getOptional(it).ifPresent { block ->
-                this.renderFakeItem(block.asItem().defaultInstance, blockX, lineY)
-                blockX += 16
-            }
-        }
-    }
+
+//    var blockX = x + 3
+//    lineY -= 2
+//    val blockSpace = 10
+//    spawnData.neededBlocksAsItems!!.forEach {
+//        this.renderFakeItem(it, blockX, lineY)
+//        blockX += blockSpace
+//    }
     poseStack.popPose()
 }
 
@@ -137,4 +138,17 @@ fun drawPokemon(
         b = rgb
     )
     poseStack.popPose()
+}
+
+fun getTimeString(period: IntRange): String = String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
+
+fun getTimeString(time: Long): String {
+    val adjustedTime = (time + 6000) % 23999
+    var hours = (adjustedTime / 1000).toInt()
+    val minutes = ((adjustedTime % 1000) * 60 / 1000).toInt()
+    val period = if (hours >= 12) "PM" else "AM"
+    hours %= 12
+    hours = if (hours == 0) 12 else hours
+
+    return String.format("%02d:%02d %s", hours, minutes, period)
 }
