@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.util
 
+import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.*
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
@@ -13,7 +14,7 @@ data class FoundPokemon(
     val ability: Component,
     val isAbilityHidden: Boolean,
     val eggMove: Component
-) {
+) : Encodable {
     companion object {
         val NOT_FOUND = FoundPokemon(false, -1, setOf(), 0, 0, Component.empty(), false, Component.empty())
 
@@ -29,7 +30,7 @@ data class FoundPokemon(
         )
     }
 
-    fun encode(buffer: RegistryFriendlyByteBuf) {
+    override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeBoolean(found)
         buffer.writeInt(entityId)
         buffer.writeCollection(aspects) { buf, aspect -> buf.writeString(aspect) }
