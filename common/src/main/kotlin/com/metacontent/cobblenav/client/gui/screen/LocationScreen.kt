@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.metacontent.cobblenav.client.gui.util.AnimationTimer
+import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
@@ -70,7 +70,7 @@ class LocationScreen(
         }
     private lateinit var biome: String
     private var loading = false
-    private val timer = AnimationTimer(LOADING_LOOP_DURATION)
+    private val timer = Timer(LOADING_LOOP_DURATION)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     var hoveredSpawnData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>

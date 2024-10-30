@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.client.gui.util
 
-class AnimationTimer(private var duration: Float) {
+class Timer(private var duration: Float) {
     private var timer = duration
 
     fun tick(delta: Float) {
