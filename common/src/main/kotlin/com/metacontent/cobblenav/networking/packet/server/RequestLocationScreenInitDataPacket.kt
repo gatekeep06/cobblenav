@@ -6,7 +6,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 
 class RequestLocationScreenInitDataPacket : NetworkPacket<RequestLocationScreenInitDataPacket> {
     companion object {
-        val ID = cobblenavResource("request_saved_preferences")
+        val ID = cobblenavResource("request_location_screen_init_data")
         fun decode(buffer: RegistryFriendlyByteBuf) = RequestLocationScreenInitDataPacket()
     }
 
