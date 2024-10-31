@@ -1,14 +1,18 @@
 package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
-import com.metacontent.cobblenav.client.gui.util.AnimationTimer
+import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
+import com.metacontent.cobblenav.client.gui.widget.finder.FoundPokemonWidget
 import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
+import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.util.log
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
@@ -23,22 +27,24 @@ class FinderScreen(
         const val FADING_DURATION: Float = 5f
         const val POKEBALL_PART_WIDTH: Int = 308
         const val POKEBALL_PART_HEIGHT: Int = 134
-        const val POKEMON_OFFSET: Int = 45
-        const val SCALE: Float = 40f
         val POKEBALL_TOP = cobblenavResource("textures/gui/pokeball_screen_top.png")
         val POKEBALL_BOTTOM = cobblenavResource("textures/gui/pokeball_screen_bottom.png")
     }
 
     override val color = FastColor.ARGB32.color(255, 190, 72, 72)
-    private val closingTimer = AnimationTimer(CLOSING_DURATION)
-    private val fadingTimer = AnimationTimer(FADING_DURATION)
-    private val state = FloatingState()
-    private var pokemonX = 0f
-    private var pokemonY = 0f
+    private var loading = false
+    private lateinit var pokemon: FoundPokemon
+    private lateinit var foundPokemonWidget: FoundPokemonWidget
+    private val closingTimer = Timer(CLOSING_DURATION)
+    private val fadingTimer = Timer(FADING_DURATION)
+    private var pokemonX = 0
+    private var pokemonY = 0
 
     override fun initScreen() {
-        pokemonX = screenX + WIDTH / 2f
-        pokemonY = screenY + HEIGHT / 2f - POKEMON_OFFSET - if (spawnData.pose == PoseType.SWIM) 10 else 0
+        pokemonX = screenX + WIDTH / 2
+        pokemonY = screenY + HEIGHT / 2
+
+        findPokemon()
 
         IconButton(
             pX = screenX + VERTICAL_BORDER_DEPTH,
@@ -50,20 +56,28 @@ class FinderScreen(
         ).also { addBlockableWidget(it) }
     }
 
-    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        val poseStack = guiGraphics.pose()
+    fun receiveFoundPokemon(pokemon: FoundPokemon) {
+        this.pokemon = pokemon
+        spawnData.pokemon.aspects += pokemon.aspects
 
-        drawPokemon(
-            poseStack = poseStack,
-            pokemon = spawnData.pokemon,
-            x = pokemonX,
-            y = pokemonY,
-            z = 100f,
-            delta = delta,
-            state = state,
-            poseType = if (spawnData.pose == PoseType.PROFILE) PoseType.WALK else spawnData.pose,
-            scale = SCALE,
-            obscured = !spawnData.encountered
+        foundPokemonWidget = FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
+
+        loading = false
+    }
+
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        if (loading) return
+
+        if (!pokemon.found) {
+            return
+        }
+
+        drawScaledTextJustifiedRight(
+            context = guiGraphics,
+            text = Component.literal(pokemon.rating.toString()),
+            x = screenX + WIDTH - VERTICAL_BORDER_DEPTH - 1,
+            y = screenY + HORIZONTAL_BORDER_DEPTH + 1,
+            shadow = true
         )
     }
 
@@ -104,7 +118,8 @@ class FinderScreen(
     }
 
     private fun findPokemon() {
+        loading = true
         val pokemon = spawnData.pokemon
-        FindPokemonPacket(pokemon.species.name, pokemon.aspects)
+        FindPokemonPacket(pokemon.species.name, pokemon.aspects).sendToServer()
     }
 }
