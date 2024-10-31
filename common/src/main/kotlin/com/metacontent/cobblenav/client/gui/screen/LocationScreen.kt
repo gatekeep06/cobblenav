@@ -70,7 +70,7 @@ class LocationScreen(
         }
     private lateinit var biome: String
     private var loading = false
-    private val timer = Timer(LOADING_LOOP_DURATION)
+    private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     var hoveredSpawnData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
@@ -228,9 +228,6 @@ class LocationScreen(
             textureWidth = ANIMATION_SHEET_WIDTH,
             uOffset = FRAME_WIDTH * ((frameAmount - 1) * timer.getProgress()).toInt()
         )
-        if (timer.isOver()) {
-            timer.reset()
-        }
     }
 
     private fun onBucketChange() {
