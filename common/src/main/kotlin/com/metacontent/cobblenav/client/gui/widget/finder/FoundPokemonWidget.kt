@@ -18,7 +18,7 @@ class FoundPokemonWidget(
     x: Int, y: Int,
     val spawnData: SpawnData,
     val pokemon: FoundPokemon
-) : SoundlessWidget(x, y, 0, 0, Component.literal("Circular Text Displayer")) {
+) : SoundlessWidget(x, y, 0, 0, Component.literal("Found Pokemon")) {
     companion object {
         const val RADIUS: Int = 60
         const val POKEMON_OFFSET: Int = 45
