@@ -34,6 +34,8 @@
   "gui.cobblenav.spawn_data.encountered": "Encountered: %s",
   "gui.cobblenav.spawn_data.biome": "Habitat: %s",
 
+  "gui.cobblenav.finder.find_button": "Let's track it down!",
+
   "bucket.cobblenav.common": "common",
   "bucket.cobblenav.uncommon": "uncommon",
   "bucket.cobblenav.rare": "rare",
