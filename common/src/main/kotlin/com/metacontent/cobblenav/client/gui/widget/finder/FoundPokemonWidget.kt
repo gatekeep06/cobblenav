@@ -25,6 +25,7 @@ class FoundPokemonWidget(
         const val SCALE: Float = 40f
         const val OPENING: Float = 12f
         const val LOOP: Float = 5000f
+        const val BARS: Int = 36
     }
 
     private val state = FloatingState()
@@ -38,9 +39,9 @@ class FoundPokemonWidget(
 
         poseStack.pushPose()
         poseStack.rotateAround(Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, 360f * loopTimer.getProgress())), x.toFloat(), y.toFloat(), 0f)
-        for (barIndex in 0 until (36 * openingTimer.getProgress()).toInt()) {
+        for (barIndex in 0 until (BARS * openingTimer.getProgress()).toInt()) {
             poseStack.pushPose()
-            poseStack.rotateAround(Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, barIndex * 360f / 36)), x.toFloat(), y.toFloat(), 0f)
+            poseStack.rotateAround(Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, barIndex * 360f / BARS)), x.toFloat(), y.toFloat(), 0f)
             guiGraphics.fill(x - 2, y + RADIUS, x + 2, y + RADIUS + 12, FastColor.ARGB32.color(128, 0, 0, 0))
             poseStack.popPose()
         }
@@ -56,6 +57,7 @@ class FoundPokemonWidget(
             state = state,
             poseType = if (spawnData.pose == PoseType.PROFILE) PoseType.WALK else spawnData.pose,
             scale = SCALE,
+            rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
             obscured = !spawnData.encountered
         )
 
