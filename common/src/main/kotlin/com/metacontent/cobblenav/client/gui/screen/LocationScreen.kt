@@ -33,7 +33,7 @@ class LocationScreen(
     animateOpening: Boolean= false
 ) : PokenavScreen(makeOpeningSound, animateOpening, Component.literal("Location")) {
     companion object {
-        val LOADING = cobblenavResource("textures/gui/loading_animation.png")
+        val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
         const val ANIMATION_SHEET_WIDTH: Int = 144
         const val FRAME_WIDTH: Int = 18
         const val FRAME_HEIGHT: Int = 22

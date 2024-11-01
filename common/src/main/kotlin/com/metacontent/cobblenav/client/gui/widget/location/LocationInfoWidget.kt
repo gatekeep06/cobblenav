@@ -24,9 +24,9 @@ class LocationInfoWidget(
         const val WIDTH: Int = SYMBOL_WIDTH + SPACE + BIOME_WIDTH
         const val HEIGHT: Int = 14
         const val BIOME_KEY_BASE: String = "biome"
-        val DAY = cobblenavResource("textures/gui/day_symbol.png")
-        val NIGHT = cobblenavResource("textures/gui/night_symbol.png")
-        val UNKNOWN_BIOME = cobblenavResource("textures/gui/unknown_biome.png")
+        val DAY = cobblenavResource("textures/gui/location/day_symbol.png")
+        val NIGHT = cobblenavResource("textures/gui/location/night_symbol.png")
+        val UNKNOWN_BIOME = cobblenavResource("textures/gui/location/unknown_biome.png")
     }
 
     private val biomeResourceLocation = ResourceLocation.parse(biome)
