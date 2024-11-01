@@ -2,10 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
-import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.metacontent.cobblenav.client.gui.widget.finder.FoundPokemonWidget
@@ -13,7 +10,6 @@ import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
-import com.metacontent.cobblenav.util.log
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
@@ -32,8 +28,9 @@ class FinderScreen(
         const val FIND_BUTTON_HEIGHT: Int = 33
         const val FIND_BUTTON_OFFSET: Int = 2
         const val FIND_BUTTON_TEXT: String = "gui.cobblenav.finder.find_button"
-        val POKEBALL_TOP = cobblenavResource("textures/gui/pokeball_screen_top.png")
-        val POKEBALL_BOTTOM = cobblenavResource("textures/gui/pokeball_screen_bottom.png")
+        val POKEBALL_TOP = cobblenavResource("textures/gui/finder/pokeball_screen_top.png")
+        val POKEBALL_BOTTOM = cobblenavResource("textures/gui/finder/pokeball_screen_bottom.png")
+        val DECORATIONS_0 = cobblenavResource("textures/gui/finder/finder_decorations_0.png")
         val FIND_BUTTON = cobblenavResource("textures/gui/button/find_button.png")
     }
 
@@ -85,6 +82,18 @@ class FinderScreen(
     }
 
     override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val poseStack = guiGraphics.pose()
+
+        blitk(
+            matrixStack = poseStack,
+            texture = DECORATIONS_0,
+            x = screenX + VERTICAL_BORDER_DEPTH,
+                y = screenY + (HEIGHT - (WIDTH - 2 * VERTICAL_BORDER_DEPTH)) / 2,
+            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+            height = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+            alpha = 0.5f
+        )
+
         if (loading) return
 
         if (!pokemon.found) {
@@ -98,10 +107,6 @@ class FinderScreen(
             y = screenY + HORIZONTAL_BORDER_DEPTH + 1,
             shadow = true
         )
-    }
-
-    override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
