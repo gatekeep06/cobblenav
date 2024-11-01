@@ -32,6 +32,7 @@ class FoundPokemonWidget(
         const val BARS: Int = 36
         val DECORATIONS_1 = cobblenavResource("textures/gui/finder/finder_decorations_1.png")
         val DECORATIONS_2 = cobblenavResource("textures/gui/finder/finder_decorations_2.png")
+        val STATS = cobblenavResource("textures/gui/finder/stats_table.png")
     }
 
     private val state = FloatingState()
@@ -88,7 +89,17 @@ class FoundPokemonWidget(
             obscured = !spawnData.encountered
         )
 
-        loopTimer.tick(delta)
+        guiGraphics.drawBlurredArea(x + 80, y - 42, x + 144, y + 42)
+        blitk(
+            matrixStack = poseStack,
+            texture = STATS,
+            x = x + 80,
+            y = y - 48,
+            width = 64,
+            height = 97
+        )
+
         openingTimer.tick(delta)
+        loopTimer.tick(delta)
     }
 }
