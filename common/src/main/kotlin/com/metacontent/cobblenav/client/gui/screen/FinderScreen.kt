@@ -29,7 +29,7 @@ class FinderScreen(
         const val POKEBALL_PART_WIDTH: Int = 308
         const val POKEBALL_PART_HEIGHT: Int = 134
         const val FIND_BUTTON_WIDTH: Int = 112
-        const val FIND_BUTTON_HEIGHT: Int = 32
+        const val FIND_BUTTON_HEIGHT: Int = 33
         const val FIND_BUTTON_OFFSET: Int = 2
         const val FIND_BUTTON_TEXT: String = "gui.cobblenav.finder.find_button"
         val POKEBALL_TOP = cobblenavResource("textures/gui/pokeball_screen_top.png")
