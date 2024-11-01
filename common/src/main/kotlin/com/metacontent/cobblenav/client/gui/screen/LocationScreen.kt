@@ -189,7 +189,7 @@ class LocationScreen(
     }
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        if (blockWidgets) return
+        if (blockWidgets || minecraft?.screen != this) return
         hoveredSpawnData?.let {
             guiGraphics.renderSpawnDataTooltip(
                 spawnData = it,
