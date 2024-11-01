@@ -106,6 +106,7 @@ abstract class PokenavScreen(makeOpeningSound: Boolean, animateOpening: Boolean,
             }
         }
 //        guiGraphics.fill((width.toFloat() / 2f).toInt() - 1, 0, (width.toFloat() / 2f).toInt() + 1, height, FastColor.ARGB32.color(255, 255, 255, 255))
+//        guiGraphics.fill(0, (height.toFloat() / 2f).toInt() - 1, width, (height.toFloat() / 2f).toInt() + 1, FastColor.ARGB32.color(255, 255, 255, 255))
     }
 
     open fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
