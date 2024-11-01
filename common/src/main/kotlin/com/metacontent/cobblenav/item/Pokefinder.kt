@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level
 class Pokefinder : Item(Properties().stacksTo(1)) {
     companion object {
         const val BASE_REGISTRY_KEY: String = "pokefinder_item_"
+        const val TRANSLATION_KEY = "item.cobblenav.pokefinder_item"
     }
 
     override fun use(
@@ -18,5 +19,9 @@ class Pokefinder : Item(Properties().stacksTo(1)) {
         interactionHand: InteractionHand
     ): InteractionResultHolder<ItemStack> {
         return super.use(level, player, interactionHand)
+    }
+
+    override fun getDescriptionId(): String {
+        return TRANSLATION_KEY
     }
 }
