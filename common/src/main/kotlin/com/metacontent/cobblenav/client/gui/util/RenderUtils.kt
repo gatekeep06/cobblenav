@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.client.gui.util
 
+import com.cobblemon.mod.common.api.spawning.TimeRange
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
@@ -38,14 +39,24 @@ fun GuiGraphics.renderSpawnDataTooltip(
 ) {
     val poseStack = this.pose()
 
-    val body = listOf(
+    val body = mutableListOf(
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance.toString()),
         Component.translatable("gui.cobblenav.spawn_data.encountered", spawnData.encountered.toString()),
         Component.translatable("gui.cobblenav.spawn_data.biome", Component.translatable(String.format("%s.%s.%s", "biome", spawnData.biome.namespace, spawnData.biome.path)).string)
     )
+    if (TimeRange.timeRanges["any"]?.ranges?.contains(spawnData.time) == false) {
+        body.add(Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(spawnData.time)))
+    }
+    if (spawnData.additionalConditions.isNotEmpty()) {
+        val conditionsComponent = Component.translatable("gui.cobblenav.spawn_data.conditions")
+        spawnData.additionalConditions.forEach {
+            conditionsComponent.append(" ").append(Component.translatable("condition.cobblenav.$it"))
+        }
+        body.add(conditionsComponent)
+    }
     val font = Minecraft.getInstance().font
     val width = max(font.width(body.maxBy { font.width(it) }) + 6, 80)
-    val bodyHeight = lineHeight * body.size + 1
+    val bodyHeight = lineHeight * body.size + 1 //+ if (spawnData.neededBlocksAsItems!!.isNotEmpty()) 16 else 0
 
     var x = mouseX + 5
     if (x < x1) {
@@ -76,10 +87,10 @@ fun GuiGraphics.renderSpawnDataTooltip(
         maxCharacterWidth = width - 6,
     )
     var lineY = y + lineHeight + 2
-    for (text in body) {
+    body.forEach {
         drawScaledText(
             context = this,
-            text = text,
+            text = it,
             x = x + 3,
             y = lineY,
             maxCharacterWidth = width - 6,
@@ -87,6 +98,14 @@ fun GuiGraphics.renderSpawnDataTooltip(
         )
         lineY += lineHeight
     }
+
+//    var blockX = x + 3
+//    lineY -= 2
+//    val blockSpace = 10
+//    spawnData.neededBlocksAsItems!!.forEach {
+//        this.renderFakeItem(it, blockX, lineY)
+//        blockX += blockSpace
+//    }
     poseStack.popPose()
 }
 
@@ -132,4 +151,17 @@ fun GuiGraphics.drawBlurredArea(
     Minecraft.getInstance().gameRenderer.processBlurEffect(blur)
     Minecraft.getInstance().mainRenderTarget.bindWrite(false)
     this.disableScissor()
+}
+
+fun getTimeString(period: IntRange): String = String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
+
+fun getTimeString(time: Long): String {
+    val adjustedTime = (time + 6000) % 23999
+    var hours = (adjustedTime / 1000).toInt()
+    val minutes = ((adjustedTime % 1000) * 60 / 1000).toInt()
+    val period = if (hours >= 12) "PM" else "AM"
+    hours %= 12
+    hours = if (hours == 0) 12 else hours
+
+    return String.format("%02d:%02d %s", hours, minutes, period)
 }
