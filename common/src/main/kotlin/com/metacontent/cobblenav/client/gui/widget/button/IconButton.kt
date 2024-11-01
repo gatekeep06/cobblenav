@@ -15,14 +15,14 @@ class IconButton(
     private val textureWidth: Int = pWidth,
     private val textureHeight: Int = pHeight,
     private val uOffset: Int = 0,
-    private val vOffset: Int = 0,
+    private val vOffset: Int = 0
 ) : PokenavButton(pX, pY, pWidth, pHeight, message, disabled, action) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
 
         var rgb = 1f
         if (disabled) {
-            rgb -= 0.2f
+            rgb -= 0.4f
         }
         else if (isHovered()) {
             rgb += 0.1f

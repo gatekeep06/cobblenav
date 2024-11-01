@@ -36,6 +36,8 @@
   "gui.cobblenav.spawn_data.time": "Period: %s",
   "gui.cobblenav.spawn_data.conditions": "Conditions:",
 
+  "gui.cobblenav.finder.find_button": "Let's track it down!",
+
   "bucket.cobblenav.common": "common",
   "bucket.cobblenav.uncommon": "uncommon",
   "bucket.cobblenav.rare": "rare",

@@ -140,6 +140,19 @@ fun drawPokemon(
     poseStack.popPose()
 }
 
+fun GuiGraphics.drawBlurredArea(
+    x1: Int,
+    y1: Int,
+    x2: Int,
+    y2: Int,
+    blur: Float = 1f
+) {
+    this.enableScissor(x1, y1, x2, y2)
+    Minecraft.getInstance().gameRenderer.processBlurEffect(blur)
+    Minecraft.getInstance().mainRenderTarget.bindWrite(false)
+    this.disableScissor()
+}
+
 fun getTimeString(period: IntRange): String = String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
 
 fun getTimeString(time: Long): String {

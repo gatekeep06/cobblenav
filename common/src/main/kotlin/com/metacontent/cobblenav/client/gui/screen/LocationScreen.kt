@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.metacontent.cobblenav.client.gui.util.AnimationTimer
+import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
@@ -33,7 +33,7 @@ class LocationScreen(
     animateOpening: Boolean= false
 ) : PokenavScreen(makeOpeningSound, animateOpening, Component.literal("Location")) {
     companion object {
-        val LOADING = cobblenavResource("textures/gui/loading_animation.png")
+        val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
         const val ANIMATION_SHEET_WIDTH: Int = 144
         const val FRAME_WIDTH: Int = 18
         const val FRAME_HEIGHT: Int = 22
@@ -70,7 +70,7 @@ class LocationScreen(
         }
     private lateinit var biome: String
     private var loading = false
-    private val timer = AnimationTimer(LOADING_LOOP_DURATION)
+    private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     var hoveredSpawnData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
@@ -171,7 +171,7 @@ class LocationScreen(
         refreshButton.disabled = false
     }
 
-    override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
         guiGraphics.fillWithOutline(
             viewX, viewY,
@@ -188,7 +188,7 @@ class LocationScreen(
         }
     }
 
-    override fun renderOnTooltipLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets) return
         hoveredSpawnData?.let {
             guiGraphics.renderSpawnDataTooltip(
@@ -229,9 +229,6 @@ class LocationScreen(
             textureWidth = ANIMATION_SHEET_WIDTH,
             uOffset = FRAME_WIDTH * ((frameAmount - 1) * timer.getProgress()).toInt()
         )
-        if (timer.isOver()) {
-            timer.reset()
-        }
     }
 
     private fun onBucketChange() {

@@ -1,9 +1,10 @@
 package com.metacontent.cobblenav.client.gui.util
 
-class AnimationTimer(private var duration: Float) {
+class Timer(private var duration: Float, var loop: Boolean = false) {
     private var timer = duration
 
     fun tick(delta: Float) {
+        if (loop && isOver()) reset()
         if (isOver()) return
         timer -= delta
     }

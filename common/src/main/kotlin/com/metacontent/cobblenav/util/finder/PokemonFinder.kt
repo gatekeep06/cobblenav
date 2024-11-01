@@ -1,0 +1,51 @@
+package com.metacontent.cobblenav.util.finder
+
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
+import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
+
+abstract class PokemonFinder {
+    companion object {
+        val NO_EGG_MOVE: Component = Component.translatable("gui.cobblenav.finder.no_egg_move")
+    }
+
+    abstract fun select(
+        pokemonEntities: List<PokemonEntity>,
+        player: ServerPlayer,
+        level: ServerLevel = player.serverLevel()
+    ): FoundPokemon
+
+    protected fun selectNearest(
+        pokemonEntities: Collection<PokemonEntity>,
+        player: ServerPlayer,
+        level: ServerLevel = player.serverLevel()
+    ): PokemonEntity? {
+        return level.getNearestEntity(
+            pokemonEntities.toList(),
+            TargetingConditions.forNonCombat(),
+            player,
+            10.0, 10.0, 10.0
+        )
+    }
+
+    fun getEggMoveName(pokemon: Pokemon): Component? {
+        val allMoves = (pokemon.moveSet.getMoves().map { it.template } + pokemon.benchedMoves.map { it.moveTemplate }).toSet()
+        val notEggMoves = pokemon.form.moves.levelUpMoves.flatMap { it.value } + pokemon.form.moves.evolutionMoves
+        val eggMoves = pokemon.form.moves.eggMoves
+        val eggMove = allMoves.firstOrNull { eggMoves.contains(it) && !notEggMoves.contains(it) }
+        eggMove?.let { return it.displayName }
+        return null
+    }
+
+    fun getPerfectIvsAmount(pokemon: Pokemon): Int = pokemon.ivs.count { it.value == 31 }
+
+    fun hasHiddenAbility(pokemon: Pokemon): Boolean {
+        val ability = pokemon.ability.template
+        val hiddenAbility = pokemon.form.abilities.firstOrNull { it is HiddenAbility }?.template ?: return false
+        return ability == hiddenAbility
+    }
+}

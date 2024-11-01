@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.metacontent.cobblenav.client.gui.util.AnimationTimer
+import com.metacontent.cobblenav.client.gui.util.Timer
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
@@ -13,7 +13,7 @@ class ClosedRadialMenu(
         const val ANIMATION_DURATION: Float = 0.5f
     }
 
-    private val timer = AnimationTimer(ANIMATION_DURATION)
+    private val timer = Timer(ANIMATION_DURATION)
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (isHovered()) {

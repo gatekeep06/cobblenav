@@ -24,7 +24,7 @@ class SpawnDataWidget(
         const val HEIGHT: Int = 50
         const val MODEL_HEIGHT: Int = 40
         val format= DecimalFormat("#.##")
-        val BACKGROUND = cobblenavResource("textures/gui/pokeball_background.png")
+        val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
     }
 
     private val state = FloatingState()

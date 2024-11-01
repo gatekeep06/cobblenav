@@ -13,6 +13,6 @@ class WelcomeScreen(
     override fun initScreen() {
     }
 
-    override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
     }
 }

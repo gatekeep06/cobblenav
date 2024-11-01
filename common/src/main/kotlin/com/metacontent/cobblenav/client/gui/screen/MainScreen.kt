@@ -27,7 +27,7 @@ class MainScreen(
         ).also { addUnblockableWidget(it) }
     }
 
-    override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
 
     }
 }
