@@ -1,8 +1,9 @@
-package com.metacontent.cobblenav.registry
+package com.metacontent.cobblenav
 
 import com.metacontent.cobblenav.item.Pokefinder
 import com.metacontent.cobblenav.item.Pokenav
 import com.metacontent.cobblenav.item.PokenavModelType
+import com.metacontent.cobblenav.registry.RegistryProvider
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries

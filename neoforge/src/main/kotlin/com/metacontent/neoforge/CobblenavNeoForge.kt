@@ -3,7 +3,7 @@ package com.metacontent.neoforge
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.Implementation
 import com.metacontent.cobblenav.CobblenavCommands
-import com.metacontent.cobblenav.registry.CobblenavItems
+import com.metacontent.cobblenav.CobblenavItems
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.neoforge.client.CobblenavNeoForgeClient
 import com.mojang.brigadier.arguments.ArgumentType
