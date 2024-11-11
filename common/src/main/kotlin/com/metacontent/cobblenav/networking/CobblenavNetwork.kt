@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.net.PacketRegisterInfo
 import com.metacontent.cobblenav.networking.handler.client.FoundPokemonHandler
 import com.metacontent.cobblenav.networking.handler.client.LocationScreenInitDataHandler
 import com.metacontent.cobblenav.networking.handler.client.SpawnMapHandler
+import com.metacontent.cobblenav.networking.handler.client.UpdatePokefinderSettingsHandler
 import com.metacontent.cobblenav.networking.handler.server.FindPokemonHandler
 import com.metacontent.cobblenav.networking.handler.server.RequestLocationScreenInitDataHandler
 import com.metacontent.cobblenav.networking.handler.server.RequestSpawnMapHandler
@@ -11,6 +12,7 @@ import com.metacontent.cobblenav.networking.handler.server.SavePreferencesHandle
 import com.metacontent.cobblenav.networking.packet.client.FoundPokemonPacket
 import com.metacontent.cobblenav.networking.packet.client.LocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
+import com.metacontent.cobblenav.networking.packet.client.UpdatePokefinderSettingsPacket
 import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
@@ -26,6 +28,7 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(SpawnMapPacket.ID, SpawnMapPacket::decode, SpawnMapHandler))
         list.add(PacketRegisterInfo(LocationScreenInitDataPacket.ID, LocationScreenInitDataPacket::decode, LocationScreenInitDataHandler))
         list.add(PacketRegisterInfo(FoundPokemonPacket.ID, FoundPokemonPacket::decode, FoundPokemonHandler))
+        list.add(PacketRegisterInfo(UpdatePokefinderSettingsPacket.ID, UpdatePokefinderSettingsPacket::decode, UpdatePokefinderSettingsHandler))
 
         return list
     }
