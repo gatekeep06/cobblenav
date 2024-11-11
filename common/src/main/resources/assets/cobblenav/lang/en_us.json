@@ -2,7 +2,6 @@
   "key.cobblenav.open_pokenav": "Open Pokenav",
   "key.cobblenav.open_location": "Open Location Screen",
   "category.cobblenav": "Cobblenav",
-  "gamerule.titleCommandsPermissionLevel": "Title commands permission level",
   "itemGroup.cobblenav.pokenav_group": "Cobblenav",
   "item.cobblenav.pokenav_item": "PokéNav",
   "item.cobblenav.pokefinder_item": "PokéFinder",
