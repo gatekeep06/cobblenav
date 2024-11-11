@@ -4,7 +4,9 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.item.Pokefinder
+import com.metacontent.cobblenav.client.gui.util.PokefinderSettings
 import com.metacontent.cobblenav.util.cobblenavResource
+import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
@@ -30,16 +32,22 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     }
 
     private val minecraft = Minecraft.getInstance()
+    private var initialized = false
+    var settings: PokefinderSettings? = null
+
+    fun initialize() {
+        settings = PokefinderSettings.get()
+        initialized = true
+    }
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
+        if (!initialized) return
+
         val isRightHand = minecraft.player?.mainHandItem?.item is Pokefinder
         val scale = minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
         val offset = (OFFSET / scale).toInt()
         val width = (WIDTH / scale).toInt()
         val height = (HEIGHT / scale).toInt()
-        val compassWidth = (COMPASS_WIDTH / scale).toInt()
-        val compassHeight = (COMPASS_HEIGHT / scale).toInt()
-        val compassOffset = (COMPASS_OFFSET / scale).toInt()
         val x = if (isRightHand) minecraft.window.guiScaledWidth - width - offset else offset
         val y = minecraft.window.guiScaledHeight - height - offset
 
@@ -56,9 +64,44 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
         val player = minecraft.player ?: return
 
+        renderCompass(poseStack, 180f - player.rotationVector.y, x, y, scale)
+
+        val species = settings?.species?.map { it.lowercase() }
+        val radius = settings?.radius ?: PokefinderSettings.MAX_RADIUS
+        val entities = minecraft.level?.getEntitiesOfClass(
+            PokemonEntity::class.java,
+            AABB.ofSize(player.position(), radius, radius, radius)
+        ) {
+            (species?.contains(it.pokemon.species.name.lowercase()) == true || species?.isEmpty() != false)
+                    && (it.pokemon.shiny || settings?.shinyOnly != true)
+                    && it.pokemon.aspects.containsAll(settings?.aspects ?: setOf())
+                    && settings?.level?.contains(it.pokemon.level) != false
+        } ?: listOf()
+//
+        entities.forEach {
+            val vec = player.position().vectorTo(it.position()).scale(RADAR_SCALE)
+            poseStack.pushPose()
+            val angle = Math.toRadians(180.0 - player.rotationVector.y)
+            val posX = x + width / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
+            val posY = y + height / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
+            poseStack.translate(posX, posY, 0.0)
+            guiGraphics.fill(
+                -1, -1,
+                1, 1,
+                FastColor.ARGB32.color(255, 255, 255, 255)
+            )
+            poseStack.popPose()
+        }
+    }
+
+    private fun renderCompass(poseStack: PoseStack, rotation: Float, x: Int, y: Int, scale: Double) {
+        val compassWidth = (COMPASS_WIDTH / scale).toInt()
+        val compassHeight = (COMPASS_HEIGHT / scale).toInt()
+        val compassOffset = (COMPASS_OFFSET / scale).toInt()
+
         poseStack.pushPose()
         poseStack.rotateAround(
-            Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, 180f - player.rotationVector.y)),
+            Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, rotation)),
             x + compassOffset + compassWidth / 2f,
             y + compassOffset + compassHeight / 2f,
             0f
@@ -72,29 +115,5 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             height = compassHeight
         )
         poseStack.popPose()
-
-        val entities = minecraft.level?.getEntitiesOfClass(
-            PokemonEntity::class.java,
-            AABB.ofSize(player.position(), 500.0, 500.0, 500.0)
-        ) {
-            it.pokemon.species.name == "Zigzagoon"
-        } ?: listOf()
-
-        entities.forEach {
-            val vec = player.position().vectorTo(it.position()).scale(RADAR_SCALE)
-            poseStack.pushPose()
-//            val rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, 180f - player.rotationVector.y))
-//            poseStack.rotateAround(rotation, x + 72.5f, y + 48.5f, 0f)
-            val angle = Math.toRadians(180.0 - player.rotationVector.y)
-            val posX = x + width / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
-            val posY = y + height / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
-            poseStack.translate(posX, posY, 0.0)
-            guiGraphics.fill(
-                -1, -1,
-                1, 1,
-                FastColor.ARGB32.color(255, 255, 255, 255)
-            )
-            poseStack.popPose()
-        }
     }
 }
