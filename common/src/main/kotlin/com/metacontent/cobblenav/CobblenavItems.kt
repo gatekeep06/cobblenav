@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav
 
+import com.metacontent.cobblenav.item.Fishingnav
 import com.metacontent.cobblenav.item.Pokefinder
 import com.metacontent.cobblenav.item.Pokenav
 import com.metacontent.cobblenav.item.PokenavModelType
@@ -45,6 +46,8 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
     val WHITE_POKEFINDER = pokefinderItem("white")
     val YELLOW_POKEFINDER = pokefinderItem("yellow")
 
+    val FISHINGNAV = add("fishingnav_item", Fishingnav())
+
     private fun pokenavItem(model: PokenavModelType): Item {
         return add(Pokenav.BASE_REGISTRY_KEY + model.modelName, Pokenav(model))
     }
@@ -80,5 +83,7 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
         entries.accept(RED_POKEFINDER)
         entries.accept(WHITE_POKEFINDER)
         entries.accept(YELLOW_POKEFINDER)
+
+        entries.accept(FISHINGNAV)
     }
 }
