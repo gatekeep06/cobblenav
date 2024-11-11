@@ -43,7 +43,8 @@ class OpenedRadialMenu(
         IconButton(
             pWidth = 16, pHeight = 16,
             action = { handler.getParentScreen().changeScreen(ContactsScreen()) },
-            texture = CONTACTS
+            texture = CONTACTS,
+            disabled = true
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
