@@ -198,7 +198,8 @@ class LocationScreen(
                 x1 = viewX,
                 y1 = viewY,
                 x2 = viewX + viewWidth,
-                y2 = viewY + viewHeight
+                y2 = viewY + viewHeight,
+                delta = delta
             )
         }
         hoveredSpawnData = null

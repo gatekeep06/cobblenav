@@ -7,14 +7,18 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
+import com.metacontent.cobblenav.util.CustomizableBlurEffectProcessor
 import com.metacontent.cobblenav.util.SpawnData
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import kotlin.math.ceil
 import kotlin.math.max
 
 fun GuiGraphics.fillWithOutline(x1: Int, y1: Int, x2: Int, y2: Int, fillColor: Int, outlineColor: Int) {
@@ -32,13 +36,8 @@ fun GuiGraphics.renderSpawnDataTooltip(
     y2: Int,
     lineHeight: Int = 12,
     opacity: Float = 0.9f,
-    headerColor: Int = spawnData.pokemon.form.primaryType.hue + ((opacity * 255).toInt() shl 24),
-    headerOutlineColot: Int = FastColor.ARGB32.multiply(headerColor, FastColor.ARGB32.color((opacity * 255).toInt(), 192, 192, 192)),
-    bodyColor: Int = FastColor.ARGB32.color((255 * opacity).toInt(), 237, 237, 237),
-    bodyOutlineColor: Int = bodyColor
+    delta: Float = 0f
 ) {
-    val poseStack = this.pose()
-
     val body = mutableListOf(
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance.toString()),
         Component.translatable("gui.cobblenav.spawn_data.encountered", spawnData.encountered.toString()),
@@ -54,9 +53,97 @@ fun GuiGraphics.renderSpawnDataTooltip(
         }
         body.add(conditionsComponent)
     }
+
+    this.renderAdvancedTooltip(
+        header = if (spawnData.encountered) spawnData.pokemon.species.translatedName else Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
+        body = body,
+        mouseX = mouseX,
+        mouseY = mouseY,
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        lineHeight = lineHeight,
+        opacity = opacity,
+        headerColor = spawnData.pokemon.form.primaryType.hue + ((opacity * 255).toInt() shl 24),
+        blur = 1f,
+        delta = delta
+    )
+}
+
+fun GuiGraphics.renderMultilineTextTooltip(
+    header: MutableComponent,
+    body: MutableComponent,
+    targetWidth: Int,
+    permissibleDeviation: Int = 10,
+    mouseX: Int,
+    mouseY: Int,
+    x1: Int,
+    y1: Int,
+    x2: Int,
+    y2: Int,
+    lineHeight: Int = 12,
+    opacity: Float = 0.9f,
+    headerColor: Int,
+    delta: Float = 0f
+) {
     val font = Minecraft.getInstance().font
-    val width = max(font.width(body.maxBy { font.width(it) }) + 6, 80)
-    val bodyHeight = lineHeight * body.size + 1 //+ if (spawnData.neededBlocksAsItems!!.isNotEmpty()) 16 else 0
+    val multilineBody = mutableListOf<MutableComponent>()
+    val words = body.string.split(" ")
+    var line = Component.empty()
+    words.forEach {
+        val alteredLine = line.copy()
+        alteredLine.append("$it ")
+        if (font.width(alteredLine) >= targetWidth + permissibleDeviation) {
+            if (line.string.isEmpty()) {
+                line = alteredLine
+            }
+            multilineBody.add(line)
+            line = Component.empty()
+        }
+        else {
+            line = alteredLine
+        }
+    }
+
+    renderAdvancedTooltip(
+        header = header,
+        body = multilineBody,
+        mouseX = mouseX,
+        mouseY = mouseY,
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        lineHeight = lineHeight,
+        opacity = opacity,
+        headerColor = headerColor,
+        delta = delta
+    )
+}
+
+fun GuiGraphics.renderAdvancedTooltip(
+    header: MutableComponent,
+    body: List<MutableComponent>?,
+    mouseX: Int,
+    mouseY: Int,
+    x1: Int,
+    y1: Int,
+    x2: Int,
+    y2: Int,
+    lineHeight: Int = 12,
+    opacity: Float = 0.9f,
+    headerColor: Int,
+    headerOutlineColor: Int = FastColor.ARGB32.multiply(headerColor, FastColor.ARGB32.color((opacity * 255).toInt(), 192, 192, 192)),
+    bodyColor: Int = FastColor.ARGB32.color((255 * opacity).toInt(), 237, 237, 237),
+    bodyOutlineColor: Int = bodyColor,
+    blur: Float = 1f,
+    delta: Float = 0f
+) {
+    val poseStack = this.pose()
+    val font = Minecraft.getInstance().font
+    val width = max(max(body?.maxOf { font.width(it) } ?: 0, font.width(header)) + 6, 80)
+    val bodyHeight = body?.let { lineHeight * body.size + 1 } ?: 0
 
     var x = mouseX + 5
     if (x < x1) {
@@ -76,18 +163,19 @@ fun GuiGraphics.renderSpawnDataTooltip(
 
     poseStack.pushPose()
     poseStack.translate(0f, 0f, 2000f)
-    this.fillWithOutline(x, y, x + width, y + lineHeight, headerColor, headerOutlineColot)
+    this.drawBlurredArea(x, y, x + width, y + lineHeight + bodyHeight, blur, delta)
+    this.fillWithOutline(x, y, x + width, y + lineHeight, headerColor, headerOutlineColor)
     this.fillWithOutline(x, y + lineHeight, x + width, y + lineHeight + bodyHeight, bodyColor, bodyOutlineColor)
 
     drawScaledText(
         context = this,
-        text = if (spawnData.encountered) spawnData.pokemon.species.translatedName else Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
+        text = header,
         x = x + 3,
         y = y + 3,
         maxCharacterWidth = width - 6,
     )
     var lineY = y + lineHeight + 2
-    body.forEach {
+    body?.forEach {
         drawScaledText(
             context = this,
             text = it,
@@ -98,14 +186,6 @@ fun GuiGraphics.renderSpawnDataTooltip(
         )
         lineY += lineHeight
     }
-
-//    var blockX = x + 3
-//    lineY -= 2
-//    val blockSpace = 10
-//    spawnData.neededBlocksAsItems!!.forEach {
-//        this.renderFakeItem(it, blockX, lineY)
-//        blockX += blockSpace
-//    }
     poseStack.popPose()
 }
 
@@ -145,13 +225,16 @@ fun GuiGraphics.drawBlurredArea(
     y1: Int,
     x2: Int,
     y2: Int,
-    blur: Float = 1f
+    blur: Float = 1f,
+    delta: Float
 ) {
     this.enableScissor(x1, y1, x2, y2)
-    Minecraft.getInstance().gameRenderer.processBlurEffect(blur)
+    Minecraft.getInstance().gameRenderer.processBlurEffect(blur, delta)
     Minecraft.getInstance().mainRenderTarget.bindWrite(false)
     this.disableScissor()
 }
+
+fun GameRenderer.processBlurEffect(blur: Float, delta: Float) = (this as CustomizableBlurEffectProcessor).`cobblenav$processBlurEffect`(blur, delta)
 
 fun getTimeString(period: IntRange): String = String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
 

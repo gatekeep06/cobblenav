@@ -89,7 +89,7 @@ class FoundPokemonWidget(
             obscured = !spawnData.encountered
         )
 
-        guiGraphics.drawBlurredArea(x + 80, y - 42, x + 144, y + 42)
+        guiGraphics.drawBlurredArea(x + 80, y - 42, x + 144, y + 42, blur = 3f, delta = delta)
         blitk(
             matrixStack = poseStack,
             texture = STATS,
