@@ -28,6 +28,9 @@
   "item.cobblenav.pokenav_item.invisible_gholdengo": "Gholdengo 1.5.1",
   "item.cobblenav.pokenav_item.netherite": "Netherite",
 
+  "gui.cobblenav.support_button.header.location_screen": "Location - Support",
+  "gui.cobblenav.support_button.body.location_screen": "The location screen displays all possible Pokémon that can spawn in your area, separated by buckets. Tooltips that appear when you hover over a Pokémon display more detailed information, as well as the conditions that affected the chance of spawning in your particular case.",
+
   "gui.cobblenav.unknown_biome": "Unknown Biome",
   "gui.cobblenav.spawn_data.unknown_pokemon": "???",
   "gui.cobblenav.spawn_data.spawn_chance": "Chance: %s%%",

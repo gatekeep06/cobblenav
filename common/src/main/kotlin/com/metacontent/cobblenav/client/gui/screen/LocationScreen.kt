@@ -17,6 +17,7 @@ import com.metacontent.cobblenav.networking.packet.server.SavePreferencesPacket
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
+import com.metacontent.cobblenav.client.gui.widget.button.SupportButton
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.util.SpawnData
@@ -141,6 +142,16 @@ class LocationScreen(
                 requestSpawnData()
             },
             texture = REFRESH
+        ).also { addBlockableWidget(it) }
+
+        SupportButton(
+            pX = screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE,
+            pY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            header = Component.translatable("gui.cobblenav.support_button.header.location_screen"),
+            body = Component.translatable("gui.cobblenav.support_button.body.location_screen"),
+            parent = this
         ).also { addBlockableWidget(it) }
     }
 
