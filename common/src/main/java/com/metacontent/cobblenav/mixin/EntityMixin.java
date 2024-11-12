@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public class EntityMixin implements PreferencesSaver {
+abstract public class EntityMixin implements PreferencesSaver {
     @Unique private CompoundTag cobblenav$savedPreferences;
 
     @Override
