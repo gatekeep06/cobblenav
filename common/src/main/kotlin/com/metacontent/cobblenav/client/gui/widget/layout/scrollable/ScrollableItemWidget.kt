@@ -12,6 +12,9 @@ class ScrollableItemWidget<T : AbstractWidget>(
 ) : ContainerWidget<T>(child) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (y > bottomEdge || y + height < topEdge) return
+        if (child.isHovered) {
+            child.isFocused = j in (topEdge + 4)..<(bottomEdge - 2)
+        }
         child.render(guiGraphics, i, j, f)
     }
 }
