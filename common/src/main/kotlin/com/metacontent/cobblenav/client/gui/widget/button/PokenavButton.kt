@@ -12,7 +12,7 @@ abstract class PokenavButton(
     pHeight: Int,
     message: Component,
     var disabled: Boolean,
-    private val action: () -> Unit
+    private val action: (PokenavButton) -> Unit
 ) : AbstractWidget(pX, pY, pWidth, pHeight, message) {
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
     }
@@ -24,6 +24,6 @@ abstract class PokenavButton(
         if (disabled) {
             return
         }
-        action.invoke()
+        action.invoke(this)
     }
 }

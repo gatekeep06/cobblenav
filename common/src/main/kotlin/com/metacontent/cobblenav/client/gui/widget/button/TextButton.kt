@@ -12,7 +12,7 @@ class TextButton(
     pX: Int = 0, pY: Int = 0,
     pWidth: Int = 0, pHeight: Int = 0,
     disabled: Boolean = false,
-    action: () -> Unit,
+    action: (PokenavButton) -> Unit,
     var texture: ResourceLocation? = null,
     private val text: MutableComponent,
     private val textureWidth: Int = pWidth,

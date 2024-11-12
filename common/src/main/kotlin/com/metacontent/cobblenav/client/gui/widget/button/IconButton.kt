@@ -5,11 +5,11 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class IconButton(
+open class IconButton(
     pX: Int = 0, pY: Int = 0,
     pWidth: Int = 0, pHeight: Int = 0,
     disabled: Boolean = false,
-    action: () -> Unit,
+    action: (PokenavButton) -> Unit,
     var texture: ResourceLocation?,
     message: Component = Component.empty(),
     private val textureWidth: Int = pWidth,
