@@ -94,17 +94,15 @@ fun GuiGraphics.renderMultilineTextTooltip(
     words.forEach {
         val alteredLine = line.copy()
         alteredLine.append("$it ")
-        if (font.width(alteredLine) >= targetWidth + permissibleDeviation) {
-            if (line.string.isEmpty()) {
-                line = alteredLine
-            }
+        if (font.width(alteredLine) >= targetWidth + permissibleDeviation && line.string.isNotEmpty()) {
             multilineBody.add(line)
-            line = Component.empty()
+            line = Component.empty().append("$it ")
         }
         else {
             line = alteredLine
         }
     }
+    multilineBody.add(line)
 
     renderAdvancedTooltip(
         header = header,
