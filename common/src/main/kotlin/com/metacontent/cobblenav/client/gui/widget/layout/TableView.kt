@@ -11,12 +11,12 @@ class TableView<I : AbstractWidget>(
     x: Int, y: Int,
     width: Int,
     val columns: Int,
-    private val verticalPadding: Int = 0,
     val columnWidth: Int = width / columns,
+    private val verticalPadding: Int = 0,
+    private val horizontalPadding: Int = (width - columns * columnWidth) / (columns - 1),
     val rowHeight: Int = 0,
 ) : ClickableParentWidget(x, y, width, 0, Component.literal("Table View")) {
     private val items = mutableListOf<I>()
-    private val horizontalPadding = (width - columns * columnWidth) / (columns - 1)
     val rows
         get() = ceil(items.size.toFloat() / columns.toFloat()).toInt()
 
