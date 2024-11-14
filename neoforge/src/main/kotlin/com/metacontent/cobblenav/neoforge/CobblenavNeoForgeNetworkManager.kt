@@ -1,4 +1,4 @@
-package com.metacontent.neoforge
+package com.metacontent.cobblenav.neoforge
 
 import com.cobblemon.mod.common.NetworkManager
 import com.cobblemon.mod.common.api.net.NetworkPacket

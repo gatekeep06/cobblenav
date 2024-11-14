@@ -1,4 +1,4 @@
-package com.metacontent.neoforge.client
+package com.metacontent.cobblenav.neoforge.client
 
 import com.metacontent.cobblenav.client.ClientImplementation
 import com.metacontent.cobblenav.client.CobblenavClient
@@ -17,7 +17,7 @@ object CobblenavNeoForgeClient : ClientImplementation {
             addListener(this@CobblenavNeoForgeClient::initialize)
         }
         with(NeoForge.EVENT_BUS) {
-            addListener(::onRenderGuiOverlayEvent)
+            addListener(CobblenavNeoForgeClient::onRenderGuiOverlayEvent)
         }
     }
 

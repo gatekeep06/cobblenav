@@ -1,11 +1,12 @@
-package com.metacontent.neoforge
+package com.metacontent.cobblenav.neoforge
 
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.Implementation
 import com.metacontent.cobblenav.CobblenavCommands
 import com.metacontent.cobblenav.CobblenavItems
 import com.metacontent.cobblenav.util.cobblenavResource
-import com.metacontent.neoforge.client.CobblenavNeoForgeClient
+import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
+import com.metacontent.cobblenav.util.log
 import com.mojang.brigadier.arguments.ArgumentType
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
@@ -35,16 +36,12 @@ class CobblenavNeoForge : Implementation {
     init {
         with(MOD_BUS) {
             this@CobblenavNeoForge.commandArgumentTypes.register(this)
-            addListener(this@CobblenavNeoForge::initialize)
+            Cobblenav.init(this@CobblenavNeoForge)
             addListener(networkManager::registerMessages)
         }
         if (FMLEnvironment.dist == Dist.CLIENT) {
             CobblenavNeoForgeClient.init()
         }
-    }
-
-    private fun initialize(event: FMLCommonSetupEvent) {
-        Cobblenav.init(this)
     }
 
     override fun registerItems() {
