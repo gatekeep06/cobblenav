@@ -8,7 +8,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FastColor
 
-class SupportButton(
+class InfoButton(
     pX: Int,
     pY: Int,
     pWidth: Int,
