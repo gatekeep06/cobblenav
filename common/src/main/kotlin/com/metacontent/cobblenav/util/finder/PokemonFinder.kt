@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.util.finder
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
 import net.minecraft.network.chat.Component
@@ -41,7 +42,7 @@ abstract class PokemonFinder {
         return null
     }
 
-    fun getPerfectIvsAmount(pokemon: Pokemon): Int = pokemon.ivs.count { it.value == 31 }
+    fun getPerfectIvsAmount(pokemon: Pokemon): Int = pokemon.ivs.count { it.value == IVs.MAX_VALUE }
 
     fun hasHiddenAbility(pokemon: Pokemon): Boolean {
         val ability = pokemon.ability.template

@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.item
 
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.MainScreen
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
@@ -26,7 +27,12 @@ class Pokenav(private val model: PokenavModelType) : Item(Properties().stacksTo(
         interactionHand: InteractionHand
     ): InteractionResultHolder<ItemStack> {
         if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(MainScreen(makeOpeningSound = true, animateOpening = true))
+            if (CobblenavClient.trackArrowOverlay.tracking) {
+                CobblenavClient.trackArrowOverlay.tracking = false
+            }
+            else {
+                Minecraft.getInstance().setScreen(MainScreen(makeOpeningSound = true, animateOpening = true))
+            }
         }
         return InteractionResultHolder.success(player.getItemInHand(interactionHand))
     }

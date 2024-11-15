@@ -1,11 +1,12 @@
 package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.metacontent.cobblenav.client.gui.widget.finder.FoundPokemonWidget
+import com.metacontent.cobblenav.client.gui.widget.finder.StatsTableWidget
 import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.SpawnData
@@ -27,26 +28,37 @@ class FinderScreen(
         const val FIND_BUTTON_WIDTH: Int = 112
         const val FIND_BUTTON_HEIGHT: Int = 33
         const val FIND_BUTTON_OFFSET: Int = 2
+        const val TABLE_OFFEST: Int = 5
+        const val BUTTON_SPACE: Int = 5
+        const val BUTTON_WIDTH: Int = 15
+        const val BUTTON_HEIGHT: Int = 16
         const val FIND_BUTTON_TEXT: String = "gui.cobblenav.finder.find_button"
         val POKEBALL_TOP = cobblenavResource("textures/gui/finder/pokeball_screen_top.png")
         val POKEBALL_BOTTOM = cobblenavResource("textures/gui/finder/pokeball_screen_bottom.png")
         val DECORATIONS_0 = cobblenavResource("textures/gui/finder/finder_decorations_0.png")
         val FIND_BUTTON = cobblenavResource("textures/gui/button/find_button.png")
+        val POKEFINDER = cobblenavResource("textures/gui/button/pokefinder_button.png")
     }
 
     override val color = FastColor.ARGB32.color(255, 190, 72, 72)
     private var loading = false
     private lateinit var pokemon: FoundPokemon
     private lateinit var foundPokemonWidget: FoundPokemonWidget
+    private lateinit var statsTableWidget: StatsTableWidget
     private lateinit var findButton: TextButton
+    private lateinit var pokefinderButton: IconButton
     private val closingTimer = Timer(CLOSING_DURATION)
     private val fadingTimer = Timer(FADING_DURATION)
     private var pokemonX = 0
     private var pokemonY = 0
+    private var tableX = 0
+    private var tableY = 0
 
     override fun initScreen() {
         pokemonX = screenX + WIDTH / 2
         pokemonY = screenY + HEIGHT / 2
+        tableX = screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatsTableWidget.WIDTH - TABLE_OFFEST
+        tableY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - StatsTableWidget.HEIGHT - TABLE_OFFEST
 
         findPokemon()
 
@@ -64,7 +76,10 @@ class FinderScreen(
         this.pokemon = pokemon
         spawnData.pokemon.aspects += pokemon.aspects
 
-        foundPokemonWidget = FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
+        if (pokemon.found) {
+            foundPokemonWidget = FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
+            statsTableWidget = StatsTableWidget(tableX, tableY, spawnData, pokemon, this).also { addBlockableWidget(it) }
+        }
 
         findButton = TextButton(
             pX = screenX + (WIDTH - FIND_BUTTON_WIDTH) / 2,
@@ -75,7 +90,21 @@ class FinderScreen(
             texture = FIND_BUTTON,
             text = Component.translatable(FIND_BUTTON_TEXT),
             shadow = true,
-            action = {  }
+            action = {
+                CobblenavClient.trackArrowOverlay.entityId = pokemon.entityId
+                onClose()
+            }
+        ).also { addBlockableWidget(it) }
+
+        pokefinderButton = IconButton(
+            pX = findButton.x - BUTTON_SPACE - BUTTON_WIDTH,
+            pY = findButton.y + (findButton.height - BUTTON_HEIGHT) / 2,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            texture = POKEFINDER,
+            action = {
+                CobblenavClient.pokefinderOverlay.settings?.resetWith(species = setOf(spawnData.pokemon.species.name.lowercase()))
+            }
         ).also { addBlockableWidget(it) }
 
         loading = false
@@ -88,10 +117,10 @@ class FinderScreen(
             matrixStack = poseStack,
             texture = DECORATIONS_0,
             x = screenX + VERTICAL_BORDER_DEPTH,
-                y = screenY + (HEIGHT - (WIDTH - 2 * VERTICAL_BORDER_DEPTH)) / 2,
+            y = screenY + HORIZONTAL_BORDER_DEPTH,
             width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
-            height = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
-            alpha = 0.5f
+            height = HEIGHT - 2 * HORIZONTAL_BORDER_DEPTH,
+            alpha = 0.6f
         )
 
         if (loading) return
@@ -100,13 +129,13 @@ class FinderScreen(
             return
         }
 
-        drawScaledTextJustifiedRight(
-            context = guiGraphics,
-            text = Component.literal(pokemon.rating.toString()),
-            x = screenX + WIDTH - VERTICAL_BORDER_DEPTH - 1,
-            y = screenY + HORIZONTAL_BORDER_DEPTH + 1,
-            shadow = true
-        )
+//        drawScaledTextJustifiedRight(
+//            context = guiGraphics,
+//            text = Component.literal(pokemon.rating.toString()),
+//            x = screenX + WIDTH - VERTICAL_BORDER_DEPTH - 1,
+//            y = screenY + HORIZONTAL_BORDER_DEPTH + 1,
+//            shadow = true
+//        )
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {

@@ -36,7 +36,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     var settings: PokefinderSettings? = null
 
     fun initialize() {
-        settings = PokefinderSettings.get()
+        settings = PokefinderSettings.read()
         initialized = true
     }
 
@@ -77,7 +77,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
                     && it.pokemon.aspects.containsAll(settings?.aspects ?: setOf())
                     && settings?.level?.contains(it.pokemon.level) != false
         } ?: listOf()
-//
+
         entities.forEach {
             val vec = player.position().vectorTo(it.position()).scale(RADAR_SCALE)
             poseStack.pushPose()

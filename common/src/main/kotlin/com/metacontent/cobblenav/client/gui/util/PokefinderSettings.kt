@@ -29,12 +29,12 @@ class PokefinderSettings {
         )
         val BUF_CODEC: StreamCodec<ByteBuf, PokefinderSettings> = ByteBufCodecs.fromCodec(CODEC)
 
-        fun get(): PokefinderSettings {
+        fun read(): PokefinderSettings {
             val file = File(PATH)
             var settings: PokefinderSettings
             try {
                 val fileReader = FileReader(file)
-                settings = CODEC.parse(JsonOps.INSTANCE, GSON.fromJson(fileReader)).orThrow
+                settings = GSON.fromJson(fileReader)
                 fileReader.close()
             }
             catch (e: Exception) {
@@ -52,7 +52,7 @@ class PokefinderSettings {
             settings.radius = matchingPair(settingPairList, "radius")?.second?.toDouble()
             settings.species = matchingPair(settingPairList, "species")?.second
                 ?.split(",", " ", ", ")
-                ?.map { it.trim() }
+                ?.map { it.trim().lowercase() }
                 ?.filter { it.isNotBlank() }
                 ?.toSet()
             settings.shinyOnly = matchingPair(settingPairList, "shinyOnly")?.second?.toBooleanStrictOrNull()
@@ -81,10 +81,15 @@ class PokefinderSettings {
     var changed = false
 
     var radius: Double? = null
+        private set
     var species: Set<String>? = null
+        private set
     var shinyOnly: Boolean? = null
+        private set
     var aspects: Set<String>? = null
+        private set
     var level: IntRanges? = null
+        private set
 
     fun merge(settings: PokefinderSettings) {
         changed = true
@@ -96,13 +101,29 @@ class PokefinderSettings {
         level = settings.level ?: level
     }
 
+    fun resetWith(
+        radius: Double? = null,
+        species: Set<String>? = null,
+        shinyOnly: Boolean? = null,
+        aspects: Set<String>? = null,
+        level: IntRanges? = null
+    ) {
+        changed = true
+
+        this.radius = radius
+        this.species = species
+        this.shinyOnly = shinyOnly
+        this.aspects = aspects
+        this.level = level
+    }
+
     fun save() {
         val file = File(PATH)
         file.parentFile.mkdirs()
         if (!file.exists()) file.createNewFile()
         try {
             val fileWriter = FileWriter(file)
-            GSON.toJson(CODEC.encodeStart(JsonOps.INSTANCE, this).orThrow, fileWriter)
+            GSON.toJson(this, fileWriter)
             fileWriter.close()
         }
         catch (e: Exception) {
