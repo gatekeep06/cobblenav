@@ -91,6 +91,7 @@ class FinderScreen(
             text = Component.translatable(FIND_BUTTON_TEXT),
             shadow = true,
             action = {
+                CobblenavClient.trackArrowOverlay.entityId = pokemon.entityId
                 onClose()
             }
         ).also { addBlockableWidget(it) }

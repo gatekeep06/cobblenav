@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
+import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
 import com.metacontent.cobblenav.item.Pokefinder
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -14,6 +15,7 @@ object CobblenavClient {
         overlay.initialize()
         overlay
     }
+    val trackArrowOverlay: TrackArrowOverlay by lazy { TrackArrowOverlay() }
 
     fun init(implementation: ClientImplementation) {
         this.implementation = implementation
@@ -31,6 +33,7 @@ object CobblenavClient {
             if (player.handSlots.any { it.item is Pokefinder }) {
                 pokefinderOverlay.render(guiGraphics, deltaTracker)
             }
+            trackArrowOverlay.render(guiGraphics, deltaTracker)
         }
     }
 }
