@@ -1,18 +1,16 @@
 package com.metacontent.cobblenav.networking.handler.server
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.api.spawning.CobblemonWorldSpawnerManager
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
-import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningArea
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.util.SpawnData
-import com.metacontent.cobblenav.util.log
+import com.metacontent.cobblenav.util.SpawnDataHelper
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
@@ -47,7 +45,7 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
 
                 spawnProbabilities.forEach { (detail, spawnChance) ->
                     if (detail is PokemonSpawnDetail && detail.isValid()) {
-                        spawnDataList.add(SpawnData.collect(detail, spawnChance, contexts, player))
+                        spawnDataList.add(SpawnDataHelper.collect(detail, spawnChance, contexts, player))
                     }
                 }
             }
