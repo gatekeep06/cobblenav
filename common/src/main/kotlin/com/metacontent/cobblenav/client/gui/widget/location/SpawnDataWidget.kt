@@ -47,11 +47,10 @@ class SpawnDataWidget(
             poseStack = poseStack,
             pokemon = spawnData.pokemon,
             x = x.toFloat() + width / 2,
-            y = y.toFloat() + if (spawnData.pose == PoseType.PROFILE) 8 else 0,
+            y = y.toFloat() + 8, // + if (spawnData.pose == PoseType.PROFILE) 8 else 0,
             z = 100f,
             delta = delta,
             state = state,
-            poseType = spawnData.pose,
             obscured = !spawnData.encountered
         )
         drawScaledText(
