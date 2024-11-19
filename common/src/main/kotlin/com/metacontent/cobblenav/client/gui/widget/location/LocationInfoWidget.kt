@@ -4,12 +4,12 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.onHover
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
+import com.metacontent.cobblenav.client.gui.util.translateOr
 import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 
 class LocationInfoWidget(
@@ -33,7 +33,11 @@ class LocationInfoWidget(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
-        val checkPair = checkBiomeTranslation(String.format("%s.%s.%s", BIOME_KEY_BASE, biomeResourceLocation.namespace, biomeResourceLocation.path))
+        val checkPair = translateOr(
+            biomeResourceLocation.toLanguageKey(BIOME_KEY_BASE),
+            Component.translatable("gui.cobblenav.unknown_biome").red()
+                .onHover(Component.literal(biomeResourceLocation.toString()))
+        )
         if (!checkPair.first) {
             blitk(
                 matrixStack = poseStack,
@@ -65,13 +69,5 @@ class LocationInfoWidget(
         if (isHovered && !checkPair.first) {
             guiGraphics.renderComponentHoverEffect(Minecraft.getInstance().font, checkPair.second.style, i - 100, j + height + 10)
         }
-    }
-
-    private fun checkBiomeTranslation(biomeKey: String): Pair<Boolean, MutableComponent> {
-        val component = Component.translatable(biomeKey)
-        if (component.string == biomeKey) {
-            return Pair(false, Component.translatable("gui.cobblenav.unknown_biome").red().onHover(Component.literal(biomeResourceLocation.toString())))
-        }
-        return Pair(true, component)
     }
 }

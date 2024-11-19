@@ -1,22 +1,41 @@
 package com.metacontent.cobblenav.util
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.spawning.condition.MoonPhase
+import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
+import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition
+import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
+import com.cobblemon.mod.common.api.spawning.condition.*
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
-import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.registry.BiomeIdentifierCondition
-import com.cobblemon.mod.common.registry.BiomeTagCondition
+import com.cobblemon.mod.common.registry.BlockIdentifierCondition
+import com.cobblemon.mod.common.registry.BlockTagCondition
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.metacontent.cobblenav.client.gui.util.getTimeString
+import com.metacontent.cobblenav.util.SpawnDataHelper.toResourceLocation
+import com.mojang.datafixers.util.Either
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.levelgen.structure.Structure
+import kotlin.jvm.optionals.getOrNull
 
 object SpawnDataHelper {
+    const val BIOME_KEY_BASE = "biome"
+    const val STRUCTURE_KEY_BASE = "structure"
+    const val WEATHER_KEY_BASE = "weather.cobblenav"
+    const val FLUID_KEY_BASE = "tag.fluid"
+    const val MOON_KEY_BASE = "moon.cobblenav"
     private const val FLYING_BIOME_CONDITION = "is_sky"
     private const val SWIMMING_CONTEXT_CONDITION = "submerged"
     private const val CLEAR_KEY = "clear"
     private const val RAIN_KEY = "rain"
     private const val THUNDER_KEY = "thunder"
+    private const val SLIME_CHUNK_KEY = "slime_chunk"
+    private const val MAX_TIME = 23999
 
     fun collect(
         detail: PokemonSpawnDetail,
@@ -25,60 +44,153 @@ object SpawnDataHelper {
         player: ServerPlayer
     ): SpawnData {
         val renderablePokemon = detail.pokemon.asRenderablePokemon()
+        val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
+        val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
 
         val speciesRecord = Cobblemon.playerDataManager.getPokedexData(player)
             .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
         val encountered = speciesRecord?.hasSeenForm(renderablePokemon.form.name) ?: false
 
-        val contextBiomes = contexts.map { it.biomeName }.toMutableList()
-        contexts.map { it.biomeRegistry.getHolder(it.biomeName) }
-            .filter { it.isPresent }
-            .flatMap { optional -> optional.get().tags().map { it.location }.toList() }
-            .let { contextBiomes.addAll(it) }
+        val conditions = mutableListOf<MutableComponent>()
+        val blockConditions = BlockConditions(mutableSetOf())
+        condition?.let { cond ->
+            conditions.add(getInfluencedBiomes(cond, fittingContexts))
 
-        val biomeConditions = detail.conditions.flatMap { it.biomes ?: mutableSetOf() }
-        val biomes = biomeConditions
-            .filterIsInstance<BiomeIdentifierCondition>()
-            .map { it.identifier }
-            .toMutableList()
-        biomeConditions
-            .filterIsInstance<BiomeTagCondition>()
-            .map { it.tag.location }
-            .let { biomes.addAll(it) }
-        val biome = biomes.firstOrNull { contextBiomes.contains(it) } ?: cobblemonResource("is_overworld")
+            cond.structures?.let { neededStructures ->
+                val structures = getInfluencedStructures(neededStructures, fittingContexts)
+                if (structures.siblings.isNotEmpty()) conditions.add(structures)
+            }
 
-        val condition = detail.conditions.firstOrNull { cond ->
-            cond.biomes?.any { b ->
-                b is BiomeTagCondition && b.tag.location == biome
-            } ?: false
-        }
-
-        val additionalConditions = mutableSetOf<String>()
-        val neededBlocks = mutableSetOf<ResourceLocation>()
-        var time = IntRange(0, 23999)
-        condition?.let {
-            // TODO: check isThundering
-            if (condition.isThundering == true) additionalConditions.add(THUNDER_KEY)
-            else if (condition.isRaining == true) additionalConditions.add(RAIN_KEY)
-            if (condition.isRaining == false) additionalConditions.add(CLEAR_KEY)
-            condition.moonPhase?.ranges?.any { it.contains(player.level().moonPhase) }?.let {
-                if (it) {
-                    additionalConditions.add(MoonPhase.ofWorld(player.level()).name.lowercase())
+            cond.timeRange?.let { time ->
+                val range = time.ranges.firstOrNull { it.contains(player.level().dayTime % MAX_TIME) }
+                if (range != null) {
+                    conditions.add(Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(range)))
                 }
             }
-            condition.timeRange?.ranges?.firstOrNull { it.contains(player.level().dayTime % 23999) }?.let {
-                time = it
+
+            val weather = Component.translatable("gui.cobblenav.spawn_data.weather")
+            if (cond.isThundering == true) weather.append(Component.translatable("$WEATHER_KEY_BASE.$THUNDER_KEY"))
+            if (cond.isRaining == true) weather.append(Component.translatable("$WEATHER_KEY_BASE.$RAIN_KEY"))
+            if (cond.isRaining == false) weather.append(Component.translatable("$WEATHER_KEY_BASE.$CLEAR_KEY"))
+            if (weather.siblings.isNotEmpty()) conditions.add(weather)
+
+            val height = getValueRangeString(cond.minY, cond.maxY, true)
+            if (height != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.height", height))
+
+            if (cond.moonPhase != null) {
+                conditions.add(
+                    Component.translatable("gui.cobblenav.spawn_data.moon")
+                        .append(Component.translatable("$MOON_KEY_BASE.${MoonPhase.ofWorld(player.level()).name.lowercase()}"))
+                )
+            }
+
+            cond.canSeeSky?.let {
+                conditions.add(Component.translatable("gui.cobblenav.spawn_data.can_see_sky")
+                    .append(Component.translatable("gui.cobblenav.$it")))
+            }
+
+            val light = getValueRangeString(cond.minLight, cond.maxLight)
+            if (light != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.light", light))
+
+            val skyLight = getValueRangeString(cond.minSkyLight, cond.maxSkyLight)
+            if (skyLight != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.light", skyLight))
+
+            blockConditions.blocks.addAll(getInfluencedBlocks(cond, contexts))
+        }
+
+        return SpawnData(renderablePokemon, spawnChance, encountered, conditions, blockConditions)
+    }
+
+    private fun getValueRangeString(min: Number?, max: Number?, useSpaces: Boolean = false): String? {
+        return if (min != null && max != null) {
+            if (useSpaces) "$min - $max" else "$min-$max"
+        }
+        else if (min != null) "≥$min"
+        else if (max != null) "≤$max"
+        else null
+    }
+
+    private fun getInfluencedBiomes(condition: SpawningCondition<*>, contexts: List<AreaSpawningContext>): MutableComponent {
+        val biomes = Component.translatable("gui.cobblenav.spawn_data.habitat")
+        condition.biomes
+            ?.mapNotNull { it.toResourceLocation() }
+            ?.filter {
+                contexts.any { context ->
+                    val registry = context.biomeRegistry
+                    val biomeLocation = registry.getKey(context.biome) ?: return@any false
+                    val biomeTags = registry.getHolder(biomeLocation).getOrNull()
+                        ?.tags()?.map { it.location }?.toList() ?: return@any false
+                    return@any biomeLocation == it || biomeTags.contains(it)
+                }
+            }
+            ?.forEach { biomes.append(Component.translatable(it.toLanguageKey(BIOME_KEY_BASE))) }
+        if (biomes.siblings.isEmpty()) biomes.append(cobblemonResource("is_overworld").toLanguageKey(BIOME_KEY_BASE))
+        return biomes
+    }
+
+    private fun getInfluencedStructures(
+        neededStructures: MutableList<Either<ResourceLocation, TagKey<Structure>>>,
+        contexts: List<AreaSpawningContext>
+    ): MutableComponent {
+        val structures = Component.translatable("gui.cobblenav.spawn_data.structures")
+        contexts.flatMap { context ->
+            val structureAccess = context.world.structureManager()
+            val cache = context.getStructureCache(context.position)
+            neededStructures.filter {
+                    str -> str.map({ cache.check(structureAccess, context.position, it) }, { cache.check(structureAccess, context.position, it) })
+            }
+        }.forEach {
+            it.ifLeft { resource -> structures.append(Component.translatable(resource.toLanguageKey(STRUCTURE_KEY_BASE))) }
+            it.ifRight { tag -> structures.append(Component.translatable(tag.location.toLanguageKey(STRUCTURE_KEY_BASE))) }
+        }
+        return structures
+    }
+
+    private fun getInfluencedBlocks(condition: SpawningCondition<*>, contexts: List<AreaSpawningContext>): Set<ResourceLocation> {
+        val blocks = mutableSetOf<ResourceLocation>()
+
+        val neededBlocks = mutableSetOf<ResourceLocation>()
+        if (condition is AreaTypeSpawningCondition<*>) {
+            neededBlocks.addAll(condition.neededNearbyBlocks?.toBlockList() ?: emptyList())
+        }
+        if (condition is SeafloorTypeSpawningCondition<*>) {
+            neededBlocks.addAll(condition.neededBaseBlocks?.toBlockList() ?: emptyList())
+        }
+        if (condition is GroundedTypeSpawningCondition<*>) {
+            neededBlocks.addAll(condition.neededBaseBlocks?.toBlockList() ?: emptyList())
+        }
+        contexts.flatMap { it.nearbyBlockTypes }.forEach {
+            val block = BuiltInRegistries.BLOCK.getKey(it)
+            if (neededBlocks.contains(block)) {
+                blocks.add(block)
             }
         }
+        return blocks
+    }
 
-        var pose = PoseType.PROFILE
-        if (detail.context.name == SWIMMING_CONTEXT_CONDITION) {
-            pose = PoseType.SWIM
+    private fun RegistryLikeCondition<*>.toResourceLocation(): ResourceLocation? {
+        if (this is RegistryLikeIdentifierCondition) {
+            return this.identifier
         }
-        if (biome.path == FLYING_BIOME_CONDITION) {
-            pose = PoseType.FLY
+        if (this is RegistryLikeTagCondition) {
+            return this.tag.location
         }
+        return null
+    }
 
-        return SpawnData(renderablePokemon, spawnChance, encountered, biome, time, additionalConditions, neededBlocks, pose)
+    private fun MutableList<RegistryLikeCondition<Block>>.toBlockList(): List<ResourceLocation> {
+        return this.flatMap {
+            if (it is BlockIdentifierCondition) {
+                return@flatMap listOf(it.identifier)
+            }
+            if (it is BlockTagCondition) {
+                if (it.tag.location.path == "natural") return@flatMap emptyList()
+                val optional = BuiltInRegistries.BLOCK.getTag(it.tag)
+                if (optional.isPresent) {
+                    return@flatMap optional.get().map { blockHolder -> BuiltInRegistries.BLOCK.getKey(blockHolder.value()) }
+                }
+            }
+            return@flatMap emptyList()
+        }
     }
 }

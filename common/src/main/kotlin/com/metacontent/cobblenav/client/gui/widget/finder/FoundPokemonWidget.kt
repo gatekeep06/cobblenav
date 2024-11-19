@@ -79,11 +79,11 @@ class FoundPokemonWidget(
             poseStack = poseStack,
             pokemon = spawnData.pokemon,
             x = x.toFloat(),
-            y = y.toFloat() - POKEMON_OFFSET - if (spawnData.pose == PoseType.SWIM) 10 else 0,
+            y = y.toFloat() - POKEMON_OFFSET, //- if (spawnData.pose == PoseType.SWIM) 10 else 0,
             z = 100f,
             delta = delta,
             state = state,
-            poseType = if (spawnData.pose == PoseType.PROFILE) PoseType.WALK else spawnData.pose,
+            poseType = PoseType.WALK,
             scale = SCALE,
             rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
             obscured = !spawnData.encountered
