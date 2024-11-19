@@ -77,6 +77,15 @@ object SpawnDataHelper {
             val height = getValueRangeString(cond.minY, cond.maxY, true)
             if (height != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.height", height))
 
+            val coordinates = Component.empty()
+            getValueRangeString(cond.minX, cond.maxX)?.let {
+                coordinates.append(Component.translatable("gui.cobblenav.spawn_data.coordinates.x", "$it "))
+            }
+            getValueRangeString(cond.minZ, cond.maxZ)?.let {
+                coordinates.append(Component.translatable("gui.cobblenav.spawn_data.coordinates.z", it))
+            }
+            if (coordinates.siblings.isNotEmpty()) conditions.add(coordinates)
+
             if (cond.moonPhase != null) {
                 conditions.add(
                     Component.translatable("gui.cobblenav.spawn_data.moon")
