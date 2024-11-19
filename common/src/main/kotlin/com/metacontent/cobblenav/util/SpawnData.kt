@@ -10,7 +10,7 @@ data class SpawnData(
     val pokemon: RenderablePokemon,
     val spawnChance: Float,
     val encountered: Boolean,
-    val conditions: List<MutableComponent>,
+    val conditions: MutableList<MutableComponent>,
     val blockConditions: BlockConditions
 ) : Encodable {
     companion object {
