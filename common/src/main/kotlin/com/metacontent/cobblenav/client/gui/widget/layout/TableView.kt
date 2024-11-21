@@ -37,6 +37,7 @@ class TableView<I : AbstractWidget>(
     }
 
     fun clear() {
+        items.forEach { removeWidget(it) }
         items.clear()
     }
 
