@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.chat.Component
 
@@ -9,7 +9,7 @@ abstract class RadialMenuState(
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
     component: Component
-) : ClickableParentWidget(pX, pY, pWidth, pHeight, component) {
+) : SoundlessWidget(pX, pY, pWidth, pHeight, component) {
     companion object {
         const val MENU_DIAMETER: Int = 20
         const val ANIMATION_SHEET_WIDTH: Int = 180

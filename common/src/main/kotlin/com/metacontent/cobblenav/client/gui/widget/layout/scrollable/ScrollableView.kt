@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -14,7 +14,7 @@ class ScrollableView(
     width: Int, height: Int,
     private val scrollMultiplier: Float = 20f,
     val child: AbstractWidget
-) : ClickableParentWidget(x, y, width, height, Component.literal("Scrollable View")) {
+) : SoundlessWidget(x, y, width, height, Component.literal("Scrollable View")) {
     var scrolled = 0
         set(value) {
             field = max(min(value, child.height - height), 0)
@@ -32,6 +32,13 @@ class ScrollableView(
         child.render(guiGraphics, i, j, f)
         scrollThumb.render(guiGraphics, i, j, f)
         guiGraphics.disableScissor()
+    }
+
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (isHovered()) {
+            return super.mouseClicked(pMouseX, pMouseY, pButton)
+        }
+        return false
     }
 
     override fun mouseScrolled(

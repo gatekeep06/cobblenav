@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.client.gui.widget.layout
 
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -15,7 +15,7 @@ class TableView<I : AbstractWidget>(
     private val verticalPadding: Int = 0,
     private val horizontalPadding: Int = (width - columns * columnWidth) / (columns - 1),
     val rowHeight: Int = 0,
-) : ClickableParentWidget(x, y, width, 0, Component.literal("Table View")) {
+) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
     private val items = mutableListOf<I>()
     val rows
         get() = ceil(items.size.toFloat() / columns.toFloat()).toInt()
@@ -71,5 +71,12 @@ class TableView<I : AbstractWidget>(
         val delta = x - i
         super.setX(i)
         items.forEach { it.x -= delta }
+    }
+
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (isHovered()) {
+            return super.mouseClicked(pMouseX, pMouseY, pButton)
+        }
+        return false
     }
 }

@@ -1,13 +1,13 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.client.gui.screen.FinderScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.gui.GuiGraphics
@@ -18,7 +18,7 @@ class SpawnDataWidget(
     x: Int, y: Int,
     val spawnData: SpawnData,
     private val parent: LocationScreen
-) : ClickableParentWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
+) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
         const val WIDTH: Int = 40
         const val HEIGHT: Int = 50
@@ -63,7 +63,11 @@ class SpawnDataWidget(
         )
     }
 
-    override fun onClick(d: Double, e: Double) {
-        parent.changeScreen(FinderScreen(spawnData), true)
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
+            parent.changeScreen(FinderScreen(spawnData), true)
+            return true
+        }
+        return false
     }
 }
