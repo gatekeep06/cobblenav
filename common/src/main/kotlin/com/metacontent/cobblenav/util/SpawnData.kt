@@ -7,7 +7,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
 
 data class SpawnData(
-    val pokemon: RenderablePokemon,
+    val renderable: RenderablePokemon,
+    val spawnAspects: Set<String>,
     val spawnChance: Float,
     val encountered: Boolean,
     val conditions: MutableList<MutableComponent>,
@@ -16,6 +17,7 @@ data class SpawnData(
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnData = SpawnData(
             RenderablePokemon.loadFromBuffer(buffer),
+            buffer.readList { it.readString() }.toSet(),
             buffer.readFloat(),
             buffer.readBoolean(),
             buffer.readList { (it as RegistryFriendlyByteBuf).readText().copy() },
@@ -24,7 +26,8 @@ data class SpawnData(
     }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        pokemon.saveToBuffer(buffer)
+        renderable.saveToBuffer(buffer)
+        buffer.writeCollection(spawnAspects) { buf, aspect -> buf.writeString(aspect) }
         buffer.writeFloat(spawnChance)
         buffer.writeBoolean(encountered)
         buffer.writeCollection(conditions) { buf, component -> (buf as RegistryFriendlyByteBuf).writeText(component) }

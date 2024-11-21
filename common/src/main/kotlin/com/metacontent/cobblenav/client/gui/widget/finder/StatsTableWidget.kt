@@ -100,12 +100,12 @@ class StatsTableWidget(
     private val textX = x + 2 * VERTICAL_MARGIN + ICON_WIDTH + TEXT_HORIZONTAL_OFFSET
     private val textBaseY = y + TOP_MARGIN
 
-    private val nameText = spawnData.pokemon.species.translatedName
+    private val nameText = spawnData.renderable.species.translatedName
         .append(", ")
         .append(Component.translatable("gui.cobblenav.level", pokemon.level))
     private val typeText = Component.empty().let {
-        val primaryType = spawnData.pokemon.form.primaryType
-        val secondaryType = spawnData.pokemon.form.secondaryType
+        val primaryType = spawnData.renderable.form.primaryType
+        val secondaryType = spawnData.renderable.form.secondaryType
         it.append(primaryType.displayName.withColor(primaryType.hue))
         secondaryType?.let { type -> it.append(", ").append(type.displayName.withColor(type.hue)) }
         return@let it

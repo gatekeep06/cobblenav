@@ -74,7 +74,7 @@ class FinderScreen(
 
     fun receiveFoundPokemon(pokemon: FoundPokemon) {
         this.pokemon = pokemon
-        spawnData.pokemon.aspects += pokemon.aspects
+        spawnData.renderable.aspects += pokemon.aspects
 
         if (pokemon.found) {
             foundPokemonWidget = FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
@@ -103,7 +103,10 @@ class FinderScreen(
             pHeight = BUTTON_HEIGHT,
             texture = POKEFINDER,
             action = {
-                CobblenavClient.pokefinderOverlay.settings?.resetWith(species = setOf(spawnData.pokemon.species.name.lowercase()))
+                CobblenavClient.pokefinderOverlay.settings?.resetWith(
+                    species = setOf(spawnData.renderable.species.name.lowercase()),
+                    aspects = spawnData.spawnAspects
+                )
             }
         ).also { addBlockableWidget(it) }
 
@@ -188,7 +191,6 @@ class FinderScreen(
 
     private fun findPokemon() {
         loading = true
-        val pokemon = spawnData.pokemon
-        FindPokemonPacket(pokemon.species.name, pokemon.aspects).sendToServer()
+        FindPokemonPacket(spawnData.renderable.species.name, spawnData.spawnAspects).sendToServer()
     }
 }

@@ -4,7 +4,6 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.client.gui.screen.FinderScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
@@ -45,7 +44,7 @@ class SpawnDataWidget(
         }
         drawPokemon(
             poseStack = poseStack,
-            pokemon = spawnData.pokemon,
+            pokemon = spawnData.renderable,
             x = x.toFloat() + width / 2,
             y = y.toFloat() + 8, // + if (spawnData.pose == PoseType.PROFILE) 8 else 0,
             z = 100f,
