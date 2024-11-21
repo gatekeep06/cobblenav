@@ -139,6 +139,7 @@ class LocationScreen(
             disabled = loading,
             action = {
                 scrollableView.reset()
+                tableView.clear()
                 requestSpawnData()
             },
             texture = REFRESH
@@ -245,6 +246,7 @@ class LocationScreen(
 
     private fun onBucketChange() {
         scrollableView.reset()
+        tableView.clear()
         val spawnDataList = spawnDataMap[currentBucket]
         if (spawnDataList == null) {
             requestSpawnData()
@@ -259,7 +261,6 @@ class LocationScreen(
     }
 
     private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
-        tableView.clear()
         val spawnDataWidgets = spawnDataList
             .sortedWith { firstData, secondData -> compareValues(firstData.spawnChance, secondData.spawnChance) * sorting.multiplier }
             .map {
