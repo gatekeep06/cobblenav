@@ -37,6 +37,8 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
     val PINK_POKENAV = pokenavItem(PokenavModelType.PINK)
     val GHOLDENGO_POKENAV = pokenavItem(PokenavModelType.GHOLDENGO)
 
+    val OLD_POKENAV = add("pokenav_item_old", Item(Item.Properties().stacksTo(16)))
+
     // Pokefinders
     val BLACK_POKEFINDER = pokefinderItem("black")
     val BLUE_POKEFINDER = pokefinderItem("blue")
@@ -75,6 +77,8 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
         entries.accept(MAGENTA_POKENAV)
         entries.accept(PINK_POKENAV)
         entries.accept(GHOLDENGO_POKENAV)
+
+        entries.accept(OLD_POKENAV)
 
         entries.accept(BLACK_POKEFINDER)
         entries.accept(BLUE_POKEFINDER)
