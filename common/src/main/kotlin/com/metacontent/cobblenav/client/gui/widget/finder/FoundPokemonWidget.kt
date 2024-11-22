@@ -29,9 +29,13 @@ class FoundPokemonWidget(
         const val LOOP: Float = 5000f
         const val BAR_LENGTH: Int = 12
         const val BARS: Int = 36
+        const val NOTIFICATION_WIDTH: Int = 14
+        const val NOTIFICATION_HEIGHT: Int = 15
+        const val NOTIFICATION_OFFSET: Int = 30
+        const val SHINY_ASPECT = "shiny"
         val DECORATIONS_1 = cobblenavResource("textures/gui/finder/finder_decorations_1.png")
         val DECORATIONS_2 = cobblenavResource("textures/gui/finder/finder_decorations_2.png")
-        val STAR = cobblenavResource("textures/gui/finder/potential_star.png")
+        val NOTIFICATION = cobblenavResource("textures/gui/finder/shiny_notification.png")
     }
 
     private val state = FloatingState()
@@ -85,6 +89,17 @@ class FoundPokemonWidget(
             rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
             obscured = !spawnData.encountered
         )
+
+        if (pokemon.aspects.contains(SHINY_ASPECT)) {
+            blitk(
+                matrixStack = poseStack,
+                texture = NOTIFICATION,
+                x = x + RADIUS - NOTIFICATION_OFFSET - NOTIFICATION_WIDTH / 2,
+                y = y - RADIUS + NOTIFICATION_OFFSET,
+                width = NOTIFICATION_WIDTH,
+                height = NOTIFICATION_HEIGHT
+            )
+        }
 
         openingTimer.tick(delta)
         loopTimer.tick(delta)
