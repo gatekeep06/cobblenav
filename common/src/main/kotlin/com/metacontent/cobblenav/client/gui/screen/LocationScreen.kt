@@ -219,6 +219,7 @@ class LocationScreen(
             poseStack.translate(0f, 0f, 400f)
             renderLoadingAnimation(guiGraphics.pose(), delta)
             poseStack.popPose()
+            return
         }
         if (tableView.isEmpty()) {
             drawScaledText(
