@@ -125,7 +125,7 @@ class LocationScreen(
 
         tableView = TableView(
             viewX + 1, viewY + 1,
-            viewWidth - 2 - ScrollThumbWidget.WIDTH, 5,
+            viewWidth - 2 - ScrollThumbWidget.SIZE, 5,
             verticalPadding = 5,
             columnWidth = SpawnDataWidget.WIDTH,
             rowHeight = SpawnDataWidget.HEIGHT

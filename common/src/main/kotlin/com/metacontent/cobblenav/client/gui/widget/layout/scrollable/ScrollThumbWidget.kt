@@ -1,25 +1,26 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
-import com.metacontent.cobblenav.Cobblenav
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
-import kotlin.math.abs
 
 class ScrollThumbWidget(
     x: Int, y: Int,
-    val parent: ScrollableView
-) : AbstractWidget(x, y, WIDTH, 0, Component.literal(" Scroll Thumb")) {
+    val parent: ScrollableView,
+    private val drag: (ScrollableView, Double, Double, Int) -> Unit,
+    private val setter: (ScrollThumbWidget) -> Unit,
+    private val getter: (ScrollThumbWidget) -> Int
+) : AbstractWidget(x, y, SIZE, SIZE, Component.literal("Scroll Thumb")) {
     companion object {
-        const val WIDTH: Int = 2
+        const val SIZE: Int = 2
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        if (parent.child.height < parent.height) return
-        height = parent.height * parent.height / parent.child.height
+        if (parent.difference < 0) return
+        setter.invoke(this)
         guiGraphics.fill(
             x, y,
             x + width,
@@ -44,10 +45,9 @@ class ScrollThumbWidget(
         return false
     }
 
-    override fun onDrag(d: Double, e: Double, f: Double, g: Double) {
-        if (parent.child.height < parent.height) return
-        // TODO: improve scrolling
-        parent.scrolled = ((e - height / 2.0 - parent.y) * (parent.child.height - parent.height) / (parent.height - height)).toInt()
+    override fun onDrag(mouseX: Double, mouseY: Double, deltaX: Double, deltaY: Double) {
+        if (parent.difference < 0) return
+        drag.invoke(parent, mouseX, mouseY, getter.invoke(this))
     }
 
     override fun playDownSound(soundManager: SoundManager) {}
