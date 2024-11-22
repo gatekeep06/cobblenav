@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
@@ -218,6 +219,16 @@ class LocationScreen(
             poseStack.translate(0f, 0f, 400f)
             renderLoadingAnimation(guiGraphics.pose(), delta)
             poseStack.popPose()
+        }
+        if (tableView.isEmpty()) {
+            drawScaledText(
+                context = guiGraphics,
+                text = Component.translatable("gui.cobblenav.empty_spawns_message"),
+                x = screenX + WIDTH / 2,
+                y = screenY + HEIGHT / 2 - 4,
+                maxCharacterWidth = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+                centered = true
+            )
         }
     }
 

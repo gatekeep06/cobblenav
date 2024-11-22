@@ -53,6 +53,8 @@ class TableView<I : AbstractWidget>(
         items.forEach(consumer)
     }
 
+    fun isEmpty() = items.isEmpty()
+
     private fun initItems() {
         height = (rowHeight + verticalPadding) * rows
         for (i in 0 until rows) {
