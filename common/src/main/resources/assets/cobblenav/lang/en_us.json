@@ -41,6 +41,7 @@
 
   "gui.cobblenav.level": "%s lvl",
   "gui.cobblenav.unknown_biome": "Unknown Biome",
+  "gui.cobblenav.apply_bucket": "Apply Bucket Chance",
   "gui.cobblenav.spawn_data.unknown_pokemon": "???",
   "gui.cobblenav.spawn_data.spawn_chance": "Chance: %s%%",
   "gui.cobblenav.spawn_data.encountered": "Encountered: ",

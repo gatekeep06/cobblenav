@@ -12,6 +12,7 @@ import kotlin.math.max
 
 fun GuiGraphics.renderSpawnDataTooltip(
     spawnData: SpawnData,
+    chanceMultiplier: Float,
     mouseX: Int,
     mouseY: Int,
     x1: Int,
@@ -23,7 +24,7 @@ fun GuiGraphics.renderSpawnDataTooltip(
     delta: Float = 0f
 ) {
     val body = mutableListOf<MutableComponent>(
-        Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance),
+        Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
         Component.translatable("gui.cobblenav.spawn_data.encountered")
             .append(Component.translatable("gui.cobblenav.${spawnData.encountered}"))
     )

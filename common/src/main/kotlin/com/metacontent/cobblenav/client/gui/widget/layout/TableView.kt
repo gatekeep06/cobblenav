@@ -49,6 +49,10 @@ class TableView<I : AbstractWidget>(
         add(resortedItems)
     }
 
+    fun applyToAll(consumer: (I) -> Unit) {
+        items.forEach(consumer)
+    }
+
     private fun initItems() {
         height = (rowHeight + verticalPadding) * rows
         for (i in 0 until rows) {

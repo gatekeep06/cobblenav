@@ -16,7 +16,8 @@ import java.text.DecimalFormat
 class SpawnDataWidget(
     x: Int, y: Int,
     val spawnData: SpawnData,
-    private val parent: LocationScreen
+    private val parent: LocationScreen,
+    var chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
         const val WIDTH: Int = 40
@@ -54,7 +55,7 @@ class SpawnDataWidget(
         )
         drawScaledText(
             guiGraphics,
-            text = Component.literal(format.format(spawnData.spawnChance) + "%"),
+            text = Component.literal(format.format(spawnData.spawnChance * chanceMultiplier) + "%"),
             x = x + width / 2, y = y + MODEL_HEIGHT,
             maxCharacterWidth = width,
             centered = true,
