@@ -32,12 +32,16 @@ class FinderScreen(
         const val BUTTON_SPACE: Int = 5
         const val BUTTON_WIDTH: Int = 15
         const val BUTTON_HEIGHT: Int = 16
+        const val STAR_SIZE: Int = 24
+        const val STAR_OFFSET: Int = 10
+        const val STAR_GAP: Int = 10
         const val FIND_BUTTON_TEXT: String = "gui.cobblenav.finder.find_button"
         val POKEBALL_TOP = cobblenavResource("textures/gui/finder/pokeball_screen_top.png")
         val POKEBALL_BOTTOM = cobblenavResource("textures/gui/finder/pokeball_screen_bottom.png")
         val DECORATIONS_0 = cobblenavResource("textures/gui/finder/finder_decorations_0.png")
         val FIND_BUTTON = cobblenavResource("textures/gui/button/find_button.png")
         val POKEFINDER = cobblenavResource("textures/gui/button/pokefinder_button.png")
+        val STAR = cobblenavResource("textures/gui/finder/potential_star.png")
     }
 
     override val color = FastColor.ARGB32.color(255, 190, 72, 72)
@@ -132,6 +136,19 @@ class FinderScreen(
             return
         }
 
+        for (i in 0 until pokemon.potentialStars) {
+            blitk(
+                matrixStack = poseStack,
+                texture = STAR,
+                x = screenX + VERTICAL_BORDER_DEPTH + STAR_OFFSET + STAR_GAP * i,
+                y = screenY + HORIZONTAL_BORDER_DEPTH + STAR_OFFSET,
+                width = STAR_SIZE,
+                height = STAR_SIZE,
+                red = 0.4 + 0.2 * pokemon.potentialStars,
+                green = 0.15 + 0.2 * pokemon.potentialStars,
+                blue = 0.2
+            )
+        }
 //        drawScaledTextJustifiedRight(
 //            context = guiGraphics,
 //            text = Component.literal(pokemon.rating.toString()),
