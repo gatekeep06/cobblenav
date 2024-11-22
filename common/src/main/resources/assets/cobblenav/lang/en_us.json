@@ -3,6 +3,8 @@
   "key.cobblenav.open_location": "Open Location Screen",
   "category.cobblenav": "Cobblenav",
   "itemGroup.cobblenav.pokenav_group": "Cobblenav",
+  "tag.item.cobblenav.pokenav": "PokéNav",
+  "tag.item.cobblenav.dyed_pokenav": "Dyed PokéNav",
   "item.cobblenav.pokenav_item": "PokéNav",
   "item.cobblenav.pokefinder_item": "PokéFinder",
   "item.cobblenav.fishingnav_item": "FishingNav",
@@ -27,6 +29,7 @@
   "item.cobblenav.pokenav_item.gholdengo": "Gholdengo",
   "item.cobblenav.pokenav_item.invisible_gholdengo": "Gholdengo 1.5.1",
   "item.cobblenav.pokenav_item.netherite": "Netherite",
+  "item.cobblenav.pokenav_item_old": "Old PokéNav",
 
   "gui.cobblenav.support_button.header.location_screen": "Location - Support",
   "gui.cobblenav.support_button.body.location_screen": "The location screen displays all possible Pokémon that can spawn in your area, separated by buckets. Tooltips that appear when you hover over a Pokémon display more detailed information, as well as the conditions that affected the chance of spawning in your particular case.",
