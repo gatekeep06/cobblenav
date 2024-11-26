@@ -33,13 +33,17 @@ class ClosedRadialMenu(
             red = if (isHovered()) 1.1 else 1,
             green = if (isHovered()) 1.1 else 1,
             blue = if (isHovered()) 1.1 else 1,
-            alpha = if (isHovered()) 1 else 0.5
+            alpha = if (isHovered()) 1 else 0.6
         )
     }
 
     override val blockScreenWidgets: Boolean = false
 
-    override fun onClick(d: Double, e: Double) {
-        handler.changeState(OpeningRadialMenu(handler, x, y))
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
+            handler.changeState(OpeningRadialMenu(handler, x, y))
+            return true
+        }
+        return false
     }
 }

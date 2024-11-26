@@ -3,9 +3,9 @@ package com.metacontent.cobblenav.client.gui.widget.location
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.onHover
 import com.cobblemon.mod.common.api.text.red
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.metacontent.cobblenav.client.gui.util.translateOr
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation
 class LocationInfoWidget(
     x: Int, y: Int,
     biome: String
-) : ClickableParentWidget(x, y, WIDTH, HEIGHT, Component.literal("Location Info")) {
+) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Location Info")) {
     companion object {
         const val SYMBOL_WIDTH: Int = 13
         const val SYMBOL_HEIGHT: Int = 14

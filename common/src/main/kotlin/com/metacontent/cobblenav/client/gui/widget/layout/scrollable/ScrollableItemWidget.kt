@@ -1,6 +1,5 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
 import com.metacontent.cobblenav.client.gui.widget.ContainerWidget
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget

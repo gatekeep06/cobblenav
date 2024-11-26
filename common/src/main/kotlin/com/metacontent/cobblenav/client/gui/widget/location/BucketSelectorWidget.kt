@@ -48,7 +48,7 @@ class BucketSelectorWidget(
         prevButton.render(guiGraphics, i, j, f)
         drawScaledText(
             context = guiGraphics,
-            text = Component.translatable(BUCKET_KEY_BASE + parent.currentBucket),
+            text = Component.translatable(BUCKET_KEY_BASE + parent.currentBucket.name),
             x = x + WIDTH / 2,
             y = y + 3,
             centered = true,

@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.api.spawning.CobblemonWorldSpawnerManager
 import com.cobblemon.mod.common.api.spawning.SpawnCause
+import com.cobblemon.mod.common.api.spawning.WorldSlice
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningArea
 import com.metacontent.cobblenav.Cobblenav
@@ -30,15 +31,22 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                 val bucket = Cobblemon.bestSpawner.config.buckets.firstOrNull { it.name == packet.bucket } ?: throw NullPointerException("For some reason bucket is null")
 
                 val cause = SpawnCause(spawner, bucket, spawner.getCauseEntity())
-                val slice = spawner.prospector.prospect(spawner, SpawningArea(
-                    cause, player.serverLevel(),
-                    ceil(player.x - config.worldSliceDiameter / 2f).toInt(),
-                    ceil(player.y - config.worldSliceHeight / 2f).toInt(),
-                    ceil(player.z - config.worldSliceDiameter / 2f).toInt(),
-                    config.worldSliceDiameter,
-                    config.worldSliceHeight,
-                    config.worldSliceDiameter
-                ))
+                val slice: WorldSlice
+                try {
+                    slice = spawner.prospector.prospect(spawner, SpawningArea(
+                        cause, player.serverLevel(),
+                        ceil(player.x - config.worldSliceDiameter / 2f).toInt(),
+                        ceil(player.y - config.worldSliceHeight / 2f).toInt(),
+                        ceil(player.z - config.worldSliceDiameter / 2f).toInt(),
+                        config.worldSliceDiameter,
+                        config.worldSliceHeight,
+                        config.worldSliceDiameter
+                    ))
+                }
+                catch (e: IllegalStateException) {
+                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
+                    return@execute
+                }
 
                 val contexts = Cobblenav.contextResolver.resolve(spawner, spawner.contextCalculators, slice)
                 val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, contexts)

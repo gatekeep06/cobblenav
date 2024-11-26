@@ -1,10 +1,11 @@
 package com.metacontent.cobblenav.client.gui.widget
 
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import net.minecraft.client.gui.components.AbstractWidget
 
 abstract class ContainerWidget<T : AbstractWidget>(
     val child: T
-) : ClickableParentWidget(child.x, child.y, child.width, child.height, child.message) {
+) : SoundlessWidget(child.x, child.y, child.width, child.height, child.message) {
     init {
         addWidget(child)
     }

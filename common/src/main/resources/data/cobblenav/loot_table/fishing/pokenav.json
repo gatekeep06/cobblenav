@@ -1,0 +1,16 @@
+{
+  "type": "cobblemon:fishing",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "cobblenav:pokenav_item_old"
+        }
+      ],
+      "rolls": 1000.0
+    }
+  ],
+  "random_sequence": "minecraft:gameplay/fishing/treasure"
+}

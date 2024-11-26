@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " D ",
+    "COC",
+    " R "
+  ],
+  "key": {
+    "O": {
+      "item": "cobblenav:pokenav_item_old"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "cobblenav:pokenav_item_base"
+  }
+}

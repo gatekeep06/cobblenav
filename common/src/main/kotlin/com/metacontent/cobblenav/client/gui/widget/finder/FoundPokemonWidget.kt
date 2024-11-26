@@ -2,17 +2,14 @@ package com.metacontent.cobblenav.client.gui.widget.finder
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
-import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
@@ -32,9 +29,13 @@ class FoundPokemonWidget(
         const val LOOP: Float = 5000f
         const val BAR_LENGTH: Int = 12
         const val BARS: Int = 36
+        const val NOTIFICATION_WIDTH: Int = 14
+        const val NOTIFICATION_HEIGHT: Int = 15
+        const val NOTIFICATION_OFFSET: Int = 30
+        const val SHINY_ASPECT = "shiny"
         val DECORATIONS_1 = cobblenavResource("textures/gui/finder/finder_decorations_1.png")
         val DECORATIONS_2 = cobblenavResource("textures/gui/finder/finder_decorations_2.png")
-        val STAR = cobblenavResource("textures/gui/finder/potential_star.png")
+        val NOTIFICATION = cobblenavResource("textures/gui/finder/shiny_notification.png")
     }
 
     private val state = FloatingState()
@@ -77,7 +78,7 @@ class FoundPokemonWidget(
 
         drawPokemon(
             poseStack = poseStack,
-            pokemon = spawnData.pokemon,
+            pokemon = spawnData.renderable,
             x = x.toFloat(),
             y = y.toFloat() - POKEMON_OFFSET, //- if (spawnData.pose == PoseType.SWIM) 10 else 0,
             z = 100f,
@@ -88,6 +89,17 @@ class FoundPokemonWidget(
             rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
             obscured = !spawnData.encountered
         )
+
+        if (pokemon.aspects.contains(SHINY_ASPECT)) {
+            blitk(
+                matrixStack = poseStack,
+                texture = NOTIFICATION,
+                x = x + RADIUS - NOTIFICATION_OFFSET - NOTIFICATION_WIDTH / 2,
+                y = y - RADIUS + NOTIFICATION_OFFSET,
+                width = NOTIFICATION_WIDTH,
+                height = NOTIFICATION_HEIGHT
+            )
+        }
 
         openingTimer.tick(delta)
         loopTimer.tick(delta)

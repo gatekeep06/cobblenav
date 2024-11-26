@@ -7,11 +7,11 @@ import com.cobblemon.mod.common.api.conditional.RegistryLikeTagCondition
 import com.cobblemon.mod.common.api.spawning.condition.*
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.registry.BlockIdentifierCondition
 import com.cobblemon.mod.common.registry.BlockTagCondition
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.metacontent.cobblenav.client.gui.util.getTimeString
-import com.metacontent.cobblenav.util.SpawnDataHelper.toResourceLocation
 import com.mojang.datafixers.util.Either
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
@@ -43,7 +43,14 @@ object SpawnDataHelper {
         contexts: List<AreaSpawningContext>,
         player: ServerPlayer
     ): SpawnData {
-        val renderablePokemon = detail.pokemon.asRenderablePokemon()
+        val renderablePokemon = detail.pokemon.let {
+            val pokemon = Pokemon()
+            it.apply(pokemon)
+            pokemon.asRenderablePokemon()
+        }
+
+        val aspects = detail.pokemon.aspects
+
         val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
         val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
 
@@ -72,7 +79,7 @@ object SpawnDataHelper {
             conditions += collectConditions(it, fittingContexts, player)
         }
 
-        return SpawnData(renderablePokemon, spawnChance, encountered, conditions, BlockConditions(blocks))
+        return SpawnData(renderablePokemon, aspects, spawnChance, encountered, conditions, BlockConditions(blocks))
     }
 
     private fun collectConditions(

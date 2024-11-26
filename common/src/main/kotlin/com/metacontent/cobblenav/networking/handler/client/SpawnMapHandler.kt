@@ -9,7 +9,7 @@ object SpawnMapHandler : ClientNetworkPacketHandler<SpawnMapPacket> {
     override fun handle(packet: SpawnMapPacket, client: Minecraft) {
         val screen = client.screen
         if (screen is LocationScreen) {
-            if (screen.currentBucket != packet.bucketName) {
+            if (screen.currentBucket.name != packet.bucketName) {
                 return
             }
             screen.receiveSpawnData(packet.spawnDataList)
