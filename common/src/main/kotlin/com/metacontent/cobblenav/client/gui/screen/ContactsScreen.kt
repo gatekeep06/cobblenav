@@ -2,9 +2,12 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
+import com.metacontent.cobblenav.client.gui.widget.contacts.ContactWidget
+import com.metacontent.cobblenav.client.gui.widget.layout.TableView
+import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
+import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
-import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import java.awt.Color
 
@@ -13,6 +16,9 @@ class ContactsScreen(
     animateOpening: Boolean = false
 ) : PokenavScreen(makeOpeningSound, animateOpening, Component.literal("Contacts")) {
     override val color = Color.decode("#C3BEA6").rgb
+
+    private lateinit var scrollableView: ScrollableView
+    private lateinit var tableView: TableView<ScrollableItemWidget<ContactWidget>>
 
     override fun initScreen() {
         RadialPopupMenu(
@@ -34,8 +40,30 @@ class ContactsScreen(
             texture = BACK_BUTTON,
             action = { changeScreen(MainScreen()) }
         ).let { addBlockableWidget(it) }
-    }
 
-    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        tableView = TableView(
+            x = screenX + WIDTH - ContactWidget.WIDTH - VERTICAL_BORDER_DEPTH - 1,
+            y = screenY + HORIZONTAL_BORDER_DEPTH + 1,
+            width = ContactWidget.WIDTH,
+            columns = 1,
+            horizontalPadding = 0,
+            rowHeight = ContactWidget.HEIGHT
+        )
+
+        scrollableView = ScrollableView(
+            x = tableView.x,
+            y = tableView.y,
+            width = tableView.width,
+            height = HEIGHT - 2 * HORIZONTAL_BORDER_DEPTH - 2,
+            child = tableView
+        ).also { addBlockableWidget(it) }
+
+        for (i in 0 until 20) {
+            tableView.add(ScrollableItemWidget(
+                child = ContactWidget(0, 0),
+                topEdge = screenY + HORIZONTAL_BORDER_DEPTH + 1,
+                bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - 1
+            ))
+        }
     }
 }
