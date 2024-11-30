@@ -137,7 +137,7 @@ object SpawnDataHelper {
         if (light != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.light", light))
 
         val skyLight = getValueRangeString(condition.minSkyLight, condition.maxSkyLight)
-        if (skyLight != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.light", skyLight))
+        if (skyLight != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.sky_light", skyLight))
 
         condition.isSlimeChunk?.let {
             conditions.add(Component.translatable("gui.cobblenav.spawn_data.slime_chunk")

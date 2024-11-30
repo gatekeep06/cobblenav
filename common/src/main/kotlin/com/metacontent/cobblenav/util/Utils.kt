@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.util
 
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.networking.packet.CobblenavNetworkPacket
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
