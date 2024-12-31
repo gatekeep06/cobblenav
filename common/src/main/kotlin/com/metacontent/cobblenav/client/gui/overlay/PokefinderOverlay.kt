@@ -3,8 +3,8 @@ package com.metacontent.cobblenav.client.gui.overlay
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.item.Pokefinder
-import com.metacontent.cobblenav.client.gui.util.PokefinderSettings
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
@@ -33,15 +33,15 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
     private val minecraft = Minecraft.getInstance()
     private var initialized = false
-    var settings: PokefinderSettings? = null
 
     fun initialize() {
-        settings = PokefinderSettings.read()
         initialized = true
     }
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
         if (!initialized) return
+
+        val settings = CobblenavClient.pokefinderSettings
 
         val isRightHand = minecraft.player?.mainHandItem?.item is Pokefinder
         val scale = minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
@@ -67,7 +67,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         renderCompass(poseStack, 180f - player.rotationVector.y, x, y, scale)
 
         val species = settings?.species?.map { it.lowercase() }
-        val radius = settings?.radius ?: PokefinderSettings.MAX_RADIUS
+        val radius = settings?.radius ?: 200.0
         val entities = minecraft.level?.getEntitiesOfClass(
             PokemonEntity::class.java,
             AABB.ofSize(player.position(), radius, radius, radius)

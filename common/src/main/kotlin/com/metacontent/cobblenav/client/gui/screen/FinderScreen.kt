@@ -107,7 +107,7 @@ class FinderScreen(
             pHeight = BUTTON_HEIGHT,
             texture = POKEFINDER,
             action = {
-                CobblenavClient.pokefinderOverlay.settings?.resetWith(
+                CobblenavClient.pokefinderSettings?.apply(
                     species = setOf(spawnData.renderable.species.name.lowercase()),
                     aspects = spawnData.spawnAspects
                 )
