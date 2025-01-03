@@ -8,6 +8,7 @@ import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.metacontent.cobblenav.client.gui.widget.finder.FoundPokemonWidget
 import com.metacontent.cobblenav.client.gui.widget.finder.StatsTableWidget
 import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
+import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
@@ -17,9 +18,10 @@ import net.minecraft.util.FastColor
 
 class FinderScreen(
     private val spawnData: SpawnData,
+    os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean= false
-) : PokenavScreen(makeOpeningSound, animateOpening, Component.literal("Finder")) {
+) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Finder")) {
     companion object {
         const val CLOSING_DURATION: Float = 3f
         const val FADING_DURATION: Float = 5f
@@ -72,7 +74,7 @@ class FinderScreen(
             pWidth = BACK_BUTTON_SIZE,
             pHeight = BACK_BUTTON_SIZE,
             texture = BACK_BUTTON,
-            action = { changeScreen(previousScreen ?: LocationScreen()) }
+            action = { changeScreen(previousScreen ?: LocationScreen(os)) }
         ).also { addBlockableWidget(it) }
     }
 

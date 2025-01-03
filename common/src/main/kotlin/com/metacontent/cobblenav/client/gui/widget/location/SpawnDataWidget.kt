@@ -65,7 +65,7 @@ class SpawnDataWidget(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (isHovered() && isFocused && isValidClickButton(pButton)) {
-            parent.changeScreen(FinderScreen(spawnData), true)
+            parent.changeScreen(FinderScreen(spawnData, parent.os), true)
             return true
         }
         return false

@@ -22,6 +22,7 @@ import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.client.gui.widget.button.InfoButton
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
+import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
 import com.metacontent.cobblenav.util.cobblenavResource
@@ -33,9 +34,10 @@ import kotlin.math.max
 import kotlin.math.min
 
 class LocationScreen(
+    os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean= false
-) : PokenavScreen(makeOpeningSound, animateOpening, Component.literal("Location")) {
+) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")) {
     companion object {
         val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
         const val ANIMATION_SHEET_WIDTH: Int = 144
@@ -120,7 +122,7 @@ class LocationScreen(
             pWidth = BACK_BUTTON_SIZE,
             pHeight = BACK_BUTTON_SIZE,
             texture = BACK_BUTTON,
-            action = { changeScreen(MainScreen()) }
+            action = { changeScreen(MainScreen(os)) }
         ).also { addBlockableWidget(it) }
 
         tableView = TableView(

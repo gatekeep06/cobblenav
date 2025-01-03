@@ -31,20 +31,21 @@ class OpenedRadialMenu(
     private val buttons = listOf(
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().changeScreen(MapScreen()) },
+            action = { handler.getParentScreen().changeScreen(MapScreen(handler.os)) },
             texture = MAP,
-            disabled = true
+            disabled = !handler.os.canUseMap
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().changeScreen(LocationScreen()) },
-            texture = LOCATION
+            action = { handler.getParentScreen().changeScreen(LocationScreen(handler.os)) },
+            texture = LOCATION,
+            disabled = !handler.os.canUseLocation
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().changeScreen(ContactsScreen()) },
+            action = { handler.getParentScreen().changeScreen(ContactsScreen(handler.os)) },
             texture = CONTACTS,
-            disabled = true
+            disabled = !handler.os.canUseContacts
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
