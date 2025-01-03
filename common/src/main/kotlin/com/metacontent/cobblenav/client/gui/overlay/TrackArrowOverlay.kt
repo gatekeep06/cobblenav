@@ -1,15 +1,12 @@
 package com.metacontent.cobblenav.client.gui.overlay
 
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.client.render.item.CobblemonBuiltinItemRendererRegistry
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.world.item.ItemDisplayContext
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import kotlin.math.atan2
@@ -30,11 +27,6 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
             tracking = true
             field = value
         }
-
-    val stack = CobblemonItems.POKE_BALL.defaultInstance
-    val model by lazy {
-        CobblemonBuiltinItemRendererRegistry.rendererOf(CobblemonItems.POKE_BALL)
-    }
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
         if (!tracking) return
@@ -58,33 +50,24 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
         val angle = Math.toDegrees(atan2(distanceVec.z, distanceVec.x)).toFloat()
 
         poseStack.pushPose()
-//        poseStack.translate(x.toDouble(), y.toDouble(), 0.0)
-        poseStack.scale(100f, 100f, 100f)
-        model?.render(
-            stack = stack,
-            mode = ItemDisplayContext.HEAD,
-            matrices = poseStack,
-            vertexConsumers = guiGraphics.bufferSource(),
-            light = 1000000,
-            overlay = 0
+        poseStack.translate(x.toDouble(), y.toDouble(), 0.0)
+        blitk(
+            matrixStack = poseStack,
+            texture = BASE,
+            x = -baseSize / 2f,
+            y = -baseSize / 2f,
+            width = baseSize,
+            height = baseSize,
         )
-//        blitk(
-//            matrixStack = poseStack,
-//            texture = BASE,
-//            x = -baseSize / 2f,
-//            y = -baseSize / 2f,
-//            width = baseSize,
-//            height = baseSize,
-//        )
-//        poseStack.mulPose(Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, 45f + angle - player.yHeadRot)))
-//        blitk(
-//            matrixStack = poseStack,
-//            texture = ARROW,
-//            x = 0,
-//            y = -arrowSize,
-//            width = arrowSize,
-//            height = arrowSize
-//        )
+        poseStack.mulPose(Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, 45f + angle - player.yHeadRot)))
+        blitk(
+            matrixStack = poseStack,
+            texture = ARROW,
+            x = 0,
+            y = -arrowSize,
+            width = arrowSize,
+            height = arrowSize
+        )
         poseStack.popPose()
     }
 }
