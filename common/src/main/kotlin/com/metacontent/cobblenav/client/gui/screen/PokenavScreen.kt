@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.google.common.collect.Lists
+import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
@@ -14,7 +15,12 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FastColor
 
-abstract class PokenavScreen(makeOpeningSound: Boolean, animateOpening: Boolean, component: Component) : Screen(component) {
+abstract class PokenavScreen(
+    val os: PokenavOS,
+    makeOpeningSound: Boolean,
+    animateOpening: Boolean,
+    component: Component
+) : Screen(component) {
     companion object {
         const val WIDTH: Int = 350
         const val HEIGHT: Int = 250
