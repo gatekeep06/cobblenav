@@ -12,7 +12,7 @@ object OpenPokenavHandler : ClientNetworkPacketHandler<OpenPokenavPacket> {
             CobblenavClient.trackArrowOverlay.tracking = false
         }
         else {
-            client.setScreen(MainScreen(packet.os))
+            client.setScreen(MainScreen(packet.os, makeOpeningSound = true, animateOpening = true))
         }
     }
 }
