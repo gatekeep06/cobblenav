@@ -29,7 +29,7 @@ abstract class PokemonFinder {
             pokemonEntities.toList(),
             TargetingConditions.forNonCombat(),
             player,
-            10.0, 10.0, 10.0
+            200.0, 200.0, 200.0
         )
     }
 

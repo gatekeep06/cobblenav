@@ -20,9 +20,9 @@ object FindPokemonHandler : ServerNetworkPacketHandler<FindPokemonPacket> {
                 PokemonEntity::class.java,
                 AABB.ofSize(
                     player.position(),
-                    100.0,
-                    100.0,
-                    100.0
+                    200.0,
+                    200.0,
+                    200.0
                 )
             ) {
                 pokemonEntity -> pokemonEntity.pokemon.isWild() && pokemonEntity.pokemon.species.name == packet.species && pokemonEntity.pokemon.aspects.containsAll(packet.aspects)
