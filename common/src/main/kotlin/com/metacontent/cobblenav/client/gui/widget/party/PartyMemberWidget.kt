@@ -11,19 +11,21 @@ import org.joml.Vector3f
 
 class PartyMemberWidget(
     var x: Int, var y: Int,
-    val width: Int, val height: Int,
     val pokemon: RenderablePokemon,
+    private val scale: Float,
     rotationY: Float
 ) : Renderable {
 
     private val rotationVec = Vector3f(0f, rotationY, 0f)
+    private val state = FloatingState()
 
     override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
+        val baseScale = pokemon.form.baseScale
         poseStack.pushPose()
         poseStack.translate(
-            x.toDouble() + width / 2f,
-            y.toDouble() + height / 2f + 18.5 - 1f * 7.5 * 1.5,
+            x.toDouble(),
+            y.toDouble() + 18.5 - baseScale * scale * 1.5,
             0.0
         )
         drawProfilePokemon(
@@ -31,8 +33,8 @@ class PartyMemberWidget(
             matrixStack = poseStack,
             partialTicks = delta,
             rotation = Quaternionf().fromEulerXYZDegrees(rotationVec),
-            state = FloatingState(),
-            scale = 7.5f,
+            state = state,
+            scale = scale,
             applyProfileTransform = false,
             applyBaseScale = true
         )

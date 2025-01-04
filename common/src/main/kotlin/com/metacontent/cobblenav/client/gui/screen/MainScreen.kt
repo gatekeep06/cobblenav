@@ -1,6 +1,9 @@
 package com.metacontent.cobblenav.client.gui.screen
 
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
+import com.metacontent.cobblenav.client.gui.widget.party.PartyMemberWidget
+import com.metacontent.cobblenav.client.gui.widget.party.PartyWidget
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.os.PokenavOS
@@ -27,6 +30,13 @@ class MainScreen(
             screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatusBarWidget.WIDTH - 2,
             screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - StatusBarWidget.HEIGHT
         ).also { addUnblockableWidget(it) }
+
+        PartyWidget(
+            playerX = screenX + VERTICAL_BORDER_DEPTH + 80,
+            playerY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - 20,
+            scale = 18f,
+            pokemon = CobblemonClient.storage.myParty.slots
+        ).also { addBlockableWidget(it) }
     }
 
     override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
