@@ -1,17 +1,17 @@
 modLoader="kotlinforforge"
 loaderVersion="[5.5,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "MPL-2.0"
 
 [[mods]]
 modId = "cobblenav"
 version = "${version}"
 displayName = "Cobblenav"
-authors = "Me!"
+authors = "gatekeep"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Cobblenav (Cobblemon Pokenav) is a sidemod that adds a pokenav item similar to the one featured in the Pokemon RS games
 '''
-#logoFile = ""
+logoFile = "assets/cobblenav/logo.png"
 
 [[dependencies.cobblenav]]
 modId = "neoforge"
@@ -24,6 +24,13 @@ side = "BOTH"
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependecies.cobblenav]]
+modId = "cobblemon"
+type = "required"
+versionRange = "[1.6.0,)"
 ordering = "NONE"
 side = "BOTH"
 
