@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.google.common.collect.Lists
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.cobblenavResource
@@ -20,7 +21,7 @@ abstract class PokenavScreen(
     makeOpeningSound: Boolean,
     animateOpening: Boolean,
     component: Component
-) : Screen(component) {
+) : Screen(component), CobblemonRenderable {
     companion object {
         const val WIDTH: Int = 350
         const val HEIGHT: Int = 250
