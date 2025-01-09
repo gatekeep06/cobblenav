@@ -38,7 +38,7 @@ class SpawnDataWidget(
             chanceString = if (finalChance <= 0.005f) ">0.01%" else format.format(finalChance) + "%"
         }
     private val state = FloatingState()
-    var isModelBroken = false
+    private var isModelBroken = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
