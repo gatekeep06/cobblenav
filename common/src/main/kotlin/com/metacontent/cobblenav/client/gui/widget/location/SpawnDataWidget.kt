@@ -17,7 +17,7 @@ class SpawnDataWidget(
     x: Int, y: Int,
     val spawnData: SpawnData,
     private val parent: LocationScreen,
-    var chanceMultiplier: Float = 1f
+    chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
         const val WIDTH: Int = 40
@@ -27,6 +27,13 @@ class SpawnDataWidget(
         val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
     }
 
+    private var chanceString = ""
+    var chanceMultiplier = chanceMultiplier
+        set(value) {
+            field = value
+            val finalChance = spawnData.spawnChance * value
+            chanceString = if (finalChance <= 0.005f) ">0.01%" else format.format(finalChance) + "%"
+        }
     private val state = FloatingState()
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
@@ -55,7 +62,7 @@ class SpawnDataWidget(
         )
         drawScaledText(
             guiGraphics,
-            text = Component.literal(format.format(spawnData.spawnChance * chanceMultiplier) + "%"),
+            text = Component.literal(chanceString),
             x = x + width / 2, y = y + MODEL_HEIGHT,
             maxCharacterWidth = width,
             centered = true,
