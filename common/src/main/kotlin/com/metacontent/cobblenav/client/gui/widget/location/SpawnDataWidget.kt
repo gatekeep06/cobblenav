@@ -66,7 +66,6 @@ class SpawnDataWidget(
                     state = state,
                     obscured = !spawnData.encountered
                 )
-                throw IllegalArgumentException()
             }
             catch (e: IllegalArgumentException) {
                 isModelBroken = true
