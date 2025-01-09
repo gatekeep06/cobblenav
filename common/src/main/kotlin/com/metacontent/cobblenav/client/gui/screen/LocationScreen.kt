@@ -116,14 +116,14 @@ class LocationScreen(
 
         RequestLocationScreenInitDataPacket().sendToServer()
 
-        IconButton(
-            pX = screenX + VERTICAL_BORDER_DEPTH,
-            pY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BACK_BUTTON_SIZE,
-            pWidth = BACK_BUTTON_SIZE,
-            pHeight = BACK_BUTTON_SIZE,
-            texture = BACK_BUTTON,
-            action = { changeScreen(MainScreen(os)) }
-        ).also { addBlockableWidget(it) }
+//        IconButton(
+//            pX = screenX + VERTICAL_BORDER_DEPTH,
+//            pY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BACK_BUTTON_SIZE,
+//            pWidth = BACK_BUTTON_SIZE,
+//            pHeight = BACK_BUTTON_SIZE,
+//            texture = BACK_BUTTON,
+//            action = { changeScreen(MainScreen(os)) }
+//        ).also { addBlockableWidget(it) }
 
         tableView = TableView(
             viewX + 1, viewY + 1,
@@ -155,8 +155,8 @@ class LocationScreen(
         ).also { addBlockableWidget(it) }
 
         InfoButton(
-            pX = screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE,
-            pY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT,
+            pX = viewX/*screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE*/,
+            pY = viewY + viewHeight/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT*/,
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
             header = Component.translatable("gui.cobblenav.support_button.header.location_screen"),
@@ -165,8 +165,8 @@ class LocationScreen(
         ).also { addBlockableWidget(it) }
 
         checkBox = CheckBox(
-            pX = screenX + BUTTON_WIDTH + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + 2 * BUTTON_SPACE,
-            pY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET,
+            pX = viewX + BUTTON_WIDTH + BUTTON_SPACE/*screenX + BUTTON_WIDTH + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + 2 * BUTTON_SPACE*/,
+            pY = viewY + viewHeight + CHECK_BOX_OFFSET/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET*/,
             pWidth = CHECK_BOX_WIDTH,
             pHeight = CHECK_BOX_HEIGHT,
             text = Component.translatable("gui.cobblenav.apply_bucket"),
