@@ -76,7 +76,7 @@ object SpawnDataHelper {
             conditions += collectConditions(it, fittingContexts, player)
         }
 
-        return SpawnData(renderablePokemon, aspects, spawnChance, encountered, conditions, BlockConditions(blocks))
+        return SpawnData(renderablePokemon, aspects, spawnChance, detail.context.name, encountered, conditions, BlockConditions(blocks))
     }
 
     private fun collectConditions(

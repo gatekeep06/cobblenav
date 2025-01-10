@@ -38,6 +38,7 @@ class FoundPokemonWidget(
         val NOTIFICATION = cobblenavResource("textures/gui/finder/shiny_notification.png")
     }
 
+    private val pose = if (spawnData.spawningContext == "submerged") PoseType.SWIM else PoseType.WALK
     private val state = FloatingState()
     private val openingTimer = Timer(OPENING)
     private val loopTimer = Timer(LOOP, true)
@@ -84,7 +85,7 @@ class FoundPokemonWidget(
             z = 100f,
             delta = delta,
             state = state,
-            poseType = PoseType.WALK,
+            poseType = pose,
             scale = SCALE,
             rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
             obscured = !spawnData.encountered

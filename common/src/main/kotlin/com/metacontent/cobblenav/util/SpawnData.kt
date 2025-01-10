@@ -10,6 +10,7 @@ data class SpawnData(
     val renderable: RenderablePokemon,
     val spawnAspects: Set<String>,
     val spawnChance: Float,
+    val spawningContext: String,
     val encountered: Boolean,
     val conditions: MutableList<MutableComponent>,
     val blockConditions: BlockConditions
@@ -19,6 +20,7 @@ data class SpawnData(
             RenderablePokemon.loadFromBuffer(buffer),
             buffer.readList { it.readString() }.toSet(),
             buffer.readFloat(),
+            buffer.readString(),
             buffer.readBoolean(),
             buffer.readList { (it as RegistryFriendlyByteBuf).readText().copy() },
             BlockConditions.decode(buffer)
@@ -29,6 +31,7 @@ data class SpawnData(
         renderable.saveToBuffer(buffer)
         buffer.writeCollection(spawnAspects) { buf, aspect -> buf.writeString(aspect) }
         buffer.writeFloat(spawnChance)
+        buffer.writeString(spawningContext)
         buffer.writeBoolean(encountered)
         buffer.writeCollection(conditions) { buf, component -> (buf as RegistryFriendlyByteBuf).writeText(component) }
         blockConditions.encode(buffer)
