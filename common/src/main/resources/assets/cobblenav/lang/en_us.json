@@ -52,6 +52,7 @@
   "gui.cobblenav.spawn_data.habitat": "Habitat: ",
   "gui.cobblenav.spawn_data.structures": "Structures: ",
   "gui.cobblenav.spawn_data.fluid": "Fluid: ",
+  "gui.cobblenav.spawn_data.depth": "Depth: %s",
   "gui.cobblenav.spawn_data.height": "Height: %s",
   "gui.cobblenav.spawn_data.coordinates.x": "x: %s",
   "gui.cobblenav.spawn_data.coordinates.z": "z: %s",
