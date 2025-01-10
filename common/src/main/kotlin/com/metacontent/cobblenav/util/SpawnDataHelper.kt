@@ -29,12 +29,9 @@ object SpawnDataHelper {
     const val WEATHER_KEY_BASE = "weather.cobblenav"
     const val FLUID_KEY_BASE = "tag.fluid"
     const val MOON_KEY_BASE = "moon.cobblenav"
-    private const val FLYING_BIOME_CONDITION = "is_sky"
-    private const val SWIMMING_CONTEXT_CONDITION = "submerged"
     private const val CLEAR_KEY = "clear"
     private const val RAIN_KEY = "rain"
     private const val THUNDER_KEY = "thunder"
-    private const val SLIME_CHUNK_KEY = "slime_chunk"
     private const val MAX_TIME = 23999
 
     fun collect(
@@ -79,7 +76,7 @@ object SpawnDataHelper {
             conditions += collectConditions(it, fittingContexts, player)
         }
 
-        return SpawnData(renderablePokemon, aspects, spawnChance, encountered, conditions, BlockConditions(blocks))
+        return SpawnData(renderablePokemon, aspects, spawnChance, detail.context.name, encountered, conditions, BlockConditions(blocks))
     }
 
     private fun collectConditions(
@@ -109,14 +106,15 @@ object SpawnDataHelper {
         if (condition.isRaining == false) weather.append(Component.translatable("$WEATHER_KEY_BASE.$CLEAR_KEY"))
         if (weather.siblings.isNotEmpty()) conditions.add(weather)
 
-        val height = getValueRangeString(condition.minY, condition.maxY, true)
-        if (height != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.height", height))
+        formatValueRange(condition.minY, condition.maxY, true)?.let {
+            conditions.add(Component.translatable("gui.cobblenav.spawn_data.height", it))
+        }
 
         val coordinates = Component.empty()
-        getValueRangeString(condition.minX, condition.maxX)?.let {
+        formatValueRange(condition.minX, condition.maxX)?.let {
             coordinates.append(Component.translatable("gui.cobblenav.spawn_data.coordinates.x", "$it "))
         }
-        getValueRangeString(condition.minZ, condition.maxZ)?.let {
+        formatValueRange(condition.minZ, condition.maxZ)?.let {
             coordinates.append(Component.translatable("gui.cobblenav.spawn_data.coordinates.z", it))
         }
         if (coordinates.siblings.isNotEmpty()) conditions.add(coordinates)
@@ -133,11 +131,13 @@ object SpawnDataHelper {
                 .append(Component.translatable("gui.cobblenav.$it")))
         }
 
-        val light = getValueRangeString(condition.minLight, condition.maxLight)
-        if (light != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.light", light))
+        formatValueRange(condition.minLight, condition.maxLight)?.let {
+            conditions.add(Component.translatable("gui.cobblenav.spawn_data.light", it))
+        }
 
-        val skyLight = getValueRangeString(condition.minSkyLight, condition.maxSkyLight)
-        if (skyLight != null) conditions.add(Component.translatable("gui.cobblenav.spawn_data.sky_light", skyLight))
+        formatValueRange(condition.minSkyLight, condition.maxSkyLight)?.let {
+            conditions.add(Component.translatable("gui.cobblenav.spawn_data.sky_light", it))
+        }
 
         condition.isSlimeChunk?.let {
             conditions.add(Component.translatable("gui.cobblenav.spawn_data.slime_chunk")
@@ -157,6 +157,9 @@ object SpawnDataHelper {
             conditions.add(Component.translatable("gui.cobblenav.spawn_data.fluid")
                 .append(Component.translatable("$FLUID_KEY_BASE.c.${it.path}")))
         }
+        formatValueRange(condition.minDepth, condition.maxDepth)?.let {
+            conditions.add(Component.translatable("gui.cobblenav.spawn_data.depth", it))
+        }
         return conditions
     }
 
@@ -170,10 +173,13 @@ object SpawnDataHelper {
             conditions.add(Component.translatable("gui.cobblenav.spawn_data.fluid")
                 .append(Component.translatable("$FLUID_KEY_BASE.c.${it.path}")))
         }
+        formatValueRange(condition.minDepth, condition.maxDepth)?.let {
+            conditions.add(Component.translatable("gui.cobblenav.spawn_data.depth", it))
+        }
         return conditions
     }
 
-    private fun getValueRangeString(min: Number?, max: Number?, useSpaces: Boolean = false): String? {
+    private fun formatValueRange(min: Number?, max: Number?, useSpaces: Boolean = false): String? {
         return if (min != null && max != null) {
             if (useSpaces) "$min - $max" else "$min-$max"
         }
