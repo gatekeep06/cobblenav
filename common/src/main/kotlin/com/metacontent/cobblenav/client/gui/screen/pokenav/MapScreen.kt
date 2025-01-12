@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.client.gui.screen
+package com.metacontent.cobblenav.client.gui.screen.pokenav
 
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.os.PokenavOS

@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.client.gui.screen
+package com.metacontent.cobblenav.client.gui.screen.pokenav
 
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk

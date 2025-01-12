@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.gui.screen.FinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokenav.FinderScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.util.SpawnData

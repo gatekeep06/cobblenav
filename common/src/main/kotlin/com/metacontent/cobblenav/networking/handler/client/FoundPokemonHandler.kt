@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.networking.handler.client
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
-import com.metacontent.cobblenav.client.gui.screen.FinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokenav.FinderScreen
 import com.metacontent.cobblenav.networking.packet.client.FoundPokemonPacket
 import net.minecraft.client.Minecraft
 

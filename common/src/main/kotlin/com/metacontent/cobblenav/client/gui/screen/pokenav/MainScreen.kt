@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.client.gui.screen
+package com.metacontent.cobblenav.client.gui.screen.pokenav
 
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
@@ -7,7 +7,6 @@ import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
-import java.awt.Color
 
 class MainScreen(
     os: PokenavOS,

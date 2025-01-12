@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
 import com.metacontent.cobblenav.client.gui.screen.ContactsScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
-import com.metacontent.cobblenav.client.gui.screen.MapScreen
+import com.metacontent.cobblenav.client.gui.screen.pokenav.MapScreen
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
