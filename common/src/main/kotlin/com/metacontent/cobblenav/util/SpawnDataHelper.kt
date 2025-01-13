@@ -11,6 +11,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.registry.BlockIdentifierCondition
 import com.cobblemon.mod.common.registry.BlockTagCondition
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.getTimeString
 import com.mojang.datafixers.util.Either
 import net.minecraft.core.registries.BuiltInRegistries
@@ -39,41 +40,49 @@ object SpawnDataHelper {
         spawnChance: Float,
         contexts: List<AreaSpawningContext>,
         player: ServerPlayer
-    ): SpawnData {
+    ): SpawnData? {
+        val config = Cobblenav.config
+
         val renderablePokemon = detail.pokemon.let {
             val pokemon = Pokemon()
             it.apply(pokemon)
             pokemon.asRenderablePokemon()
         }
 
-        val aspects = detail.pokemon.aspects
-
-        val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
-        val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
-
         val speciesRecord = Cobblemon.playerDataManager.getPokedexData(player)
             .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
         val encountered = speciesRecord?.hasSeenForm(renderablePokemon.form.name) ?: false
 
+        if (!encountered && config.hideUnknownPokemon) {
+            return null
+        }
+
+        val aspects = detail.pokemon.aspects
+
         val conditions = mutableListOf<MutableComponent>()
         val blocks = mutableSetOf<ResourceLocation>()
-        condition?.let {
-            if (it is GroundedTypeSpawningCondition<*>) {
-                blocks += getInfluencedBlocks(it, fittingContexts)
-            }
-            if (it is SubmergedTypeSpawningCondition<*>) {
+        if (config.showPokemonTooltips && (config.showUnknownPokemonTooltips || encountered)) {
+            val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
+            val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
+
+            condition?.let {
+                if (it is GroundedTypeSpawningCondition<*>) {
+                    blocks += getInfluencedBlocks(it, fittingContexts)
+                }
+                if (it is SubmergedTypeSpawningCondition<*>) {
+                    conditions += collectConditions(it, fittingContexts, player)
+                }
+                if (it is SeafloorTypeSpawningCondition<*>) {
+                    blocks += getInfluencedBlocks(it, fittingContexts)
+                }
+                if (it is SurfaceTypeSpawningCondition<*>) {
+                    conditions += collectConditions(it, fittingContexts, player)
+                }
+                if (it is AreaTypeSpawningCondition<*>) {
+                    blocks += getInfluencedBlocks(it, fittingContexts)
+                }
                 conditions += collectConditions(it, fittingContexts, player)
             }
-            if (it is SeafloorTypeSpawningCondition<*>) {
-                blocks += getInfluencedBlocks(it, fittingContexts)
-            }
-            if (it is SurfaceTypeSpawningCondition<*>) {
-                conditions += collectConditions(it, fittingContexts, player)
-            }
-            if (it is AreaTypeSpawningCondition<*>) {
-                blocks += getInfluencedBlocks(it, fittingContexts)
-            }
-            conditions += collectConditions(it, fittingContexts, player)
         }
 
         return SpawnData(renderablePokemon, aspects, spawnChance, detail.context.name, encountered, conditions, BlockConditions(blocks))

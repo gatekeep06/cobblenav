@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.client.settings
 
+import com.cobblemon.mod.common.util.adapters.IntRangeAdapter
 import com.cobblemon.mod.common.util.fromJson
 import com.google.gson.GsonBuilder
 import com.metacontent.cobblenav.Cobblenav
@@ -11,7 +12,11 @@ import java.io.FileWriter
 
 object ClientSettingsDataManager {
     const val DIRECTORY = "cobblenav/settings/"
-    val GSON = GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create()
+    val GSON = GsonBuilder()
+        .disableHtmlEscaping()
+        .setPrettyPrinting()
+        .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
+        .create()
 
     private fun String.toPath() = "$DIRECTORY$this.json"
 

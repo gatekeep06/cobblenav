@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.util.finder
+package com.metacontent.cobblenav.config
 
 data class FeatureWeights(
     val shiny: Float,
