@@ -44,7 +44,7 @@ class SpawnDataWidget(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        if (isHovered && isFocused) {
+        if (isHovered && isFocused && !parent.blockWidgets) {
             blitk(
                 matrixStack = poseStack,
                 texture = BACKGROUND,
