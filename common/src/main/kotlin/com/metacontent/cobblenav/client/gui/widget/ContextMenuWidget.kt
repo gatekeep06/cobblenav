@@ -69,8 +69,6 @@ class ContextMenuWidget(
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        if (parent != Minecraft.getInstance().screen) cancelButton.activate()
-
         guiGraphics.drawBlurredArea(
             x1 = x,
             y1 = y + 3,
