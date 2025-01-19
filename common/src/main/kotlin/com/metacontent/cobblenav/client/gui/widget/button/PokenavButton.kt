@@ -25,6 +25,8 @@ abstract class PokenavButton(
         if (disabled) {
             return
         }
-        action.invoke(this)
+        activate()
     }
+
+    fun activate() = action.invoke(this)
 }
