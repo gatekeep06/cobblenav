@@ -92,13 +92,13 @@ fun translateOr(
     return Pair(true, component)
 }
 
-fun splitText(text: MutableComponent, targetWidth: Int, permissibleDeviation: Int = 10): List<MutableComponent> {
+fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
     val font = Minecraft.getInstance().font
     val divided = mutableListOf<MutableComponent>()
     val words = text.string.split(" ")
     var line = Component.empty()
     words.forEach {
-        if (font.width(line) + font.width(it) >= targetWidth + permissibleDeviation && line.string.isNotEmpty()) {
+        if (font.width(line) + font.width(it) >= targetWidth && line.string.isNotEmpty()) {
             divided.add(line)
             line = Component.empty().append(it)
         }
