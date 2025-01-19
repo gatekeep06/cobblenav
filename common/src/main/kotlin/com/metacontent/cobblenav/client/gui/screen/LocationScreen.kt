@@ -17,9 +17,9 @@ import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.SavePreferencesPacket
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
+import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
 import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
-import com.metacontent.cobblenav.client.gui.widget.button.InfoButton
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.os.PokenavOS
@@ -56,6 +56,7 @@ class LocationScreen(
         val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
         val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
         val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
+        val SUPPORT = cobblenavResource("textures/gui/button/support_button.png")
     }
     var viewX = 0
     var viewY = 0
@@ -88,6 +89,7 @@ class LocationScreen(
     private lateinit var sortButton: IconButton
     private lateinit var refreshButton: IconButton
     private lateinit var checkBox: CheckBox
+    private lateinit var supportContextMenu: ContextMenuWidget
 
     override fun initScreen() {
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
@@ -154,16 +156,6 @@ class LocationScreen(
             texture = REFRESH
         ).also { addBlockableWidget(it) }
 
-        InfoButton(
-            pX = viewX/*screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE*/,
-            pY = viewY + viewHeight/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT*/,
-            pWidth = BUTTON_WIDTH,
-            pHeight = BUTTON_HEIGHT,
-            header = Component.translatable("gui.cobblenav.support_button.header.location_screen"),
-            body = Component.translatable("gui.cobblenav.support_button.body.location_screen"),
-            parent = this
-        ).also { addBlockableWidget(it) }
-
         checkBox = CheckBox(
             pX = viewX + BUTTON_WIDTH + BUTTON_SPACE/*screenX + BUTTON_WIDTH + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + 2 * BUTTON_SPACE*/,
             pY = viewY + viewHeight + CHECK_BOX_OFFSET/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET*/,
@@ -174,6 +166,29 @@ class LocationScreen(
                 tableView.applyToAll { child ->
                     child.child.chanceMultiplier = if ((it as CheckBox).checked) currentBucket.chance else 1f
                 }
+            }
+        ).also { addBlockableWidget(it) }
+
+        supportContextMenu = ContextMenuWidget(
+            parent = this,
+            text = Component.translatable("gui.cobblenav.support_button.body.location_screen"),
+            pX = (width - ContextMenuWidget.WIDTH) / 2,
+            pY = height / 2,
+            cancelAction = { menu, _ ->
+                blockWidgets = false
+                removeUnblockableWidget(menu)
+            }
+        )
+
+        IconButton(
+            pX = viewX/*screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE*/,
+            pY = viewY + viewHeight/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT*/,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            texture = SUPPORT,
+            action = {
+                blockWidgets = true
+                addUnblockableWidget(supportContextMenu)
             }
         ).also { addBlockableWidget(it) }
     }
