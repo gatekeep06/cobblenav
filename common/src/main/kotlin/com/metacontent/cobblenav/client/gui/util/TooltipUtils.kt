@@ -58,7 +58,6 @@ fun GuiGraphics.renderMultilineTextTooltip(
     header: MutableComponent,
     body: MutableComponent,
     targetWidth: Int,
-    permissibleDeviation: Int = 10,
     mouseX: Int,
     mouseY: Int,
     x1: Int,
@@ -71,7 +70,7 @@ fun GuiGraphics.renderMultilineTextTooltip(
     delta: Float = 0f
 ) = renderAdvancedTooltip(
     header = header,
-    body = splitText(body, targetWidth, permissibleDeviation),
+    body = splitText(body, targetWidth),
     mouseX = mouseX,
     mouseY = mouseY,
     x1 = x1,
