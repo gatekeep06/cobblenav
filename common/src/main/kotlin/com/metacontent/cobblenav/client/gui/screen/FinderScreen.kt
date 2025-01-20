@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.api.gui.blitk
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
+import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.metacontent.cobblenav.client.gui.widget.finder.FoundPokemonWidget
@@ -53,6 +54,7 @@ class FinderScreen(
     private lateinit var statsTableWidget: StatsTableWidget
     private lateinit var findButton: TextButton
     private lateinit var pokefinderButton: IconButton
+    private lateinit var supportContextMenu: ContextMenuWidget
     private val closingTimer = Timer(CLOSING_DURATION)
     private val fadingTimer = Timer(FADING_DURATION)
     private var pokemonX = 0
@@ -76,6 +78,21 @@ class FinderScreen(
             texture = BACK_BUTTON,
             action = { changeScreen(previousScreen ?: LocationScreen(os)) }
         ).also { addBlockableWidget(it) }
+
+        supportContextMenu = ContextMenuWidget(
+            text = listOf(
+                Component.translatable("")
+            ),
+            pX = (width - ContextMenuWidget.WIDTH) / 2,
+            pY = height / 2,
+            lineHeight = 8,
+            centerText = false,
+            textWidth = ContextMenuWidget.WIDTH - 20,
+            cancelAction = { menu, _ ->
+                blockWidgets = false
+                removeUnblockableWidget(menu)
+            }
+        )
     }
 
     fun receiveFoundPokemon(pokemon: FoundPokemon) {
@@ -117,6 +134,18 @@ class FinderScreen(
                     aspects = spawnData.spawnAspects
                 )
                 it.disabled = true
+            }
+        ).also { addBlockableWidget(it) }
+
+        IconButton(
+            pX = pokefinderButton.x - BUTTON_SPACE - BUTTON_WIDTH,
+            pY = pokefinderButton.y,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            texture = SUPPORT,
+            action = {
+                blockWidgets = true
+                addUnblockableWidget(supportContextMenu)
             }
         ).also { addBlockableWidget(it) }
 

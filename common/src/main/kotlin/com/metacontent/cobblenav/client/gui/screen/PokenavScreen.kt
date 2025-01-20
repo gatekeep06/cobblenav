@@ -37,6 +37,7 @@ abstract class PokenavScreen(
         val BORDERS = cobblenavResource("textures/gui/pokenav_borders.png")
         val SCREEN = cobblenavResource("textures/gui/pokenav_screen.png")
         val BACK_BUTTON = cobblenavResource("textures/gui/button/back.png")
+        val SUPPORT = cobblenavResource("textures/gui/button/support_button.png")
     }
 
     var screenX = 0

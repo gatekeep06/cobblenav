@@ -56,7 +56,6 @@ class LocationScreen(
         val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
         val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
         val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
-        val SUPPORT = cobblenavResource("textures/gui/button/support_button.png")
     }
     var viewX = 0
     var viewY = 0
