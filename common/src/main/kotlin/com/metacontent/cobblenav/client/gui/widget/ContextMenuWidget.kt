@@ -3,7 +3,6 @@ package com.metacontent.cobblenav.client.gui.widget
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
 import com.metacontent.cobblenav.client.gui.util.splitText
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
@@ -16,13 +15,14 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 
 class ContextMenuWidget(
-    private val parent: PokenavScreen,
-    text: MutableComponent,
+    text: List<MutableComponent>,
     pX: Int,
     pY: Int,
     private val lineHeight: Int = 12,
+    private val textWidth: Int = WIDTH - 4,
+    private val centerText: Boolean = true,
     acceptAction: ((ContextMenuWidget, PokenavButton) -> Unit)? = null,
-    cancelAction: ((ContextMenuWidget, PokenavButton) -> Unit)
+    cancelAction: (ContextMenuWidget, PokenavButton) -> Unit
 ) : SoundlessWidget(pX, pY, WIDTH, 0, Component.literal("Context Menu")) {
     companion object {
         const val WIDTH: Int = 220
@@ -33,7 +33,7 @@ class ContextMenuWidget(
         const val BUTTON_VERTICAL_OFFSET: Int = 5
         const val BUTTON_HORIZONTAL_OFFSET: Int = 1
         const val BUTTON_SPACE: Int = 3
-        val COLOR: Int = FastColor.ARGB32.color(225, 142, 205, 229)
+        val COLOR: Int = FastColor.ARGB32.color(225, 132, 195, 219)
         val MENU_TOP = cobblenavResource("textures/gui/context_menu_top.png")
         val MENU_BOTTOM = cobblenavResource("textures/gui/context_menu_bottom.png")
         val ACCEPT = cobblenavResource("textures/gui/button/accept_button.png")
@@ -42,7 +42,8 @@ class ContextMenuWidget(
 
     private var acceptButton: IconButton? = null
     private val cancelButton: IconButton
-    private val dividedText = splitText(text, width - 4)
+    private val scale = lineHeight.toFloat() / Minecraft.getInstance().font.lineHeight.toFloat()
+    private val dividedText = text.flatMap { splitText(it, (textWidth / scale).toInt()) }
 
     init {
         height = TOP_HEIGHT + dividedText.size * lineHeight + BOTTOM_HEIGHT
@@ -98,10 +99,11 @@ class ContextMenuWidget(
             drawScaledText(
                 context = guiGraphics,
                 text = line,
-                x = x + WIDTH / 2,
+                x = x + (if (centerText) width / 2f else (width - textWidth) / 2f),
                 y = y + height / 2f - (dividedText.size / 2f - index) * lineHeight,
-                centered = true,
-                maxCharacterWidth = WIDTH - 4
+                centered = centerText,
+//                maxCharacterWidth = (textWidth / scale).toInt(),
+                scale = scale
             )
         }
 
