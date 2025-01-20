@@ -69,7 +69,6 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
                 ?.filter { it.isNotBlank() }
                 ?.toSet()
             settings.shinyOnly = matchingPair(settingPairList, "shinyonly")?.second?.toBooleanStrictOrNull()
-            Cobblenav.LOGGER.error(matchingPair(settingPairList, "shinyonly").toString())
             settings.aspects = matchingPair(settingPairList, "aspects")?.second
                 ?.split(",", " ", ", ")
                 ?.map { it.trim() }
