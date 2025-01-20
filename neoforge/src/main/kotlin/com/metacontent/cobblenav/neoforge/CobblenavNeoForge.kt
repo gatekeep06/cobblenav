@@ -79,7 +79,7 @@ class CobblenavNeoForge : Implementation {
         argumentClass: KClass<A>,
         serializer: ArgumentTypeInfo<A, T>
     ) {
-        commandArgumentTypes.register(identifier.path) { it ->
+        commandArgumentTypes.register(identifier.path) { _ ->
             ArgumentTypeInfos.registerByClass(argumentClass.java, serializer)
         }
     }

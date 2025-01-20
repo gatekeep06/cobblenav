@@ -1,7 +1,9 @@
 package com.metacontent.cobblenav
 
+import com.metacontent.cobblenav.command.argument.PokefinderSettingsArgumentType
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.util.PokenavAreaContextResolver
+import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -25,5 +27,10 @@ object Cobblenav {
     }
 
     private fun registerArgumentTypes() {
+        implementation.registerCommandArgument(
+            PokefinderSettingsArgumentType.ID,
+            PokefinderSettingsArgumentType::class,
+            SingletonArgumentInfo.contextFree(PokefinderSettingsArgumentType::settings)
+        )
     }
 }

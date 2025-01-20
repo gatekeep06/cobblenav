@@ -137,7 +137,7 @@ class FinderScreen(
             texture = POKEFINDER,
             disabled = settings?.species?.contains(name) == true && settings.aspects == spawnData.spawnAspects,
             action = {
-                settings?.apply(
+                settings?.merge(
                     species = setOf(name),
                     aspects = spawnData.spawnAspects
                 )

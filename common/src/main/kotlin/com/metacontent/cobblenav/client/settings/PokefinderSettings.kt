@@ -1,12 +1,24 @@
 package com.metacontent.cobblenav.client.settings
 
 import com.cobblemon.mod.common.api.spawning.IntRanges
+import com.cobblemon.mod.common.util.splitMap
+import com.metacontent.cobblenav.Cobblenav
 import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.RecordCodecBuilder
+import io.netty.buffer.ByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 
 class PokefinderSettings : Settings<PokefinderSettings>() {
     companion object {
         const val NAME = "pokefinder"
+        const val DELIMITER = " "
+        const val ASSIGNER = "="
+        val SETTINGS = listOf("species", "shinyonly", "aspects")
+        val CODEC: Codec<PokefinderSettings> = Codec.STRING.xmap(
+            { parse(it, DELIMITER, ASSIGNER) },
+            { it.asString() }
+        )
+        val BUF_CODEC: StreamCodec<ByteBuf, PokefinderSettings> = ByteBufCodecs.fromCodec(CODEC)
 //        val CODEC: Codec<PokefinderSettings> = RecordCodecBuilder.create { instance ->
 //            instance.group(
 //                Codec.DOUBLE.fieldOf("radius").forGetter(PokefinderSettings::radius),
@@ -47,36 +59,70 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
 //                return@apply settings
 //            }
 //        }
-    }
+        fun parse(string: String, delimiter: String, assigner: String): PokefinderSettings {
+            val settings = PokefinderSettings()
+            val settingPairList = string.splitMap(delimiter, assigner)
 
-//    override val codec: Codec<Settings<PokefinderSettings>> = CODEC
+            settings.species = matchingPair(settingPairList, "species")?.second
+                ?.split(",", " ", ", ")
+                ?.map { it.trim().lowercase() }
+                ?.filter { it.isNotBlank() }
+                ?.toSet()
+            settings.shinyOnly = matchingPair(settingPairList, "shinyonly")?.second?.toBooleanStrictOrNull()
+            Cobblenav.LOGGER.error(matchingPair(settingPairList, "shinyonly").toString())
+            settings.aspects = matchingPair(settingPairList, "aspects")?.second
+                ?.split(",", " ", ", ")
+                ?.map { it.trim() }
+                ?.filter { it.isNotBlank() }
+                ?.toSet()
+
+            return settings
+        }
+
+        private fun matchingPair(pairs: List<Pair<String, String?>>, key: String) = pairs.findLast { it.first == key }
+    }
 
     @Transient
     override val name = NAME
 
-    var radius: Double? = null
-        private set
+//    var radius: Double? = null
+//        private set
     var species: Set<String>? = null
         private set
     var shinyOnly: Boolean? = null
         private set
     var aspects: Set<String>? = null
         private set
-    var level: IntRanges? = null
-        private set
+//    var level: IntRanges? = null
+//        private set
 
-    fun apply(
-        radius: Double? = null,
+    fun merge(
+//        radius: Double? = null,
         species: Set<String>? = null,
         shinyOnly: Boolean? = null,
         aspects: Set<String>? = null,
-        level: IntRanges? = null
+//        level: IntRanges? = null
     ) {
         changed = true
-        radius?.let { this.radius = it }
         species?.let { this.species = it }
         shinyOnly?.let { this.shinyOnly = it }
         aspects?.let { this.aspects = it }
-        level?.let { this.level = it }
+    }
+
+    fun apply(settings: PokefinderSettings) {
+        changed = true
+        species = settings.species
+        shinyOnly = settings.shinyOnly
+        aspects = settings.aspects
+    }
+
+    fun asString(): String {
+        val pieces = mutableListOf<String>()
+//        radius?.let { pieces.add("radius${ASSIGNER}${it}") }
+        species?.let { pieces.add("species${ASSIGNER}${it.joinToString(separator = ",")}") }
+        shinyOnly?.let { pieces.add("shinyOnly${ASSIGNER}${it}") }
+        aspects?.let { pieces.add("aspects${ASSIGNER}${it.joinToString(separator = ",")}") }
+//        level?.let { pieces.add("level${ASSIGNER}${it.ranges.joinToString(separator = ",") { range -> "${range.first}-${range.last}" }}") }
+        return pieces.joinToString(DELIMITER)
     }
 }
