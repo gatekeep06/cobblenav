@@ -81,11 +81,19 @@ class FinderScreen(
 
         supportContextMenu = ContextMenuWidget(
             text = listOf(
-                Component.translatable("")
+                Component.translatable("gui.cobblenav.support.finder_screen"),
+                Component.empty(),
+                Component.translatable("gui.cobblenav.support.potential_stars"),
+                Component.empty(),
+                Component.translatable("gui.cobblenav.support.stats_table"),
+                Component.empty(),
+                Component.translatable("gui.cobblenav.support.track_button"),
+                Component.empty(),
+                Component.translatable("gui.cobblenav.support.pokefinder_button")
             ),
             pX = (width - ContextMenuWidget.WIDTH) / 2,
             pY = height / 2,
-            lineHeight = 8,
+            lineHeight = 7,
             centerText = false,
             textWidth = ContextMenuWidget.WIDTH - 20,
             cancelAction = { menu, _ ->
