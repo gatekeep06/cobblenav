@@ -102,17 +102,21 @@ class FinderScreen(
             }
         ).also { addBlockableWidget(it) }
 
+        val settings = CobblenavClient.pokefinderSettings
+        val name = spawnData.renderable.species.name.lowercase()
         pokefinderButton = IconButton(
             pX = findButton.x - BUTTON_SPACE - BUTTON_WIDTH,
             pY = findButton.y + (findButton.height - BUTTON_HEIGHT) / 2,
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
             texture = POKEFINDER,
+            disabled = settings?.species?.contains(name) == true && settings.aspects == spawnData.spawnAspects,
             action = {
-                CobblenavClient.pokefinderSettings?.apply(
-                    species = setOf(spawnData.renderable.species.name.lowercase()),
+                settings?.apply(
+                    species = setOf(name),
                     aspects = spawnData.spawnAspects
                 )
+                it.disabled = true
             }
         ).also { addBlockableWidget(it) }
 
