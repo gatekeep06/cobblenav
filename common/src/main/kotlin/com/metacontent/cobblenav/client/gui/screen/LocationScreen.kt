@@ -221,7 +221,6 @@ class LocationScreen(
 
     fun receiveSpawnData(spawnDataList: List<SpawnData>) {
         this.spawnDataMap[currentBucket.name] = spawnDataList
-//        spawnDataList.forEach { (renderablePokemon, fl, bool, biome) -> player?.sendSystemMessage(Component.literal(renderablePokemon.species.name + ": " + fl + ", " + bool + ", " + biome.toString())) }
         createSpawnDataWidgets(spawnDataList)
         loading = false
         refreshButton.disabled = false

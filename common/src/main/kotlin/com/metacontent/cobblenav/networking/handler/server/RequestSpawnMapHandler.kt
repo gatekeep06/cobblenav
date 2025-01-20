@@ -22,11 +22,12 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
         server: MinecraftServer,
         player: ServerPlayer
     ) {
-        val config = Cobblemon.config
+        val cobblemonConfig = Cobblemon.config
+        val config = Cobblenav.config
         val spawnDataList = mutableListOf<SpawnData>()
 
         server.execute {
-            if (config.enableSpawning) {
+            if (cobblemonConfig.enableSpawning) {
                 val spawner = CobblemonWorldSpawnerManager.spawnersForPlayers[player.uuid] ?: throw NullPointerException("For some reason player spawner is null")
                 val bucket = Cobblemon.bestSpawner.config.buckets.firstOrNull { it.name == packet.bucket } ?: throw NullPointerException("For some reason bucket is null")
 
@@ -35,12 +36,12 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                 try {
                     slice = spawner.prospector.prospect(spawner, SpawningArea(
                         cause, player.serverLevel(),
-                        ceil(player.x - config.worldSliceDiameter / 2f).toInt(),
-                        ceil(player.y - config.worldSliceHeight / 2f).toInt(),
-                        ceil(player.z - config.worldSliceDiameter / 2f).toInt(),
-                        config.worldSliceDiameter,
-                        config.worldSliceHeight,
-                        config.worldSliceDiameter
+                        ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
+                        ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
+                        ceil(player.z - config.checkSpawnWidth / 2f).toInt(),
+                        config.checkSpawnWidth,
+                        config.checkSpawnHeight,
+                        config.checkSpawnWidth
                     ))
                 }
                 catch (e: IllegalStateException) {
@@ -53,7 +54,7 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
 
                 spawnProbabilities.forEach { (detail, spawnChance) ->
                     if (detail is PokemonSpawnDetail && detail.isValid()) {
-                        spawnDataList.add(SpawnDataHelper.collect(detail, spawnChance, contexts, player))
+                        SpawnDataHelper.collect(detail, spawnChance, contexts, player)?.let { spawnDataList.add(it) }
                     }
                 }
             }

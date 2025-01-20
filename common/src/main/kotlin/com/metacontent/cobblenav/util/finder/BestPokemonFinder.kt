@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.util.finder
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.metacontent.cobblenav.Cobblenav
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -8,7 +9,7 @@ import kotlin.math.max
 
 object BestPokemonFinder : PokemonFinder() {
     override fun select(pokemonEntities: List<PokemonEntity>, player: ServerPlayer, level: ServerLevel): FoundPokemon {
-        val weights = FeatureWeights.BASE
+        val weights = Cobblenav.config.pokemonFeatureWeights
         val entityToFoundPokemon = mutableMapOf<PokemonEntity, FoundPokemon>()
         var maxRating = 0f
 
