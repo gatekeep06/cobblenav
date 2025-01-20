@@ -58,7 +58,6 @@ fun GuiGraphics.renderMultilineTextTooltip(
     header: MutableComponent,
     body: MutableComponent,
     targetWidth: Int,
-    permissibleDeviation: Int = 10,
     mouseX: Int,
     mouseY: Int,
     x1: Int,
@@ -69,39 +68,20 @@ fun GuiGraphics.renderMultilineTextTooltip(
     opacity: Float = 0.9f,
     headerColor: Int,
     delta: Float = 0f
-) {
-    val font = Minecraft.getInstance().font
-    val multilineBody = mutableListOf<MutableComponent>()
-    val words = body.string.split(" ")
-    var line = Component.empty()
-    words.forEach {
-        val alteredLine = line.copy()
-        alteredLine.append("$it ")
-        if (font.width(alteredLine) >= targetWidth + permissibleDeviation && line.string.isNotEmpty()) {
-            multilineBody.add(line)
-            line = Component.empty().append("$it ")
-        }
-        else {
-            line = alteredLine
-        }
-    }
-    multilineBody.add(line)
-
-    renderAdvancedTooltip(
-        header = header,
-        body = multilineBody,
-        mouseX = mouseX,
-        mouseY = mouseY,
-        x1 = x1,
-        y1 = y1,
-        x2 = x2,
-        y2 = y2,
-        lineHeight = lineHeight,
-        opacity = opacity,
-        headerColor = headerColor,
-        delta = delta
-    )
-}
+) = renderAdvancedTooltip(
+    header = header,
+    body = splitText(body, targetWidth),
+    mouseX = mouseX,
+    mouseY = mouseY,
+    x1 = x1,
+    y1 = y1,
+    x2 = x2,
+    y2 = y2,
+    lineHeight = lineHeight,
+    opacity = opacity,
+    headerColor = headerColor,
+    delta = delta
+)
 
 fun GuiGraphics.renderAdvancedTooltip(
     header: MutableComponent,
