@@ -32,7 +32,8 @@
   "item.cobblenav.pokenav_item_old": "Old PokéNav",
 
   "gui.cobblenav.support_button.header.location_screen": "Location - Support",
-  "gui.cobblenav.support_button.body.location_screen": "The location screen displays all possible Pokémon that can spawn in your area, separated by buckets. Tooltips that appear when you hover over a Pokémon display more detailed information, as well as the conditions that affected the chance of spawning in your particular case.",
+  "gui.cobblenav.support.location_screen": "The location screen displays all possible Pokémon that can spawn in your area, separated by buckets. Tooltips that appear when you hover over a Pokémon display more detailed information, as well as the conditions that affected the chance of spawning in your particular case.",
+  "gui.cobblenav.support.bucket_checkbox": "The checkbox at the bottom allows you to decide whether the probability of triggering a bucket should be considered when calculating the odds. If checked, your actual chance of spawning will be displayed. If not, the chance of a Pokémon spawning when a specific bucket is triggered will be shown instead.",
   "gui.cobblenav.info_button.header.name": "Name",
   "gui.cobblenav.info_button.body.name": "Name of the species of Pokémon found",
   "gui.cobblenav.info_button.header.type": "Type",
