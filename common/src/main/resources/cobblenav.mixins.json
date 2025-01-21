@@ -8,7 +8,6 @@
     "GrowingPlantBlockMixin"
   ],
   "mixins": [
-    "CobblemonMixin",
     "EntityMixin"
   ],
   "injectors": {

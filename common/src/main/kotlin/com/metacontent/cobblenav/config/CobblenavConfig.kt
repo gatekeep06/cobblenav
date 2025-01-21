@@ -43,8 +43,8 @@ class CobblenavConfig {
     val hideUnknownPokemon = false
     val showPokemonTooltips = true
     val showUnknownPokemonTooltips = true
-    val checkSpawnWidth = Cobblemon.config.worldSliceDiameter
-    val checkSpawnHeight = Cobblemon.config.worldSliceHeight
+    val checkSpawnWidth = 8
+    val checkSpawnHeight = 16
     val searchAreaWidth = 200.0
     val searchAreaHeight = 200.0
     val pokemonFeatureWeights = FeatureWeights.BASE

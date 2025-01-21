@@ -16,6 +16,7 @@ object Cobblenav {
     val contextResolver = PokenavAreaContextResolver()
 
     fun init(implementation: Implementation) {
+        loadConfig()
         this.implementation = implementation
         implementation.registerItems()
         registerArgumentTypes()
