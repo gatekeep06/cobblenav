@@ -1,3 +1,7 @@
+# Hotfix alpha-2.0.2
+
+- Fixed crash when starting a dedicated server
+
 # Update alpha-2.0.1
 
 - Removed a crash while attempting to render a Pokémon model that had broken animations as a result of improper addon management. Now such Pokémon will not be rendered, and an exception message will be sent to chat.
