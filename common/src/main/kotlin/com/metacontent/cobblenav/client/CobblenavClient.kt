@@ -33,7 +33,7 @@ object CobblenavClient {
         }
     }
 
-    fun beforeChatRender(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
+    fun renderOverlay(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
         val player = Minecraft.getInstance().player
         if (Minecraft.getInstance().screen != null) return
         player?.let {

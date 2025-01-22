@@ -8,6 +8,5 @@ class CobblenavFabricClient : ClientModInitializer, ClientImplementation {
     override fun onInitializeClient() {
         CobblenavClient.init(this)
         CobblenavFabricNetworkManager.registerClientHandlers()
-        HudRenderCallback.EVENT.register(CobblenavClient::beforeChatRender)
     }
 }
