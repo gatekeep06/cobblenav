@@ -8,8 +8,10 @@ import com.cobblemon.mod.common.api.spawning.condition.*
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.registry.BlockIdentifierCondition
 import com.cobblemon.mod.common.registry.BlockTagCondition
+import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.getTimeString
@@ -46,11 +48,13 @@ object SpawnDataHelper {
         val renderablePokemon = detail.pokemon.let {
             val pokemon = Pokemon()
             it.apply(pokemon)
+            SeasonFeatureHandler.updateSeason(pokemon, player.level(), player.onPos)
             pokemon.asRenderablePokemon()
         }
 
-        val speciesRecord = Cobblemon.playerDataManager.getPokedexData(player)
-            .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
+        val speciesRecord = detail.pokemon.species?.asIdentifierDefaultingNamespace()?.let {
+            Cobblemon.playerDataManager.getPokedexData(player).getSpeciesRecord(it)
+        }
         val encountered = speciesRecord?.hasSeenForm(renderablePokemon.form.name) ?: false
 
         if (!encountered && config.hideUnknownPokemon) {
