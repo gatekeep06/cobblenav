@@ -9,7 +9,7 @@ import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.screen.FinderScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
-import com.metacontent.cobblenav.util.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics

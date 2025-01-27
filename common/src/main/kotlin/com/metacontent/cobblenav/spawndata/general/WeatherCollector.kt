@@ -1,0 +1,21 @@
+package com.metacontent.cobblenav.spawndata.general
+
+import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
+import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerPlayer
+
+class WeatherCollector : GeneralConditionCollector() {
+    override fun collect(
+        condition: SpawningCondition<*>,
+        contexts: List<SpawningContext>,
+        player: ServerPlayer
+    ): MutableComponent? {
+        val weather = Component.translatable("gui.cobblenav.spawn_data.weather")
+        if (condition.isThundering == true) weather.append(Component.translatable("weather.cobblenav.thunder"))
+        if (condition.isRaining == true) weather.append(Component.translatable("weather.cobblenav.rain"))
+        if (condition.isRaining == false) weather.append(Component.translatable("weather.cobblenav.clear"))
+        return if (weather.siblings.isEmpty()) null else weather
+    }
+}

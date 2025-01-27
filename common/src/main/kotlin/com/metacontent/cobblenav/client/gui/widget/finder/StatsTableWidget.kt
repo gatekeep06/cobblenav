@@ -7,7 +7,7 @@ import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
 import com.metacontent.cobblenav.client.gui.widget.button.InfoButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
-import com.metacontent.cobblenav.util.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.finder.PokemonFinder
