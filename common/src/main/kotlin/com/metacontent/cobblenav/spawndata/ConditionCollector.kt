@@ -9,11 +9,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
-interface ConditionCollector<T : SpawningCondition<*>> {
-    val conditionClass: Class<T>
-
-    fun supports(condition: SpawningCondition<*>) = conditionClass.isInstance(condition)
-
+interface ConditionCollector<T : SpawningCondition<*>> : SpawningConditionSupporter<T> {
     fun collect(condition: T, contexts: List<SpawningContext>, player: ServerPlayer): MutableComponent?
 
     fun RegistryLikeCondition<*>.toResourceLocation(): ResourceLocation? {
