@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
 interface ConditionCollector<T : SpawningCondition<*>> {
-    val conditionClass: Class<out SpawningCondition<*>>
+    val conditionClass: Class<T>
 
     fun supports(condition: SpawningCondition<*>) = conditionClass.isInstance(condition)
 
