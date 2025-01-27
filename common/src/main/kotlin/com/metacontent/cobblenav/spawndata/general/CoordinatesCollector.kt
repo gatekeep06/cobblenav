@@ -7,6 +7,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class CoordinatesCollector : GeneralConditionCollector() {
+    override val configName = "coordinates"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

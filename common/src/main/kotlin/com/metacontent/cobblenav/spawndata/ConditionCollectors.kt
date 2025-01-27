@@ -19,14 +19,17 @@ object ConditionCollectors {
     private val blockCollectors = mutableListOf<BlockConditionCollector<*>>()
 
     fun registerGeneral(collector: GeneralConditionCollector) {
+        if (!collector.present(Cobblenav.config.collectableConditions)) return
         generalCollectors += collector
     }
 
     fun register(collector: ConditionCollector<*>) {
+        if (collector is ConfigureableCollector && !collector.present(Cobblenav.config.collectableConditions)) return
         collectors += collector
     }
 
     fun registerBlock(collector: BlockConditionCollector<*>) {
+        if (collector is ConfigureableCollector && !collector.present(Cobblenav.config.collectableConditions)) return
         blockCollectors += collector
     }
 
@@ -75,5 +78,7 @@ object ConditionCollectors {
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())
         registerBlock(SeafloorTypeBlockCollector())
+
+        Cobblenav.LOGGER.info("Registered ${generalCollectors.size} general collectors, ${collectors.size} specialized collectors, ${blockCollectors.size} block collectors")
     }
 }

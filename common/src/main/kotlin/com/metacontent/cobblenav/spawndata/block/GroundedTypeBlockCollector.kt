@@ -3,10 +3,12 @@ package com.metacontent.cobblenav.spawndata.block
 import com.cobblemon.mod.common.api.spawning.condition.GroundedTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.metacontent.cobblenav.spawndata.BlockConditionCollector
+import com.metacontent.cobblenav.spawndata.ConfigureableCollector
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 
-class GroundedTypeBlockCollector : BlockConditionCollector<GroundedTypeSpawningCondition<*>> {
+class GroundedTypeBlockCollector : BlockConditionCollector<GroundedTypeSpawningCondition<*>>, ConfigureableCollector {
+    override val configName = "grounded_type_block"
     override val conditionClass = GroundedTypeSpawningCondition::class.java
 
     override fun collect(

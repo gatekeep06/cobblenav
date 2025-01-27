@@ -8,6 +8,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class MoonPhaseCollector : GeneralConditionCollector() {
+    override val configName = "moon_phase"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

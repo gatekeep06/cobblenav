@@ -7,6 +7,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class LightCollector : GeneralConditionCollector() {
+    override val configName = "light"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

@@ -11,6 +11,8 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.level.levelgen.structure.Structure
 
 class StructureCollector : GeneralConditionCollector() {
+    override val configName = "structures"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

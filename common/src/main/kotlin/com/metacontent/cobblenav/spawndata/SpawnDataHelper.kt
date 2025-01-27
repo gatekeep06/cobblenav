@@ -1,14 +1,12 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.spawning.condition.*
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.metacontent.cobblenav.Cobblenav
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -42,7 +40,7 @@ object SpawnDataHelper {
 
         val conditions = mutableListOf<MutableComponent>()
         val blocks = mutableSetOf<ResourceLocation>()
-        if (config.showPokemonTooltips && (config.showUnknownPokemonTooltips || encountered)) {
+        if (config.showPokemonTooltips && (!config.hideUnknownPokemonTooltips || encountered)) {
             val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
             val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
             condition?.let {

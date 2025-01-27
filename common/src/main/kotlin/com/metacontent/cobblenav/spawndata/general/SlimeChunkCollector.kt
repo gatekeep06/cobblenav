@@ -7,6 +7,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class SlimeChunkCollector : GeneralConditionCollector() {
+    override val configName = "slime_chunk"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

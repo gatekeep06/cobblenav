@@ -9,6 +9,8 @@ import net.minecraft.server.level.ServerPlayer
 import kotlin.jvm.optionals.getOrNull
 
 class BiomeCollector : GeneralConditionCollector() {
+    override val configName = "biomes"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

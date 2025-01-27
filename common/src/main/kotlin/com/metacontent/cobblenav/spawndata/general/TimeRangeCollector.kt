@@ -8,6 +8,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class TimeRangeCollector : GeneralConditionCollector() {
+    override val configName = "time_range"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

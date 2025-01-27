@@ -7,6 +7,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class SkyLightCollector : GeneralConditionCollector() {
+    override val configName = "sky_light"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

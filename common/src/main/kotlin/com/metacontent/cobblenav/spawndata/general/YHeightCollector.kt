@@ -7,6 +7,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class YHeightCollector : GeneralConditionCollector() {
+    override val configName = "y_height"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,

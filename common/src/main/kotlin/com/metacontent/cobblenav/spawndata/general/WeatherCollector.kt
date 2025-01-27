@@ -7,6 +7,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class WeatherCollector : GeneralConditionCollector() {
+    override val configName = "weather"
+
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,
