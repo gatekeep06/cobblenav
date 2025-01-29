@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
@@ -38,7 +39,7 @@ class SpawnDataWidget(
             val finalChance = spawnData.spawnChance * value
             chanceString = if (finalChance <= 0.005f) ">0.01%" else format.format(finalChance) + "%"
         }
-    private val pose = if (spawnData.spawningContext == "submerged") PoseType.SWIM else PoseType.PROFILE
+    private val pose = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME) PoseType.SWIM else PoseType.PROFILE
     private val state = FloatingState()
     private var isModelBroken = false
 
