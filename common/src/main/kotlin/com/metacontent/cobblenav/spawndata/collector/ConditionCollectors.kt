@@ -5,20 +5,13 @@ import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.config.CobblenavConfig
-import com.metacontent.cobblenav.spawndata.collector.block.AreaTypeBlockCollector
-import com.metacontent.cobblenav.spawndata.collector.block.GroundedTypeBlockCollector
-import com.metacontent.cobblenav.spawndata.collector.block.SeafloorTypeBlockCollector
-import com.metacontent.cobblenav.spawndata.general.*
-import com.metacontent.cobblenav.spawndata.special.*
+import com.metacontent.cobblenav.spawndata.collector.block.*
+import com.metacontent.cobblenav.spawndata.collector.general.*
+import com.metacontent.cobblenav.spawndata.collector.special.*
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import com.metacontent.cobblenav.spawndata.collector.general.*
-import com.metacontent.cobblenav.spawndata.collector.special.DepthSubmergedCollector
-import com.metacontent.cobblenav.spawndata.collector.special.DepthSurfaceCollector
-import com.metacontent.cobblenav.spawndata.collector.special.FluidSubmergedCollector
-import com.metacontent.cobblenav.spawndata.collector.special.FluidSurfaceCollector
 
 /**
  * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [SpawnData].
