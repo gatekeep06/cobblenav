@@ -13,6 +13,7 @@ import com.metacontent.cobblenav.spawndata.special.*
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import com.cobblemon.mod.common.platform.events.PlatformEvents
 
 /**
  * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [SpawnData].
@@ -20,6 +21,8 @@ import net.minecraft.server.level.ServerPlayer
  *
  * [ConfigureableCollector] is an optional interface for collectors. If a collector implements the interface,
  * it can only be registered if the [ConfigureableCollector.configName] value is present in the [CobblenavConfig.collectableConditions] list.
+ * Registration of additional [ConfigureableCollector]s should be done when the Cobblenav mod is definitely initialized,
+ * for which you can use an event such as, for example, [PlatformEvents.SERVER_STARTING].
  */
 object ConditionCollectors {
     /**
