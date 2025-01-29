@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata
+package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 

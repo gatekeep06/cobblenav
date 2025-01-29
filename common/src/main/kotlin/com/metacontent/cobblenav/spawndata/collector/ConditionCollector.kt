@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata
+package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition

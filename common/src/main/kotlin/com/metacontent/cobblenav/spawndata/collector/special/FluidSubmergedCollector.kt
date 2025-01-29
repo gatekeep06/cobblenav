@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata.special
+package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext

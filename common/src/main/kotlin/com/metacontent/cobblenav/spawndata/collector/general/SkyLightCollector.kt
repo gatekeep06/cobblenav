@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata.general
+package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
@@ -6,17 +6,16 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class UnderOpenSkyCollector : GeneralConditionCollector() {
-    override val configName = "under_open_sky"
+class SkyLightCollector : com.metacontent.cobblenav.spawndata.collector.general.GeneralConditionCollector() {
+    override val configName = "sky_light"
 
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,
         player: ServerPlayer
     ): MutableComponent? {
-        condition.canSeeSky?.let {
-            return Component.translatable("gui.cobblenav.spawn_data.can_see_sky")
-                .append(Component.translatable("gui.cobblenav.$it"))
+        formatValueRange(condition.minSkyLight, condition.maxSkyLight)?.let {
+            return Component.translatable("gui.cobblenav.spawn_data.sky_light", it)
         }
         return null
     }

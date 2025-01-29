@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata.special
+package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.SurfaceTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
@@ -8,8 +8,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class DepthSurfaceCollector: ConditionCollector<SurfaceTypeSpawningCondition<*>>, ConfigureableCollector {
-    override val configName = "depth_surface"
+class FluidSurfaceCollector : ConditionCollector<SurfaceTypeSpawningCondition<*>>, ConfigureableCollector {
+    override val configName = "fluid_surface"
     override val conditionClass = SurfaceTypeSpawningCondition::class.java
 
     override fun collect(
@@ -17,8 +17,8 @@ class DepthSurfaceCollector: ConditionCollector<SurfaceTypeSpawningCondition<*>>
         contexts: List<SpawningContext>,
         player: ServerPlayer
     ): MutableComponent? {
-        formatValueRange(condition.minDepth, condition.maxDepth)?.let {
-            return Component.translatable("gui.cobblenav.spawn_data.depth", it)
+        condition.fluid?.toResourceLocation()?.let {
+            return Component.translatable("gui.cobblenav.spawn_data.fluid").append(Component.translatable("tag.fluid.c.${it.path}"))
         }
         return null
     }

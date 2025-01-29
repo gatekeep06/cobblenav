@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata
+package com.metacontent.cobblenav.spawndata.collector
 
 interface ConfigureableCollector {
     val configName: String

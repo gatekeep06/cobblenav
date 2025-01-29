@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata
+package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
@@ -81,7 +81,7 @@ object ConditionCollectors {
         registerGeneral(YHeightCollector())
         registerGeneral(CoordinatesCollector())
         registerGeneral(LightCollector())
-        registerGeneral(SkyLightCollector())
+        registerGeneral(com.metacontent.cobblenav.spawndata.collector.general.SkyLightCollector())
         registerGeneral(WeatherCollector())
         registerGeneral(TimeRangeCollector())
         registerGeneral(StructureCollector())

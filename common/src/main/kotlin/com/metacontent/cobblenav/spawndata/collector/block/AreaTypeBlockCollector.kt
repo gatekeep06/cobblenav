@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.spawndata.block
+package com.metacontent.cobblenav.spawndata.collector.block
 
 import com.cobblemon.mod.common.api.spawning.condition.AreaTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext

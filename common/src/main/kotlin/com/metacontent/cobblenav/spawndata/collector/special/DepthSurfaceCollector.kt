@@ -1,6 +1,6 @@
-package com.metacontent.cobblenav.spawndata.special
+package com.metacontent.cobblenav.spawndata.collector.special
 
-import com.cobblemon.mod.common.api.spawning.condition.SubmergedTypeSpawningCondition
+import com.cobblemon.mod.common.api.spawning.condition.SurfaceTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.spawndata.ConditionCollector
 import com.metacontent.cobblenav.spawndata.ConfigureableCollector
@@ -8,12 +8,12 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class DepthSubmergedCollector : ConditionCollector<SubmergedTypeSpawningCondition<*>>, ConfigureableCollector {
-    override val configName = "depth_submerged"
-    override val conditionClass = SubmergedTypeSpawningCondition::class.java
+class DepthSurfaceCollector: ConditionCollector<SurfaceTypeSpawningCondition<*>>, ConfigureableCollector {
+    override val configName = "depth_surface"
+    override val conditionClass = SurfaceTypeSpawningCondition::class.java
 
     override fun collect(
-        condition: SubmergedTypeSpawningCondition<*>,
+        condition: SurfaceTypeSpawningCondition<*>,
         contexts: List<SpawningContext>,
         player: ServerPlayer
     ): MutableComponent? {

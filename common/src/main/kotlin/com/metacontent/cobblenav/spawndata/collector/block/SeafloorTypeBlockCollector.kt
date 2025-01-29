@@ -1,18 +1,18 @@
-package com.metacontent.cobblenav.spawndata.block
+package com.metacontent.cobblenav.spawndata.collector.block
 
-import com.cobblemon.mod.common.api.spawning.condition.GroundedTypeSpawningCondition
+import com.cobblemon.mod.common.api.spawning.condition.SeafloorTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.metacontent.cobblenav.spawndata.BlockConditionCollector
 import com.metacontent.cobblenav.spawndata.ConfigureableCollector
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 
-class GroundedTypeBlockCollector : BlockConditionCollector<GroundedTypeSpawningCondition<*>>, ConfigureableCollector {
-    override val configName = "grounded_type_block"
-    override val conditionClass = GroundedTypeSpawningCondition::class.java
+class SeafloorTypeBlockCollector : BlockConditionCollector<SeafloorTypeSpawningCondition<*>>, ConfigureableCollector {
+    override val configName = "seafloor_type_block"
+    override val conditionClass = SeafloorTypeSpawningCondition::class.java
 
     override fun collect(
-        condition: GroundedTypeSpawningCondition<*>,
+        condition: SeafloorTypeSpawningCondition<*>,
         contexts: List<AreaSpawningContext>
     ): Set<ResourceLocation> {
         val blocks = mutableSetOf<ResourceLocation>()
