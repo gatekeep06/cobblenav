@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer

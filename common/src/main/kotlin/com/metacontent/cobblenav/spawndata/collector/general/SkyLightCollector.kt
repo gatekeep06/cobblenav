@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class SkyLightCollector : com.metacontent.cobblenav.spawndata.collector.general.GeneralConditionCollector() {
+class SkyLightCollector : GeneralConditionCollector() {
     override val configName = "sky_light"
 
     override fun collect(

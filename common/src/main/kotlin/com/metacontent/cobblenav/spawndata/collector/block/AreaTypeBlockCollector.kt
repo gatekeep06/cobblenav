@@ -2,8 +2,8 @@ package com.metacontent.cobblenav.spawndata.collector.block
 
 import com.cobblemon.mod.common.api.spawning.condition.AreaTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
-import com.metacontent.cobblenav.spawndata.BlockConditionCollector
-import com.metacontent.cobblenav.spawndata.ConfigureableCollector
+import com.metacontent.cobblenav.spawndata.collector.BlockConditionCollector
+import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 
