@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.spawndata.block.AreaTypeBlockCollector
 import com.metacontent.cobblenav.spawndata.block.GroundedTypeBlockCollector
 import com.metacontent.cobblenav.spawndata.block.SeafloorTypeBlockCollector
@@ -13,7 +14,17 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
+/**
+ * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [SpawnData].
+ * Each [ConditionCollector] corresponds to a separate line in the tooltip.
+ *
+ * [ConfigureableCollector] is an optional interface for collectors. If a collector implements the interface,
+ * it can only be registered if the [ConfigureableCollector.configName] value is present in the [CobblenavConfig.collectableConditions] list.
+ */
 object ConditionCollectors {
+    /**
+     * The [generalCollectors] list contains collectors that cover all basic conditions from [SpawningCondition].
+     */
     private val generalCollectors = mutableListOf<GeneralConditionCollector>()
     private val collectors = mutableListOf<ConditionCollector<*>>()
     private val blockCollectors = mutableListOf<BlockConditionCollector<*>>()
@@ -21,16 +32,19 @@ object ConditionCollectors {
     fun registerGeneral(collector: GeneralConditionCollector) {
         if (!collector.present(Cobblenav.config.collectableConditions)) return
         generalCollectors += collector
+        Cobblenav.LOGGER.info("Registered general collector: ${collector::class.java.simpleName}")
     }
 
     fun register(collector: ConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.present(Cobblenav.config.collectableConditions)) return
         collectors += collector
+        Cobblenav.LOGGER.info("Registered collector: ${collector::class.java.simpleName}")
     }
 
     fun registerBlock(collector: BlockConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.present(Cobblenav.config.collectableConditions)) return
         blockCollectors += collector
+        Cobblenav.LOGGER.info("Registered block collector: ${collector::class.java.simpleName}")
     }
 
     private fun <T : SpawningCondition<*>> getCollectors(condition: T): List<ConditionCollector<T>> {
@@ -78,7 +92,5 @@ object ConditionCollectors {
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())
         registerBlock(SeafloorTypeBlockCollector())
-
-        Cobblenav.LOGGER.info("Registered ${generalCollectors.size} general collectors, ${collectors.size} specialized collectors, ${blockCollectors.size} block collectors")
     }
 }

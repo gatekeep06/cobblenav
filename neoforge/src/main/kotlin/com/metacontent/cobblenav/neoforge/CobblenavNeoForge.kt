@@ -54,7 +54,7 @@ class CobblenavNeoForge : Implementation {
             addListener<RegisterEvent> { event ->
                 event.register(Registries.CREATIVE_MODE_TAB) { helper ->
                     helper.register(
-                        ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), cobblenavResource("com/metacontent/cobblenav")),
+                        ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), cobblenavResource("cobblenav")),
                         CreativeModeTab.builder()
                             .title(Component.translatable("itemGroup.cobblenav.pokenav_group"))
                             .icon { ItemStack(CobblenavItems.POKENAV) }
