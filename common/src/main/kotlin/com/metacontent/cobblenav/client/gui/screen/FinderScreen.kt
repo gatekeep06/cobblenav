@@ -11,7 +11,7 @@ import com.metacontent.cobblenav.client.gui.widget.finder.StatsTableWidget
 import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.finder.FoundPokemon
-import com.metacontent.cobblenav.util.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component

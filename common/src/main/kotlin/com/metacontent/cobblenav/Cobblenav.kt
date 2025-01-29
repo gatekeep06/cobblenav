@@ -2,6 +2,7 @@ package com.metacontent.cobblenav
 
 import com.metacontent.cobblenav.command.argument.PokefinderSettingsArgumentType
 import com.metacontent.cobblenav.config.CobblenavConfig
+import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.util.PokenavAreaContextResolver
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import org.slf4j.Logger
@@ -21,6 +22,8 @@ object Cobblenav {
         implementation.registerItems()
         registerArgumentTypes()
         implementation.registerCommands()
+
+        ConditionCollectors.init()
     }
 
     fun loadConfig() {

@@ -1,13 +1,14 @@
 package com.metacontent.cobblenav.client.gui.widget.finder
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
-import com.metacontent.cobblenav.util.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import net.minecraft.client.gui.GuiGraphics
@@ -38,7 +39,7 @@ class FoundPokemonWidget(
         val NOTIFICATION = cobblenavResource("textures/gui/finder/shiny_notification.png")
     }
 
-    private val pose = if (spawnData.spawningContext == "submerged") PoseType.SWIM else PoseType.WALK
+    private val pose = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME) PoseType.SWIM else PoseType.WALK
     private val state = FloatingState()
     private val openingTimer = Timer(OPENING)
     private val loopTimer = Timer(LOOP, true)

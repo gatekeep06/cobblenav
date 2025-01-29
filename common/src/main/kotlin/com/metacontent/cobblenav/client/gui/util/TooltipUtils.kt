@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.util
 
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.util.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
