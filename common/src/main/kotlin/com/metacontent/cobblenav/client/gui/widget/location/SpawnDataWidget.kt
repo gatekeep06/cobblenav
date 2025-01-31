@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.FinderScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
@@ -27,7 +28,7 @@ class SpawnDataWidget(
         const val WIDTH: Int = 40
         const val HEIGHT: Int = 50
         const val MODEL_HEIGHT: Int = 40
-        val format= DecimalFormat("#.##")
+        val FORMAT = DecimalFormat("#.##")
         val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
     }
@@ -37,10 +38,12 @@ class SpawnDataWidget(
         set(value) {
             field = value
             val finalChance = spawnData.spawnChance * value
-            chanceString = if (finalChance <= 0.005f) ">0.01%" else format.format(finalChance) + "%"
+            chanceString = if (finalChance <= 0.005f) ">0.01%" else FORMAT.format(finalChance) + "%"
         }
-    private val pose = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME) PoseType.SWIM else PoseType.PROFILE
+    private val pose = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged)
+        PoseType.SWIM else PoseType.PROFILE
     private val state = FloatingState()
+    private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
@@ -68,19 +71,21 @@ class SpawnDataWidget(
                     delta = delta,
                     state = state,
                     poseType = pose,
-                    obscured = !spawnData.encountered
+                    obscured = obscured
                 )
             }
             catch (e: IllegalArgumentException) {
                 isModelBroken = true
-                parent.player?.sendSystemMessage(
-                    Component.translatable(
-                        "gui.cobblenav.pokemon_rendering_exception",
-                        spawnData.renderable.species.translatedName.string,
-                        spawnData.renderable.species.translatedName.string
-                    ).withStyle(ChatFormatting.RED)
+                val message = Component.translatable(
+                    "gui.cobblenav.pokemon_rendering_exception",
+                    spawnData.renderable.species.translatedName.string,
+                    spawnData.renderable.species.translatedName.string
                 )
+                Cobblenav.LOGGER.error(message.string)
                 Cobblenav.LOGGER.error(e.message)
+                if (CobblenavClient.config.sendErrorMessagesToChat) {
+                    parent.player?.sendSystemMessage(message.withStyle(ChatFormatting.RED))
+                }
             }
         }
         else {

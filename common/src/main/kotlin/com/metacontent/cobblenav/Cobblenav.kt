@@ -17,17 +17,13 @@ object Cobblenav {
     val contextResolver = PokenavAreaContextResolver()
 
     fun init(implementation: Implementation) {
-        loadConfig()
+        config = CobblenavConfig.load()
         this.implementation = implementation
         implementation.registerItems()
         registerArgumentTypes()
         implementation.registerCommands()
 
         ConditionCollectors.init()
-    }
-
-    fun loadConfig() {
-        config = CobblenavConfig.load()
     }
 
     private fun registerArgumentTypes() {
