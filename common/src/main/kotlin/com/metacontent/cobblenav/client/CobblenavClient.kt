@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.client.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
 import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics
 
 object CobblenavClient {
     lateinit var implementation: ClientImplementation
+    lateinit var config: ClientCobblenavConfig
     private val settingsManager = ClientSettingsDataManager
     var pokefinderSettings: PokefinderSettings? = null
     val pokefinderOverlay: PokefinderOverlay by lazy {
@@ -22,6 +24,7 @@ object CobblenavClient {
     val trackArrowOverlay: TrackArrowOverlay by lazy { TrackArrowOverlay() }
 
     fun init(implementation: ClientImplementation) {
+        config = ClientCobblenavConfig.load()
         this.implementation = implementation
         PlatformEvents.CLIENT_PLAYER_LOGIN.subscribe {
             pokefinderSettings = settingsManager.load(PokefinderSettings.NAME, PokefinderSettings::class.java) as PokefinderSettings

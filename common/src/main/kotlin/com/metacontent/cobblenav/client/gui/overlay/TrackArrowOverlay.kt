@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -13,7 +14,6 @@ import kotlin.math.atan2
 
 class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
     companion object {
-        const val OFFSET: Int = 80
         const val ARROW_SIZE: Int = 35
         const val BASE_SIZE: Int = 37
         val ARROW = cobblenavResource("textures/gui/finder/arrow.png")
@@ -21,6 +21,7 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
     }
 
     private val minecraft = Minecraft.getInstance()
+    private val offset = CobblenavClient.config.trackArrowYOffset
     var tracking = false
     var entityId = -1
         set(value) {
@@ -40,9 +41,9 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
 
         val poseStack = guiGraphics.pose()
         val scale = minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
-        val offset = (OFFSET / scale).toInt()
+        val scaledOffset = (offset / scale).toInt()
         val x = minecraft.window.guiScaledWidth / 2
-        val y = minecraft.window.guiScaledHeight - offset
+        val y = minecraft.window.guiScaledHeight - scaledOffset
         val arrowSize = (ARROW_SIZE / scale).toInt()
         val baseSize = (BASE_SIZE / scale).toInt()
 

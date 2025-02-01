@@ -20,7 +20,6 @@ import kotlin.math.sin
 
 class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     companion object {
-        const val OFFSET: Int = 10
         const val WIDTH: Int = 144
         const val HEIGHT: Int = 96
         const val COMPASS_WIDTH: Int = 23
@@ -33,6 +32,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
     private val minecraft = Minecraft.getInstance()
     private var initialized = false
+    private val offset = CobblenavClient.config.pokefinderOverlayOffset
 
     fun initialize() {
         initialized = true
@@ -45,11 +45,11 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
         val isRightHand = minecraft.player?.mainHandItem?.item is Pokefinder
         val scale = minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
-        val offset = (OFFSET / scale).toInt()
-        val width = (WIDTH / scale).toInt()
-        val height = (HEIGHT / scale).toInt()
-        val x = if (isRightHand) minecraft.window.guiScaledWidth - width - offset else offset
-        val y = minecraft.window.guiScaledHeight - height - offset
+        val scaledOffset = (offset / scale).toInt()
+        val scaledWidth = (WIDTH / scale).toInt()
+        val scaledHeight = (HEIGHT / scale).toInt()
+        val x = if (isRightHand) minecraft.window.guiScaledWidth - scaledWidth - scaledOffset else scaledOffset
+        val y = minecraft.window.guiScaledHeight - scaledHeight - scaledOffset
 
         val poseStack = guiGraphics.pose()
 
@@ -58,8 +58,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             texture = BACKGROUND,
             x = x,
             y = y,
-            width = width,
-            height = height
+            width = scaledWidth,
+            height = scaledHeight
         )
 
         val player = minecraft.player ?: return
@@ -82,8 +82,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             val vec = player.position().vectorTo(it.position()).scale(RADAR_SCALE)
             poseStack.pushPose()
             val angle = Math.toRadians(180.0 - player.rotationVector.y)
-            val posX = x + width / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
-            val posY = y + height / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
+            val posX = x + scaledWidth / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
+            val posY = y + scaledHeight / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
             poseStack.translate(posX, posY, 0.0)
             guiGraphics.fill(
                 -1, -1,
