@@ -99,6 +99,7 @@ class FinderScreen(
             cancelAction = { menu, _ ->
                 blockWidgets = false
                 removeUnblockableWidget(menu)
+                menu.openingTimer.reset()
             }
         )
     }

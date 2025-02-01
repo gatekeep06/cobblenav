@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.widget
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
 import com.metacontent.cobblenav.client.gui.util.splitText
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
@@ -33,6 +34,7 @@ class ContextMenuWidget(
         const val BUTTON_VERTICAL_OFFSET: Int = 5
         const val BUTTON_HORIZONTAL_OFFSET: Int = 1
         const val BUTTON_SPACE: Int = 3
+        const val OPENING: Float = 2f
         val COLOR: Int = FastColor.ARGB32.color(225, 132, 195, 219)
         val MENU_TOP = cobblenavResource("textures/gui/context_menu_top.png")
         val MENU_BOTTOM = cobblenavResource("textures/gui/context_menu_bottom.png")
@@ -44,6 +46,7 @@ class ContextMenuWidget(
     private val cancelButton: IconButton
     private val scale = lineHeight.toFloat() / Minecraft.getInstance().font.lineHeight.toFloat()
     private val dividedText = text.flatMap { splitText(it, (textWidth / scale).toInt()) }
+    val openingTimer = Timer(OPENING)
 
     init {
         height = TOP_HEIGHT + dividedText.size * lineHeight + BOTTOM_HEIGHT
@@ -70,31 +73,19 @@ class ContextMenuWidget(
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        guiGraphics.enableScissor(
+            x, (y + 3 + (height / 2) * (1 - openingTimer.getProgress())).toInt(),
+            x + width, (y + height - 3 - (height / 2) * (1 - openingTimer.getProgress())).toInt()
+        )
         guiGraphics.drawBlurredArea(
             x1 = x,
             y1 = y + 3,
             x2 = x + width,
             y2 = y + height - 3,
-            blur = 2f,
+            blur = 1f,
             delta = f
         )
         guiGraphics.fill(x, y + 3, x + width, y + height - 3, COLOR)
-        blitk(
-            matrixStack = guiGraphics.pose(),
-            texture = MENU_TOP,
-            x = x,
-            y = y,
-            width = WIDTH,
-            height = TOP_HEIGHT
-        )
-        blitk(
-            matrixStack = guiGraphics.pose(),
-            texture = MENU_BOTTOM,
-            x = x,
-            y = y + height - BOTTOM_HEIGHT,
-            width = WIDTH,
-            height = BOTTOM_HEIGHT
-        )
         dividedText.forEachIndexed { index, line ->
             drawScaledText(
                 context = guiGraphics,
@@ -106,8 +97,27 @@ class ContextMenuWidget(
                 scale = scale
             )
         }
+        guiGraphics.disableScissor()
+        blitk(
+            matrixStack = guiGraphics.pose(),
+            texture = MENU_TOP,
+            x = x,
+            y = y + (height / 2) * (1 - openingTimer.getProgress()),
+            width = WIDTH,
+            height = TOP_HEIGHT
+        )
+        blitk(
+            matrixStack = guiGraphics.pose(),
+            texture = MENU_BOTTOM,
+            x = x,
+            y = y + height - BOTTOM_HEIGHT - (height / 2) * (1 - openingTimer.getProgress()),
+            width = WIDTH,
+            height = BOTTOM_HEIGHT
+        )
 
         acceptButton?.render(guiGraphics, i, j, f)
         cancelButton.render(guiGraphics, i, j, f)
+
+        openingTimer.tick(f)
     }
 }

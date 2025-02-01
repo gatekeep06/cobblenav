@@ -182,6 +182,7 @@ class LocationScreen(
             cancelAction = { menu, _ ->
                 blockWidgets = false
                 removeUnblockableWidget(menu)
+                menu.openingTimer.reset()
             }
         )
 
