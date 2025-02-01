@@ -1,10 +1,12 @@
 package com.metacontent.cobblenav.client.gui.widget.layout
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
+import net.minecraft.util.FastColor
 import kotlin.math.ceil
 
 class TableView<I : AbstractWidget>(
@@ -22,6 +24,7 @@ class TableView<I : AbstractWidget>(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         items.forEach { it.render(guiGraphics, i, j, f) }
+//        guiGraphics.renderOutline(x + 1, y + 1, width - 1, height - 3, FastColor.ARGB32.color(255, 0, 0, 0))
     }
 
     fun add(widget: I) {
@@ -81,9 +84,7 @@ class TableView<I : AbstractWidget>(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (isHovered()) {
-            return super.mouseClicked(pMouseX, pMouseY, pButton)
-        }
-        return false
+        if (!clicked(pMouseX, pMouseY)) return false
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 }

@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.util.CustomizableBlurEffectProcessor
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
@@ -60,11 +61,24 @@ fun GuiGraphics.drawBlurredArea(
     blur: Float = 1f,
     delta: Float
 ) {
-    this.enableScissor(x1, y1, x2, y2)
+    this.cobblenavScissor(x1, y1, x2, y2)
     Minecraft.getInstance().gameRenderer.processBlurEffect(blur, delta)
     Minecraft.getInstance().mainRenderTarget.bindWrite(false)
     this.disableScissor()
 }
+
+fun GuiGraphics.cobblenavScissor(
+    x1: Int,
+    y1: Int,
+    x2: Int,
+    y2: Int,
+    scale: Float = CobblenavClient.config.screenScale
+) = this.enableScissor(
+    (x1 * scale).toInt(),
+    (y1 * scale).toInt(),
+    (x2 * scale).toInt(),
+    (y2 * scale).toInt()
+)
 
 fun GameRenderer.processBlurEffect(blur: Float, delta: Float) = (this as CustomizableBlurEffectProcessor).`cobblenav$processBlurEffect`(blur, delta)
 

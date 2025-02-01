@@ -4,6 +4,8 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.google.common.collect.Lists
+import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
@@ -40,6 +42,7 @@ abstract class PokenavScreen(
         val SUPPORT = cobblenavResource("textures/gui/button/support_button.png")
     }
 
+    val scale = CobblenavClient.config.screenScale
     var screenX = 0
     var screenY = 0
     abstract val color: Int
@@ -60,6 +63,10 @@ abstract class PokenavScreen(
         blockWidgets = false
         blockable.clear()
         unblockable.clear()
+
+        width = (width / scale).toInt()
+        height = (height / scale).toInt()
+
         screenX = (width - WIDTH) / 2
         screenY = (height - HEIGHT) / 2
 
@@ -70,21 +77,24 @@ abstract class PokenavScreen(
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        renderBackground(guiGraphics, mouseX, mouseY, delta)
         poseStack.pushPose()
+        poseStack.scale(scale, scale, 1f)
+        renderBackground(guiGraphics, mouseX, mouseY, delta)
+        val scaledMouseX = (mouseX / scale).toInt()
+        val scaledMouseY = (mouseY / scale).toInt()
         poseStack.translate(0f, animationOffset, 0f)
         renderBaseElement(poseStack, BORDERS)
         renderScreenBackground(guiGraphics, SCREEN, color)
-        guiGraphics.enableScissor(
+        guiGraphics.cobblenavScissor(
             screenX + VERTICAL_BORDER_DEPTH,
             screenY + HORIZONTAL_BORDER_DEPTH,
             screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH,
             screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
         )
         //render blockable widgets and the current screen's stuff
-        renderOnBackLayer(guiGraphics, mouseX, mouseY, delta)
-        renderWidgets(blockable, guiGraphics, mouseX, mouseY, delta)
-        renderOnFrontLayer(guiGraphics, mouseX, mouseY, delta)
+        renderOnBackLayer(guiGraphics, scaledMouseX, scaledMouseY, delta)
+        renderWidgets(blockable, guiGraphics, scaledMouseX, scaledMouseY, delta)
+        renderOnFrontLayer(guiGraphics, scaledMouseX, scaledMouseY, delta)
         // if true block widgets and screen
         poseStack.pushPose()
         poseStack.translate(0f, 0f, 500f)
@@ -98,7 +108,7 @@ abstract class PokenavScreen(
             )
         }
         //render unblockable widgets
-        renderWidgets(unblockable, guiGraphics, mouseX, mouseY, delta)
+        renderWidgets(unblockable, guiGraphics, scaledMouseX, scaledMouseY, delta)
         poseStack.popPose()
         guiGraphics.disableScissor()
         poseStack.pushPose()
@@ -179,37 +189,37 @@ abstract class PokenavScreen(
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
         if (!blockWidgets) {
-            val blockableClicked = blockable.widgetsClicked(d, e, i)
+            val blockableClicked = blockable.widgetsClicked(d / scale, e / scale, i)
             if (blockableClicked) {
                 return true
             }
         }
-        return unblockable.widgetsClicked(d, e, i)
+        return unblockable.widgetsClicked(d / scale, e / scale, i)
     }
 
     override fun mouseScrolled(d: Double, e: Double, f: Double, g: Double): Boolean {
         if (!blockWidgets) {
-            val blockableScrolled = blockable.widgetsScrolled(d, e, f, g)
+            val blockableScrolled = blockable.widgetsScrolled(d / scale, e / scale, f / scale, g / scale)
             if (blockableScrolled) {
                 return true
             }
         }
-        return unblockable.widgetsScrolled(d, e, f, g)
+        return unblockable.widgetsScrolled(d / scale, e / scale, f / scale, g / scale)
     }
 
     override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double): Boolean {
         if (!blockWidgets) {
-            blockable.widgetsDragged(d, e, i, f, g)
+            blockable.widgetsDragged(d / scale, e / scale, i, f / scale, g / scale)
         }
-        unblockable.widgetsDragged(d, e, i, f, g)
+        unblockable.widgetsDragged(d / scale, e / scale, i, f / scale, g / scale)
         return true
     }
 
     override fun mouseReleased(d: Double, e: Double, i: Int): Boolean {
         if (!blockWidgets) {
-            blockable.widgetsReleased(d, e, i)
+            blockable.widgetsReleased(d / scale, e / scale, i)
         }
-        unblockable.widgetsReleased(d, e, i)
+        unblockable.widgetsReleased(d / scale, e / scale, i)
         return true
     }
 

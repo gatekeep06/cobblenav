@@ -48,7 +48,7 @@ class SpawnDataWidget(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        if (isHovered && isFocused && !parent.blockWidgets) {
+        if (ishHovered(i, j) && isFocused && !parent.blockWidgets) {
             blitk(
                 matrixStack = poseStack,
                 texture = BACKGROUND,
@@ -109,7 +109,7 @@ class SpawnDataWidget(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (isHovered() && isFocused && isValidClickButton(pButton)) {
+        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
             parent.changeScreen(FinderScreen(spawnData, parent.os), true)
             return true
         }

@@ -27,7 +27,7 @@ class TextButton(
         if (disabled) {
             argb -= 0.4f
         }
-        else if (isHovered()) {
+        else if (isHovered(i, j)) {
             argb += 0.1f
         }
 
