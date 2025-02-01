@@ -75,7 +75,7 @@ class ContextMenuWidget(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         guiGraphics.enableScissor(
             x, (y + 3 + (height / 2) * (1 - openingTimer.getProgress())).toInt(),
-            x + width, (y + height - 3 - (height / 2) * (1 - openingTimer.getProgress())).toInt()
+            x + width, (y + height - 3 - (height / 2 - BOTTOM_HEIGHT) * (1 - openingTimer.getProgress())).toInt()
         )
         guiGraphics.drawBlurredArea(
             x1 = x,
@@ -110,13 +110,15 @@ class ContextMenuWidget(
             matrixStack = guiGraphics.pose(),
             texture = MENU_BOTTOM,
             x = x,
-            y = y + height - BOTTOM_HEIGHT - (height / 2) * (1 - openingTimer.getProgress()),
+            y = y + height - BOTTOM_HEIGHT - (height / 2 - BOTTOM_HEIGHT) * (1 - openingTimer.getProgress()),
             width = WIDTH,
             height = BOTTOM_HEIGHT
         )
 
-        acceptButton?.render(guiGraphics, i, j, f)
-        cancelButton.render(guiGraphics, i, j, f)
+        if (openingTimer.isOver()) {
+            acceptButton?.render(guiGraphics, i, j, f)
+            cancelButton.render(guiGraphics, i, j, f)
+        }
 
         openingTimer.tick(f)
     }
