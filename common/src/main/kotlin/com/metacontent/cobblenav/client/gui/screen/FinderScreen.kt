@@ -82,13 +82,13 @@ class FinderScreen(
         supportContextMenu = ContextMenuWidget(
             text = listOf(
                 Component.translatable("gui.cobblenav.support.finder_screen"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.potential_stars"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.stats_table"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.track_button"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.pokefinder_button")
             ),
             pX = (width - ContextMenuWidget.WIDTH) / 2,
