@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation
 class GroundedTypeBlockCollector : BlockConditionCollector<GroundedTypeSpawningCondition<*>>, ConfigureableCollector {
     override val configName = "grounded_type_block"
     override val conditionClass = GroundedTypeSpawningCondition::class.java
+    override var neededInstalledMods: List<String> = emptyList()
+    override var neededUninstalledMods: List<String> = emptyList()
 
     override fun collect(
         condition: GroundedTypeSpawningCondition<*>,

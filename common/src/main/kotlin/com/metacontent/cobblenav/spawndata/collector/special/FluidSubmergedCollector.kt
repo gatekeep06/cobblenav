@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerPlayer
 class FluidSubmergedCollector : ConditionCollector<SubmergedTypeSpawningCondition<*>>, ConfigureableCollector {
     override val configName = "fluid_submerged"
     override val conditionClass = SubmergedTypeSpawningCondition::class.java
+    override var neededInstalledMods: List<String> = emptyList()
+    override var neededUninstalledMods: List<String> = emptyList()
 
     override fun collect(
         condition: SubmergedTypeSpawningCondition<*>,

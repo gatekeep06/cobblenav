@@ -10,7 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 
-interface BlockConditionCollector<T : SpawningCondition<*>> : SpawningConditionSupporter<T> {
+interface BlockConditionCollector<T : SpawningCondition<*>> : Collector<T> {
     fun collect(condition: T, contexts: List<AreaSpawningContext>): Set<ResourceLocation>
 
     fun MutableList<RegistryLikeCondition<Block>>.toBlockList(): List<ResourceLocation> {
