@@ -122,4 +122,9 @@ class ContextMenuWidget(
 
         openingTimer.tick(f)
     }
+
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (!openingTimer.isOver()) return false
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
+    }
 }
