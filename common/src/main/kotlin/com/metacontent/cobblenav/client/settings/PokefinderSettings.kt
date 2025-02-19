@@ -67,13 +67,13 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
                 ?.split(",", " ", ", ")
                 ?.map { it.trim().lowercase() }
                 ?.filter { it.isNotBlank() }
-                ?.toSet()
+                ?.toMutableSet()
             settings.shinyOnly = matchingPair(settingPairList, "shinyonly")?.second?.toBooleanStrictOrNull()
             settings.aspects = matchingPair(settingPairList, "aspects")?.second
                 ?.split(",", " ", ", ")
                 ?.map { it.trim() }
                 ?.filter { it.isNotBlank() }
-                ?.toSet()
+                ?.toMutableSet()
 
             return settings
         }
@@ -86,27 +86,11 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
 
 //    var radius: Double? = null
 //        private set
-    var species: Set<String>? = null
-        private set
+    var species: MutableSet<String>? = null
     var shinyOnly: Boolean? = null
-        private set
-    var aspects: Set<String>? = null
-        private set
+    var aspects: MutableSet<String>? = null
 //    var level: IntRanges? = null
 //        private set
-
-    fun merge(
-//        radius: Double? = null,
-        species: Set<String>? = null,
-        shinyOnly: Boolean? = null,
-        aspects: Set<String>? = null,
-//        level: IntRanges? = null
-    ) {
-        changed = true
-        species?.let { this.species = it }
-        shinyOnly?.let { this.shinyOnly = it }
-        aspects?.let { this.aspects = it }
-    }
 
     fun apply(settings: PokefinderSettings) {
         changed = true

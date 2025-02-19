@@ -47,6 +47,7 @@
   "gui.cobblenav.info_button.body.ability": "宝可梦的特性。如果是隐藏特性，则用感叹号标记",
   "gui.cobblenav.info_button.header.egg_move": "蛋招式",
   "gui.cobblenav.info_button.body.egg_move": "宝可梦的蛋招式。如果存在，则用感叹号标记",
+  "gui.cobblenav.notification.pokefinder_updated": "宝可梦现已加入宝可搜索器",
 
   "gui.cobblenav.level": "%s 级",
   "gui.cobblenav.unknown_biome": "未知生物群落",
