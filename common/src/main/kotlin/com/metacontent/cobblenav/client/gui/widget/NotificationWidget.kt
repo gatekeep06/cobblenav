@@ -45,9 +45,10 @@ class NotificationWidget(pX: Int, pY: Int) : SoundlessWidget(pX, pY, WIDTH, HEIG
         drawScaledText(
             context = guiGraphics,
             text = notification.text,
-            x = x,
-            y = y + 2,
-            maxCharacterWidth = width,
+            x = x + 2,
+            y = y + 5,
+            maxCharacterWidth = (width / 0.6f).toInt(),
+            scale = 0.6f
 //            shadow = true
         )
         notification.timer.tick(f)

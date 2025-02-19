@@ -47,7 +47,7 @@
   "gui.cobblenav.info_button.body.ability": "Ability of the Pokémon found. Marked with an exclamation mark if the ability is hidden",
   "gui.cobblenav.info_button.header.egg_move": "Egg Move",
   "gui.cobblenav.info_button.body.egg_move": "Egg move of the Pokémon found. Marked with an exclamation mark if present",
-  "gui.cobblenav.notification.pokefinder_updated": "Species and aspects added to PokéFinder",
+  "gui.cobblenav.notification.pokefinder_updated": "Pokémon added to PokéFinder",
 
   "gui.cobblenav.level": "%s lvl",
   "gui.cobblenav.unknown_biome": "Unknown Biome",
