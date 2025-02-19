@@ -86,11 +86,11 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
 
 //    var radius: Double? = null
 //        private set
-    var species: Set<String>? = null
+    var species: MutableSet<String>? = null
         private set
     var shinyOnly: Boolean? = null
         private set
-    var aspects: Set<String>? = null
+    var aspects: MutableSet<String>? = null
         private set
 //    var level: IntRanges? = null
 //        private set
