@@ -137,12 +137,14 @@ class FinderScreen(
             pHeight = BUTTON_HEIGHT,
             texture = POKEFINDER,
             disabled = settings?.species?.contains(name) == true && settings.aspects == spawnData.spawnAspects,
-            action = {
-                settings?.merge(
-                    species = setOf(name),
-                    aspects = spawnData.spawnAspects
-                )
-                it.disabled = true
+            action = { button ->
+                settings?.let {
+                    it.species?.add(name) ?: { it.species = mutableSetOf(name) }
+                    it.aspects?.addAll(spawnData.spawnAspects) ?: { it.aspects = spawnData.spawnAspects.toMutableSet() }
+                    button.disabled = true
+                    notifications.add(Component.translatable("gui.cobblenav.notification.pokefinder_updated"))
+                    return@IconButton
+                }
             }
         ).also { addBlockableWidget(it) }
 
