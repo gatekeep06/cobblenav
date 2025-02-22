@@ -23,7 +23,6 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(LocationScreenInitDataPacket.ID, LocationScreenInitDataPacket::decode, LocationScreenInitDataHandler))
         list.add(PacketRegisterInfo(FoundPokemonPacket.ID, FoundPokemonPacket::decode, FoundPokemonHandler))
         list.add(PacketRegisterInfo(OpenPokenavPacket.ID, OpenPokenavPacket::decode, OpenPokenavHandler))
-        list.add(PacketRegisterInfo(UpdatePokefinderSettingsPacket.ID, UpdatePokefinderSettingsPacket::decode, UpdatePokefinderSettingsHandler))
 
         return list
     }

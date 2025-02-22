@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation
 class AreaTypeBlockCollector : BlockConditionCollector<AreaTypeSpawningCondition<*>>, ConfigureableCollector {
     override val configName = "area_type_block"
     override val conditionClass = AreaTypeSpawningCondition::class.java
+    override var neededInstalledMods: List<String> = emptyList()
+    override var neededUninstalledMods: List<String> = emptyList()
 
     override fun collect(condition: AreaTypeSpawningCondition<*>, contexts: List<AreaSpawningContext>): Set<ResourceLocation> {
         val blocks = mutableSetOf<ResourceLocation>()

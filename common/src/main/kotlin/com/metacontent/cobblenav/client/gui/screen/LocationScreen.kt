@@ -171,7 +171,7 @@ class LocationScreen(
         supportContextMenu = ContextMenuWidget(
             text = listOf(
                 Component.translatable("gui.cobblenav.support.location_screen"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.bucket_checkbox")
             ),
             pX = (width - ContextMenuWidget.WIDTH) / 2,
@@ -182,6 +182,7 @@ class LocationScreen(
             cancelAction = { menu, _ ->
                 blockWidgets = false
                 removeUnblockableWidget(menu)
+                menu.openingTimer.reset()
             }
         )
 

@@ -83,13 +83,13 @@ class FinderScreen(
         supportContextMenu = ContextMenuWidget(
             text = listOf(
                 Component.translatable("gui.cobblenav.support.finder_screen"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.potential_stars"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.stats_table"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.track_button"),
-                Component.empty(),
+                Component.literal(" "),
                 Component.translatable("gui.cobblenav.support.pokefinder_button")
             ),
             pX = (width - ContextMenuWidget.WIDTH) / 2,
@@ -100,6 +100,7 @@ class FinderScreen(
             cancelAction = { menu, _ ->
                 blockWidgets = false
                 removeUnblockableWidget(menu)
+                menu.openingTimer.reset()
             }
         )
     }
@@ -129,20 +130,22 @@ class FinderScreen(
         ).also { addBlockableWidget(it) }
 
         val settings = CobblenavClient.pokefinderSettings
-        val name = spawnData.renderable.species.name.lowercase()
+        val name = spawnData.renderable.species.name
         pokefinderButton = IconButton(
             pX = findButton.x - BUTTON_SPACE - BUTTON_WIDTH,
             pY = findButton.y + (findButton.height - BUTTON_HEIGHT) / 2,
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
             texture = POKEFINDER,
-            disabled = settings?.species?.contains(name) == true && settings.aspects == spawnData.spawnAspects,
-            action = {
-                settings?.merge(
-                    species = setOf(name),
-                    aspects = spawnData.spawnAspects
-                )
-                it.disabled = true
+            disabled = settings?.species?.contains(name.lowercase()) == true && settings.aspects == spawnData.spawnAspects,
+            action = { button ->
+                settings?.let {
+                    it.species += name
+                    it.aspects += spawnData.spawnAspects
+                    button.disabled = true
+                    notifications.add(Component.translatable("gui.cobblenav.notification.pokefinder_updated"))
+                    return@IconButton
+                }
             }
         ).also { addBlockableWidget(it) }
 

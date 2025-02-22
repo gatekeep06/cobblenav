@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation
 class SeafloorTypeBlockCollector : BlockConditionCollector<SeafloorTypeSpawningCondition<*>>, ConfigureableCollector {
     override val configName = "seafloor_type_block"
     override val conditionClass = SeafloorTypeSpawningCondition::class.java
+    override var neededInstalledMods: List<String> = emptyList()
+    override var neededUninstalledMods: List<String> = emptyList()
 
     override fun collect(
         condition: SeafloorTypeSpawningCondition<*>,

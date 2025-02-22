@@ -12,8 +12,10 @@ import kotlin.math.min
 class CheckBox(
     pX: Int, pY: Int,
     pHeight: Int, pWidth: Int,
+    private val textOffset: Int = 2,
     disabled: Boolean = false,
     private val text: MutableComponent,
+    private val shadow: Boolean = false,
     default: Boolean = false,
     afterClick: (PokenavButton) -> Unit
 ) : PokenavButton(pX, pY, pWidth, pHeight, text, disabled, {
@@ -21,7 +23,6 @@ class CheckBox(
     afterClick.invoke(it)
 }) {
     companion object {
-        const val TEXT_OFFSET: Int = 2
         val COLOR = FastColor.ARGB32.color(255, 240, 240, 240)
         val CHECKMARK = cobblenavResource("textures/gui/button/checked.png")
     }
@@ -47,17 +48,18 @@ class CheckBox(
                 )
             }
             else {
-                guiGraphics.fill(x + 2, y + 2, x + height - 4, y + height - 4, COLOR)
+                guiGraphics.fill(x + 2, y + 2, x + height - 2, y + height - 2, COLOR)
             }
         }
 
         drawScaledText(
             context = guiGraphics,
             text = text,
-            x = x + height + TEXT_OFFSET,
+            x = x + height + textOffset,
             y = y + 1 * scale,
             scale = scale,
-            maxCharacterWidth = width - height - TEXT_OFFSET
+            shadow = shadow,
+            maxCharacterWidth = width - height - textOffset
         )
     }
 }

@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.google.common.collect.Lists
+import com.metacontent.cobblenav.client.gui.widget.NotificationWidget
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.os.PokenavOS
@@ -51,6 +52,7 @@ abstract class PokenavScreen(
     var blockWidgets: Boolean = false
     private val blockable = Lists.newArrayList<AbstractWidget>()
     private val unblockable = Lists.newArrayList<AbstractWidget>()
+    lateinit var notifications: NotificationWidget
     var previousScreen: PokenavScreen? = null
 
     init {
@@ -69,6 +71,11 @@ abstract class PokenavScreen(
 
         screenX = (width - WIDTH) / 2
         screenY = (height - HEIGHT) / 2
+
+        notifications = NotificationWidget(
+            screenX + VERTICAL_BORDER_DEPTH,
+            screenY + HORIZONTAL_BORDER_DEPTH
+        ).also { addUnblockableWidget(it) }
 
         initScreen()
     }

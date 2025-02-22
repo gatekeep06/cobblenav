@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerPlayer
 class FluidSurfaceCollector : ConditionCollector<SurfaceTypeSpawningCondition<*>>, ConfigureableCollector {
     override val configName = "fluid_surface"
     override val conditionClass = SurfaceTypeSpawningCondition::class.java
+    override var neededInstalledMods: List<String> = emptyList()
+    override var neededUninstalledMods: List<String> = emptyList()
 
     override fun collect(
         condition: SurfaceTypeSpawningCondition<*>,

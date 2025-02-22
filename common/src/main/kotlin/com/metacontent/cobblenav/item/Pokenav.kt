@@ -31,7 +31,7 @@ class Pokenav(private val model: PokenavModelType) : Item(Properties().stacksTo(
                 OpenPokenavPacket(PokenavOS("Lite", canUseLocation = true)).sendToPlayer(it)
             }
         }
-        return InteractionResultHolder.success(player.getItemInHand(interactionHand))
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(interactionHand), false)
     }
 
     override fun getDescriptionId(itemStack: ItemStack): String {
