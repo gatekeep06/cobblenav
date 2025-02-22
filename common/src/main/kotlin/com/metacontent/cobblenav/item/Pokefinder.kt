@@ -22,9 +22,8 @@ class Pokefinder : Item(Properties().stacksTo(1)) {
     ): InteractionResultHolder<ItemStack> {
         if (level.isClientSide()) {
             Minecraft.getInstance().setScreen(PokefinderScreen())
-            return InteractionResultHolder.success(player.getItemInHand(interactionHand))
         }
-        return InteractionResultHolder.fail(player.getItemInHand(interactionHand))
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(interactionHand), false)
     }
 
     override fun getDescriptionId(): String {
