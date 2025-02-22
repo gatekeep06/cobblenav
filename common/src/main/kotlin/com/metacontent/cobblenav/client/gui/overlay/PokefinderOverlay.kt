@@ -66,16 +66,12 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
         renderCompass(poseStack, 180f - player.rotationVector.y, x, y, scale)
 
-        val species = settings?.species?.map { it.lowercase() }
         val radius = /*settings?.radius ?:*/ 200.0
-        val entities = minecraft.level?.getEntitiesOfClass(
-            PokemonEntity::class.java,
-            AABB.ofSize(player.position(), radius, radius, radius)
-        ) {
-            (species?.contains(it.pokemon.species.name.lowercase()) == true || species?.isEmpty() != false)
-                    && (it.pokemon.shiny || settings?.shinyOnly != true)
-                    && it.pokemon.aspects.containsAll(settings?.aspects ?: setOf())
-//                    && settings?.level?.contains(it.pokemon.level) != false
+        val entities = settings?.let {
+            minecraft.level?.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(player.position(), radius, radius, radius)
+            ) { settings.check(it.pokemon) }
         } ?: listOf()
 
         entities.forEach {
