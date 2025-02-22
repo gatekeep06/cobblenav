@@ -129,18 +129,18 @@ class FinderScreen(
         ).also { addBlockableWidget(it) }
 
         val settings = CobblenavClient.pokefinderSettings
-        val name = spawnData.renderable.species.name.lowercase()
+        val name = spawnData.renderable.species.name
         pokefinderButton = IconButton(
             pX = findButton.x - BUTTON_SPACE - BUTTON_WIDTH,
             pY = findButton.y + (findButton.height - BUTTON_HEIGHT) / 2,
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
             texture = POKEFINDER,
-            disabled = settings?.species?.contains(name) == true && settings.aspects == spawnData.spawnAspects,
+            disabled = settings?.species?.contains(name.lowercase()) == true && settings.aspects == spawnData.spawnAspects,
             action = { button ->
                 settings?.let {
-                    it.species?.add(name) ?: { it.species = mutableSetOf(name) }
-                    it.aspects?.addAll(spawnData.spawnAspects) ?: { it.aspects = spawnData.spawnAspects.toMutableSet() }
+                    it.species += name
+                    it.aspects += spawnData.spawnAspects
                     button.disabled = true
                     notifications.add(Component.translatable("gui.cobblenav.notification.pokefinder_updated"))
                     return@IconButton
