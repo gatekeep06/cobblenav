@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.client.gui.screen.pokefinder
 
+import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.client.render.drawScaledText
@@ -8,8 +9,10 @@ import com.metacontent.cobblenav.client.gui.widget.TextFieldWidget
 import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 
@@ -28,6 +31,11 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         const val Y_CHECK_BOX_OFFSET: Int = 10
         val BACKGROUND = cobblenavResource("textures/gui/pokefinder/background.png")
         val LOGO = cobblenavResource("textures/gui/pokefinder/logo.png")
+    }
+
+    val player: LocalPlayer? = Minecraft.getInstance().player
+    init {
+        player?.playSound(CobblemonSounds.PC_ON, 0.1f, 2f)
     }
 
     private var screenX = 0
