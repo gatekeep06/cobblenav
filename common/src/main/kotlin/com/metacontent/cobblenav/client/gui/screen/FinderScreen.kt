@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.api.gui.blitk
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
+import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.button.TextButton
@@ -222,13 +223,14 @@ class FinderScreen(
     private fun renderPokeballAnimation(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
 
-        guiGraphics.enableScissor(
+        poseStack.pushPose()
+        poseStack.scale(scale, scale, 1f)
+        guiGraphics.cobblenavScissor(
             screenX + VERTICAL_BORDER_DEPTH,
             screenY + HORIZONTAL_BORDER_DEPTH,
             screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH,
             screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
         )
-        poseStack.pushPose()
         poseStack.translate(0f, 0f, 400f)
         blitk(
             matrixStack = poseStack,

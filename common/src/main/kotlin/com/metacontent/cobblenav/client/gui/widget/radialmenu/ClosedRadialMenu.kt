@@ -16,8 +16,12 @@ class ClosedRadialMenu(
     private val timer = Timer(ANIMATION_DURATION)
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        if (isHovered()) {
+        var rgb = 1f
+        var alpha = 0.6f
+        if (ishHovered(mouseX, mouseY)) {
             timer.tick(delta)
+            rgb = 1.1f
+            alpha = 1f
         }
         else if (timer.getProgress() != 0f) {
             timer.reset()
@@ -30,10 +34,10 @@ class ClosedRadialMenu(
             width = MENU_DIAMETER,
             height = MENU_DIAMETER,
             textureWidth = ANIMATION_SHEET_WIDTH,
-            red = if (isHovered()) 1.1 else 1,
-            green = if (isHovered()) 1.1 else 1,
-            blue = if (isHovered()) 1.1 else 1,
-            alpha = if (isHovered()) 1 else 0.6
+            red = rgb,
+            green = rgb,
+            blue = rgb,
+            alpha = alpha
         )
     }
 

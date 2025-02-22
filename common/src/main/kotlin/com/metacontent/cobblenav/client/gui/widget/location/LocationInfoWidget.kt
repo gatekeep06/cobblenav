@@ -66,7 +66,7 @@ class LocationInfoWidget(
             height = SYMBOL_HEIGHT
         )
 
-        if (isHovered && !checkPair.first) {
+        if (ishHovered(i, j) && !checkPair.first) {
             guiGraphics.renderComponentHoverEffect(Minecraft.getInstance().font, checkPair.second.style, i - 100, j + height + 10)
         }
     }

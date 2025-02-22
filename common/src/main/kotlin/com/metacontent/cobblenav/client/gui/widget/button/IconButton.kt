@@ -24,7 +24,7 @@ open class IconButton(
         if (disabled) {
             rgb -= 0.4f
         }
-        else if (isHovered()) {
+        else if (isHovered(i, j)) {
             rgb += 0.1f
         }
 

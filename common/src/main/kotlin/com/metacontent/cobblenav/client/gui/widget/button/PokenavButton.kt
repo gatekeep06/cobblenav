@@ -29,4 +29,6 @@ abstract class PokenavButton(
     }
 
     fun activate() = action.invoke(this)
+
+    fun isHovered(mouseX: Int, mouseY: Int) = mouseX in this.x..(this.x + this.width) && mouseY in this.y..(this.y + this.height)
 }
