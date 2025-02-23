@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.Timer
+import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
 import com.metacontent.cobblenav.client.gui.util.splitText
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
@@ -73,7 +74,7 @@ class ContextMenuWidget(
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        guiGraphics.enableScissor(
+        guiGraphics.cobblenavScissor(
             x, (y + 3 + (height / 2) * (1 - openingTimer.getProgress())).toInt(),
             x + width, (y + height - 3 - (height / 2 - BOTTOM_HEIGHT) * (1 - openingTimer.getProgress())).toInt()
         )
