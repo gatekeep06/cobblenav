@@ -1,3 +1,26 @@
+# Update 2.1.0
+
+- Revamped the Pokémon spawn details collection system. Made scalability easier, added ability to register collectors from outside, i.e. by other mods.
+- Added ability to remove built-in collectors via config. In other words, added ability to limit available information in PokéNav tooltips.
+- Added client config with the following settings:
+  - PokéNav screen scale,
+  - setting that determines whether rendering errors should be sent to the chat room,
+  - setting that determines whether to shade unknown pokémon,
+  - setting that determines whether PokéNav will use swimming animations when appropriate,
+  - PokéFinder interface offset,
+  - track arrow offset.
+- Added PokéFinder configuration screen.
+- Added pop-up notifications (So far, only to notify you when a species is added to your PokéFinder settings).
+- Revamped PokéFinder settings.
+- Removed the PokéFinder configuration command.
+- Added animation of context menu opening.
+- Added Chinese translation by Brzjomo.
+- Added support for seasonal forms.
+- Removed hand swing when using PokéNav.
+- Fixed an issue that caused some special Pokémon forms to be considered unknown, even though logically they should be known.
+- Fixed an issue with the PokéFinder interface layer hierarchy.
+- Fixed line breaks for languages that do not use spaces.
+
 # Hotfix alpha-2.0.2
 
 - Fixed crash when starting a dedicated server
