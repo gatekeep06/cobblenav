@@ -1,12 +1,9 @@
 package com.metacontent.cobblenav.networking.packet.client
 
-import com.cobblemon.mod.common.pokemon.RenderablePokemon
-import com.cobblemon.mod.common.util.readList
 import com.cobblemon.mod.common.util.readString
-import com.cobblemon.mod.common.util.writeCollection
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.networking.packet.CobblenavNetworkPacket
-import com.metacontent.cobblenav.util.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 

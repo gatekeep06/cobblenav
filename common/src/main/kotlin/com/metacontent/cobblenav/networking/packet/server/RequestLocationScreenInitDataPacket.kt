@@ -1,12 +1,12 @@
 package com.metacontent.cobblenav.networking.packet.server
 
-import com.cobblemon.mod.common.api.net.NetworkPacket
+import com.metacontent.cobblenav.networking.packet.CobblenavNetworkPacket
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class RequestLocationScreenInitDataPacket : NetworkPacket<RequestLocationScreenInitDataPacket> {
+class RequestLocationScreenInitDataPacket : CobblenavNetworkPacket<RequestLocationScreenInitDataPacket> {
     companion object {
-        val ID = cobblenavResource("request_saved_preferences")
+        val ID = cobblenavResource("request_location_screen_init_data")
         fun decode(buffer: RegistryFriendlyByteBuf) = RequestLocationScreenInitDataPacket()
     }
 

@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.widget
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.metacontent.cobblenav.client.gui.util.getTimeString
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -43,16 +44,5 @@ class StatusBarWidget(
             width = DECORATION_WIDTH,
             height = height
         )
-    }
-
-    private fun getTimeString(dayTime: Long): String {
-        val adjustedTime = (dayTime + 6000) % 24000
-        var hours = (adjustedTime / 1000).toInt()
-        val minutes = ((adjustedTime % 1000) * 60 / 1000).toInt()
-        val period = if (hours >= 12) "PM" else "AM"
-        hours %= 12
-        hours = if (hours == 0) 12 else hours
-
-        return String.format("%02d:%02d %s", hours, minutes, period)
     }
 }

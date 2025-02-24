@@ -3,15 +3,17 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
+import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import java.awt.Color
 
 class MainScreen(
+    os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean = false
-) : PokenavScreen(makeOpeningSound, animateOpening, Component.literal("Main")) {
+) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Main")) {
     override val color = FastColor.ARGB32.color(255, 79, 189, 201)
 
     override fun initScreen() {
@@ -27,7 +29,7 @@ class MainScreen(
         ).also { addUnblockableWidget(it) }
     }
 
-    override fun renderScreen(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
 
     }
 }

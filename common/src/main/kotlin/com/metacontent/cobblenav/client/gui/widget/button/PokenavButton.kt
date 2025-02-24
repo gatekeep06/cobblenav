@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.client.gui.widget.button
 
+import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.sounds.SoundManager
@@ -12,8 +13,8 @@ abstract class PokenavButton(
     pHeight: Int,
     message: Component,
     var disabled: Boolean,
-    private val action: () -> Unit
-) : AbstractWidget(pX, pY, pWidth, pHeight, message) {
+    private val action: (PokenavButton) -> Unit
+) : AbstractWidget(pX, pY, pWidth, pHeight, message), CobblemonRenderable {
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
     }
 
@@ -24,6 +25,10 @@ abstract class PokenavButton(
         if (disabled) {
             return
         }
-        action.invoke()
+        activate()
     }
+
+    fun activate() = action.invoke(this)
+
+    fun isHovered(mouseX: Int, mouseY: Int) = mouseX in this.x..(this.x + this.width) && mouseY in this.y..(this.y + this.height)
 }

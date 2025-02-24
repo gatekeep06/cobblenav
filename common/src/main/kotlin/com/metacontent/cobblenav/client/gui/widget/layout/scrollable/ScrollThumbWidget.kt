@@ -1,18 +1,16 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
-import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.gui.widget.button.PokenavButton
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
-import kotlin.math.abs
 
 class ScrollThumbWidget(
     x: Int, y: Int,
     val parent: ScrollableView
-) : AbstractWidget(x, y, WIDTH, 0, Component.literal(" Scroll Thumb")) {
+) : PokenavButton(x, y, WIDTH, 0, Component.literal(" Scroll Thumb"), false, {}) {
     companion object {
         const val WIDTH: Int = 2
     }
@@ -24,7 +22,7 @@ class ScrollThumbWidget(
             x, y,
             x + width,
             y + height,
-            FastColor.ARGB32.color(100 + if (isHovered()) 30 else 0, 255, 255, 255)
+            FastColor.ARGB32.color(100 + if (isHovered(i, j)) 30 else 0, 255, 255, 255)
         )
     }
 

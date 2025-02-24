@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.metacontent.cobblenav.client.gui.util.AnimationTimer
+import com.metacontent.cobblenav.client.gui.util.Timer
 import com.mojang.math.Axis
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -20,7 +20,7 @@ class OpeningRadialMenu(
     }
 
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / DIAMETER
-    private val timer = AnimationTimer(ANIMATION_DURATION)
+    private val timer = Timer(ANIMATION_DURATION)
     private val buttons = listOf(SWITCH_OFF, CONTACTS, LOCATION, MAP)
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {

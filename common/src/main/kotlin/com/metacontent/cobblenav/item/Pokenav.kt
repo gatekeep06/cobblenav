@@ -1,9 +1,10 @@
 package com.metacontent.cobblenav.item
 
-import com.metacontent.cobblenav.client.gui.screen.MainScreen
+import com.metacontent.cobblenav.networking.packet.client.OpenPokenavPacket
+import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
@@ -25,10 +26,12 @@ class Pokenav(private val model: PokenavModelType) : Item(Properties().stacksTo(
         player: Player,
         interactionHand: InteractionHand
     ): InteractionResultHolder<ItemStack> {
-        if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(MainScreen(makeOpeningSound = true, animateOpening = true))
+        if (!level.isClientSide()) {
+            (player as? ServerPlayer)?.let {
+                OpenPokenavPacket(PokenavOS("Lite", canUseLocation = true)).sendToPlayer(it)
+            }
         }
-        return InteractionResultHolder.success(player.getItemInHand(interactionHand))
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(interactionHand), false)
     }
 
     override fun getDescriptionId(itemStack: ItemStack): String {

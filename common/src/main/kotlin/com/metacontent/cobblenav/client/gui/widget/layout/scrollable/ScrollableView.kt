@@ -1,10 +1,13 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
+import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
+import net.minecraft.util.FastColor
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -14,7 +17,7 @@ class ScrollableView(
     width: Int, height: Int,
     private val scrollMultiplier: Float = 20f,
     val child: AbstractWidget
-) : ClickableParentWidget(x, y, width, height, Component.literal("Scrollable View")) {
+) : SoundlessWidget(x, y, width, height, Component.literal("Scrollable View")) {
     var scrolled = 0
         set(value) {
             field = max(min(value, child.height - height), 0)
@@ -28,10 +31,16 @@ class ScrollableView(
     private val scrollThumb = ScrollThumbWidget(x + width - ScrollThumbWidget.WIDTH, y, this).also { addWidget(it) }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        guiGraphics.enableScissor(x, y, x + width, y + height)
+        guiGraphics.cobblenavScissor(x, y, x + width, y + height)
         child.render(guiGraphics, i, j, f)
         scrollThumb.render(guiGraphics, i, j, f)
+//        guiGraphics.renderOutline(x, y, width, height, FastColor.ARGB32.color(255, 255, 255, 255))
         guiGraphics.disableScissor()
+    }
+
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (!clicked(pMouseX, pMouseY)) return false
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 
     override fun mouseScrolled(

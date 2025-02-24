@@ -13,6 +13,7 @@ object SavePreferencesHandler : ServerNetworkPacketHandler<SavePreferencesPacket
             val tag = player.savedPreferences()
             tag.putInt(PreferencesSaver.BUCKET_INDEX_KEY, packet.bucketIndex)
             tag.putString(PreferencesSaver.SORTING_KEY, packet.sorting.name)
+            tag.putBoolean(PreferencesSaver.APPLY_BUCKET_KEY, packet.applyBucketChecked)
         }
     }
 }

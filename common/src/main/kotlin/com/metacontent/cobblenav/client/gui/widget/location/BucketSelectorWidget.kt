@@ -1,10 +1,13 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
+import com.cobblemon.mod.common.api.text.onHover
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
+import com.metacontent.cobblenav.client.gui.util.translateOr
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.util.cobblenavResource
+import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
@@ -18,7 +21,7 @@ class BucketSelectorWidget(
         const val BUTTON_WIDTH: Int = 10
         const val BUTTON_HEIGHT: Int = 9
         const val SPACE: Int = 1
-        const val BUCKET_KEY_BASE: String = "bucket.cobblenav."
+        const val BUCKET_KEY_BASE: String = "bucket.cobblenav"
         val NEXT = cobblenavResource("textures/gui/button/next_button.png")
         val PREV = cobblenavResource("textures/gui/button/prev_button.png")
     }
@@ -46,13 +49,25 @@ class BucketSelectorWidget(
         prevButton.disabled = parent.bucketIndex <= 0
         nextButton.disabled = parent.bucketIndex >= parent.buckets.size - 1
         prevButton.render(guiGraphics, i, j, f)
+        val bucketName = parent.currentBucket.name
+        val pair = translateOr(
+            "$BUCKET_KEY_BASE.$bucketName",
+            Component.literal(bucketName)
+        )
+        val text = pair.second
+        if (!pair.first) {
+            text.onHover("$BUCKET_KEY_BASE.$bucketName")
+                .withStyle(ChatFormatting.RED)
+        }
         drawScaledText(
             context = guiGraphics,
-            text = Component.translatable(BUCKET_KEY_BASE + parent.currentBucket),
+            text = text,
             x = x + WIDTH / 2,
             y = y + 3,
             centered = true,
-            maxCharacterWidth = WIDTH - 2 * (BUTTON_WIDTH + SPACE)
+            maxCharacterWidth = WIDTH - 2 * (BUTTON_WIDTH + SPACE),
+            pMouseX = i,
+            pMouseY = j
         )
         nextButton.render(guiGraphics, i, j, f)
     }

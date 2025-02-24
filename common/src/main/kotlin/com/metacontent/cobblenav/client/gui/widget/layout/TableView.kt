@@ -1,27 +1,30 @@
 package com.metacontent.cobblenav.client.gui.widget.layout
 
-import com.metacontent.cobblenav.client.gui.widget.ClickableParentWidget
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
+import net.minecraft.util.FastColor
 import kotlin.math.ceil
 
 class TableView<I : AbstractWidget>(
     x: Int, y: Int,
     width: Int,
     val columns: Int,
-    private val verticalPadding: Int = 0,
     val columnWidth: Int = width / columns,
+    private val verticalPadding: Int = 0,
+    private val horizontalPadding: Int = (width - columns * columnWidth) / (columns - 1),
     val rowHeight: Int = 0,
-) : ClickableParentWidget(x, y, width, 0, Component.literal("Table View")) {
+) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
     private val items = mutableListOf<I>()
-    private val horizontalPadding = (width - columns * columnWidth) / (columns - 1)
     val rows
         get() = ceil(items.size.toFloat() / columns.toFloat()).toInt()
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         items.forEach { it.render(guiGraphics, i, j, f) }
+//        guiGraphics.renderOutline(x + 1, y + 1, width - 1, height - 3, FastColor.ARGB32.color(255, 0, 0, 0))
     }
 
     fun add(widget: I) {
@@ -37,6 +40,7 @@ class TableView<I : AbstractWidget>(
     }
 
     fun clear() {
+        items.forEach { removeWidget(it) }
         items.clear()
     }
 
@@ -47,6 +51,12 @@ class TableView<I : AbstractWidget>(
         items.clear()
         add(resortedItems)
     }
+
+    fun applyToAll(consumer: (I) -> Unit) {
+        items.forEach(consumer)
+    }
+
+    fun isEmpty() = items.isEmpty()
 
     private fun initItems() {
         height = (rowHeight + verticalPadding) * rows
@@ -71,5 +81,10 @@ class TableView<I : AbstractWidget>(
         val delta = x - i
         super.setX(i)
         items.forEach { it.x -= delta }
+    }
+
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (!clicked(pMouseX, pMouseY)) return false
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 }

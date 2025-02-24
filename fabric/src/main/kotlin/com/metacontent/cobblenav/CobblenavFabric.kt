@@ -1,13 +1,19 @@
 package com.metacontent.cobblenav
 
-import com.metacontent.cobblenav.registry.CobblenavItems
+import com.metacontent.cobblenav.CobblenavItems
 import com.metacontent.cobblenav.util.cobblenavResource
+import com.mojang.brigadier.arguments.ArgumentType
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
+import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
+import kotlin.reflect.KClass
 
 class CobblenavFabric : ModInitializer, Implementation {
     override val networkManager = CobblenavFabricNetworkManager
@@ -32,5 +38,14 @@ class CobblenavFabric : ModInitializer, Implementation {
     }
 
     override fun registerCommands() {
+        CommandRegistrationCallback.EVENT.register(CobblenavCommands::register)
+    }
+
+    override fun <A : ArgumentType<*>, T : ArgumentTypeInfo.Template<A>> registerCommandArgument(
+        identifier: ResourceLocation,
+        argumentClass: KClass<A>,
+        serializer: ArgumentTypeInfo<A, T>
+    ) {
+        ArgumentTypeRegistry.registerArgumentType(identifier, argumentClass.java, serializer)
     }
 }

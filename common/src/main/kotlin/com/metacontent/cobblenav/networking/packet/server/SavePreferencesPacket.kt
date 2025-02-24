@@ -5,12 +5,17 @@ import com.metacontent.cobblenav.client.gui.util.Sorting
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class SavePreferencesPacket(val bucketIndex: Int, val sorting: Sorting) : NetworkPacket<SavePreferencesPacket> {
+class SavePreferencesPacket(
+    val bucketIndex: Int,
+    val sorting: Sorting,
+    val applyBucketChecked: Boolean
+) : NetworkPacket<SavePreferencesPacket> {
     companion object {
         val ID = cobblenavResource("save_preferences")
         fun decode(buffer: RegistryFriendlyByteBuf) = SavePreferencesPacket(
             buffer.readInt(),
-            buffer.readEnum(Sorting::class.java)
+            buffer.readEnum(Sorting::class.java),
+            buffer.readBoolean()
         )
     }
 
@@ -19,5 +24,6 @@ class SavePreferencesPacket(val bucketIndex: Int, val sorting: Sorting) : Networ
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeInt(bucketIndex)
         buffer.writeEnum(sorting)
+        buffer.writeBoolean(applyBucketChecked)
     }
 }

@@ -3,15 +3,15 @@
   "id": "cobblenav",
   "version": "${version}",
   "name": "Cobblenav",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Cobblenav (Cobblemon Pokenav) is a sidemod that adds a pokenav item similar to the one featured in the Pokemon RS games",
   "authors": [
-    "Me!"
+    "gatekeep"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
-  "license": "CC0-1.0",
+  "license": "MPL-2.0",
   "icon": "assets/cobblenav/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -28,10 +28,8 @@
   "depends": {
     "fabricloader": ">=0.16.5",
     "minecraft": "~1.21.1",
+    "cobblemon": ">=1.6.0",
     "java": ">=21",
     "fabric-api": "*"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
