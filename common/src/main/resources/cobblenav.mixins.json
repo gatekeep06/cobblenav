@@ -9,7 +9,8 @@
     "GuiMixin"
   ],
   "mixins": [
-    "EntityMixin"
+    "EntityMixin",
+    "PokeRodFishingBobberEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

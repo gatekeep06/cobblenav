@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav
 
 import com.metacontent.cobblenav.config.CobblenavConfig
+import com.metacontent.cobblenav.event.CobblenavEvents
+import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.util.PokenavAreaContextResolver
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
@@ -23,6 +25,10 @@ object Cobblenav {
         implementation.registerCommands()
 
         ConditionCollectors.init()
+
+        CobblenavEvents.FISH_TRAVELING_STARTED.subscribe { event ->
+            CloseFishingnavPacket().sendToPlayer(event.player)
+        }
     }
 
     private fun registerArgumentTypes() {
