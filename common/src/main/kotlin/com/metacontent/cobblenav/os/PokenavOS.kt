@@ -9,7 +9,8 @@ class PokenavOS(
     val version: String,
     val canUseLocation: Boolean = false,
     val canUseContacts: Boolean = false,
-    val canUseMap: Boolean = false
+    val canUseMap: Boolean = false,
+    val canUseFishingAid: Boolean = false
 ) : Encodable {
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(version)
