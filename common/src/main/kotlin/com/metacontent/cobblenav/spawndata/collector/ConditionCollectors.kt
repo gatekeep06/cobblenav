@@ -100,5 +100,6 @@ object ConditionCollectors {
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())
         registerBlock(SeafloorTypeBlockCollector())
+        registerBlock(FishingBlockCollector())
     }
 }
