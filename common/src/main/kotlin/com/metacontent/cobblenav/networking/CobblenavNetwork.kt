@@ -20,6 +20,7 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(OpenFishingnavPacket.ID, OpenFishingnavPacket::decode, OpenFishingnavHandler))
         list.add(PacketRegisterInfo(CloseFishingnavPacket.ID, CloseFishingnavPacket::decode, CloseFishingnavHandler))
         list.add(PacketRegisterInfo(FishingMapPacket.ID, FishingMapPacket::decode, FishingMapHandler))
+        list.add(PacketRegisterInfo(FishingnavScreenInitDataPacket.ID, FishingnavScreenInitDataPacket::decode, FishingnavScreenInitDataHandler))
 
         return list
     }
@@ -32,6 +33,7 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(SavePreferencesPacket.ID, SavePreferencesPacket::decode, SavePreferencesHandler))
         list.add(PacketRegisterInfo(FindPokemonPacket.ID, FindPokemonPacket::decode, FindPokemonHandler))
         list.add(PacketRegisterInfo(RequestFishingMapPacket.ID, RequestFishingMapPacket::decode, RequestFishingMapHandler))
+        list.add(PacketRegisterInfo(RequestFishingnavScreenInitDataPacket.ID, RequestFishingnavScreenInitDataPacket::decode, RequestFishingnavScreenInitDataHandler))
 
         return list
     }
