@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack
 
 class FishingnavScreenInitDataPacket(
     val buckets: List<WeightedBucket>,
-    val applyBuckets: Boolean
+    val applyBuckets: Boolean,
     val pokeBall: ResourceLocation,
     val lineColor: String,
     val baitItem: ItemStack
