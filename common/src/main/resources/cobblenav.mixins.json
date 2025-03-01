@@ -10,7 +10,8 @@
   ],
   "mixins": [
     "EntityMixin",
-    "PokeRodFishingBobberEntityMixin"
+    "PokeRodFishingBobberEntityMixin",
+    "PokeRodItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

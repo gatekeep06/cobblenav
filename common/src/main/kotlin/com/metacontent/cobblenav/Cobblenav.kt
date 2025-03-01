@@ -5,7 +5,6 @@ import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.util.PokenavAreaContextResolver
-import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -26,7 +25,7 @@ object Cobblenav {
 
         ConditionCollectors.init()
 
-        CobblenavEvents.FISH_TRAVELING_STARTED.subscribe { event ->
+        CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
             CloseFishingnavPacket().sendToPlayer(event.player)
         }
     }
