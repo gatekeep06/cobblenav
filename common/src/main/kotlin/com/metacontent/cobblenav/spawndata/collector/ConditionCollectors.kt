@@ -92,6 +92,10 @@ object ConditionCollectors {
         register(DepthSurfaceCollector())
         register(FluidSubmergedCollector())
         register(DepthSubmergedCollector())
+        register(BaitCollector())
+        register(LureLevelCollector())
+        register(RodCollector())
+        register(RodTypeCollector())
 
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())
