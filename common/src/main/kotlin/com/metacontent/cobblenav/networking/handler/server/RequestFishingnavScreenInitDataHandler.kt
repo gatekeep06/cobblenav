@@ -6,7 +6,9 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.metacontent.cobblenav.networking.packet.client.FishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
+import com.metacontent.cobblenav.util.PreferencesSaver
 import com.metacontent.cobblenav.util.WeightedBucket
+import com.metacontent.cobblenav.util.savedPreferences
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -20,6 +22,8 @@ object RequestFishingnavScreenInitDataHandler : ServerNetworkPacketHandler<Reque
                 WeightedBucket(it.name, (it.weight / weightSum).toFloat())
             }
 
+            val applyBuckets = player.savedPreferences().getBoolean(PreferencesSaver.APPLY_BUCKET_KEY)
+
             var pokeBall = ResourceLocation.withDefaultNamespace("air")
             var lineColor = ""
             var bait = ItemStack.EMPTY
@@ -29,7 +33,7 @@ object RequestFishingnavScreenInitDataHandler : ServerNetworkPacketHandler<Reque
                 bait = bobber.bobberBait
             }
 
-            FishingnavScreenInitDataPacket(buckets, pokeBall, lineColor, bait).sendToPlayer(player)
+            FishingnavScreenInitDataPacket(buckets, applyBuckets, pokeBall, lineColor, bait).sendToPlayer(player)
         }
     }
 }
