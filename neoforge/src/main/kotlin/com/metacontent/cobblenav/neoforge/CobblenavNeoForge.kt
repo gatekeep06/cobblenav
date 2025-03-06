@@ -17,11 +17,15 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.storage.loot.LootPool
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegisterEvent
@@ -81,6 +85,18 @@ class CobblenavNeoForge : Implementation {
     ) {
         commandArgumentTypes.register(identifier.path) { _ ->
             ArgumentTypeInfos.registerByClass(argumentClass.java, serializer)
+        }
+    }
+
+    override fun injectLootTables() {
+        with(NeoForge.EVENT_BUS) {
+            addListener<LootTableLoadEvent> { event ->
+                val table = cobblenavResource("injection/${event.name.path}")
+                val pool = LootPool.lootPool().add(
+                    NestedLootTable.lootTableReference(ResourceKey.create(Registries.LOOT_TABLE, table)).setWeight(1)
+                ).setBonusRolls(UniformGenerator.between(0f, 1f))
+                event.table.addPool(pool.build())
+            }
         }
     }
 }

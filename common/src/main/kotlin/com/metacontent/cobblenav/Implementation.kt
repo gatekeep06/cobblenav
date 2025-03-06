@@ -13,5 +13,7 @@ interface Implementation {
 
     fun registerCommands()
 
+    fun injectLootTables()
+
     fun <A : ArgumentType<*>, T : ArgumentTypeInfo.Template<A>> registerCommandArgument(identifier: ResourceLocation, argumentClass: KClass<A>, serializer: ArgumentTypeInfo<A, T>)
 }

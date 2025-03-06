@@ -21,6 +21,7 @@ object Cobblenav {
         implementation.registerItems()
         registerArgumentTypes()
         implementation.registerCommands()
+        implementation.injectLootTables()
 
         ConditionCollectors.init()
     }
