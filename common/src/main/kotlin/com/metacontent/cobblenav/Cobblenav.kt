@@ -27,8 +27,10 @@ object Cobblenav {
 
         ConditionCollectors.init()
 
-        CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
-            LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
+        if (config.syncLabelsWithClient) {
+            CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
+                LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
+            }
         }
     }
 
