@@ -57,14 +57,8 @@ class CobblenavFabric : ModInitializer, Implementation {
     }
 
     override fun injectLootTables() {
-        LootTableEvents.MODIFY.register { id, tableBuilder, source, provider ->
-            if (id == BuiltInLootTables.FISHING_TREASURE) {
-                val table = cobblenavResource("injection/${id.location().path}")
-                val pool = LootPool.lootPool().add(
-                    NestedLootTable.lootTableReference(ResourceKey.create(Registries.LOOT_TABLE, table)).setWeight(1)
-                ).setBonusRolls(UniformGenerator.between(0f, 1f))
-                tableBuilder.withPool(pool)
-            }
+        LootTableEvents.MODIFY.register { id, tableBuilder, _, _ ->
+            CobblenavLootInjector.inject(id.location(), tableBuilder::withPool)
         }
     }
 }

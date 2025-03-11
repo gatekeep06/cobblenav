@@ -1,9 +1,6 @@
 package com.metacontent.cobblenav.neoforge
 
-import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.Implementation
-import com.metacontent.cobblenav.CobblenavCommands
-import com.metacontent.cobblenav.CobblenavItems
+import com.metacontent.cobblenav.*
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
 import com.metacontent.cobblenav.util.log
@@ -91,11 +88,7 @@ class CobblenavNeoForge : Implementation {
     override fun injectLootTables() {
         with(NeoForge.EVENT_BUS) {
             addListener<LootTableLoadEvent> { event ->
-                val table = cobblenavResource("injection/${event.name.path}")
-                val pool = LootPool.lootPool().add(
-                    NestedLootTable.lootTableReference(ResourceKey.create(Registries.LOOT_TABLE, table)).setWeight(1)
-                ).setBonusRolls(UniformGenerator.between(0f, 1f))
-                event.table.addPool(pool.build())
+                CobblenavLootInjector.inject(event.name) { builder -> event.table.addPool(builder.build()) }
             }
         }
     }
