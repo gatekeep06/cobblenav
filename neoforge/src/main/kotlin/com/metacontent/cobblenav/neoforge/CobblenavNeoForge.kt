@@ -3,7 +3,6 @@ package com.metacontent.cobblenav.neoforge
 import com.metacontent.cobblenav.*
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
-import com.metacontent.cobblenav.util.log
 import com.mojang.brigadier.arguments.ArgumentType
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
@@ -14,12 +13,8 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.storage.loot.LootPool
-import net.minecraft.world.level.storage.loot.entries.NestedLootTable
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.common.Mod
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.LootTableLoadEvent

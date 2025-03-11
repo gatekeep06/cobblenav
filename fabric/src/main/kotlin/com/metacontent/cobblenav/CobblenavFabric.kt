@@ -1,6 +1,5 @@
 package com.metacontent.cobblenav
 
-import com.metacontent.cobblenav.CobblenavItems
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.brigadier.arguments.ArgumentType
 import net.fabricmc.api.ModInitializer
@@ -11,15 +10,9 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.storage.loot.BuiltInLootTables
-import net.minecraft.world.level.storage.loot.LootPool
-import net.minecraft.world.level.storage.loot.entries.NestedLootTable
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 import kotlin.reflect.KClass
 
 class CobblenavFabric : ModInitializer, Implementation {
