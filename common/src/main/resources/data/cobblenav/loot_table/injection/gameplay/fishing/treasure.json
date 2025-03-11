@@ -6,7 +6,14 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "cobblenav:pokenav_item_old"
+          "name": "cobblenav:pokenav_item_old",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1,
+              "add": false
+            }
+          ]
         }
       ],
       "conditions": [
