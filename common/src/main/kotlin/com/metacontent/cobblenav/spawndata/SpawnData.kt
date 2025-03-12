@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.*
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -11,7 +12,7 @@ data class SpawnData(
     val spawnAspects: Set<String>,
     val spawnChance: Float,
     val spawningContext: String,
-    val encountered: Boolean,
+    val knowledge: PokedexEntryProgress,
     val conditions: MutableList<MutableComponent>,
     val blockConditions: BlockConditions
 ) : Encodable {
@@ -21,7 +22,7 @@ data class SpawnData(
             buffer.readList { it.readString() }.toSet(),
             buffer.readFloat(),
             buffer.readString(),
-            buffer.readBoolean(),
+            buffer.readEnum(PokedexEntryProgress::class.java),
             buffer.readList { (it as RegistryFriendlyByteBuf).readText().copy() },
             BlockConditions.decode(buffer)
         )
@@ -32,8 +33,10 @@ data class SpawnData(
         buffer.writeCollection(spawnAspects) { buf, aspect -> buf.writeString(aspect) }
         buffer.writeFloat(spawnChance)
         buffer.writeString(spawningContext)
-        buffer.writeBoolean(encountered)
+        buffer.writeEnum(knowledge)
         buffer.writeCollection(conditions) { buf, component -> (buf as RegistryFriendlyByteBuf).writeText(component) }
         blockConditions.encode(buffer)
     }
+
+    fun known() = knowledge != PokedexEntryProgress.NONE
 }

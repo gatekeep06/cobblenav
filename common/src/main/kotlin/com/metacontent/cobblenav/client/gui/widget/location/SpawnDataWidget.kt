@@ -1,11 +1,13 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.util.cobblemonResource
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.FinderScreen
@@ -28,9 +30,12 @@ class SpawnDataWidget(
         const val WIDTH: Int = 40
         const val HEIGHT: Int = 50
         const val MODEL_HEIGHT: Int = 40
+        const val INDICATOR_SIZE: Int = 5
+        const val INDICATOR_OFFSET: Int = 10
         val FORMAT = DecimalFormat("#.##")
         val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
+        val CAUGHT = cobblemonResource("textures/gui/battle/battle_owned_indicator.png")
     }
 
     private var chanceString = ""
@@ -43,7 +48,7 @@ class SpawnDataWidget(
     private val pose = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged)
         PoseType.SWIM else PoseType.PROFILE
     private val state = FloatingState()
-    private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
+    private val obscured = !spawnData.known() && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
@@ -96,6 +101,16 @@ class SpawnDataWidget(
                 y = y + 2,
                 width = MODEL_HEIGHT - 4,
                 height = MODEL_HEIGHT - 4
+            )
+        }
+        if (spawnData.knowledge == PokedexEntryProgress.CAUGHT) {
+            blitk(
+                matrixStack = poseStack,
+                texture = CAUGHT,
+                x = x + width - INDICATOR_OFFSET,
+                y = y + INDICATOR_OFFSET,
+                width = INDICATOR_SIZE,
+                height = INDICATOR_SIZE
             )
         }
         drawScaledText(

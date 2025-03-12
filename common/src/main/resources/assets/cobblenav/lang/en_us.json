@@ -61,7 +61,7 @@
   "gui.cobblenav.empty_spawns_message": "There doesn't seem to be anyone living here",
   "gui.cobblenav.spawn_data.unknown_pokemon": "???",
   "gui.cobblenav.spawn_data.spawn_chance": "Chance: %s%%",
-  "gui.cobblenav.spawn_data.encountered": "Encountered: ",
+  "gui.cobblenav.spawn_data.knowledge": "Knowledge: ",
   "gui.cobblenav.spawn_data.habitat": "Habitat: ",
   "gui.cobblenav.spawn_data.structures": "Structures: ",
   "gui.cobblenav.spawn_data.fluid": "Fluid: ",
@@ -87,6 +87,9 @@
 
   "gui.cobblenav.true": "Yes",
   "gui.cobblenav.false": "No",
+  "gui.cobblenav.knowledge.none": "None",
+  "gui.cobblenav.knowledge.encountered": "Encountered",
+  "gui.cobblenav.knowledge.caught": "Caught",
   "weather.cobblenav.rain": "Raining",
   "weather.cobblenav.thunder": "Thundering",
   "weather.cobblenav.clear": "Clear",

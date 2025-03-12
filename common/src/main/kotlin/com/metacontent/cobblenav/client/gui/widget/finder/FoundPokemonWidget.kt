@@ -45,7 +45,7 @@ class FoundPokemonWidget(
     private val state = FloatingState()
     private val openingTimer = Timer(OPENING)
     private val loopTimer = Timer(LOOP, true)
-    private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
+    private val obscured = !spawnData.known() && CobblenavClient.config.obscureUnknownPokemon
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()

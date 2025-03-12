@@ -25,8 +25,8 @@ fun GuiGraphics.renderSpawnDataTooltip(
 ) {
     val body = mutableListOf<MutableComponent>(
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
-        Component.translatable("gui.cobblenav.spawn_data.encountered")
-            .append(Component.translatable("gui.cobblenav.${spawnData.encountered}"))
+        Component.translatable("gui.cobblenav.spawn_data.knowledge")
+            .append(Component.translatable("gui.cobblenav.knowledge.${spawnData.knowledge.name.lowercase()}"))
     )
 
     spawnData.conditions.forEach {
@@ -37,7 +37,7 @@ fun GuiGraphics.renderSpawnDataTooltip(
     }
 
     this.renderAdvancedTooltip(
-        header = if (spawnData.encountered) spawnData.renderable.species.translatedName else Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
+        header = if (spawnData.known()) spawnData.renderable.species.translatedName else Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
         body = body,
         items = spawnData.blockConditions.asItemStacks,
         mouseX = mouseX,

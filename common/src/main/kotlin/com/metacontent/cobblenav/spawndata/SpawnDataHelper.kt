@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.pokemon.Pokemon
@@ -31,9 +32,9 @@ object SpawnDataHelper {
         val speciesRecord = detail.pokemon.species?.asIdentifierDefaultingNamespace()?.let {
             Cobblemon.playerDataManager.getPokedexData(player).getSpeciesRecord(it)
         }
-        val encountered = speciesRecord?.hasSeenForm(renderablePokemon.form.name) ?: false
+        val knowledge = speciesRecord?.getKnowledge() ?: PokedexEntryProgress.NONE
 
-        if (!encountered && config.hideUnknownPokemon) {
+        if (knowledge == PokedexEntryProgress.NONE && config.hideUnknownPokemon) {
             return null
         }
 
@@ -41,7 +42,7 @@ object SpawnDataHelper {
 
         val conditions = mutableListOf<MutableComponent>()
         val blocks = mutableSetOf<ResourceLocation>()
-        if (config.showPokemonTooltips && (!config.hideUnknownPokemonTooltips || encountered)) {
+        if (config.showPokemonTooltips && (!config.hideUnknownPokemonTooltips || knowledge == PokedexEntryProgress.NONE)) {
             val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
             val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
             condition?.let {
@@ -50,6 +51,6 @@ object SpawnDataHelper {
             }
         }
 
-        return SpawnData(renderablePokemon, aspects, spawnChance, detail.context.name, encountered, conditions, BlockConditions(blocks))
+        return SpawnData(renderablePokemon, aspects, spawnChance, detail.context.name, knowledge, conditions, BlockConditions(blocks))
     }
 }
