@@ -18,6 +18,7 @@ import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import java.text.DecimalFormat
 
 class SpawnDataWidget(
@@ -35,7 +36,7 @@ class SpawnDataWidget(
         val FORMAT = DecimalFormat("#.##")
         val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
-        val CAUGHT = cobblemonResource("textures/gui/battle/battle_owned_indicator.png")
+        val CAUGHT: ResourceLocation = cobblemonResource("textures/gui/battle/battle_owned_indicator.png")
     }
 
     private var chanceString = ""
