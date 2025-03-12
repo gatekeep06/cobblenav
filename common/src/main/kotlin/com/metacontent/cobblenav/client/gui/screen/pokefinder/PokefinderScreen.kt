@@ -19,7 +19,7 @@ import net.minecraft.util.FastColor
 class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     companion object {
         const val WIDTH: Int = 288
-        const val HEIGHT: Int = 192
+        const val HEIGHT: Int = 192 # TODO - Calculate new HEIGHT with the 2 new CheckBoxes
         const val LOGO_SIZE: Int = 64
         const val BORDER: Int = 5
         const val SETTING_WIDTH: Int = 160
@@ -47,6 +47,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private lateinit var strictAspectCheckBox: CheckBox
     private lateinit var strictLabelCheckBox: CheckBox
     private lateinit var shinyOnlyCheckBox: CheckBox
+    private lateinit var uncaughtOnlyCheckBox: CheckBox
+    private lateinit var unseenOnlyCheckBox: CheckBox
     private val settings = CobblenavClient.pokefinderSettings
 
     override fun init() {
@@ -134,6 +136,28 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             default = settings?.shinyOnly ?: false,
             afterClick = { button -> settings?.let { it.shinyOnly = (button as CheckBox).checked } }
         ).also { addWidget(it) }
+        uncaughtOnlyCheckBox = CheckBox(
+            pX = screenX + BORDER + X_OFFSET,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 3 * Y_CHECK_BOX_OFFSET + 3 * CHECK_BOX_HEIGHT,
+            pWidth = SETTING_WIDTH,
+            pHeight = CHECK_BOX_HEIGHT,
+            textOffset = 6,
+            text = Component.translatable("gui.cobblenav.uncaught_only"),
+            shadow = true,
+            default = settings?.uncaughtOnly ?: false,
+            afterClick = { button -> settings?.let { it.uncaughtOnly = (button as CheckBox).checked } }
+        ).also { addWidget(it) }
+        unseenOnlyCheckBox = CheckBox(
+            pX = screenX + BORDER + X_OFFSET,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 3 * Y_CHECK_BOX_OFFSET + 4 * CHECK_BOX_HEIGHT,
+            pWidth = SETTING_WIDTH,
+            pHeight = CHECK_BOX_HEIGHT,
+            textOffset = 6,
+            text = Component.translatable("gui.cobblenav.unseen_only"),
+            shadow = true,
+            default = settings?.unseenOnly ?: false,
+            afterClick = { button -> settings?.let { it.unseenOnly = (button as CheckBox).checked } }
+        ).also { addWidget(it) }
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -175,6 +199,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         strictAspectCheckBox.render(guiGraphics, mouseX, mouseY, delta)
         strictLabelCheckBox.render(guiGraphics, mouseX, mouseY, delta)
         shinyOnlyCheckBox.render(guiGraphics, mouseX, mouseY, delta)
+        uncaughtOnlyCheckBox.render(guiGraphics, mouseX, mouseY, delta)
+        unseenOnlyCheckBox.render(guiGraphics, mouseX, mouseY, delta)
 
         blitk(
             matrixStack = poseStack,
