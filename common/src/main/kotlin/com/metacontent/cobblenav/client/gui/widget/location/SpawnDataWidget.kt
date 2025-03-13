@@ -37,6 +37,7 @@ class SpawnDataWidget(
         val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
         val CAUGHT: ResourceLocation = cobblemonResource("textures/gui/battle/battle_owned_indicator.png")
+        val SPAWNED: ResourceLocation = cobblenavResource("textures/gui/location/spawned_indicator.png")
     }
 
     private var chanceString = ""
@@ -104,7 +105,7 @@ class SpawnDataWidget(
                 height = MODEL_HEIGHT - 4
             )
         }
-        if (spawnData.knowledge == PokedexEntryProgress.CAUGHT) {
+        if (spawnData.caught()) {
             blitk(
                 matrixStack = poseStack,
                 texture = CAUGHT,

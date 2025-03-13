@@ -39,4 +39,8 @@ data class SpawnData(
     }
 
     fun known() = knowledge != PokedexEntryProgress.NONE
+
+    fun seen() = knowledge == PokedexEntryProgress.ENCOUNTERED
+
+    fun caught() = knowledge == PokedexEntryProgress.CAUGHT
 }
