@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
@@ -30,6 +31,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import net.minecraft.world.phys.AABB
 import kotlin.math.max
 import kotlin.math.min
 
@@ -44,6 +46,7 @@ class LocationScreen(
         const val FRAME_WIDTH: Int = 18
         const val FRAME_HEIGHT: Int = 22
         const val LOADING_LOOP_DURATION: Float = 10f
+        const val SPAWNED_CHECK_COOLDOWN: Float = 200f
         const val BUTTON_BLOCK_SPACE: Int = 10
         const val BUTTON_SPACE: Int = 5
         const val BUTTON_WIDTH: Int = 15
@@ -51,6 +54,7 @@ class LocationScreen(
         const val CHECK_BOX_WIDTH: Int = 100
         const val CHECK_BOX_HEIGHT: Int = 8
         const val CHECK_BOX_OFFSET: Int = 4
+        const val SPAWNED_CHECK_AREA_SIZE: Double = 200.0
         val VIEW_BACKGROUND_COLOR = FastColor.ARGB32.color(255, 125, 190, 164)
         val VIEW_OUTLINE_COLOR = FastColor.ARGB32.color(255, 84, 168, 134)
         val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
@@ -79,7 +83,8 @@ class LocationScreen(
         }
     private lateinit var biome: String
     private var loading = false
-    private val timer = Timer(LOADING_LOOP_DURATION, true)
+    private val loadingTimer = Timer(LOADING_LOOP_DURATION, true)
+    private val spawnedCheckTimer = Timer(SPAWNED_CHECK_COOLDOWN, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     var hoveredSpawnData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
@@ -253,6 +258,9 @@ class LocationScreen(
                 centered = true
             )
         }
+        else {
+            checkSpawnedPokemon(delta)
+        }
     }
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -288,7 +296,7 @@ class LocationScreen(
     }
 
     private fun renderLoadingAnimation(poseStack: PoseStack, delta: Float) {
-        timer.tick(delta)
+        loadingTimer.tick(delta)
         blitk(
             poseStack, LOADING,
             screenX + (WIDTH - FRAME_WIDTH) / 2,
@@ -296,7 +304,7 @@ class LocationScreen(
             width = FRAME_WIDTH,
             height = FRAME_HEIGHT,
             textureWidth = ANIMATION_SHEET_WIDTH,
-            uOffset = FRAME_WIDTH * ((frameAmount - 1) * timer.getProgress()).toInt()
+            uOffset = FRAME_WIDTH * ((frameAmount - 1) * loadingTimer.getProgress()).toInt()
         )
     }
 
@@ -330,5 +338,23 @@ class LocationScreen(
         tableView.applyToAll { child ->
             child.child.chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
         }
+    }
+
+    private fun checkSpawnedPokemon(delta: Float) {
+        if (spawnedCheckTimer.getProgress() == 0f) {
+            player?.level()?.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(player.position(), SPAWNED_CHECK_AREA_SIZE, SPAWNED_CHECK_AREA_SIZE, SPAWNED_CHECK_AREA_SIZE)
+            )?.let { entities ->
+                tableView.applyToAll { child ->
+                    val species = child.child.spawnData.renderable.species
+                    val aspects = child.child.spawnData.spawnAspects
+                    child.child.spawned = entities.any {
+                        it.pokemon.species == species && it.pokemon.aspects.containsAll(aspects)
+                    }
+                }
+            }
+        }
+        spawnedCheckTimer.tick(delta)
     }
 }

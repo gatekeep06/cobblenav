@@ -33,6 +33,7 @@ class SpawnDataWidget(
         const val MODEL_HEIGHT: Int = 40
         const val INDICATOR_SIZE: Int = 5
         const val INDICATOR_OFFSET: Int = 10
+        const val INDICATOR_SPACE_BETWEEN: Int = 1
         val FORMAT = DecimalFormat("#.##")
         val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
@@ -52,6 +53,7 @@ class SpawnDataWidget(
     private val state = FloatingState()
     private val obscured = !spawnData.known() && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
+    var spawned = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -105,16 +107,30 @@ class SpawnDataWidget(
                 height = MODEL_HEIGHT - 4
             )
         }
+
+        var indicatorY = y + INDICATOR_OFFSET
         if (spawnData.caught()) {
             blitk(
                 matrixStack = poseStack,
                 texture = CAUGHT,
                 x = x + width - INDICATOR_OFFSET,
-                y = y + INDICATOR_OFFSET,
+                y = indicatorY,
+                width = INDICATOR_SIZE,
+                height = INDICATOR_SIZE
+            )
+            indicatorY += INDICATOR_SIZE + INDICATOR_SPACE_BETWEEN
+        }
+        if (spawned) {
+            blitk(
+                matrixStack = poseStack,
+                texture = SPAWNED,
+                x = x + width - INDICATOR_OFFSET,
+                y = indicatorY,
                 width = INDICATOR_SIZE,
                 height = INDICATOR_SIZE
             )
         }
+
         drawScaledText(
             guiGraphics,
             text = Component.literal(chanceString),
