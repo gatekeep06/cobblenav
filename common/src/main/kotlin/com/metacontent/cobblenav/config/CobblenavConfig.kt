@@ -19,19 +19,17 @@ class CobblenavConfig {
             val configFile = File(PATH)
             configFile.parentFile.mkdirs()
 
-            var config: CobblenavConfig
-            try {
+            val baseConfig = CobblenavConfig()
+            val config = runCatching {
                 if (!configFile.exists()) {
                     configFile.createNewFile()
                 }
-                val fileReader = FileReader(configFile)
-                config = GSON.fromJson(fileReader, CobblenavConfig::class.java) ?: CobblenavConfig()
-                fileReader.close()
-            }
-            catch (e: Exception) {
-                Cobblenav.LOGGER.error(e.message, e)
-                config = CobblenavConfig()
-            }
+                FileReader(configFile).use {
+                    GSON.fromJson(it, CobblenavConfig::class.java) ?: baseConfig
+                }
+            }.onFailure {
+                Cobblenav.LOGGER.error(it.message, it)
+            }.getOrDefault(baseConfig)
 
             config.save()
 
@@ -71,14 +69,10 @@ class CobblenavConfig {
 
     fun save() {
         val configFile = File(PATH)
-        try {
-            val fileWriter = FileWriter(configFile)
-            GSON.toJson(this, fileWriter)
-            fileWriter.flush()
-            fileWriter.close()
-        }
-        catch (e: Exception) {
-            Cobblenav.LOGGER.error(e.message, e)
-        }
+        runCatching{
+            FileWriter(configFile).use {
+                GSON.toJson(this, it)
+            }
+        }.onFailure{ Cobblenav.LOGGER.error(it.message ?: "", it) }
     }
 }
