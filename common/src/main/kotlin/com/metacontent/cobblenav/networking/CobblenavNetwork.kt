@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.networking
 
+import com.cobblemon.mod.common.client.net.data.DataRegistrySyncPacketHandler
 import com.cobblemon.mod.common.net.PacketRegisterInfo
 import com.metacontent.cobblenav.networking.handler.client.*
 import com.metacontent.cobblenav.networking.handler.server.FindPokemonHandler
@@ -23,6 +24,8 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(LocationScreenInitDataPacket.ID, LocationScreenInitDataPacket::decode, LocationScreenInitDataHandler))
         list.add(PacketRegisterInfo(FoundPokemonPacket.ID, FoundPokemonPacket::decode, FoundPokemonHandler))
         list.add(PacketRegisterInfo(OpenPokenavPacket.ID, OpenPokenavPacket::decode, OpenPokenavHandler))
+
+        list.add(PacketRegisterInfo(LabelSyncPacket.ID, LabelSyncPacket::decode, DataRegistrySyncPacketHandler()))
 
         return list
     }
