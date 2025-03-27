@@ -19,17 +19,19 @@ class CobblenavConfig {
             val configFile = File(PATH)
             configFile.parentFile.mkdirs()
 
-            val baseConfig = CobblenavConfig()
+            val default = CobblenavConfig()
             val config = runCatching {
                 if (!configFile.exists()) {
                     configFile.createNewFile()
                 }
                 FileReader(configFile).use {
-                    GSON.fromJson(it, CobblenavConfig::class.java) ?: baseConfig
+                    GSON.fromJson(it, CobblenavConfig::class.java) ?: default
                 }
             }.onFailure {
                 Cobblenav.LOGGER.error(it.message, it)
-            }.getOrDefault(baseConfig)
+            }.getOrDefault(default)
+
+            default.collectableConditions.forEach { config.collectableConditions.putIfAbsent(it.key, it.value) }
 
             config.save()
 
@@ -46,25 +48,30 @@ class CobblenavConfig {
     val searchAreaWidth = 200.0
     val searchAreaHeight = 200.0
     val pokemonFeatureWeights = FeatureWeights.BASE
-    val collectableConditions = listOf(
-        "biomes",
-        "coordinates",
-        "light",
-        "moon_phase",
-        "sky_light",
-        "slime_chunk",
-        "structures",
-        "time_range",
-        "under_open_sky",
-        "weather",
-        "y_height",
-        "depth_submerged",
-        "depth_surface",
-        "fluid_submerged",
-        "fluid_surface",
-        "area_type_block",
-        "grounded_type_block",
-        "seafloor_type_block"
+    val collectableConditions = mutableMapOf(
+        "biomes"                to true,
+        "coordinates"           to true,
+        "light"                 to true,
+        "moon_phase"            to true,
+        "sky_light"             to true,
+        "slime_chunk"           to true,
+        "structures"            to true,
+        "time_range"            to true,
+        "under_open_sky"        to true,
+        "weather"               to true,
+        "y_height"              to true,
+        "depth_submerged"       to true,
+        "depth_surface"         to true,
+        "fluid_submerged"       to true,
+        "fluid_surface"         to true,
+        "bait"                  to true,
+        "lure_level"            to true,
+        "rod"                   to true,
+        "rod_type"              to true,
+        "area_type_block"       to true,
+        "grounded_type_block"   to true,
+        "seafloor_type_block"   to true,
+        "fishing_block"         to true
     )
 
     fun save() {
