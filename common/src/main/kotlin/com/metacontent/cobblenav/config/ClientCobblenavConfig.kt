@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.client.config
+package com.metacontent.cobblenav.config
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

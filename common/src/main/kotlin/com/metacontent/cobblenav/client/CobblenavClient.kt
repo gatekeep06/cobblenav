@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import com.metacontent.cobblenav.client.config.ClientCobblenavConfig
+import com.metacontent.cobblenav.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
 import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
