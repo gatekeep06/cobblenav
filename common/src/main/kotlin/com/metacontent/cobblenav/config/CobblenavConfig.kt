@@ -1,43 +1,7 @@
 package com.metacontent.cobblenav.config
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.metacontent.cobblenav.Cobblenav
-import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
-
-class CobblenavConfig {
-    companion object {
-        private const val PATH = "config/cobblenav/server-config.json"
-        private val GSON: Gson = GsonBuilder()
-            .disableHtmlEscaping()
-            .setPrettyPrinting()
-            .create()
-
-        fun load(): CobblenavConfig {
-            val configFile = File(PATH)
-            configFile.parentFile.mkdirs()
-
-            val default = CobblenavConfig()
-            val config = runCatching {
-                if (!configFile.exists()) {
-                    configFile.createNewFile()
-                }
-                FileReader(configFile).use {
-                    GSON.fromJson(it, CobblenavConfig::class.java) ?: default
-                }
-            }.onFailure {
-                Cobblenav.LOGGER.error(it.message, it)
-            }.getOrDefault(default)
-
-            default.collectableConditions.forEach { config.collectableConditions.putIfAbsent(it.key, it.value) }
-
-            config.save()
-
-            return config
-        }
-    }
+class CobblenavConfig : Config<CobblenavConfig>() {
+    override val fileName = "server-config.json"
 
     val hideUnknownPokemon = false
     val showPokemonTooltips = true
@@ -74,12 +38,7 @@ class CobblenavConfig {
         "fishing_block"         to true
     )
 
-    fun save() {
-        val configFile = File(PATH)
-        runCatching{
-            FileWriter(configFile).use {
-                GSON.toJson(this, it)
-            }
-        }.onFailure{ Cobblenav.LOGGER.error(it.message ?: "", it) }
+    override fun applyToLoadedConfig(default: CobblenavConfig) {
+        default.collectableConditions.forEach { this.collectableConditions.putIfAbsent(it.key, it.value) }
     }
 }
