@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav
 
 import com.metacontent.cobblenav.config.CobblenavConfig
+import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
@@ -17,7 +18,7 @@ object Cobblenav {
     val contextResolver = PokenavAreaContextResolver()
 
     fun init(implementation: Implementation) {
-        config = CobblenavConfig.load()
+        config = Config.load(CobblenavConfig::class.java)
         this.implementation = implementation
         implementation.registerItems()
         registerArgumentTypes()
