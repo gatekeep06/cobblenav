@@ -41,7 +41,7 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                 }
 
                 val cause = SpawnCause(spawner, bucket, spawner.getCauseEntity())
-                val slice = PokenavSpawningProspector.prospect(spawner, SpawningArea(
+                val slice = Cobblenav.prospector.prospect(spawner, SpawningArea(
                     cause, player.serverLevel(),
                     ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
                     ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
