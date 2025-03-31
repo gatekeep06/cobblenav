@@ -7,7 +7,8 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     val showPokemonTooltips = true
     val hideUnknownPokemonTooltips = false
     val hideNaturalBlockConditions = true
-    val checkSpawnWidth = 8
+    val syncLabelsWithClient = true
+    val checkSpawnWidth = 16
     val checkSpawnHeight = 16
     val searchAreaWidth = 200.0
     val searchAreaHeight = 200.0

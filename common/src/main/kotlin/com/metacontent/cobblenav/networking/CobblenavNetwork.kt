@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.networking
 
+import com.cobblemon.mod.common.client.net.data.DataRegistrySyncPacketHandler
 import com.cobblemon.mod.common.net.PacketRegisterInfo
 import com.metacontent.cobblenav.networking.handler.client.*
 import com.metacontent.cobblenav.networking.handler.server.*
@@ -21,6 +22,8 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(CloseFishingnavPacket.ID, CloseFishingnavPacket::decode, CloseFishingnavHandler))
         list.add(PacketRegisterInfo(FishingMapPacket.ID, FishingMapPacket::decode, FishingMapHandler))
         list.add(PacketRegisterInfo(FishingnavScreenInitDataPacket.ID, FishingnavScreenInitDataPacket::decode, FishingnavScreenInitDataHandler))
+
+        list.add(PacketRegisterInfo(LabelSyncPacket.ID, LabelSyncPacket::decode, DataRegistrySyncPacketHandler()))
 
         return list
     }
