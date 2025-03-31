@@ -4,7 +4,6 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.api.spawning.CobblemonWorldSpawnerManager
 import com.cobblemon.mod.common.api.spawning.SpawnCause
-import com.cobblemon.mod.common.api.spawning.WorldSlice
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningArea
 import com.metacontent.cobblenav.Cobblenav
@@ -12,7 +11,6 @@ import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
-import com.metacontent.cobblenav.util.PokenavSpawningProspector
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil

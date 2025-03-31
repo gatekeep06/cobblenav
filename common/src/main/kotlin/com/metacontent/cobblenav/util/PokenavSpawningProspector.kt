@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.util
 
 import com.cobblemon.mod.common.api.spawning.WorldSlice
-import com.cobblemon.mod.common.api.spawning.spawner.Spawner
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningArea
 import com.cobblemon.mod.common.api.tags.CobblemonBlockTags
 import net.minecraft.core.BlockPos
