@@ -76,6 +76,10 @@
   "gui.cobblenav.spawn_data.weather": "Weather: ",
   "gui.cobblenav.spawn_data.moon": "Moon: ",
   "gui.cobblenav.spawn_data.slime_chunk": "Slime Chunk: ",
+  "gui.cobblenav.spawn_data.bait": "Bait: ",
+  "gui.cobblenav.spawn_data.lure_level": "Lure Level: %s",
+  "gui.cobblenav.spawn_data.rod": "Rod: ",
+  "gui.cobblenav.spawn_data.rod_type": "Rod Type: ",
 
   "gui.cobblenav.finder.find_button": "Let's track it down!",
   "gui.cobblenav.finder.no_egg_move": "No Egg Move",

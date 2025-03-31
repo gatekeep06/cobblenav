@@ -1,11 +1,12 @@
 package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import com.metacontent.cobblenav.client.config.ClientCobblenavConfig
+import com.metacontent.cobblenav.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
 import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
 import com.metacontent.cobblenav.client.settings.PokefinderSettings
+import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.item.Pokefinder
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -24,7 +25,7 @@ object CobblenavClient {
     val trackArrowOverlay: TrackArrowOverlay by lazy { TrackArrowOverlay() }
 
     fun init(implementation: ClientImplementation) {
-        config = ClientCobblenavConfig.load()
+        config = Config.load(ClientCobblenavConfig::class.java)
         this.implementation = implementation
         PlatformEvents.CLIENT_PLAYER_LOGIN.subscribe {
             pokefinderSettings = settingsManager.load(PokefinderSettings.NAME, PokefinderSettings::class.java) as PokefinderSettings
