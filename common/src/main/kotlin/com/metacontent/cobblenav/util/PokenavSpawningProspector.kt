@@ -12,7 +12,7 @@ import net.minecraft.world.level.chunk.ChunkAccess
 import net.minecraft.world.level.chunk.status.ChunkStatus
 
 object PokenavSpawningProspector {
-    fun prospect(spawner: Spawner, area: SpawningArea): WorldSlice? {
+    fun prospect(area: SpawningArea): WorldSlice? {
         val world = area.world
         var baseY = area.baseY
         var height = area.height
