@@ -12,6 +12,7 @@ import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
+import com.metacontent.cobblenav.util.PokenavSpawningProspector
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
@@ -28,28 +29,32 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
 
         server.execute {
             if (cobblemonConfig.enableSpawning) {
-                val spawner = CobblemonWorldSpawnerManager.spawnersForPlayers[player.uuid] ?: throw NullPointerException("For some reason player spawner is null")
-                val bucket = Cobblemon.bestSpawner.config.buckets.firstOrNull { it.name == packet.bucket } ?: throw NullPointerException("For some reason bucket is null")
-
-                val cause = SpawnCause(spawner, bucket, spawner.getCauseEntity())
-                val slice: WorldSlice
-                try {
-                    slice = spawner.prospector.prospect(spawner, SpawningArea(
-                        cause, player.serverLevel(),
-                        ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
-                        ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
-                        ceil(player.z - config.checkSpawnWidth / 2f).toInt(),
-                        config.checkSpawnWidth,
-                        config.checkSpawnHeight,
-                        config.checkSpawnWidth
-                    ))
+                val spawner = CobblemonWorldSpawnerManager.spawnersForPlayers[player.uuid] ?: run {
+                    Cobblenav.LOGGER.error("For some reason player spawner is null")
+                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
+                    return@execute
                 }
-                catch (e: IllegalStateException) {
+                val bucket = Cobblemon.bestSpawner.config.buckets.firstOrNull { it.name == packet.bucket } ?: run {
+                    Cobblenav.LOGGER.error("For some reason bucket is null")
                     SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
                     return@execute
                 }
 
-                val contexts = Cobblenav.contextResolver.resolve(spawner, spawner.contextCalculators, slice)
+                val cause = SpawnCause(spawner, bucket, spawner.getCauseEntity())
+                val slice = PokenavSpawningProspector.prospect(spawner, SpawningArea(
+                    cause, player.serverLevel(),
+                    ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
+                    ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
+                    ceil(player.z - config.checkSpawnWidth / 2f).toInt(),
+                    config.checkSpawnWidth,
+                    config.checkSpawnHeight,
+                    config.checkSpawnWidth
+                )) ?: run {
+                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
+                    return@execute
+                }
+
+                val contexts = spawner.resolver.resolve(spawner, spawner.contextCalculators, slice)
                 val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, contexts)
 
                 spawnProbabilities.forEach { (detail, spawnChance) ->

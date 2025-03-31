@@ -16,7 +16,6 @@ object Cobblenav {
 
     lateinit var config: CobblenavConfig
     lateinit var implementation: Implementation
-    val contextResolver = PokenavAreaContextResolver()
 
     fun init(implementation: Implementation) {
         config = CobblenavConfig.load()
