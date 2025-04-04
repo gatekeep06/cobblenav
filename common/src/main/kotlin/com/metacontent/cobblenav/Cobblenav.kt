@@ -30,9 +30,9 @@ object Cobblenav {
 
         ConditionCollectors.init()
 
-//        CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
-//            CloseFishingnavPacket().sendToPlayer(event.player)
-//        }
+        CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
+            CloseFishingnavPacket().sendToPlayer(event.player)
+        }
       
         if (config.syncLabelsWithClient) {
             CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
