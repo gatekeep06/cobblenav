@@ -43,8 +43,20 @@ class WeatherWidget(
 
         level?.let {
             val normalizedTime = it.dayTime % 24000
+            if (normalizedTime in 23000..24000 || normalizedTime in 0..13702) {
+                // There is a small bug with the sun angle that occurs when using `/time set`. I don't know how to fix it
+                val sunAngle = 1.5 * PI + ((it.dayTime.toFloat() - 23000) % 24000) / 14702 * PI
+                blitk(
+                    matrixStack = poseStack,
+                    texture = SUN,
+                    x = centerX - width / 2 * sin(sunAngle),
+                    y = centerY - height * cos(sunAngle),
+                    width = SUN_WIDTH,
+                    height = SUN_HEIGHT
+                )
+            }
             if (normalizedTime in 11834..24000 || normalizedTime in 0..167) {
-                val moonAngle = 1.5 * PI + ((it.dayTime - 11834) % 24000) / 12333.0 * PI
+                val moonAngle = 1.5 * PI + ((it.dayTime.toFloat() - 11667) % 24000) / 12333 * PI
                 blitk(
                     matrixStack = poseStack,
                     texture = MOON,
@@ -54,17 +66,6 @@ class WeatherWidget(
                     height = SUN_HEIGHT,
                     textureWidth = SUN_WIDTH * 8,
                     uOffset = SUN_WIDTH * it.moonPhase
-                )
-            }
-            if (normalizedTime in 23000..23999 || normalizedTime in 0..13702) {
-                val sunAngle = 1.5 * PI + ((it.dayTime - 23000) % 24000) / 14702.0 * PI
-                blitk(
-                    matrixStack = poseStack,
-                    texture = SUN,
-                    x = centerX - width / 2 * sin(sunAngle),
-                    y = centerY - height * cos(sunAngle),
-                    width = SUN_WIDTH,
-                    height = SUN_HEIGHT
                 )
             }
         }
