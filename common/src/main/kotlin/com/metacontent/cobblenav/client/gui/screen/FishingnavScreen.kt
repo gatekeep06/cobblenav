@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack
 class FishingnavScreen(
     os: PokenavOS
 ) : PokenavScreen(os, true, true, Component.literal("Fishing")) {
-    val dayColor = Vec3i(117, 230, 218)
-    val nightColor = Vec3i(2, 1, 39)
+    private val dayColor = Vec3i(117, 230, 218)
+    private val nightColor = Vec3i(2, 1, 39)
     override val color: Int
         get() {
             val normalizedTime = (player?.clientLevel?.dayTime ?: 0) % 24000
