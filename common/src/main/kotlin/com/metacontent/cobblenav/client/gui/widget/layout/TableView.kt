@@ -8,15 +8,15 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import kotlin.math.ceil
+import kotlin.math.max
 
-class TableView<I : AbstractWidget>(
+open class TableView<I : AbstractWidget>(
     x: Int, y: Int,
     width: Int,
     val columns: Int,
     val columnWidth: Int = width / columns,
     private val verticalPadding: Int = 0,
     private val horizontalPadding: Int = (width - columns * columnWidth) / (columns - 1),
-    val rowHeight: Int = 0,
 ) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
     private val items = mutableListOf<I>()
     val rows
@@ -58,17 +58,21 @@ class TableView<I : AbstractWidget>(
 
     fun isEmpty() = items.isEmpty()
 
-    private fun initItems() {
-        height = (rowHeight + verticalPadding) * rows
+    open fun initItems() {
+        var initializedHeight = 0
         for (i in 0 until rows) {
+            var rowHeight = 0
             for (j in 0 until columns) {
                 val index = i * columns + j
-                if (items.size <= index) return
+                if (items.size <= index) break
                 val item = items[index]
                 item.x = x + j * (columnWidth + horizontalPadding)
-                item.y = y + i * (rowHeight + verticalPadding)
+                item.y = y + initializedHeight
+                rowHeight = max(rowHeight, item.height)
             }
+            initializedHeight += rowHeight + verticalPadding
         }
+        height = initializedHeight
     }
 
     override fun setY(i: Int) {

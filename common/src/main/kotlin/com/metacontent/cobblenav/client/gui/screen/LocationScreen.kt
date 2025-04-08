@@ -37,7 +37,7 @@ class LocationScreen(
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean= false
-) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")) {
+) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataTooltipDisplayer {
     companion object {
         val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
         const val ANIMATION_SHEET_WIDTH: Int = 144
@@ -81,7 +81,7 @@ class LocationScreen(
     private var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
-    var hoveredSpawnData: SpawnData? = null
+    override var hoveredSpawnData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
     private lateinit var scrollableView: ScrollableView
     private lateinit var bucketSelector: BucketSelectorWidget
@@ -130,8 +130,7 @@ class LocationScreen(
             viewX + 1, viewY + 1,
             viewWidth - 2 - ScrollThumbWidget.WIDTH, 5,
             verticalPadding = 5,
-            columnWidth = SpawnDataWidget.WIDTH,
-            rowHeight = SpawnDataWidget.HEIGHT
+            columnWidth = SpawnDataWidget.WIDTH
         )
         scrollableView = ScrollableView(
             tableView.x,
@@ -321,14 +320,20 @@ class LocationScreen(
             .sortedWith { firstData, secondData -> compareValues(firstData.spawnChance, secondData.spawnChance) * sorting.multiplier }
             .map {
                 ScrollableItemWidget(
-                    SpawnDataWidget(0, 0, it, this),
-                    screenY + HORIZONTAL_BORDER_DEPTH + 16,
-                    screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - 15
+                    child = SpawnDataWidget(
+                        x = 0,
+                        y = 0,
+                        spawnData = it,
+                        displayer = this,
+                        onClick = { widget -> changeScreen(FinderScreen(widget.spawnData, os), true) },
+                        chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
+                    ),
+                    topEdge = screenY + HORIZONTAL_BORDER_DEPTH + 16,
+                    bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - 15
                 )
             }
         tableView.add(spawnDataWidgets)
-        tableView.applyToAll { child ->
-            child.child.chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
-        }
     }
+
+    override fun isBlockingTooltip() = blockWidgets
 }
