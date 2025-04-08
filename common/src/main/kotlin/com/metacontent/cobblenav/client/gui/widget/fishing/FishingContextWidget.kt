@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.client.gui.widget.fishing
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
@@ -13,7 +12,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class WeatherWidget(
+class FishingContextWidget(
     x: Int,
     y: Int,
     width: Int,

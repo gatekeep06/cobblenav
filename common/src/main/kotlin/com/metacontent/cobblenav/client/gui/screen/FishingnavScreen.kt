@@ -2,13 +2,11 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.entity.PoseType
-import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.util.interpolate
 import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
-import com.metacontent.cobblenav.client.gui.widget.fishing.WeatherWidget
+import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -20,10 +18,10 @@ import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import org.joml.Quaternionf
 import org.joml.Vector3f
 
 class FishingnavScreen(
@@ -32,6 +30,7 @@ class FishingnavScreen(
     companion object {
         const val POKEMON_CHANCE = 0.85f
         const val WEATHER_WIDGET_HEIGHT = 80
+        const val BUCKET_VIEW_MIN_HEIGHT = 100
         private val DAY_COLOR = RGB(117, 230, 218)
         private val NIGHT_COLOR = RGB(2, 1, 39)
     }
@@ -85,7 +84,7 @@ class FishingnavScreen(
             horizontalPadding = 0
         )
         baseTable.add(
-            WeatherWidget(
+            FishingContextWidget(
                 x = 0, y = 0,
                 width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
                 height = WEATHER_WIDGET_HEIGHT,
@@ -107,7 +106,7 @@ class FishingnavScreen(
                 x = 0, y = 0,
                 width = fishingTable.width,
                 columns = 5,
-                minHeight = 100,
+                minHeight = BUCKET_VIEW_MIN_HEIGHT,
                 bucket = it,
                 verticalPadding = 2
             )
@@ -115,6 +114,8 @@ class FishingnavScreen(
             fishingTable.add(it)
             baseTable.add(fishingTable)
         }
+
+        val pokeBallItem = BuiltInRegistries.ITEM.get(pokeBall)
 
         RequestFishingMapPacket().sendToServer()
     }
