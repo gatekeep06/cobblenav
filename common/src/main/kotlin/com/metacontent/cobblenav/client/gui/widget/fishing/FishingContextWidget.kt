@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -22,14 +23,21 @@ class FishingContextWidget(
     companion object {
         const val SUN_WIDTH = 30
         const val SUN_HEIGHT = 31
+        const val HOOK_WIDTH = 10
+        const val HOOK_HEIGHT = 12
         val SUN = cobblenavResource("textures/gui/fishing/sun.png")
         val MOON = cobblenavResource("textures/gui/fishing/moon.png")
+        val HOOK = cobblenavResource("textures/gui/fishing/hook.png")
     }
 
     private val centerX
         get() = x + (width - SUN_WIDTH) / 2
     private val centerY
         get() = y + height
+
+    var lineColor: Int? = null
+    var pokeBallStack: ItemStack? = null
+    var baitStack: ItemStack? = null
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
@@ -69,6 +77,28 @@ class FishingContextWidget(
             }
         }
 
+        poseStack.pushPose()
+        poseStack.translate(0f, 0f, -250f)
+        pokeBallStack?.let {
+            guiGraphics.renderItem(it, x + (width - 16) / 2, y + height - 14)
+        }
+
         guiGraphics.disableScissor()
+
+        baitStack?.let {
+            guiGraphics.renderFakeItem(it, x + (width - 16) / 2, y + height + 5)
+        }
+        poseStack.popPose()
+
+        if (pokeBallStack?.isEmpty == false) {
+            blitk(
+                matrixStack = poseStack,
+                texture = HOOK,
+                x = x + (width - HOOK_WIDTH) / 2,
+                y = y + height,
+                width = HOOK_WIDTH,
+                height = HOOK_HEIGHT
+            )
+        }
     }
 }

@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f
+import java.awt.Color
 
 class FishingnavScreen(
     os: PokenavOS
@@ -54,6 +55,7 @@ class FishingnavScreen(
 
     override var hoveredSpawnData: SpawnData? = null
     lateinit var buckets: List<WeightedBucket>
+    private lateinit var fishingContextWidget: FishingContextWidget
     private lateinit var scrollableView: ScrollableView
     private lateinit var baseTable: TableView<SoundlessWidget>
     private lateinit var fishingTable: TableView<AbstractWidget>
@@ -83,14 +85,13 @@ class FishingnavScreen(
             columnWidth = baseTable.columnWidth,
             horizontalPadding = 0
         )
-        baseTable.add(
-            FishingContextWidget(
-                x = 0, y = 0,
-                width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
-                height = WEATHER_WIDGET_HEIGHT,
-                level = player?.clientLevel
-            )
+        fishingContextWidget = FishingContextWidget(
+            x = 0, y = 0,
+            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+            height = WEATHER_WIDGET_HEIGHT,
+            level = player?.clientLevel
         )
+        baseTable.add(fishingContextWidget)
     }
 
     fun receiveInitData(
@@ -108,14 +109,16 @@ class FishingnavScreen(
                 columns = 5,
                 minHeight = BUCKET_VIEW_MIN_HEIGHT,
                 bucket = it,
-                verticalPadding = 2
+                verticalPadding = 4
             )
         }.also {
             fishingTable.add(it)
             baseTable.add(fishingTable)
         }
 
-        val pokeBallItem = BuiltInRegistries.ITEM.get(pokeBall)
+        fishingContextWidget.lineColor = lineColor.toIntOrNull()
+        fishingContextWidget.pokeBallStack = ItemStack(BuiltInRegistries.ITEM.get(pokeBall))
+        fishingContextWidget.baitStack = baitItem
 
         RequestFishingMapPacket().sendToServer()
     }
