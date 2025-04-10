@@ -31,6 +31,7 @@ class FishingContextWidget(
         const val HOOK_HEIGHT = 12
         const val CLOUD_WIDTH = 30
         const val CLOUD_HEIGHT = 16
+        const val MAX_CLOUD_OPACITY = 0.8f
         val SUN = cobblenavResource("textures/gui/fishing/sun.png")
         val MOON = cobblenavResource("textures/gui/fishing/moon.png")
         val HOOK = cobblenavResource("textures/gui/fishing/hook.png")
@@ -47,6 +48,7 @@ class FishingContextWidget(
     private val clouds = mutableListOf<Cloud>()
     private val xRange = -CLOUD_WIDTH..width
     private val yRange = 0..(height - 10 - CLOUD_HEIGHT)
+    private var cloudOpacity = 0f
 
     var lineColor: Int? = null
     var pokeBallStack: ItemStack? = null
@@ -87,6 +89,7 @@ class FishingContextWidget(
                     width = SUN_WIDTH,
                     height = SUN_HEIGHT
                 )
+                if (cloudOpacity < MAX_CLOUD_OPACITY) cloudOpacity = (cloudOpacity + 0.01f).coerceIn(0f, MAX_CLOUD_OPACITY)
             }
             if (normalizedTime in 11834..24000 || normalizedTime in 0..167) {
                 val moonAngle = 1.5 * PI + ((it.dayTime.toDouble() - 11667) % 24000) / 12333 * PI
@@ -100,6 +103,7 @@ class FishingContextWidget(
                     textureWidth = SUN_WIDTH * 8,
                     uOffset = SUN_WIDTH * it.moonPhase
                 )
+                if (cloudOpacity > 0) cloudOpacity = (cloudOpacity - 0.02f).coerceIn(0f, MAX_CLOUD_OPACITY)
             }
         }
 
@@ -139,7 +143,7 @@ class FishingContextWidget(
                 y = y + cloud.position.y,
                 width = CLOUD_WIDTH,
                 height = CLOUD_HEIGHT,
-                alpha = 0.8f
+                alpha = cloudOpacity
             )
             cloud.position.x += cloud.velocity * f
             if (!xRange.contains(cloud.position.x.toInt())) {
