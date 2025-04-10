@@ -5,8 +5,9 @@ import com.cobblemon.mod.common.api.fishing.PokeRods
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.util.enchantmentRegistry
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.FishingnavScreenInitDataPacket
-import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
+import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.util.PreferencesSaver
 import com.metacontent.cobblenav.util.WeightedBucket
 import com.metacontent.cobblenav.util.savedPreferences
@@ -17,8 +18,8 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 
-object RequestFishingnavScreenInitDataHandler : ServerNetworkPacketHandler<RequestLocationScreenInitDataPacket> {
-    override fun handle(packet: RequestLocationScreenInitDataPacket, server: MinecraftServer, player: ServerPlayer) {
+object RequestFishingnavScreenInitDataHandler : ServerNetworkPacketHandler<RequestFishingnavScreenInitDataPacket> {
+    override fun handle(packet: RequestFishingnavScreenInitDataPacket, server: MinecraftServer, player: ServerPlayer) {
         server.execute {
             val applyBuckets = player.savedPreferences().getBoolean(PreferencesSaver.APPLY_BUCKET_KEY)
 

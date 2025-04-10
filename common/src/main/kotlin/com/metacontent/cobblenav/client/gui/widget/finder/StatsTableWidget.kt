@@ -51,8 +51,7 @@ class StatsTableWidget(
         width = ICON_WIDTH,
         columns = 1,
         verticalPadding = PADDING,
-        horizontalPadding = 0,
-        rowHeight = ROW_HEIGHT
+        horizontalPadding = 0
     ).also {
         it.add(
             listOf(
