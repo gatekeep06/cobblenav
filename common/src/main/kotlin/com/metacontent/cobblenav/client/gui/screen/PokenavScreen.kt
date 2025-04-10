@@ -89,7 +89,7 @@ abstract class PokenavScreen(
         renderBackground(guiGraphics, mouseX, mouseY, delta)
         val scaledMouseX = (mouseX / scale).toInt()
         val scaledMouseY = (mouseY / scale).toInt()
-        poseStack.translate(0f, animationOffset, 0f)
+        poseStack.translate(0f, animationOffset, 100f)
         renderBaseElement(poseStack, BORDERS)
         renderScreenBackground(guiGraphics, SCREEN, color)
         guiGraphics.cobblenavScissor(
