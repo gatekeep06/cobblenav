@@ -36,7 +36,7 @@ abstract class PokenavScreen(
         const val ANIMATION_OFFSET: Float = 20f
         const val BACK_BUTTON_SIZE: Int = 14
         val DETAILS = cobblenavResource("textures/gui/pokenav_details.png")
-        val SCREEN_BASE = cobblenavResource("textures/gui/pokenav_screen_base.png")
+        val SCREEN_GLOW = cobblenavResource("textures/gui/pokenav_screen_glow.png")
         val BORDERS = cobblenavResource("textures/gui/pokenav_borders.png")
         val SCREEN = cobblenavResource("textures/gui/pokenav_screen.png")
         val BACK_BUTTON = cobblenavResource("textures/gui/button/back.png")
@@ -89,7 +89,7 @@ abstract class PokenavScreen(
         renderBackground(guiGraphics, mouseX, mouseY, delta)
         val scaledMouseX = (mouseX / scale).toInt()
         val scaledMouseY = (mouseY / scale).toInt()
-        poseStack.translate(0f, animationOffset, 0f)
+        poseStack.translate(0f, animationOffset, 100f)
         renderBaseElement(poseStack, BORDERS)
         renderScreenBackground(guiGraphics, SCREEN, color)
         guiGraphics.cobblenavScissor(
@@ -119,7 +119,19 @@ abstract class PokenavScreen(
         poseStack.popPose()
         guiGraphics.disableScissor()
         poseStack.pushPose()
-        poseStack.translate(0f, 0f, 2000f)
+        poseStack.translate(0f, 0f, 600f)
+        blitk(
+            poseStack,
+            texture = SCREEN_GLOW,
+            x = screenX,
+            y = screenY,
+            width = WIDTH,
+            height = HEIGHT,
+            red = FastColor.ARGB32.red(color) / 128f,
+            green = FastColor.ARGB32.green(color) / 128f,
+            blue = FastColor.ARGB32.blue(color) / 128f  ,
+        )
+        poseStack.translate(0f, 0f, 1400f)
         renderBaseElement(poseStack, DETAILS)
         poseStack.popPose()
         poseStack.popPose()
@@ -181,17 +193,7 @@ abstract class PokenavScreen(
 ////            green = FastColor.ARGB32.green(color),
 ////            blue = FastColor.ARGB32.blue(color),
 //        )
-        blitk(
-            poseStack,
-            texture = SCREEN_BASE,
-            x = screenX,
-            y = screenY,
-            width = WIDTH,
-            height = HEIGHT,
-            red = FastColor.ARGB32.red(color) / 128f,
-            green = FastColor.ARGB32.green(color) / 128f,
-            blue = FastColor.ARGB32.blue(color) / 128f  ,
-        )
+
     }
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {

@@ -3,16 +3,14 @@ package com.metacontent.cobblenav.networking.packet.server
 import com.metacontent.cobblenav.networking.packet.CobblenavNetworkPacket
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
 
-class RequestFishingnavScreenInitDataPacket : CobblenavNetworkPacket<RequestLocationScreenInitDataPacket> {
+class RequestFishingnavScreenInitDataPacket : CobblenavNetworkPacket<RequestFishingnavScreenInitDataPacket> {
     companion object {
         val ID = cobblenavResource("request_fishingnav_screen_init_data")
-        fun decode(buffer: RegistryFriendlyByteBuf) = RequestLocationScreenInitDataPacket()
+        fun decode(buffer: RegistryFriendlyByteBuf) = RequestFishingnavScreenInitDataPacket()
     }
 
     override val id = ID
 
-    override fun encode(buffer: RegistryFriendlyByteBuf) {
-    }
+    override fun encode(buffer: RegistryFriendlyByteBuf) {}
 }
