@@ -52,7 +52,7 @@ class FishingnavScreen(
             }
         }
 
-    override var hoveredSpawnData: SpawnData? = null
+    override var hoveredWidget: SpawnDataWidget? = null
     lateinit var buckets: List<WeightedBucket>
     private lateinit var fishingContextWidget: FishingContextWidget
     private lateinit var scrollableView: ScrollableView
@@ -151,10 +151,10 @@ class FishingnavScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredSpawnData?.let {
+        hoveredWidget?.let {
             guiGraphics.renderSpawnDataTooltip(
-                spawnData = it,
-                chanceMultiplier = 1f,
+                spawnData = it.spawnData,
+                chanceMultiplier = it.chanceMultiplier,
                 mouseX = mouseX,
                 mouseY = mouseY,
                 x1 = screenX + VERTICAL_BORDER_DEPTH,
@@ -164,7 +164,7 @@ class FishingnavScreen(
                 delta = delta
             )
         }
-        hoveredSpawnData = null
+        hoveredWidget = null
     }
 
     override fun isBlockingTooltip() = blockWidgets

@@ -81,7 +81,7 @@ class LocationScreen(
     private var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
-    override var hoveredSpawnData: SpawnData? = null
+    override var hoveredWidget: SpawnDataWidget? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
     private lateinit var scrollableView: ScrollableView
     private lateinit var bucketSelector: BucketSelectorWidget
@@ -256,10 +256,10 @@ class LocationScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredSpawnData?.let {
+        hoveredWidget?.let {
             guiGraphics.renderSpawnDataTooltip(
-                spawnData = it,
-                chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f,
+                spawnData = it.spawnData,
+                chanceMultiplier = it.chanceMultiplier,
                 mouseX = mouseX,
                 mouseY = mouseY,
                 x1 = viewX,
@@ -269,7 +269,7 @@ class LocationScreen(
                 delta = delta
             )
         }
-        hoveredSpawnData = null
+        hoveredWidget = null
     }
 
     private fun savePreferences() {

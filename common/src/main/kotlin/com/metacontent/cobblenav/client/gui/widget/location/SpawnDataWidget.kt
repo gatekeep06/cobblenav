@@ -10,13 +10,10 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.gui.screen.FinderScreen
-import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
-import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -65,7 +62,7 @@ class SpawnDataWidget(
                 height = MODEL_HEIGHT - 4,
                 alpha = 0.5f
             )
-            displayer.hoveredSpawnData = spawnData
+            displayer.hoveredWidget = this
         }
         if (!isModelBroken) {
             try {
