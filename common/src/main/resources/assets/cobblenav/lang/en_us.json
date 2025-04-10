@@ -8,6 +8,7 @@
   "item.cobblenav.pokenav_item": "PokéNav",
   "item.cobblenav.pokefinder_item": "PokéFinder",
   "item.cobblenav.fishingnav_item": "FishingNav",
+  "item.cobblenav.fishingnav_item.tooltip": "Hold SHIFT to open while fishing",
   "item.cobblenav.pokenav_item.base": "Base",
   "item.cobblenav.pokenav_item.custom": "Custom",
   "item.cobblenav.pokenav_item.white": "White",
