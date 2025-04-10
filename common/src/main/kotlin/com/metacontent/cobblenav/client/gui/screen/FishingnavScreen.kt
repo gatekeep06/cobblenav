@@ -23,7 +23,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f
-import java.awt.Color
 
 class FishingnavScreen(
     os: PokenavOS
