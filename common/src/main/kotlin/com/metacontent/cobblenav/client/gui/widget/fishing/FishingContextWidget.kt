@@ -31,9 +31,11 @@ class FishingContextWidget(
         const val CLOUD_WIDTH = 30
         const val CLOUD_HEIGHT = 16
         const val MAX_CLOUD_OPACITY = 0.8f
+        const val MAX_STARS_OPACITY = 1f
         val SUN = cobblenavResource("textures/gui/fishing/sun.png")
         val MOON = cobblenavResource("textures/gui/fishing/moon.png")
         val HOOK = cobblenavResource("textures/gui/fishing/hook.png")
+        val STARS = cobblenavResource("textures/gui/fishing/stars.png")
         val CLOUDS = listOf(
             cobblenavResource("textures/gui/fishing/cloud.png")
         )
@@ -48,6 +50,7 @@ class FishingContextWidget(
     private val xRange = -CLOUD_WIDTH..width
     private val yRange = 0..(height - 10 - CLOUD_HEIGHT)
     private var cloudOpacity = 0f
+    private var starsOpacity = 0f
 
     var lineColor: Int? = null
     var pokeBallStack: ItemStack? = null
@@ -75,6 +78,18 @@ class FishingContextWidget(
             y2 = y + height
         )
 
+        blitk(
+            matrixStack = poseStack,
+            texture = STARS,
+            x = x,
+            y = y,
+            width = width,
+            height = height - 10,
+            textureWidth = 308,
+            textureHeight = 70,
+            alpha = starsOpacity
+        )
+
         level?.let {
             val normalizedTime = it.dayTime % 24000
             if (normalizedTime in 23000..24000 || normalizedTime in 0..13702) {
@@ -89,6 +104,7 @@ class FishingContextWidget(
                     height = SUN_HEIGHT
                 )
                 if (cloudOpacity < MAX_CLOUD_OPACITY) cloudOpacity = (cloudOpacity + 0.01f).coerceIn(0f, MAX_CLOUD_OPACITY)
+                if (starsOpacity > 0) starsOpacity = (starsOpacity - 0.02f).coerceIn(0f, MAX_STARS_OPACITY)
             }
             if (normalizedTime in 11834..24000 || normalizedTime in 0..167) {
                 val moonAngle = 1.5 * PI + ((it.dayTime.toDouble() - 11667) % 24000) / 12333 * PI
@@ -103,6 +119,7 @@ class FishingContextWidget(
                     uOffset = SUN_WIDTH * it.moonPhase
                 )
                 if (cloudOpacity > 0) cloudOpacity = (cloudOpacity - 0.02f).coerceIn(0f, MAX_CLOUD_OPACITY)
+                if (starsOpacity < MAX_STARS_OPACITY) starsOpacity = (starsOpacity + 0.01f).coerceIn(0f, MAX_STARS_OPACITY)
             }
         }
 
