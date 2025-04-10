@@ -103,7 +103,7 @@ class FishingContextWidget(
                     width = SUN_WIDTH,
                     height = SUN_HEIGHT
                 )
-                if (cloudOpacity < MAX_CLOUD_OPACITY) cloudOpacity = (cloudOpacity + 0.01f).coerceIn(0f, MAX_CLOUD_OPACITY)
+                if (cloudOpacity < MAX_CLOUD_OPACITY) cloudOpacity = (cloudOpacity + 0.02f).coerceIn(0f, MAX_CLOUD_OPACITY)
                 if (starsOpacity > 0) starsOpacity = (starsOpacity - 0.02f).coerceIn(0f, MAX_STARS_OPACITY)
             }
             if (normalizedTime in 11834..24000 || normalizedTime in 0..167) {
@@ -118,7 +118,7 @@ class FishingContextWidget(
                     textureWidth = SUN_WIDTH * 8,
                     uOffset = SUN_WIDTH * it.moonPhase
                 )
-                if (cloudOpacity > 0) cloudOpacity = (cloudOpacity - 0.02f).coerceIn(0f, MAX_CLOUD_OPACITY)
+                if (cloudOpacity > 0) cloudOpacity = (cloudOpacity - 0.01f).coerceIn(0f, MAX_CLOUD_OPACITY)
                 if (starsOpacity < MAX_STARS_OPACITY) starsOpacity = (starsOpacity + 0.01f).coerceIn(0f, MAX_STARS_OPACITY)
             }
         }
