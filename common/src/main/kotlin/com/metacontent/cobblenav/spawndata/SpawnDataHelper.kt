@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
+import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
@@ -16,7 +17,7 @@ object SpawnDataHelper {
     fun collect(
         detail: PokemonSpawnDetail,
         spawnChance: Float,
-        contexts: List<AreaSpawningContext>,
+        contexts: List<SpawningContext>,
         player: ServerPlayer
     ): SpawnData? {
         val config = Cobblenav.config
@@ -46,7 +47,7 @@ object SpawnDataHelper {
             val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
             condition?.let {
                 conditions += ConditionCollectors.collectConditions(it, fittingContexts, player)
-                blocks += ConditionCollectors.collectBlockConditions(it, fittingContexts)
+                blocks += ConditionCollectors.collectBlockConditions(it, fittingContexts.filterIsInstance<AreaSpawningContext>())
             }
         }
 

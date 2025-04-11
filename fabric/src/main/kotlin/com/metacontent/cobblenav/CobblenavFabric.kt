@@ -1,12 +1,12 @@
 package com.metacontent.cobblenav
 
-import com.metacontent.cobblenav.CobblenavItems
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.brigadier.arguments.ArgumentType
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -47,5 +47,11 @@ class CobblenavFabric : ModInitializer, Implementation {
         serializer: ArgumentTypeInfo<A, T>
     ) {
         ArgumentTypeRegistry.registerArgumentType(identifier, argumentClass.java, serializer)
+    }
+
+    override fun injectLootTables() {
+        LootTableEvents.MODIFY.register { id, tableBuilder, _, _ ->
+            CobblenavLootInjector.inject(id.location(), tableBuilder::withPool)
+        }
     }
 }

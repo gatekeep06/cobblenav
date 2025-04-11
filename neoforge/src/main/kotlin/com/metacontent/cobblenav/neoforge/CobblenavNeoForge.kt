@@ -1,12 +1,8 @@
 package com.metacontent.cobblenav.neoforge
 
-import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.Implementation
-import com.metacontent.cobblenav.CobblenavCommands
-import com.metacontent.cobblenav.CobblenavItems
+import com.metacontent.cobblenav.*
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
-import com.metacontent.cobblenav.util.log
 import com.mojang.brigadier.arguments.ArgumentType
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
@@ -19,9 +15,9 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.common.Mod
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegisterEvent
@@ -81,6 +77,14 @@ class CobblenavNeoForge : Implementation {
     ) {
         commandArgumentTypes.register(identifier.path) { _ ->
             ArgumentTypeInfos.registerByClass(argumentClass.java, serializer)
+        }
+    }
+
+    override fun injectLootTables() {
+        with(NeoForge.EVENT_BUS) {
+            addListener<LootTableLoadEvent> { event ->
+                CobblenavLootInjector.inject(event.name) { builder -> event.table.addPool(builder.build()) }
+            }
         }
     }
 }

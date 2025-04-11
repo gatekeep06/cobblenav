@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SCS",
+    "EGU",
+    "SRS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:prismarine_shard"
+    },
+    "C": {
+      "item": "minecraft:prismarine_crystals"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "E": {
+      "item": "cobblemon:electirizer"
+    },
+    "G": {
+      "item": "cobblemon:water_gem"
+    },
+    "U": {
+      "item": "cobblemon:upgrade"
+    }
+  },
+  "result": {
+    "id": "cobblenav:fishingnav_item"
+  }
+}

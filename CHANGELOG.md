@@ -1,3 +1,15 @@
+# Update 2.2.0
+
+- Added FishingNav:
+  - updated the item sprite,
+  - added screen,
+  - added recipe.
+- Changed the `collectableConditions` config parameter to simplify modification and support for custom collectors.
+- Slightly optimized spawn checking.
+- Added Old PokéNav to the fishing and ancient city chest loot tables.
+- Fixed an issue on dedicated servers that caused PokéFinder to not be able to search for pokémon by label. This was achieved by synchronizing the species labels with the players' clients. Also, added a parameter to the config to disable this feature.
+- Fixed a conflict with the blur mod that caused a transparent background.
+
 # Update 2.1.0
 
 - Revamped the Pokémon spawn details collection system. Made scalability easier, added ability to register collectors from outside, i.e. by other mods.
