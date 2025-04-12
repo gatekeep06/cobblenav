@@ -6,7 +6,9 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
+import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
@@ -37,6 +39,8 @@ object Cobblenav {
         implementation.injectLootTables()
 
         ConditionCollectors.init()
+
+        CobblemonDataProvider.register(TrainerTitles)
 
         PlatformEvents.SERVER_STARTED.subscribe { event ->
             val profileNbtFactory = CachedPlayerDataStoreFactory(ProfileDataNbtBackend())
