@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.storage
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.metacontent.cobblenav.api.contact.ClientPokenavContact
+import com.metacontent.cobblenav.client.CobblenavClient
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 data class ClientContactPlayerData(
@@ -15,6 +16,16 @@ data class ClientContactPlayerData(
                 contacts = buf.readList { ClientPokenavContact.decode(it as RegistryFriendlyByteBuf) }
             )
         )
+
+        fun afterDecode(data: ClientInstancedPlayerData) {
+            if (data !is ClientContactPlayerData) return
+            CobblenavClient.clientContactData = data
+        }
+
+        fun incrementalAfterDecode(data: ClientInstancedPlayerData) {
+            if (data !is ClientContactPlayerData) return
+            CobblenavClient.clientContactData.contacts.addAll(data.contacts)
+        }
     }
 
     override fun encode(buf: RegistryFriendlyByteBuf) {
