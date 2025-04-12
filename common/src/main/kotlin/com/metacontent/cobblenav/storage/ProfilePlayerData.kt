@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerD
 import com.cobblemon.mod.common.util.asUUID
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
+import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -21,7 +22,7 @@ data class ProfilePlayerData(
     var partnerPokemonCache: PokemonProperties?
 ) : InstancedPlayerData {
     companion object {
-        val CODEC = RecordCodecBuilder.create<ProfilePlayerData> { instance ->
+        val CODEC: Codec<ProfilePlayerData> = RecordCodecBuilder.create<ProfilePlayerData> { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 ResourceLocation.CODEC.optionalFieldOf("titleId").forGetter { Optional.ofNullable(it.titleId) },
