@@ -7,7 +7,7 @@ import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
 import com.metacontent.cobblenav.util.cobblenavResource
 
 object CobblenavDataStoreTypes {
-    val PROFILES = register(PlayerInstancedDataStoreType(
+    val PROFILE = register(PlayerInstancedDataStoreType(
         id = cobblenavResource("profile"),
         decoder = ClientProfilePlayerData::decode,
         afterDecodeAction = ClientProfilePlayerData::afterDecode,
@@ -15,7 +15,7 @@ object CobblenavDataStoreTypes {
     ))
 
     val CONTACTS = register(PlayerInstancedDataStoreType(
-        id = cobblenavResource("contact_data"),
+        id = cobblenavResource("contacts"),
         decoder = ClientContactPlayerData::decode,
         afterDecodeAction = ClientContactPlayerData::afterDecode,
         incrementalAfterDecodeAction = ClientContactPlayerData::incrementalAfterDecode

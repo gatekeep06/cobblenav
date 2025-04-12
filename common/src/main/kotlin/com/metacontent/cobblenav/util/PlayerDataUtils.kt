@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer
 import java.util.UUID
 
 fun PlayerInstancedDataStoreManager.getProfileData(playerId: UUID): ProfilePlayerData {
-    return get(playerId, CobblenavDataStoreTypes.PROFILES) as ProfilePlayerData
+    return get(playerId, CobblenavDataStoreTypes.PROFILE) as ProfilePlayerData
 }
 
 fun PlayerInstancedDataStoreManager.getProfileData(player: ServerPlayer): ProfilePlayerData {

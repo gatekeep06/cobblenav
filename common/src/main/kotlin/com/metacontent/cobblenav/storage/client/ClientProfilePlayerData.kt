@@ -15,7 +15,7 @@ data class ClientProfilePlayerData(
 ) : ClientInstancedPlayerData {
     companion object {
         fun decode(buf: RegistryFriendlyByteBuf): SetClientPlayerDataPacket = SetClientPlayerDataPacket(
-            type = CobblenavDataStoreTypes.PROFILES,
+            type = CobblenavDataStoreTypes.PROFILE,
             playerData = ClientProfilePlayerData(
                 title = buf.readNullable { TrainerTitle.decode(buf) },
                 allowedTitles = buf.readList { TrainerTitle.decode(it as RegistryFriendlyByteBuf) }.toMutableSet(),
