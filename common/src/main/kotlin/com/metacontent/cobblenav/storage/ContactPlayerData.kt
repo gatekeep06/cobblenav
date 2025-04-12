@@ -15,7 +15,7 @@ data class ContactPlayerData(
     val contacts: MutableMap<ContactID, PokenavContact>
 ) : InstancedPlayerData {
     companion object {
-        val CODEC = RecordCodecBuilder.create<ContactPlayerData> { instance ->
+        val CODEC: Codec<ContactPlayerData> = RecordCodecBuilder.create<ContactPlayerData> { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 Codec.unboundedMap(ContactID.CODEC, PokenavContact.CODEC).fieldOf("contacts").forGetter { it.contacts }
