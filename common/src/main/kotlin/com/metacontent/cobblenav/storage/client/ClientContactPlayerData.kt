@@ -1,9 +1,10 @@
-package com.metacontent.cobblenav.storage
+package com.metacontent.cobblenav.storage.client
 
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.metacontent.cobblenav.api.contact.ClientPokenavContact
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 data class ClientContactPlayerData(

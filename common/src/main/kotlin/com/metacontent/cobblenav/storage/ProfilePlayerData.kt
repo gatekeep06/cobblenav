@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
+import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
 import net.minecraft.resources.ResourceLocation
 import java.util.*
 

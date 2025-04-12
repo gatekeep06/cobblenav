@@ -8,8 +8,8 @@ import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
 import com.metacontent.cobblenav.client.settings.PokefinderSettings
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.item.Pokefinder
-import com.metacontent.cobblenav.storage.ClientContactPlayerData
-import com.metacontent.cobblenav.storage.ClientProfilePlayerData
+import com.metacontent.cobblenav.storage.client.ClientContactPlayerData
+import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
