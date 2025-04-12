@@ -8,6 +8,8 @@ import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
 import com.metacontent.cobblenav.client.settings.PokefinderSettings
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.item.Pokefinder
+import com.metacontent.cobblenav.storage.ClientContactPlayerData
+import com.metacontent.cobblenav.storage.ClientProfilePlayerData
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -23,6 +25,9 @@ object CobblenavClient {
         overlay
     }
     val trackArrowOverlay: TrackArrowOverlay by lazy { TrackArrowOverlay() }
+
+    var clientProfileData = ClientProfilePlayerData()
+    var clientContactData = ClientContactPlayerData()
 
     fun init(implementation: ClientImplementation) {
         config = Config.load(ClientCobblenavConfig::class.java)
