@@ -6,18 +6,34 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.util.getProfileData
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.ListCodec
+import com.mojang.serialization.codecs.PrimitiveCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 
 data class PokenavContact(
-    val contactID: ContactID,
+    val contactId: ContactID,
     val name: String,
     val battleRecords: List<BattleRecord>
 ) {
+    companion object {
+        val CODEC: Codec<PokenavContact> = RecordCodecBuilder.create<PokenavContact> { instance ->
+            instance.group(
+                ContactID.CODEC.fieldOf("contactId").forGetter { it.contactId },
+                PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
+                ListCodec(BattleRecord.CODEC, 0, 512).fieldOf("battleRecords").forGetter { it.battleRecords }
+            ).apply(instance) { contactId, name, battleRecords ->
+                PokenavContact(contactId, name, battleRecords)
+            }
+        }
+    }
+
     fun toClientContact(): ClientPokenavContact {
-        val profile = Cobblemon.playerDataManager.getProfileData(contactID.uuid)
+        val profile = Cobblemon.playerDataManager.getProfileData(contactId.uuid)
         return ClientPokenavContact(
-            contactID = contactID,
+            contactID = contactId,
             name = name,
             titleId = profile.titleId,
             partnerPokemon = profile.partnerPokemonCache?.asRenderablePokemon(),
