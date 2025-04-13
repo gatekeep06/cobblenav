@@ -21,7 +21,7 @@ class TrainerTitleArgument : ArgumentType<TrainerTitle> {
     }
 
     override fun parse(reader: StringReader): TrainerTitle {
-        val id = ResourceLocation.parse(reader.readString())
+        val id = ResourceLocation.read(reader)
         val title = TrainerTitles.getTitle(id)
         return title!!
     }
