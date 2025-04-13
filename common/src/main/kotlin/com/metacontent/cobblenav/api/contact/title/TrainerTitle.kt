@@ -11,7 +11,7 @@ data class TrainerTitle(
     var id: ResourceLocation,
     val overrideName: String?,
     val overrideBannerId: ResourceLocation?,
-    val commonUse: Boolean
+    val commonUse: Boolean = false
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = TrainerTitle(
