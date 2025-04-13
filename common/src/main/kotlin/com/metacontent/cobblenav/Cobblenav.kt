@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStore
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
+import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
@@ -19,6 +20,8 @@ import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.adapter.ContactDataNbtBackend
 import com.metacontent.cobblenav.storage.adapter.ProfileDataNbtBackend
 import com.metacontent.cobblenav.util.PokenavSpawningProspector
+import com.metacontent.cobblenav.util.cobblenavResource
+import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -80,5 +83,6 @@ object Cobblenav {
     }
 
     private fun registerArgumentTypes() {
+        implementation.registerCommandArgument(cobblenavResource("trainer_title"), TrainerTitleArgument::class, SingletonArgumentInfo.contextFree(TrainerTitleArgument::title))
     }
 }
