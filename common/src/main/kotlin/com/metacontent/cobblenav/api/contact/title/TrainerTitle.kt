@@ -9,20 +9,27 @@ import net.minecraft.resources.ResourceLocation
 
 data class TrainerTitle(
     var id: ResourceLocation,
-    val literalName: String?,
-    val commonUse: Boolean = false
+    val overrideName: String?,
+    val overrideBannerId: ResourceLocation?,
+    val commonUse: Boolean
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = TrainerTitle(
             id = buffer.readResourceLocation(),
-            literalName = buffer.readNullable { it.readString() },
+            overrideName = buffer.readNullable { it.readString() },
+            overrideBannerId = buffer.readNullable { it.readResourceLocation() },
+            commonUse = buffer.readBoolean()
         )
     }
 
-    fun name(): MutableComponent = literalName?.let { Component.literal(it) } ?: Component.translatable(id.toLanguageKey("title"))
+    fun name(): MutableComponent = overrideName?.let { Component.translatable(it) } ?: Component.translatable(id.toLanguageKey("title"))
+
+    fun banner(): ResourceLocation = overrideBannerId ?: ResourceLocation.fromNamespaceAndPath(id.namespace, "textures/gui/banner/${id.path}")
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(id)
-        buffer.writeNullable(literalName) { pb, value -> pb.writeString(value) }
+        buffer.writeNullable(overrideName) { pb, value -> pb.writeString(value) }
+        buffer.writeNullable(overrideBannerId) { pb, value -> pb.writeResourceLocation(value) }
+        buffer.writeBoolean(commonUse)
     }
 }
