@@ -32,7 +32,9 @@ object TrainerTitles : JsonDataRegistry<TrainerTitle> {
         it.commonUse || granted.contains(it.id)
     }.toMutableSet()
 
-    fun getAll() = titles
+    fun getAll() = titles.values
+
+    fun getStrict() = titles.values.filter { !it.commonUse }
 
     override fun sync(player: ServerPlayer) {
         TrainerTitleRegistrySyncPacket(titles.values).sendToPlayer(player)
