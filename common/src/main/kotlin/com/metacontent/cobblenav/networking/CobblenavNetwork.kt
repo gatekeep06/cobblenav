@@ -24,6 +24,7 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(FishingnavScreenInitDataPacket.ID, FishingnavScreenInitDataPacket::decode, FishingnavScreenInitDataHandler))
 
         list.add(PacketRegisterInfo(LabelSyncPacket.ID, LabelSyncPacket::decode, DataRegistrySyncPacketHandler()))
+        list.add(PacketRegisterInfo(TrainerTitleRegistrySyncPacket.ID, TrainerTitleRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
 
         return list
     }

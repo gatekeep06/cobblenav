@@ -6,12 +6,12 @@ import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class TrainerTitlesRegistrySyncPacket(
+class TrainerTitleRegistrySyncPacket(
     titles: Collection<TrainerTitle>
-) : DataRegistrySyncPacket<TrainerTitle, TrainerTitlesRegistrySyncPacket>(titles) {
+) : DataRegistrySyncPacket<TrainerTitle, TrainerTitleRegistrySyncPacket>(titles) {
     companion object {
         val ID = cobblenavResource("title_sync")
-        fun decode(buffer: RegistryFriendlyByteBuf) = TrainerTitlesRegistrySyncPacket(emptyList()).apply {
+        fun decode(buffer: RegistryFriendlyByteBuf) = TrainerTitleRegistrySyncPacket(emptyList()).apply {
             val size = buffer.readInt()
             val decodedBuffer = RegistryFriendlyByteBuf(buffer.readBytes(size), buffer.registryAccess())
             this.buffer = decodedBuffer

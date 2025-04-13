@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.metacontent.cobblenav.networking.packet.client.TrainerTitleRegistrySyncPacket
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -34,7 +35,7 @@ object TrainerTitles : JsonDataRegistry<TrainerTitle> {
     fun getAll() = titles
 
     override fun sync(player: ServerPlayer) {
-
+        TrainerTitleRegistrySyncPacket(titles.values).sendToPlayer(player)
     }
 
     override fun reload(data: Map<ResourceLocation, TrainerTitle>) {
