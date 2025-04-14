@@ -7,7 +7,6 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.util.getProfileData
 import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -23,7 +22,7 @@ data class PokenavContact(
             instance.group(
                 ContactID.CODEC.fieldOf("contactId").forGetter { it.contactId },
                 PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
-                ListCodec(BattleRecord.CODEC, 0, 512).fieldOf("battleRecords").forGetter { it.battleRecords }
+                BattleRecord.CODEC.listOf().fieldOf("battleRecords").forGetter { it.battleRecords }
             ).apply(instance) { contactId, name, battleRecords ->
                 PokenavContact(contactId, name, battleRecords)
             }
