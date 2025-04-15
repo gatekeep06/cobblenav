@@ -71,11 +71,11 @@ class CobblenavNeoForge : Implementation {
     }
 
     override fun <A : ArgumentType<*>, T : ArgumentTypeInfo.Template<A>> registerCommandArgument(
-        identifier: ResourceLocation,
+        id: ResourceLocation,
         argumentClass: KClass<A>,
         serializer: ArgumentTypeInfo<A, T>
     ) {
-        commandArgumentTypes.register(identifier.path) { _ ->
+        commandArgumentTypes.register(id.path) { _ ->
             ArgumentTypeInfos.registerByClass(argumentClass.java, serializer)
         }
     }

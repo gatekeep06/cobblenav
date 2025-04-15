@@ -106,6 +106,9 @@
 
   "gui.cobblenav.pokemon_rendering_exception": "An exception occurred when trying to render %s. The cause could be a conflict between several resource packs that add %s or an outdated version of one. Make sure your resource packs do not contain any pokémon assets that are in another resource pack or in the main mod. If this does not work, report an exception.",
 
+  "message.cobblenav.title_granted": "The following titles have been granted to you: ",
+  "message.cobblenav.title_removed": "The following titles have been removed: ",
+
   "biome.minecraft.is_nether": "Nether",
   "biome.minecraft.is_end": "End",
   "biome.minecraft.is_deep_ocean": "Deep Ocean",
