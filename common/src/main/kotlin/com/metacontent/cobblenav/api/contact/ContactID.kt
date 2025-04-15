@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.api.contact
 
 import com.cobblemon.mod.common.api.net.Encodable
 import com.metacontent.cobblenav.util.cobblenavResource
+import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -13,7 +14,7 @@ data class ContactID(
     val type: ResourceLocation = cobblenavResource("player")
 ) : Encodable {
     companion object {
-        val CODEC = RecordCodecBuilder.create<ContactID> { instance ->
+        val CODEC: Codec<ContactID> = RecordCodecBuilder.create<ContactID> { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 ResourceLocation.CODEC.fieldOf("type").forGetter { it.type }

@@ -20,7 +20,7 @@ data class ContactPlayerData(
     val contacts: MutableMap<ContactID, PokenavContact>
 ) : InstancedPlayerData {
     companion object {
-        val CODEC: Codec<ContactPlayerData> = RecordCodecBuilder.create<ContactPlayerData> { instance ->
+        val CODEC: Codec<ContactPlayerData> = RecordCodecBuilder.create { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 Codec.unboundedMap(ContactID.CODEC, PokenavContact.CODEC).fieldOf("contacts").forGetter { it.contacts }
@@ -39,6 +39,31 @@ data class ContactPlayerData(
         fun executeAndSafe(player: ServerPlayer, action: (ContactPlayerData) -> Boolean) {
             executeAndSafe(player.uuid, action)
         }
+    }
+
+    fun findByUuid(uuid: UUID): PokenavContact? {
+        val contactId = ContactID(uuid)
+        return contacts[contactId]
+    }
+
+    fun findByName(name: String): PokenavContact? = contacts.values.firstOrNull { it.name == name }
+
+    fun addContact(contact: PokenavContact): Boolean {
+        if (contacts.putIfAbsent(contact.contactId, contact) != null) return false
+        onContactListUpdated()
+        return true
+    }
+
+    fun removeContact(contactID: ContactID): Boolean {
+        if (contacts.remove(contactID) == null) return false
+        onContactListUpdated()
+        return true
+    }
+
+    fun clearContacts() {
+        if (contacts.isEmpty()) return
+        contacts.clear()
+        onContactListUpdated()
     }
 
     fun onContactListUpdated() {

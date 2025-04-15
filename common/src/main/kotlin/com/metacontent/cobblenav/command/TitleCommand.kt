@@ -19,6 +19,7 @@ object TitleCommand : Command {
     private const val LIST = "list"
     private const val GRANT = "grant"
     private const val REMOVE = "remove"
+    private const val ALL = "all"
 
     private const val PLAYER_ARGUMENT = "player"
     private const val PLAYERS_ARGUMENT = "players"
@@ -27,19 +28,19 @@ object TitleCommand : Command {
     override fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
         val command = literal(BASE)
         val commandList = literal(LIST)
-            .then(literal("all").executes(::executeListAll))
+            .then(literal(ALL).executes(::executeListAll))
             .then(argument(PLAYER_ARGUMENT, EntityArgument.player()).executes(::executeListForPlayer))
         val commandGrant = literal(GRANT)
             .then(
                 argument(PLAYERS_ARGUMENT, EntityArgument.players())
                     .then(argument(TITLE_ARGUMENT, TrainerTitleArgument.title()).executes(::executeGrant))
-                    .then(literal("all").executes(::executeGrantAll))
+                    .then(literal(ALL).executes(::executeGrantAll))
             )
         val commandRemove = literal(REMOVE)
             .then(
                 argument(PLAYERS_ARGUMENT, EntityArgument.players())
                     .then(argument(TITLE_ARGUMENT, TrainerTitleArgument.title()).executes(::executeRemove))
-                    .then(literal("all").executes(::executeRemoveAll))
+                    .then(literal(ALL).executes(::executeRemoveAll))
             )
 
         command
@@ -119,15 +120,17 @@ object TitleCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         players.forEach {
             ProfilePlayerData.executeAndSafe(it) { data ->
-                if (data.grantedTitles.isNotEmpty()) {
+                return@executeAndSafe if (data.grantedTitles.isNotEmpty()) {
                     val message = data.grantedTitles.mapNotNull {
                             id -> TrainerTitles.getTitle(id)?.name()
                     }.join(Component.translatable("message.cobblenav.title_removed"))
                     data.clearTitles()
                     it.sendSystemMessage(message)
-                    return@executeAndSafe true
+                    true
                 }
-                return@executeAndSafe false
+                else {
+                    false
+                }
             }
         }
         return 1
