@@ -1,8 +1,8 @@
 package com.metacontent.cobblenav.mixin;
 
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity;
-import com.metacontent.cobblenav.event.CobblenavEvents;
-import com.metacontent.cobblenav.event.FishTravelStartedEvent;
+import com.metacontent.cobblenav.api.event.CobblenavEvents;
+import com.metacontent.cobblenav.api.event.fishing.FishTravelStartedEvent;
 import com.metacontent.cobblenav.util.FishTravelChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +26,7 @@ public abstract class PokeRodFishingBobberEntityMixin implements FishTravelCheck
     )
     protected void injectTick(BlockPos pos, CallbackInfo ci) {
         if (((PokeRodFishingBobberEntity)(Object)this).getPlayerOwner() instanceof ServerPlayer player) {
-            CobblenavEvents.INSTANCE.getFISH_TRAVEL_STARTED().emit(new FishTravelStartedEvent(player));
+            CobblenavEvents.getFISH_TRAVEL_STARTED().emit(new FishTravelStartedEvent(player));
         }
     }
 

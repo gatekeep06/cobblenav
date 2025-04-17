@@ -9,10 +9,10 @@ import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStore
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
+import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
-import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
@@ -22,6 +22,7 @@ import com.metacontent.cobblenav.storage.adapter.ProfileDataNbtBackend
 import com.metacontent.cobblenav.util.PokenavSpawningProspector
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
+import net.minecraft.network.chat.Component
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -44,6 +45,8 @@ object Cobblenav {
         ConditionCollectors.init()
 
         CobblemonDataProvider.register(TrainerTitles)
+
+        CobblenavDataStoreTypes
 
         PlatformEvents.SERVER_STARTED.subscribe { event ->
             val profileNbtFactory = CachedPlayerDataStoreFactory(ProfileDataNbtBackend())
@@ -74,7 +77,29 @@ object Cobblenav {
         CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
             CloseFishingnavPacket().sendToPlayer(event.player)
         }
-      
+
+        CobblenavEvents.TITLES_GRANTED.subscribe { event ->
+            event.player?.let { player ->
+                val titles = event.titleIds.mapNotNull { TrainerTitles.getTitle(it) }
+                titles.forEach { player.sendSystemMessage(Component.translatable("message.cobblenav.title_granted", it.name())) }
+            }
+        }
+
+        CobblenavEvents.TITLES_REMOVED.subscribe { event ->
+            event.player?.let { player ->
+                val titles = event.titleIds.mapNotNull { TrainerTitles.getTitle(it) }
+                titles.forEach { player.sendSystemMessage(Component.translatable("message.cobblenav.title_removed", it.name())) }
+            }
+        }
+
+        CobblenavEvents.CONTACTS_ADDED.subscribe { event ->
+            event.player?.let { player ->
+                event.contacts.forEach {
+                    player.sendSystemMessage(Component.translatable("message.cobblenav.contact_added", it.name))
+                }
+            }
+        }
+
         if (config.syncLabelsWithClient) {
             CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
