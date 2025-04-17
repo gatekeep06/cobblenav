@@ -7,6 +7,10 @@ import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerD
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
+import com.metacontent.cobblenav.api.event.CobblenavEvents
+import com.metacontent.cobblenav.api.event.profile.ProfileDataCreated
+import com.metacontent.cobblenav.api.event.profile.TitlesGranted
+import com.metacontent.cobblenav.api.event.profile.TitlesRemoved
 import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
 import com.metacontent.cobblenav.util.getProfileData
 import com.mojang.serialization.Codec
@@ -25,7 +29,7 @@ data class ProfilePlayerData(
     var partnerPokemonCache: PokemonProperties?
 ) : InstancedPlayerData {
     companion object {
-        val CODEC: Codec<ProfilePlayerData> = RecordCodecBuilder.create<ProfilePlayerData> { instance ->
+        val CODEC: Codec<ProfilePlayerData> = RecordCodecBuilder.create { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 ResourceLocation.CODEC.optionalFieldOf("titleId").forGetter { Optional.ofNullable(it.titleId) },
@@ -55,26 +59,40 @@ data class ProfilePlayerData(
         }
     }
 
-    fun grantTitle(titleId: ResourceLocation, sync: Boolean = true): Boolean {
+    private val player: ServerPlayer? by lazy { uuid.getPlayer() }
+
+    fun grantTitle(titleId: ResourceLocation): Boolean {
         if (!grantedTitles.add(titleId)) return false
-        if (sync) onTitleListUpdated()
+        CobblenavEvents.TITLES_GRANTED.post(TitlesGranted(player, listOf(titleId)))
+        onTitleListUpdated()
         return true
     }
 
-    fun removeTitle(titleId: ResourceLocation, sync: Boolean = true): Boolean {
+    fun grantTitles(titleIds: List<ResourceLocation>): Boolean {
+        val added = titleIds.filter { grantedTitles.add(it) }
+        if (added.isEmpty()) return false
+        CobblenavEvents.TITLES_GRANTED.post(TitlesGranted(player, added))
+        onTitleListUpdated()
+        return true
+    }
+
+    fun removeTitle(titleId: ResourceLocation): Boolean {
         if (!grantedTitles.remove(titleId)) return false
-        if (sync) onTitleListUpdated()
+        CobblenavEvents.TITLES_REMOVED.post(TitlesRemoved(player, listOf(titleId)))
+        onTitleListUpdated()
         return true
     }
 
-    fun clearTitles(sync: Boolean = true) {
+    fun clearTitles() {
         if (grantedTitles.isEmpty()) return
+        val copy = grantedTitles.toList()
         grantedTitles.clear()
-        if (sync) onTitleListUpdated()
+        CobblenavEvents.TITLES_REMOVED.post(TitlesRemoved(player, copy))
+        onTitleListUpdated()
     }
 
     fun onTitleListUpdated() {
-        uuid.getPlayer()?.let {
+        player?.let {
             SetClientPlayerDataPacket(
                 type = CobblenavDataStoreTypes.PROFILE,
                 playerData = ClientProfilePlayerData(allowedTitles = TrainerTitles.getAllowed(grantedTitles)),

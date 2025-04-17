@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav.storage.adapter
 
 import com.cobblemon.mod.common.api.storage.player.adapter.NbtBackedPlayerData
+import com.metacontent.cobblenav.api.event.CobblenavEvents
+import com.metacontent.cobblenav.api.event.contact.ContactDataCreated
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.ContactPlayerData
 import com.mojang.serialization.Codec
@@ -11,5 +13,7 @@ class ContactDataNbtBackend : NbtBackedPlayerData<ContactPlayerData>(
     type = CobblenavDataStoreTypes.CONTACTS
 ) {
     override val codec: Codec<ContactPlayerData> = ContactPlayerData.CODEC
-    override val defaultData = { uuid: UUID -> ContactPlayerData(uuid, mutableMapOf()) }
+    override val defaultData = { uuid: UUID ->
+        ContactPlayerData(uuid, mutableMapOf()).also { CobblenavEvents.CONTACT_DATA_CREATED.post(ContactDataCreated(it)) }
+    }
 }
