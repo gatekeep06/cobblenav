@@ -13,30 +13,31 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 import java.text.DateFormat
 import java.util.Date
+import java.util.UUID
 
 data class PokenavContact(
-    val contactId: ContactID,
+    val uuid: UUID,
     val name: String,
     val battleRecords: List<BattleRecord>,
     val date: Date = Date()
 ) {
     companion object {
-        val CODEC: Codec<PokenavContact> = RecordCodecBuilder.create<PokenavContact> { instance ->
+        val CODEC: Codec<PokenavContact> = RecordCodecBuilder.create { instance ->
             instance.group(
-                ContactID.CODEC.fieldOf("contactId").forGetter { it.contactId },
+                PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
                 BattleRecord.CODEC.listOf().fieldOf("battleRecords").forGetter { it.battleRecords },
                 PrimitiveCodec.LONG.fieldOf("date").forGetter { it.date.time }
-            ).apply(instance) { contactId, name, battleRecords, date ->
-                PokenavContact(contactId, name, battleRecords, Date(date))
+            ).apply(instance) { uuid, name, battleRecords, date ->
+                PokenavContact(UUID.fromString(uuid), name, battleRecords, Date(date))
             }
         }
     }
 
     fun toClientContact(): ClientPokenavContact {
-        val profile = Cobblemon.playerDataManager.getProfileData(contactId.uuid)
+        val profile = Cobblemon.playerDataManager.getProfileData(uuid)
         return ClientPokenavContact(
-            contactID = contactId,
+            uuid = uuid,
             name = name,
             titleId = profile.titleId,
             partnerPokemon = profile.partnerPokemonCache?.asRenderablePokemon(),
@@ -72,7 +73,7 @@ data class PokenavContact(
 }
 
 data class ClientPokenavContact(
-    val contactID: ContactID,
+    val uuid: UUID,
     val name: String,
     val titleId: ResourceLocation?,
     val partnerPokemon: RenderablePokemon?,
@@ -81,7 +82,7 @@ data class ClientPokenavContact(
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = ClientPokenavContact(
-            contactID = ContactID.decode(buffer),
+            uuid = buffer.readUUID(),
             name = buffer.readString(),
             titleId = buffer.readNullable { it.readResourceLocation() },
             partnerPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(buffer) },
@@ -91,7 +92,7 @@ data class ClientPokenavContact(
     }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        contactID.encode(buffer)
+        buffer.writeUUID(uuid)
         buffer.writeString(name)
         buffer.writeNullable(titleId) { pb, value -> pb.writeResourceLocation(value) }
         buffer.writeNullable(partnerPokemon) { pb, value -> value.saveToBuffer(pb as RegistryFriendlyByteBuf) }

@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStore
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
+import com.metacontent.cobblenav.api.contact.type.NPCContactTypes
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
 import com.metacontent.cobblenav.config.CobblenavConfig
@@ -45,6 +46,7 @@ object Cobblenav {
         ConditionCollectors.init()
 
         CobblemonDataProvider.register(TrainerTitles)
+        CobblemonDataProvider.register(NPCContactTypes)
 
         CobblenavDataStoreTypes
 

@@ -45,5 +45,6 @@ object TrainerTitles : JsonDataRegistry<TrainerTitle> {
             it.value.id = it.key
             titles[it.key] = it.value
         }
+        observable.emit(this)
     }
 }

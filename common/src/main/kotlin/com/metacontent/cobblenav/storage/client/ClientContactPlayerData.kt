@@ -3,20 +3,20 @@ package com.metacontent.cobblenav.storage.client
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.metacontent.cobblenav.api.contact.ClientPokenavContact
-import com.metacontent.cobblenav.api.contact.ContactID
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
+import java.util.UUID
 
 data class ClientContactPlayerData(
-    val contacts: MutableMap<ContactID, ClientPokenavContact> = mutableMapOf()
+    val contacts: MutableMap<UUID, ClientPokenavContact> = mutableMapOf()
 ) : ClientInstancedPlayerData {
     companion object {
         fun decode(buf: RegistryFriendlyByteBuf): SetClientPlayerDataPacket = SetClientPlayerDataPacket(
             type = CobblenavDataStoreTypes.CONTACTS,
             playerData = ClientContactPlayerData(
                 contacts = buf.readMap(
-                    { ContactID.decode(it as RegistryFriendlyByteBuf) },
+                    { it.readUUID() },
                     { ClientPokenavContact.decode(it as RegistryFriendlyByteBuf) }
                 )
             )
@@ -36,7 +36,7 @@ data class ClientContactPlayerData(
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeMap(
             contacts,
-            { pb, key -> key.encode(pb as RegistryFriendlyByteBuf) },
+            { pb, key -> pb.writeUUID(key) },
             { pb, value -> value.encode(pb as RegistryFriendlyByteBuf) }
         )
     }

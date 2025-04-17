@@ -111,7 +111,7 @@ object ContactCommand : Command {
         val contactPlayer = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT)
         players.forEach {
             val contact = PokenavContact(
-                contactId = ContactID(contactPlayer.uuid),
+                uuid = ContactID(contactPlayer.uuid),
                 name = contactPlayer.name.string,
                 battleRecords = mutableListOf()
             )
@@ -136,7 +136,7 @@ object ContactCommand : Command {
             ContactPlayerData.executeAndSafe(it) { data ->
                 val contact = data.findByName(name)
                 return@executeAndSafe if (contact != null) {
-                    data.removeContact(contact.contactId)
+                    data.removeContact(contact.uuid)
                 }
                 else {
                     false

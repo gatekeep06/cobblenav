@@ -25,6 +25,7 @@ object CobblenavNetwork {
 
         list.add(PacketRegisterInfo(LabelSyncPacket.ID, LabelSyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(TrainerTitleRegistrySyncPacket.ID, TrainerTitleRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
+        list.add(PacketRegisterInfo(NPCContactTypeRegistrySyncPacket.ID, NPCContactTypeRegistrySyncPacket::decode, DataRegistrySyncPacketHandler()))
 
         return list
     }
