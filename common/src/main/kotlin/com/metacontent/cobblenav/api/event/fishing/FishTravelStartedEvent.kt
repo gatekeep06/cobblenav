@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.event
+package com.metacontent.cobblenav.api.event.fishing
 
 import net.minecraft.server.level.ServerPlayer
 

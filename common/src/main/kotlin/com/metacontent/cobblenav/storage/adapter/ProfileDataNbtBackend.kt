@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav.storage.adapter
 
 import com.cobblemon.mod.common.api.storage.player.adapter.NbtBackedPlayerData
+import com.metacontent.cobblenav.api.event.CobblenavEvents
+import com.metacontent.cobblenav.api.event.profile.ProfileDataCreated
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.ProfilePlayerData
 import com.mojang.serialization.Codec
@@ -18,6 +20,6 @@ class ProfileDataNbtBackend : NbtBackedPlayerData<ProfilePlayerData>(
             grantedTitles = mutableSetOf(),
             partnerPokemonUuid = null,
             partnerPokemonCache = null
-        )
+        ).also { CobblenavEvents.PROFILE_DATA_CREATED.post(ProfileDataCreated(it)) }
     }
 }

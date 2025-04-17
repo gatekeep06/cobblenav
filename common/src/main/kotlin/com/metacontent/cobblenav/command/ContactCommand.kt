@@ -76,7 +76,7 @@ object ContactCommand : Command {
         val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
         val data = Cobblemon.playerDataManager.getContactData(player)
         val names = data.contacts.values.joinToString { it.name }
-        source.sendSystemMessage(Component.literal(names))
+        if (names.isNotBlank()) source.sendSystemMessage(Component.literal(names))
         return 1
     }
 
@@ -89,7 +89,7 @@ object ContactCommand : Command {
             source.sendSystemMessage(Component.literal(it.getSummary()))
             return 1
         }
-        source.sendSystemMessage(Component.translatable("").red())
+        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
         return 0
     }
 
@@ -102,7 +102,7 @@ object ContactCommand : Command {
             source.sendSystemMessage(Component.literal(it.getSummary()))
             return 1
         }
-        source.sendSystemMessage(Component.literal("").red())
+        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
         return 0
     }
 
@@ -115,9 +115,7 @@ object ContactCommand : Command {
                 name = contactPlayer.name.string,
                 battleRecords = mutableListOf()
             )
-            ContactPlayerData.executeAndSafe(it) { data ->
-                data.addContact(contact)
-            }
+            ContactPlayerData.executeAndSafe(it) { data -> data.addContact(contact) }
         }
         return 1
     }
@@ -126,9 +124,7 @@ object ContactCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid
         players.forEach {
-            ContactPlayerData.executeAndSafe(it) { data ->
-                data.removeContact(ContactID(contactUuid))
-            }
+            ContactPlayerData.executeAndSafe(it) { data -> data.removeContact(ContactID(contactUuid)) }
         }
         return 1
     }

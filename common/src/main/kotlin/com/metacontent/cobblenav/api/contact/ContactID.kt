@@ -14,7 +14,7 @@ data class ContactID(
     val type: ResourceLocation = cobblenavResource("player")
 ) : Encodable {
     companion object {
-        val CODEC: Codec<ContactID> = RecordCodecBuilder.create<ContactID> { instance ->
+        val CODEC: Codec<ContactID> = RecordCodecBuilder.create { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 ResourceLocation.CODEC.fieldOf("type").forGetter { it.type }

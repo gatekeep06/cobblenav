@@ -72,31 +72,16 @@ object TitleCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val title = TrainerTitleArgument.getTitle(context, TITLE_ARGUMENT)
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data ->
-                if (data.grantTitle(title.id)) {
-                    it.sendSystemMessage(Component.translatable("message.cobblenav.title_granted").append(title.name()))
-                    return@executeAndSafe true
-                }
-                return@executeAndSafe false
-            }
+            ProfilePlayerData.executeAndSafe(it) { data -> data.grantTitle(title.id) }
         }
         return 1
     }
 
     private fun executeGrantAll(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
-        val strictUseTitles = TrainerTitles.getStrict()
+        val strictUseTitles = TrainerTitles.getStrict().map { it.id }
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data ->
-                val addedTitles = strictUseTitles.filter { title -> data.grantTitle(title.id, false) }
-                if (addedTitles.isNotEmpty()) {
-                    data.onTitleListUpdated()
-                    val message = addedTitles.map(TrainerTitle::name).join(Component.translatable("message.cobblenav.title_granted"))
-                    it.sendSystemMessage(message)
-                    return@executeAndSafe true
-                }
-                return@executeAndSafe false
-            }
+            ProfilePlayerData.executeAndSafe(it) { data -> data.grantTitles(strictUseTitles) }
         }
         return 1
     }
@@ -105,13 +90,7 @@ object TitleCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val title = TrainerTitleArgument.getTitle(context, TITLE_ARGUMENT)
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data ->
-                if (data.removeTitle(title.id)) {
-                    it.sendSystemMessage(Component.translatable("message.cobblenav.title_removed").append(title.name()))
-                    return@executeAndSafe true
-                }
-                return@executeAndSafe false
-            }
+            ProfilePlayerData.executeAndSafe(it) { data -> data.removeTitle(title.id) }
         }
         return 1
     }
@@ -121,11 +100,7 @@ object TitleCommand : Command {
         players.forEach {
             ProfilePlayerData.executeAndSafe(it) { data ->
                 return@executeAndSafe if (data.grantedTitles.isNotEmpty()) {
-                    val message = data.grantedTitles.mapNotNull {
-                            id -> TrainerTitles.getTitle(id)?.name()
-                    }.join(Component.translatable("message.cobblenav.title_removed"))
                     data.clearTitles()
-                    it.sendSystemMessage(message)
                     true
                 }
                 else {
