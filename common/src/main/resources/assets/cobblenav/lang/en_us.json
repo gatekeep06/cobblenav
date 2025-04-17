@@ -109,6 +109,7 @@
   "message.cobblenav.title_granted": "<You've been granted the title \"%s\">",
   "message.cobblenav.title_removed": "<\"%s\" has been removed from your titles>",
   "message.cobblenav.contact_added": "<%s added to your contacts>",
+  "message.cobblenav.contact_not_found": "Contact not found",
 
   "biome.minecraft.is_nether": "Nether",
   "biome.minecraft.is_end": "End",

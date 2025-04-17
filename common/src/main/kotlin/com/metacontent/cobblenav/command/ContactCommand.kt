@@ -89,7 +89,7 @@ object ContactCommand : Command {
             source.sendSystemMessage(Component.literal(it.getSummary()))
             return 1
         }
-        source.sendSystemMessage(Component.translatable("").red())
+        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
         return 0
     }
 
@@ -102,7 +102,7 @@ object ContactCommand : Command {
             source.sendSystemMessage(Component.literal(it.getSummary()))
             return 1
         }
-        source.sendSystemMessage(Component.literal("").red())
+        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
         return 0
     }
 
