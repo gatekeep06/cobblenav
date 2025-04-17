@@ -91,7 +91,7 @@ data class ProfilePlayerData(
         onTitleListUpdated()
     }
 
-    fun onTitleListUpdated() {
+    private fun onTitleListUpdated() {
         player?.let {
             SetClientPlayerDataPacket(
                 type = CobblenavDataStoreTypes.PROFILE,

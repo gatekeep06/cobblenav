@@ -84,7 +84,7 @@ data class ContactPlayerData(
         onContactListUpdated()
     }
 
-    fun onContactListUpdated() {
+    private fun onContactListUpdated() {
         player?.let {
             SetClientPlayerDataPacket(
                 type = CobblenavDataStoreTypes.CONTACTS,
