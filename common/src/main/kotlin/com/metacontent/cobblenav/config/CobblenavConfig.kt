@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.config
 
 class CobblenavConfig : Config<CobblenavConfig>() {
+    @Transient
     override val fileName = "server-config.json"
 
     val hideUnknownPokemon = false
