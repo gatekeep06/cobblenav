@@ -12,5 +12,3 @@ fun cobblenavResource(name: String, namespace: String = Cobblenav.ID): ResourceL
 fun log(message: String) {
     Cobblenav.LOGGER.info(message)
 }
-
-fun ServerPlayer.savedPreferences(): CompoundTag = (this as PreferencesSaver).`cobblenav$getSavedPreferences`()

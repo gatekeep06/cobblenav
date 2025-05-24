@@ -12,9 +12,11 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.core.Vec3i
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
+import net.minecraft.util.FastColor
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -109,4 +111,16 @@ fun translateOr(
 
 fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
     return Minecraft.getInstance().font.splitter.splitLines(text, targetWidth, Style.EMPTY).map { Component.literal(it.string) }
+}
+
+fun interpolate(start: RGB, end: RGB, progress: Float): RGB {
+    return RGB(
+        interpolateChannel(start.r, end.r, progress),
+        interpolateChannel(start.g, end.g, progress),
+        interpolateChannel(start.b, end.b, progress)
+    )
+}
+
+fun interpolateChannel(start: Int, end: Int, progress: Float): Int {
+    return (start + (end - start) * progress).toInt().coerceIn(0, 255)
 }

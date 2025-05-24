@@ -9,17 +9,9 @@ class Timer(private var duration: Float, var loop: Boolean = false) {
         timer -= delta
     }
 
-    fun isOver(): Boolean {
-        return timer <= 0f
-    }
+    fun isOver(): Boolean = timer <= 0f
 
-    fun getProgress(): Float {
-        var progress = 1f - timer / duration
-        if (progress > 1f) {
-            progress = 1f
-        }
-        return progress
-    }
+    fun getProgress(): Float = (1f - timer / duration).coerceIn(0f, 1f)
 
     fun reset() {
         timer = duration

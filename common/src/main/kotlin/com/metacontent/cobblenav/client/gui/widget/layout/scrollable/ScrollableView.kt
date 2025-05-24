@@ -1,14 +1,10 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
-import net.minecraft.util.FastColor
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
