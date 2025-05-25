@@ -2,11 +2,15 @@ package com.metacontent.cobblenav
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
+import com.metacontent.cobblenav.event.CustomCollectorRegistrar
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
+import com.metacontent.cobblenav.spawndata.collector.BlockConditionCollector
+import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.util.PokenavSpawningProspector
 import org.slf4j.Logger
@@ -36,6 +40,20 @@ object Cobblenav {
             CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
             }
+        }
+
+        PlatformEvents.SERVER_STARTING.subscribe {
+            CobblenavEvents.REGISTER_CUSTOM_COLLECTORS.emit(object : CustomCollectorRegistrar {
+                override fun register(collector: ConditionCollector<*>): CustomCollectorRegistrar {
+                    ConditionCollectors.register(collector)
+                    return this
+                }
+
+                override fun registerBlock(collector: BlockConditionCollector<*>): CustomCollectorRegistrar {
+                    ConditionCollectors.registerBlock(collector)
+                    return this
+                }
+            })
         }
     }
 
