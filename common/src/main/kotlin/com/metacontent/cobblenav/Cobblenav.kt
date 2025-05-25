@@ -43,22 +43,8 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTING.subscribe {
-            CobblenavEvents.REGISTER_CUSTOM_COLLECTORS.emit(object : CustomCollectorRegistrar {
-                override fun register(collector: ConditionCollector<*>): CustomCollectorRegistrar {
-                    ConditionCollectors.register(collector)
-                    return this
-                }
-
-                override fun registerBlock(collector: BlockConditionCollector<*>): CustomCollectorRegistrar {
-                    ConditionCollectors.registerBlock(collector)
-                    return this
-                }
-            })
+            ConditionCollectors.init()
         }
-    }
-
-    fun onCobblemonInit() {
-        ConditionCollectors.init()
     }
 
     private fun registerArgumentTypes() {
