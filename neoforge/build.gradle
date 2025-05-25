@@ -42,7 +42,7 @@ dependencies {
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 
     modImplementation "com.cobblemon:neoforge:${cobblemon_version}"
-    modImplementation "maven.modrinth:cobblemon-myths-and-legends-sidemod:$mal_neoforge_version"
+    modCompileOnly "maven.modrinth:cobblemon-myths-and-legends-sidemod:$mal_neoforge_version"
 
     implementation("thedarkcolour:kotlinforforge-neoforge:${kotlinforforge_version}") {
         exclude group: "net.neoforged.fancymodloader", module: "loader"

@@ -8,5 +8,5 @@ dependencies {
     // Do NOT use other classes from Fabric Loader.
     modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
     modImplementation "com.cobblemon:mod:$cobblemon_version"
-    modImplementation "maven.modrinth:cobblemon-myths-and-legends-sidemod:$mal_fabric_version"
+    modCompileOnly "maven.modrinth:cobblemon-myths-and-legends-sidemod:$mal_fabric_version"
 }
