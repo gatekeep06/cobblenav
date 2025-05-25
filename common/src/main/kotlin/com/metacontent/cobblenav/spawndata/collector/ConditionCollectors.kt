@@ -37,21 +37,18 @@ object ConditionCollectors {
     private fun registerGeneral(collector: GeneralConditionCollector) {
         if (!collector.allowed(Cobblenav.config.collectableConditions)) return
         generalCollectors += collector
-        Cobblenav.LOGGER.info("Registered general collector: ${collector::class.java.simpleName}")
     }
 
     internal fun register(collector: ConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
         if (!collector.isModDependencySatisfied()) return
         collectors += collector
-        Cobblenav.LOGGER.info("Registered collector: ${collector::class.java.simpleName}")
     }
 
     internal fun registerBlock(collector: BlockConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
         if (!collector.isModDependencySatisfied()) return
         blockCollectors += collector
-        Cobblenav.LOGGER.info("Registered block collector: ${collector::class.java.simpleName}")
     }
 
     private fun <T : SpawningCondition<*>> getCollectors(condition: T): List<ConditionCollector<T>> {
@@ -120,5 +117,7 @@ object ConditionCollectors {
                 return this
             }
         })
+
+        Cobblenav.LOGGER.info("Registered {} collectors and {} block collectors", collectors.size, blockCollectors.size)
     }
 }
