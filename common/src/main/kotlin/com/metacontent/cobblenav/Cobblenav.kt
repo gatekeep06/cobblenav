@@ -28,8 +28,6 @@ object Cobblenav {
         implementation.registerCommands()
         implementation.injectLootTables()
 
-        ConditionCollectors.init()
-
         CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
             CloseFishingnavPacket().sendToPlayer(event.player)
         }
@@ -39,6 +37,10 @@ object Cobblenav {
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
             }
         }
+    }
+
+    fun onCobblemonInit() {
+        ConditionCollectors.init()
     }
 
     private fun registerArgumentTypes() {
