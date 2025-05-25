@@ -25,12 +25,12 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-    modImplementation "net.fabricmc:fabric-language-kotlin:$rootProject.fabric_kotlin_version"
+    modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
+    modImplementation "net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
-    modImplementation "com.cobblemon:fabric:${rootProject.cobblemon_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:$fabric_api_version"
+    modImplementation "com.cobblemon:fabric:$cobblemon_version"
+    modCompileOnly "maven.modrinth:cobblemon-myths-and-legends-sidemod:$mal_fabric_version"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
