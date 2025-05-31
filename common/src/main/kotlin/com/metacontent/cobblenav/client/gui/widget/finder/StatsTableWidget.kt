@@ -22,21 +22,21 @@ class StatsTableWidget(
     val parent: PokenavScreen
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Stats Table")) {
     companion object {
-        const val WIDTH: Int = 82
-        const val HEIGHT: Int = 66
-        const val TOP_MARGIN: Int = 1
-        const val BOTTOM_MARGIN: Int = 2
-        const val VERTICAL_MARGIN: Int = 1
-        const val ROW_HEIGHT: Int = 15
-        const val ICON_WIDTH: Int = ROW_HEIGHT
-        const val PADDING: Int = 1
-        const val TEXT_WIDTH: Int = 60
-        const val TEXT_VERTICAL_OFFSET: Int = 4
-        const val TEXT_HORIZONTAL_OFFSET: Int = 4
-        const val TEXT_SCALE: Float = 0.75f
-        const val NOTIFICATION_WIDTH: Int = 7
-        const val NOTIFICATION_HEIGHT: Int = 8
-        const val NOTIFICATION_OFFSET: Int = 1
+        const val WIDTH = 82
+        const val HEIGHT = 66
+        const val TOP_MARGIN = 1
+        const val BOTTOM_MARGIN = 2
+        const val VERTICAL_MARGIN = 1
+        const val ROW_HEIGHT = 15
+        const val ICON_WIDTH = ROW_HEIGHT
+        const val PADDING = 1f
+        const val TEXT_WIDTH = 60
+        const val TEXT_VERTICAL_OFFSET = 4
+        const val TEXT_HORIZONTAL_OFFSET = 4
+        const val TEXT_SCALE = 0.75f
+        const val NOTIFICATION_WIDTH = 7
+        const val NOTIFICATION_HEIGHT = 8
+        const val NOTIFICATION_OFFSET = 1
         val TABLE = cobblenavResource("textures/gui/finder/stats_table.png")
         val NAME = cobblenavResource("textures/gui/finder/name.png")
         val TYPE = cobblenavResource("textures/gui/finder/type.png")
@@ -51,7 +51,7 @@ class StatsTableWidget(
         width = ICON_WIDTH,
         columns = 1,
         verticalPadding = PADDING,
-        horizontalPadding = 0
+        horizontalPadding = 0f
     ).also {
         it.add(
             listOf(
@@ -115,7 +115,14 @@ class StatsTableWidget(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
 
-        guiGraphics.drawBlurredArea(x + VERTICAL_MARGIN, y + TOP_MARGIN - 1, x + width - VERTICAL_MARGIN, y + height - BOTTOM_MARGIN + 1, 3f, f)
+        guiGraphics.drawBlurredArea(
+            x + VERTICAL_MARGIN,
+            y + TOP_MARGIN - 1,
+            x + width - VERTICAL_MARGIN,
+            y + height - BOTTOM_MARGIN + 1,
+            3f,
+            f
+        )
         blitk(
             matrixStack = poseStack,
             texture = TABLE,

@@ -43,10 +43,12 @@ class FishingnavScreen(
                     val progress = (normalizedTime - 12040) / 1630f
                     interpolate(DAY_COLOR, NIGHT_COLOR, progress).toColor()
                 }
+
                 in 22331..23961 -> {
                     val progress = (normalizedTime - 22331) / 1630f
                     interpolate(NIGHT_COLOR, DAY_COLOR, progress).toColor()
                 }
+
                 in 13670..22331 -> NIGHT_COLOR.toColor()
                 else -> DAY_COLOR.toColor()
             }
@@ -68,7 +70,7 @@ class FishingnavScreen(
             y = screenY + HORIZONTAL_BORDER_DEPTH,
             width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
             columns = 1,
-            horizontalPadding = 0
+            horizontalPadding = 0f
         )
         scrollableView = ScrollableView(
             x = screenX + VERTICAL_BORDER_DEPTH,
@@ -82,7 +84,7 @@ class FishingnavScreen(
             width = baseTable.width,
             columns = 1,
             columnWidth = baseTable.columnWidth,
-            horizontalPadding = 0
+            horizontalPadding = 0f
         )
         fishingContextWidget = FishingContextWidget(
             x = 0, y = 0,
@@ -108,7 +110,7 @@ class FishingnavScreen(
                 columns = 5,
                 minHeight = BUCKET_VIEW_MIN_HEIGHT,
                 bucket = it,
-                verticalPadding = 4
+                verticalPadding = 4f
             )
         }.also {
             fishingTable.add(it)
@@ -126,7 +128,12 @@ class FishingnavScreen(
         fishingMap.forEach { (bucketName, spawnDatas) ->
             bucketViews.find { it.bucket.name == bucketName }?.let { view ->
                 view.add(spawnDatas
-                    .sortedWith { firstData, secondData -> -compareValues(firstData.spawnChance, secondData.spawnChance) }
+                    .sortedWith { firstData, secondData ->
+                        -compareValues(
+                            firstData.spawnChance,
+                            secondData.spawnChance
+                        )
+                    }
                     .map {
                         ScrollableItemWidget(
                             child = SpawnDataWidget(

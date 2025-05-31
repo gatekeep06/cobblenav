@@ -36,27 +36,29 @@ import kotlin.math.min
 class LocationScreen(
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
-    animateOpening: Boolean= false
+    animateOpening: Boolean = false
 ) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataTooltipDisplayer {
     companion object {
         val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
-        const val ANIMATION_SHEET_WIDTH: Int = 144
-        const val FRAME_WIDTH: Int = 18
-        const val FRAME_HEIGHT: Int = 22
-        const val LOADING_LOOP_DURATION: Float = 10f
-        const val BUTTON_BLOCK_SPACE: Int = 10
-        const val BUTTON_SPACE: Int = 5
-        const val BUTTON_WIDTH: Int = 15
-        const val BUTTON_HEIGHT: Int = 16
-        const val CHECK_BOX_WIDTH: Int = 100
-        const val CHECK_BOX_HEIGHT: Int = 8
-        const val CHECK_BOX_OFFSET: Int = 4
+        const val ANIMATION_SHEET_WIDTH = 144
+        const val FRAME_WIDTH = 18
+        const val FRAME_HEIGHT = 22
+        const val LOADING_LOOP_DURATION = 10f
+        const val BUTTON_BLOCK_SPACE = 10
+        const val BUTTON_SPACE = 5
+        const val BUTTON_WIDTH = 15
+        const val BUTTON_HEIGHT = 16
+        const val CHECK_BOX_WIDTH = 100
+        const val CHECK_BOX_HEIGHT = 8
+        const val CHECK_BOX_OFFSET = 4
+        const val TABLE_MARGIN = 5
         val VIEW_BACKGROUND_COLOR = FastColor.ARGB32.color(255, 125, 190, 164)
         val VIEW_OUTLINE_COLOR = FastColor.ARGB32.color(255, 84, 168, 134)
         val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
         val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
         val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
     }
+
     var viewX = 0
     var viewY = 0
     val viewWidth = WIDTH - 2 * (VERTICAL_BORDER_DEPTH + 5)
@@ -71,7 +73,9 @@ class LocationScreen(
         }
     var currentBucket: WeightedBucket
         get() = buckets[bucketIndex]
-        set(value) { bucketIndex = buckets.indexOf(value) }
+        set(value) {
+            bucketIndex = buckets.indexOf(value)
+        }
     private var sorting = Sorting.ASCENDING
         set(value) {
             field = value
@@ -111,7 +115,9 @@ class LocationScreen(
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
             disabled = true,
-            action = { this.sorting = if (this.sorting == Sorting.ASCENDING) Sorting.DESCENDING else Sorting.ASCENDING },
+            action = {
+                this.sorting = if (this.sorting == Sorting.ASCENDING) Sorting.DESCENDING else Sorting.ASCENDING
+            },
             texture = null,
         ).also { addBlockableWidget(it) }
 
@@ -127,15 +133,17 @@ class LocationScreen(
 //        ).also { addBlockableWidget(it) }
 
         tableView = TableView(
-            viewX + 1, viewY + 1,
-            viewWidth - 2 - ScrollThumbWidget.WIDTH, 5,
-            verticalPadding = 5,
+            x = viewX + TABLE_MARGIN,
+            y = viewY + 1,
+            width = viewWidth - 2 * TABLE_MARGIN,
+            columns = 6,
+            verticalPadding = 3f,
             columnWidth = SpawnDataWidget.WIDTH
         )
         scrollableView = ScrollableView(
-            tableView.x,
+            viewX + 1,
             tableView.y,
-            tableView.width + 2,
+            viewWidth - 2,
             viewHeight - 2,
             child = tableView
         ).also { addBlockableWidget(it) }
@@ -198,7 +206,13 @@ class LocationScreen(
         ).also { addBlockableWidget(it) }
     }
 
-    fun receiveInitData(buckets: List<WeightedBucket>, biome: String, bucketIndex: Int, sorting: Sorting, applyBucket: Boolean) {
+    fun receiveInitData(
+        buckets: List<WeightedBucket>,
+        biome: String,
+        bucketIndex: Int,
+        sorting: Sorting,
+        applyBucket: Boolean
+    ) {
         checkBox.checked = applyBucket
 
         this.buckets = buckets
@@ -317,7 +331,12 @@ class LocationScreen(
 
     private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
         val spawnDataWidgets = spawnDataList
-            .sortedWith { firstData, secondData -> compareValues(firstData.spawnChance, secondData.spawnChance) * sorting.multiplier }
+            .sortedWith { firstData, secondData ->
+                compareValues(
+                    firstData.spawnChance,
+                    secondData.spawnChance
+                ) * sorting.multiplier
+            }
             .map {
                 ScrollableItemWidget(
                     child = SpawnDataWidget(
