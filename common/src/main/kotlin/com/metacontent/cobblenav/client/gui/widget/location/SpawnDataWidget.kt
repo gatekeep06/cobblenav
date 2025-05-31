@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
@@ -32,11 +33,12 @@ class SpawnDataWidget(
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
-        const val WIDTH: Int = 40
-        const val HEIGHT: Int = 50
-        const val MODEL_HEIGHT: Int = 40
+        const val WIDTH = 45
+        const val HEIGHT = 45
+        const val MODEL_HEIGHT = 35
         val FORMAT = DecimalFormat("#.##")
-        val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
+        val PLATFORM = cobblenavResource("textures/gui/location/platform.png")
+        val SELECTED_PLATFORM = cobblenavResource("textures/gui/location/selected_platform.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
     }
 
@@ -49,28 +51,35 @@ class SpawnDataWidget(
     private val state = FloatingState()
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
+    private val isFishing = spawnData.spawningContext == FishingSpawningCondition.NAME
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        if (ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()) {
-            blitk(
-                matrixStack = poseStack,
-                texture = BACKGROUND,
-                x = x + 2,
-                y = y + 2,
-                width = MODEL_HEIGHT - 4,
-                height = MODEL_HEIGHT - 4,
-                alpha = 0.5f
-            )
+        val selected = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
+
+        if (selected) {
             displayer.hoveredWidget = this
         }
+
+        if (!isFishing) {
+            blitk(
+                matrixStack = poseStack,
+                texture = if (selected) SELECTED_PLATFORM else PLATFORM,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT
+            )
+        }
+
         if (!isModelBroken) {
             try {
+//                guiGraphics.fill(x, y, x + width, y + height, FastColor.ARGB32.color(100, 255, 255, 255))
                 drawPokemon(
                     poseStack = poseStack,
                     pokemon = spawnData.renderable,
                     x = x.toFloat() + width / 2,
-                    y = y.toFloat() + 8,
+                    y = y.toFloat() + (if (selected && !isFishing) 0 else 2),
                     z = 100f,
                     delta = delta,
                     state = state,
@@ -78,8 +87,7 @@ class SpawnDataWidget(
                     rotation = Quaternionf().fromEulerXYZDegrees(pokemonRotation),
                     obscured = obscured
                 )
-            }
-            catch (e: IllegalArgumentException) {
+            } catch (e: IllegalArgumentException) {
                 isModelBroken = true
                 val message = Component.translatable(
                     "gui.cobblenav.pokemon_rendering_exception",
@@ -92,8 +100,7 @@ class SpawnDataWidget(
                     Minecraft.getInstance().player?.sendSystemMessage(message.red())
                 }
             }
-        }
-        else {
+        } else {
             blitk(
                 matrixStack = poseStack,
                 texture = BROKEN_MODEL,
@@ -103,10 +110,11 @@ class SpawnDataWidget(
                 height = MODEL_HEIGHT - 4
             )
         }
+
         drawScaledText(
             guiGraphics,
             text = Component.literal(chanceString),
-            x = x + width / 2, y = y + MODEL_HEIGHT,
+            x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
             maxCharacterWidth = width,
             centered = true,
             shadow = true
