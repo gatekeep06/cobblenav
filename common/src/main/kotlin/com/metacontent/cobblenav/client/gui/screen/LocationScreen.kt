@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
@@ -51,8 +52,11 @@ class LocationScreen(
         const val CHECK_BOX_HEIGHT = 8
         const val CHECK_BOX_OFFSET = 4
         const val TABLE_MARGIN = 5
-        val VIEW_BACKGROUND_COLOR = FastColor.ARGB32.color(255, 125, 190, 164)
+        val VIEW_BACKGROUND_COLOR = FastColor.ARGB32.color(255, 110, 220, 176)
         val VIEW_OUTLINE_COLOR = FastColor.ARGB32.color(255, 84, 168, 134)
+        const val VIEW_WIDTH = 298
+        const val VIEW_HEIGHT = 182
+//        val VIEW = cobblenavResource("textures/gui/location/view.png")
         val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
         val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
         val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
@@ -60,8 +64,6 @@ class LocationScreen(
 
     var viewX = 0
     var viewY = 0
-    val viewWidth = WIDTH - 2 * (VERTICAL_BORDER_DEPTH + 5)
-    val viewHeight = HEIGHT - 2 * (HORIZONTAL_BORDER_DEPTH + 18)
     override val color = FastColor.ARGB32.color(255, 63, 126, 101)
     private val spawnDataMap = mutableMapOf<String, List<SpawnData>>()
     lateinit var buckets: List<WeightedBucket>
@@ -134,7 +136,7 @@ class LocationScreen(
         tableView = TableView(
             x = viewX + TABLE_MARGIN,
             y = viewY + 1,
-            width = viewWidth - 2 * TABLE_MARGIN,
+            width = VIEW_WIDTH - 2 * TABLE_MARGIN,
             columns = 6,
             verticalGap = 4f,
             horizontalGap = 3f,
@@ -143,8 +145,8 @@ class LocationScreen(
         scrollableView = ScrollableView(
             viewX + 1,
             tableView.y,
-            viewWidth - 2,
-            viewHeight - 2,
+            VIEW_WIDTH - 2,
+            VIEW_HEIGHT - 2,
             child = tableView
         ).also { addBlockableWidget(it) }
 
@@ -164,7 +166,7 @@ class LocationScreen(
 
         checkBox = CheckBox(
             pX = viewX + BUTTON_WIDTH + BUTTON_SPACE/*screenX + BUTTON_WIDTH + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + 2 * BUTTON_SPACE*/,
-            pY = viewY + viewHeight + CHECK_BOX_OFFSET/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET*/,
+            pY = viewY + VIEW_HEIGHT + CHECK_BOX_OFFSET/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET*/,
             pWidth = CHECK_BOX_WIDTH,
             pHeight = CHECK_BOX_HEIGHT,
             text = Component.translatable("gui.cobblenav.apply_bucket"),
@@ -195,7 +197,7 @@ class LocationScreen(
 
         IconButton(
             pX = viewX/*screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE*/,
-            pY = viewY + viewHeight/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT*/,
+            pY = viewY + VIEW_HEIGHT/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT*/,
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
             texture = SUPPORT,
@@ -224,7 +226,7 @@ class LocationScreen(
 
         this.biome = biome
         LocationInfoWidget(
-            x = viewX + viewWidth - LocationInfoWidget.WIDTH,
+            x = viewX + VIEW_WIDTH - LocationInfoWidget.WIDTH,
             y = viewY - LocationInfoWidget.HEIGHT,
             biome = this.biome
         ).also { addBlockableWidget(it) }
@@ -244,11 +246,19 @@ class LocationScreen(
         val poseStack = guiGraphics.pose()
         guiGraphics.fillWithOutline(
             viewX, viewY,
-            viewX + viewWidth,
-            viewY + viewHeight,
+            viewX + VIEW_WIDTH,
+            viewY + VIEW_HEIGHT,
             VIEW_BACKGROUND_COLOR,
             VIEW_OUTLINE_COLOR
         )
+//        blitk(
+//            matrixStack = poseStack,
+//            texture = VIEW,
+//            x = viewX,
+//            y = viewY,
+//            width = VIEW_WIDTH,
+//            height = VIEW_WIDTH
+//        )
         if (loading) {
             poseStack.pushPose()
             poseStack.translate(0f, 0f, 400f)
@@ -278,8 +288,8 @@ class LocationScreen(
                 mouseY = mouseY,
                 x1 = viewX,
                 y1 = viewY,
-                x2 = viewX + viewWidth,
-                y2 = viewY + viewHeight,
+                x2 = viewX + VIEW_WIDTH,
+                y2 = viewY + VIEW_HEIGHT,
                 delta = delta
             )
         }
