@@ -10,6 +10,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
@@ -29,7 +30,7 @@ class SpawnDataWidget(
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
     private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
-    private val pokemonRotation: Vector3f = Vector3f(13F, 35F, 0F),
+    private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
@@ -37,8 +38,6 @@ class SpawnDataWidget(
         const val HEIGHT = 45
         const val MODEL_HEIGHT = 35
         val FORMAT = DecimalFormat("#.##")
-        val PLATFORM = cobblenavResource("textures/gui/location/platform.png")
-        val SELECTED_PLATFORM = cobblenavResource("textures/gui/location/selected_platform.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
     }
 
@@ -52,6 +51,7 @@ class SpawnDataWidget(
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
     private val isFishing = spawnData.spawningContext == FishingSpawningCondition.NAME
+    private val platform = BiomePlatforms.get(spawnData.biome)
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -64,7 +64,8 @@ class SpawnDataWidget(
         if (!isFishing) {
             blitk(
                 matrixStack = poseStack,
-                texture = if (selected) SELECTED_PLATFORM else PLATFORM,
+                texture = if (selected && platform.selectedBackground != null) platform.selectedBackground else platform.background
+                    ?: BiomePlatforms.DEFAULT.background,
                 x = x,
                 y = y,
                 width = WIDTH,
@@ -79,7 +80,7 @@ class SpawnDataWidget(
                     poseStack = poseStack,
                     pokemon = spawnData.renderable,
                     x = x.toFloat() + width / 2,
-                    y = y.toFloat() + (if (selected && !isFishing) 0 else 2),
+                    y = y.toFloat() + 1 - (if (selected && !isFishing) platform.selectedPokemonOffset else 0),
                     z = 100f,
                     delta = delta,
                     state = state,
@@ -108,6 +109,18 @@ class SpawnDataWidget(
                 y = y + 2,
                 width = MODEL_HEIGHT - 4,
                 height = MODEL_HEIGHT - 4
+            )
+        }
+
+        if (!isFishing) {
+            blitk(
+                matrixStack = poseStack,
+                texture = if (selected && platform.selectedForeground != null) platform.selectedForeground else platform.foreground
+                    ?: BiomePlatforms.DEFAULT.foreground,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT
             )
         }
 
