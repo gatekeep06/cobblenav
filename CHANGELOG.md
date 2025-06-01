@@ -10,7 +10,7 @@
 - Track arrow changed to PokéBall model. Further refinement needed.
 - Added biome platforms to the location screen. There are currently two platforms, and I'll be adding more in the future. You can add platforms through resource packs.
 - Finder screen now indicates that pokémon not found.
-- Removed biome collector
+- Removed biome collector.
 
 # Update 2.2.0
 
