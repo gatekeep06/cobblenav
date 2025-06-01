@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.CobblemonItems
+import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.util.cobblenavResource
@@ -8,6 +10,7 @@ import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
@@ -68,5 +71,13 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
             0
         )
         poseStack.popPose()
+
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.translatable("gui.cobblenav.finder.distance", distanceVec.length().toInt()),
+            x = x,
+            y = y + 20,
+            centered = true
+        )
     }
 }
