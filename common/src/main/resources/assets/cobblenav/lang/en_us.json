@@ -88,6 +88,7 @@
 
   "gui.cobblenav.finder.find_button": "Let's track it down!",
   "gui.cobblenav.finder.no_egg_move": "No Egg Move",
+  "gui.cobblenav.finder.distance": "%s Blocks",
 
   "bucket.cobblenav.common": "common",
   "bucket.cobblenav.uncommon": "uncommon",
@@ -212,6 +213,8 @@
   "biome.cobblemon.is_mushroom": "Mushroom",
   "biome.cobblemon.is_ocean": "Ocean",
   "biome.cobblemon.is_overworld": "Overworld",
+  "biome.cobblemon.is_nether": "Nether",
+  "biome.cobblemon.is_end": "End",
   "biome.cobblemon.is_peak": "Peak",
   "biome.cobblemon.is_plains": "Plains",
   "biome.cobblemon.is_plateau": "Plateau",
