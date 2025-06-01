@@ -96,10 +96,13 @@ object ConditionCollectors {
         register(LureLevelCollector())
         register(RodCollector())
         register(RodTypeCollector())
-        register(KeyItemCollector())
-        register(ItemsCollector())
-        register(PokemonCollector())
-        register(ZygardeCubeChargeCollector())
+
+        if (Cobblenav.config.enableMythsAndLegendsIntegration) {
+            register(KeyItemCollector())
+            register(ItemsCollector())
+            register(PokemonCollector())
+            register(ZygardeCubeChargeCollector())
+        }
 
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())
