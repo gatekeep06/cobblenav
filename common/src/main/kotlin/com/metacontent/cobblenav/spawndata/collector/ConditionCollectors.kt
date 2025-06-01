@@ -76,6 +76,10 @@ object ConditionCollectors {
     }
 
     fun init() {
+        generalCollectors.clear()
+        collectors.clear()
+        blockCollectors.clear()
+
 //        registerGeneral(BiomeCollector())
         registerGeneral(MoonPhaseCollector())
         registerGeneral(UnderOpenSkyCollector())
