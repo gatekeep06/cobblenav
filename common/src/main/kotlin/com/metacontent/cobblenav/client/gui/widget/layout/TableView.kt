@@ -13,8 +13,8 @@ open class TableView<I : AbstractWidget>(
     width: Int,
     val columns: Int,
     val columnWidth: Int = width / columns,
-    private val verticalPadding: Float = 0f,
-    private val horizontalPadding: Float = (width - columns * columnWidth) / (columns - 1f),
+    private val verticalGap: Float = 0f,
+    private val horizontalGap: Float = (width - columns * columnWidth) / (columns - 1f),
 ) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
     private val items = mutableListOf<I>()
     val rows
@@ -57,6 +57,8 @@ open class TableView<I : AbstractWidget>(
     fun isEmpty() = items.isEmpty()
 
     open fun initItems() {
+        val contentWidth = columns * columnWidth + (columns - 1) * horizontalGap
+        val padding = (width - contentWidth) / 2
         var initializedHeight = 0
         for (i in 0 until rows) {
             var rowHeight = 0
@@ -64,11 +66,11 @@ open class TableView<I : AbstractWidget>(
                 val index = i * columns + j
                 if (items.size <= index) break
                 val item = items[index]
-                item.x = (x + j * (columnWidth + horizontalPadding)).toInt()
+                item.x = (padding + x + j * (columnWidth + horizontalGap)).toInt()
                 item.y = y + initializedHeight
                 rowHeight = max(rowHeight, item.height)
             }
-            initializedHeight += (rowHeight + verticalPadding).toInt()
+            initializedHeight += (rowHeight + verticalGap).toInt()
         }
         height = initializedHeight
     }

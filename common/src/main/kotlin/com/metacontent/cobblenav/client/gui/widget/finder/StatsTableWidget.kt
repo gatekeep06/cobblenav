@@ -50,8 +50,8 @@ class StatsTableWidget(
         y = y + TOP_MARGIN,
         width = ICON_WIDTH,
         columns = 1,
-        verticalPadding = PADDING,
-        horizontalPadding = 0f
+        verticalGap = PADDING,
+        horizontalGap = 0f
     ).also {
         it.add(
             listOf(

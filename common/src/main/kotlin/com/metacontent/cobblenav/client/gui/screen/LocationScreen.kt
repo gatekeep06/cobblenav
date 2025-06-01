@@ -7,7 +7,6 @@ import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
-import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollThumbWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
@@ -137,7 +136,8 @@ class LocationScreen(
             y = viewY + 1,
             width = viewWidth - 2 * TABLE_MARGIN,
             columns = 6,
-            verticalPadding = 3f,
+            verticalGap = 4f,
+            horizontalGap = 3f,
             columnWidth = SpawnDataWidget.WIDTH
         )
         scrollableView = ScrollableView(

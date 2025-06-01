@@ -70,7 +70,7 @@ class FishingnavScreen(
             y = screenY + HORIZONTAL_BORDER_DEPTH,
             width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
             columns = 1,
-            horizontalPadding = 0f
+            horizontalGap = 0f
         )
         scrollableView = ScrollableView(
             x = screenX + VERTICAL_BORDER_DEPTH,
@@ -84,7 +84,7 @@ class FishingnavScreen(
             width = baseTable.width,
             columns = 1,
             columnWidth = baseTable.columnWidth,
-            horizontalPadding = 0f
+            horizontalGap = 0f
         )
         fishingContextWidget = FishingContextWidget(
             x = 0, y = 0,

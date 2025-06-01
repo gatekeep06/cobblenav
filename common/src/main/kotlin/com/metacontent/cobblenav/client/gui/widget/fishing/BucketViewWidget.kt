@@ -29,8 +29,8 @@ class BucketViewWidget(
     width = width,
     columns = columns,
     columnWidth = columnWidth,
-    verticalPadding = verticalPadding,
-    horizontalPadding = horizontalPadding
+    verticalGap = verticalPadding,
+    horizontalGap = horizontalPadding
 ) {
     companion object {
         const val SEPARATOR_HEIGHT = 4
