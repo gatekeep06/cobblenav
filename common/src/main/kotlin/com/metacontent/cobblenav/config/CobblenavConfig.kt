@@ -15,7 +15,6 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     val searchAreaHeight = 200.0
     val pokemonFeatureWeights = FeatureWeights.BASE
     val collectableConditions = mutableMapOf(
-        "biomes"                to true,
         "coordinates"           to true,
         "light"                 to true,
         "moon_phase"            to true,

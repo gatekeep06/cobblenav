@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
+import com.metacontent.cobblenav.util.toResourceLocation
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer

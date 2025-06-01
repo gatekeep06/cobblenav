@@ -76,7 +76,7 @@ object ConditionCollectors {
     }
 
     fun init() {
-        registerGeneral(BiomeCollector())
+//        registerGeneral(BiomeCollector())
         registerGeneral(MoonPhaseCollector())
         registerGeneral(UnderOpenSkyCollector())
         registerGeneral(YHeightCollector())
