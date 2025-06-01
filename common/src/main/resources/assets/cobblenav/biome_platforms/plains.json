@@ -1,0 +1,12 @@
+{
+    "biomeIds": [
+        "cobblemon:is_plains",
+        "cobblemon:is_grassland",
+        "cobblemon:is_temperate"
+    ],
+    "background": "cobblenav:textures/gui/biome_platforms/plains.png",
+    "foreground": "cobblenav:textures/gui/biome_platforms/default_foreground.png",
+    "selectedBackground": "cobblenav:textures/gui/biome_platforms/plains_selected.png",
+    "selectedForeground": "cobblenav:textures/gui/biome_platforms/default_foreground_selected.png",
+    "selectedPokemonOffset": 2
+}
