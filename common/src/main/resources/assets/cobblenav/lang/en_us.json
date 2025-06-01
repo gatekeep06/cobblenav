@@ -88,6 +88,7 @@
 
   "gui.cobblenav.finder.find_button": "Let's track it down!",
   "gui.cobblenav.finder.no_egg_move": "No Egg Move",
+  "gui.cobblenav.finder.pokemon_not_found": "No luck finding anything",
   "gui.cobblenav.finder.distance": "%s Blocks",
 
   "bucket.cobblenav.common": "common",
