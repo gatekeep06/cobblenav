@@ -38,6 +38,7 @@ object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
     override fun sync(player: ServerPlayer) {}
 
     override fun reload(data: Map<ResourceLocation, BiomePlatform>) {
+        platforms.clear()
         data.forEach { (_, platform) ->
             platform.biomeIds.forEach {
                 platforms[it] = platform
