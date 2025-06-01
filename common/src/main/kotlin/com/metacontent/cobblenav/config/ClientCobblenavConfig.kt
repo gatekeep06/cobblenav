@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.config
 
 class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
+    @Transient
     override val fileName = "client-config.json"
 
     val screenScale = 1f

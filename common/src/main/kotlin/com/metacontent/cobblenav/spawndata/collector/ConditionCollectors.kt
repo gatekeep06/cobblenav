@@ -11,7 +11,12 @@ import com.metacontent.cobblenav.spawndata.collector.special.*
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
-import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.event.CobblenavEvents
+import com.metacontent.cobblenav.event.CustomCollectorRegistrar
+import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.ItemsCollector
+import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.KeyItemCollector
+import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.PokemonCollector
+import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.ZygardeCubeChargeCollector
 
 /**
  * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [SpawnData].
@@ -19,8 +24,7 @@ import com.cobblemon.mod.common.platform.events.PlatformEvents
  *
  * [ConfigureableCollector] is an optional interface for collectors. If a collector implements the interface,
  * it can only be registered if the [ConfigureableCollector.configName] value is present in the [CobblenavConfig.collectableConditions] list.
- * Registration of additional [ConfigureableCollector]s should be done when the Cobblenav mod is definitely initialized,
- * for which you can use an event such as, for example, [PlatformEvents.SERVER_STARTING].
+ * Registration of additional collectors should be done using the [CobblenavEvents.REGISTER_CUSTOM_COLLECTORS] event.
  */
 object ConditionCollectors {
     /**
@@ -30,25 +34,21 @@ object ConditionCollectors {
     private val collectors = mutableListOf<ConditionCollector<*>>()
     private val blockCollectors = mutableListOf<BlockConditionCollector<*>>()
 
-    fun registerGeneral(collector: GeneralConditionCollector) {
+    private fun registerGeneral(collector: GeneralConditionCollector) {
         if (!collector.allowed(Cobblenav.config.collectableConditions)) return
-        if (!collector.isModDependencySatisfied()) return
         generalCollectors += collector
-        Cobblenav.LOGGER.info("Registered general collector: ${collector::class.java.simpleName}")
     }
 
-    fun register(collector: ConditionCollector<*>) {
+    internal fun register(collector: ConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
         if (!collector.isModDependencySatisfied()) return
         collectors += collector
-        Cobblenav.LOGGER.info("Registered collector: ${collector::class.java.simpleName}")
     }
 
-    fun registerBlock(collector: BlockConditionCollector<*>) {
+    internal fun registerBlock(collector: BlockConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
         if (!collector.isModDependencySatisfied()) return
         blockCollectors += collector
-        Cobblenav.LOGGER.info("Registered block collector: ${collector::class.java.simpleName}")
     }
 
     private fun <T : SpawningCondition<*>> getCollectors(condition: T): List<ConditionCollector<T>> {
@@ -76,7 +76,7 @@ object ConditionCollectors {
     }
 
     fun init() {
-        registerGeneral(BiomeCollector())
+//        registerGeneral(BiomeCollector())
         registerGeneral(MoonPhaseCollector())
         registerGeneral(UnderOpenSkyCollector())
         registerGeneral(YHeightCollector())
@@ -96,10 +96,28 @@ object ConditionCollectors {
         register(LureLevelCollector())
         register(RodCollector())
         register(RodTypeCollector())
+        register(KeyItemCollector())
+        register(ItemsCollector())
+        register(PokemonCollector())
+        register(ZygardeCubeChargeCollector())
 
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())
         registerBlock(SeafloorTypeBlockCollector())
         registerBlock(FishingBlockCollector())
+
+        CobblenavEvents.REGISTER_CUSTOM_COLLECTORS.emit(object : CustomCollectorRegistrar {
+            override fun register(collector: ConditionCollector<*>): CustomCollectorRegistrar {
+                ConditionCollectors.register(collector)
+                return this
+            }
+
+            override fun registerBlock(collector: BlockConditionCollector<*>): CustomCollectorRegistrar {
+                ConditionCollectors.registerBlock(collector)
+                return this
+            }
+        })
+
+        Cobblenav.LOGGER.info("Registered {} collectors and {} block collectors", collectors.size, blockCollectors.size)
     }
 }

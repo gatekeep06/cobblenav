@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
@@ -22,24 +23,24 @@ class FinderScreen(
     private val spawnData: SpawnData,
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
-    animateOpening: Boolean= false
+    animateOpening: Boolean = false
 ) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Finder")) {
     companion object {
-        const val CLOSING_DURATION: Float = 3f
-        const val FADING_DURATION: Float = 5f
-        const val POKEBALL_PART_WIDTH: Int = 308
-        const val POKEBALL_PART_HEIGHT: Int = 134
-        const val FIND_BUTTON_WIDTH: Int = 112
-        const val FIND_BUTTON_HEIGHT: Int = 33
-        const val FIND_BUTTON_OFFSET: Int = 2
-        const val TABLE_OFFEST: Int = 5
-        const val BUTTON_SPACE: Int = 5
-        const val BUTTON_WIDTH: Int = 15
-        const val BUTTON_HEIGHT: Int = 16
-        const val STAR_SIZE: Int = 24
-        const val STAR_OFFSET: Int = 10
-        const val STAR_GAP: Int = 10
-        const val FIND_BUTTON_TEXT: String = "gui.cobblenav.finder.find_button"
+        const val CLOSING_DURATION = 3f
+        const val FADING_DURATION = 5f
+        const val POKEBALL_PART_WIDTH = 308
+        const val POKEBALL_PART_HEIGHT = 134
+        const val FIND_BUTTON_WIDTH = 112
+        const val FIND_BUTTON_HEIGHT = 33
+        const val FIND_BUTTON_OFFSET = 2
+        const val TABLE_OFFSET = 5
+        const val BUTTON_SPACE = 5
+        const val BUTTON_WIDTH = 15
+        const val BUTTON_HEIGHT = 16
+        const val STAR_SIZE = 24
+        const val STAR_OFFSET = 10
+        const val STAR_GAP = 10
+        const val FIND_BUTTON_TEXT = "gui.cobblenav.finder.find_button"
         val POKEBALL_TOP = cobblenavResource("textures/gui/finder/pokeball_screen_top.png")
         val POKEBALL_BOTTOM = cobblenavResource("textures/gui/finder/pokeball_screen_bottom.png")
         val DECORATIONS_0 = cobblenavResource("textures/gui/finder/finder_decorations_0.png")
@@ -66,8 +67,8 @@ class FinderScreen(
     override fun initScreen() {
         pokemonX = screenX + WIDTH / 2
         pokemonY = screenY + HEIGHT / 2
-        tableX = screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatsTableWidget.WIDTH - TABLE_OFFEST
-        tableY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - StatsTableWidget.HEIGHT - TABLE_OFFEST
+        tableX = screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatsTableWidget.WIDTH - TABLE_OFFSET
+        tableY = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - StatsTableWidget.HEIGHT - TABLE_OFFSET
 
         findPokemon()
 
@@ -110,8 +111,10 @@ class FinderScreen(
         spawnData.renderable.aspects += pokemon.aspects
 
         if (pokemon.found) {
-            foundPokemonWidget = FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
-            statsTableWidget = StatsTableWidget(tableX, tableY, spawnData, pokemon, this).also { addBlockableWidget(it) }
+            foundPokemonWidget =
+                FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
+            statsTableWidget =
+                StatsTableWidget(tableX, tableY, spawnData, pokemon, this).also { addBlockableWidget(it) }
         }
 
         findButton = TextButton(
@@ -180,6 +183,14 @@ class FinderScreen(
         if (loading) return
 
         if (!pokemon.found) {
+            drawScaledText(
+                context = guiGraphics,
+                text = Component.translatable("gui.cobblenav.finder.pokemon_not_found"),
+                x = width / 2,
+                y = height / 2,
+                centered = true,
+                shadow = true
+            )
             return
         }
 
@@ -208,8 +219,7 @@ class FinderScreen(
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (closingTimer.isOver()) {
             super.render(guiGraphics, mouseX, mouseY, delta)
-        }
-        else {
+        } else {
             previousScreen?.render(guiGraphics, mouseX, mouseY, delta)
         }
         if (!fadingTimer.isOver()) {

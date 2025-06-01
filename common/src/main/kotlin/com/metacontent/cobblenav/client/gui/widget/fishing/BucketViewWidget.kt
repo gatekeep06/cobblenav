@@ -19,8 +19,8 @@ class BucketViewWidget(
     width: Int,
     columns: Int,
     columnWidth: Int = width / columns,
-    verticalPadding: Int = 0,
-    horizontalPadding: Int = (width - columns * columnWidth) / (columns - 1),
+    verticalPadding: Float = 0f,
+    horizontalPadding: Float = (width - columns * columnWidth) / (columns - 1f),
     val minHeight: Int,
     val bucket: WeightedBucket
 ) : TableView<ScrollableItemWidget<SpawnDataWidget>>(
@@ -29,15 +29,15 @@ class BucketViewWidget(
     width = width,
     columns = columns,
     columnWidth = columnWidth,
-    verticalPadding = verticalPadding,
-    horizontalPadding = horizontalPadding
+    verticalGap = verticalPadding,
+    horizontalGap = horizontalPadding
 ) {
     companion object {
         const val SEPARATOR_HEIGHT = 4
         const val BUCKET_PADDING = 4
         const val BUCKET_WIDTH = 60
-        val UP_COLOR = RGB(0,64,128)
-        val DOWN_COLOR = RGB(0,13,25)
+        val UP_COLOR = RGB(0, 64, 128)
+        val DOWN_COLOR = RGB(0, 13, 25)
     }
 
     val color = interpolate(DOWN_COLOR, UP_COLOR, sqrt(bucket.chance)).toColor(200)

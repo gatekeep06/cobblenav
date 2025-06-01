@@ -5,11 +5,13 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.*
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 data class SpawnData(
     val renderable: RenderablePokemon,
     val spawnAspects: Set<String>,
     val spawnChance: Float,
+    val biome: ResourceLocation?,
     val spawningContext: String,
     val encountered: Boolean,
     val conditions: MutableList<MutableComponent>,
@@ -20,6 +22,7 @@ data class SpawnData(
             RenderablePokemon.loadFromBuffer(buffer),
             buffer.readList { it.readString() }.toSet(),
             buffer.readFloat(),
+            buffer.readNullable { it.readResourceLocation() },
             buffer.readString(),
             buffer.readBoolean(),
             buffer.readList { (it as RegistryFriendlyByteBuf).readText().copy() },
@@ -31,6 +34,7 @@ data class SpawnData(
         renderable.saveToBuffer(buffer)
         buffer.writeCollection(spawnAspects) { buf, aspect -> buf.writeString(aspect) }
         buffer.writeFloat(spawnChance)
+        buffer.writeNullable(biome) { buf, id -> buf.writeResourceLocation(id) }
         buffer.writeString(spawningContext)
         buffer.writeBoolean(encountered)
         buffer.writeCollection(conditions) { buf, component -> (buf as RegistryFriendlyByteBuf).writeText(component) }

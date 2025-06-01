@@ -13,8 +13,8 @@ open class TableView<I : AbstractWidget>(
     width: Int,
     val columns: Int,
     val columnWidth: Int = width / columns,
-    private val verticalPadding: Int = 0,
-    private val horizontalPadding: Int = (width - columns * columnWidth) / (columns - 1),
+    private val verticalGap: Float = 0f,
+    private val horizontalGap: Float = (width - columns * columnWidth) / (columns - 1f),
 ) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
     private val items = mutableListOf<I>()
     val rows
@@ -22,7 +22,7 @@ open class TableView<I : AbstractWidget>(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         items.forEach { it.render(guiGraphics, i, j, f) }
-//        guiGraphics.renderOutline(x + 1, y + 1, width - 1, height - 3, FastColor.ARGB32.color(255, 0, 0, 0))
+//        guiGraphics.renderOutline(x, y, width, height, FastColor.ARGB32.color(255, 0, 0, 0))
     }
 
     fun add(widget: I) {
@@ -57,6 +57,8 @@ open class TableView<I : AbstractWidget>(
     fun isEmpty() = items.isEmpty()
 
     open fun initItems() {
+        val contentWidth = columns * columnWidth + (columns - 1) * horizontalGap
+        val padding = (width - contentWidth) / 2
         var initializedHeight = 0
         for (i in 0 until rows) {
             var rowHeight = 0
@@ -64,11 +66,11 @@ open class TableView<I : AbstractWidget>(
                 val index = i * columns + j
                 if (items.size <= index) break
                 val item = items[index]
-                item.x = x + j * (columnWidth + horizontalPadding)
+                item.x = (padding + x + j * (columnWidth + horizontalGap)).toInt()
                 item.y = y + initializedHeight
                 rowHeight = max(rowHeight, item.height)
             }
-            initializedHeight += rowHeight + verticalPadding
+            initializedHeight += (rowHeight + verticalGap).toInt()
         }
         height = initializedHeight
     }

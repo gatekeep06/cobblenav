@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
@@ -9,6 +10,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
@@ -28,15 +30,14 @@ class SpawnDataWidget(
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
     private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
-    private val pokemonRotation: Vector3f = Vector3f(13F, 35F, 0F),
+    private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
-        const val WIDTH: Int = 40
-        const val HEIGHT: Int = 50
-        const val MODEL_HEIGHT: Int = 40
+        const val WIDTH = 45
+        const val HEIGHT = 45
+        const val MODEL_HEIGHT = 35
         val FORMAT = DecimalFormat("#.##")
-        val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
         val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
     }
 
@@ -49,28 +50,37 @@ class SpawnDataWidget(
     private val state = FloatingState()
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
+    private val isFishing = spawnData.spawningContext == FishingSpawningCondition.NAME
+    private val platform = BiomePlatforms.get(spawnData.biome)
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        if (ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()) {
-            blitk(
-                matrixStack = poseStack,
-                texture = BACKGROUND,
-                x = x + 2,
-                y = y + 2,
-                width = MODEL_HEIGHT - 4,
-                height = MODEL_HEIGHT - 4,
-                alpha = 0.5f
-            )
+        val selected = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
+
+        if (selected) {
             displayer.hoveredWidget = this
         }
+
+        if (!isFishing) {
+            blitk(
+                matrixStack = poseStack,
+                texture = if (selected && platform.selectedBackground != null) platform.selectedBackground else platform.background
+                    ?: BiomePlatforms.DEFAULT.background,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT
+            )
+        }
+
         if (!isModelBroken) {
             try {
+//                guiGraphics.fill(x, y, x + width, y + height, FastColor.ARGB32.color(100, 255, 255, 255))
                 drawPokemon(
                     poseStack = poseStack,
                     pokemon = spawnData.renderable,
                     x = x.toFloat() + width / 2,
-                    y = y.toFloat() + 8,
+                    y = y.toFloat() + 1 - (if (selected && !isFishing) platform.selectedPokemonOffset else 0),
                     z = 100f,
                     delta = delta,
                     state = state,
@@ -78,8 +88,7 @@ class SpawnDataWidget(
                     rotation = Quaternionf().fromEulerXYZDegrees(pokemonRotation),
                     obscured = obscured
                 )
-            }
-            catch (e: IllegalArgumentException) {
+            } catch (e: IllegalArgumentException) {
                 isModelBroken = true
                 val message = Component.translatable(
                     "gui.cobblenav.pokemon_rendering_exception",
@@ -92,8 +101,7 @@ class SpawnDataWidget(
                     Minecraft.getInstance().player?.sendSystemMessage(message.red())
                 }
             }
-        }
-        else {
+        } else {
             blitk(
                 matrixStack = poseStack,
                 texture = BROKEN_MODEL,
@@ -103,10 +111,23 @@ class SpawnDataWidget(
                 height = MODEL_HEIGHT - 4
             )
         }
+
+        if (!isFishing) {
+            blitk(
+                matrixStack = poseStack,
+                texture = if (selected && platform.selectedForeground != null) platform.selectedForeground else platform.foreground
+                    ?: BiomePlatforms.DEFAULT.foreground,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT
+            )
+        }
+
         drawScaledText(
             guiGraphics,
             text = Component.literal(chanceString),
-            x = x + width / 2, y = y + MODEL_HEIGHT,
+            x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
             maxCharacterWidth = width,
             centered = true,
             shadow = true

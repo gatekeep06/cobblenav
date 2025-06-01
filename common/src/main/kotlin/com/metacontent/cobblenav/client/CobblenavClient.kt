@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
@@ -11,6 +12,7 @@ import com.metacontent.cobblenav.item.Pokefinder
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.server.packs.resources.ResourceManager
 
 object CobblenavClient {
     lateinit var implementation: ClientImplementation
@@ -46,5 +48,9 @@ object CobblenavClient {
             }
             trackArrowOverlay.render(guiGraphics, deltaTracker)
         }
+    }
+
+    fun reloadAssets(resourceManager: ResourceManager) {
+        BiomePlatforms.reload(resourceManager)
     }
 }
