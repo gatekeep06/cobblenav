@@ -76,6 +76,10 @@ object ConditionCollectors {
     }
 
     fun init() {
+        generalCollectors.clear()
+        collectors.clear()
+        blockCollectors.clear()
+
 //        registerGeneral(BiomeCollector())
         registerGeneral(MoonPhaseCollector())
         registerGeneral(UnderOpenSkyCollector())
@@ -96,10 +100,13 @@ object ConditionCollectors {
         register(LureLevelCollector())
         register(RodCollector())
         register(RodTypeCollector())
-        register(KeyItemCollector())
-        register(ItemsCollector())
-        register(PokemonCollector())
-        register(ZygardeCubeChargeCollector())
+
+        if (Cobblenav.config.enableMythsAndLegendsIntegration) {
+            register(KeyItemCollector())
+            register(ItemsCollector())
+            register(PokemonCollector())
+            register(ZygardeCubeChargeCollector())
+        }
 
         registerBlock(AreaTypeBlockCollector())
         registerBlock(GroundedTypeBlockCollector())

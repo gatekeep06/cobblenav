@@ -1,3 +1,8 @@
+# Hotfix 2.2.2
+
+- Added the `enableMythsAndLegendsIntegration` parameter to the config to enable Myths And Legends condition collectors. Disabled by default, as many players are using an older, incompatible version of MaL and are unable to update.
+- Fixed collector duplication when restarting the world.
+
 # Update 2.2.1
 
 - Removed unnecessary file name field from configs.
