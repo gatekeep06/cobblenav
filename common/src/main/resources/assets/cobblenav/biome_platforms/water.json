@@ -1,18 +1,5 @@
 {
-    "biomeIds": [
-        "cobblemon:is_freshwater",
-        "cobblemon:is_river",
-        "cobblemon:is_ocean",
-        "minecraft:is_ocean",
-        "cobblemon:is_cold_ocean",
-        "cobblemon:is_warm_ocean",
-        "cobblemon:is_deep_ocean",
-        "minecraft:is_deep_ocean",
-        "minecraft:river",
-        "minecraft:ocean",
-        "minecraft:warm_ocean",
-        "minecraft:cold_ocean"
-    ],
+    "id": "cobblenav:water",
     "background": "cobblenav:textures/gui/biome_platforms/water.png",
     "foreground": "cobblenav:textures/gui/biome_platforms/default_foreground.png",
     "selectedBackground": "cobblenav:textures/gui/biome_platforms/water_selected.png",

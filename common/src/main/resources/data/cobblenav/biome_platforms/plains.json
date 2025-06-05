@@ -1,0 +1,10 @@
+{
+    "id": "cobblenav:plains",
+    "conditions": {
+        "biomes": [
+            "cobblemon:is_plains",
+            "cobblemon:is_grassland",
+            "cobblemon:is_temperate"
+        ]
+    }
+}
