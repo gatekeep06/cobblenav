@@ -29,7 +29,7 @@ class FishingnavScreen(
 ) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataTooltipDisplayer {
     companion object {
         const val POKEMON_CHANCE = 0.85f
-        const val WEATHER_WIDGET_HEIGHT = 80
+        const val WEATHER_WIDGET_HEIGHT = 40
         const val BUCKET_VIEW_MIN_HEIGHT = 100
         private val DAY_COLOR = RGB(117, 230, 218)
         private val NIGHT_COLOR = RGB(2, 1, 39)
