@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.spawndata.collector.block.*
 import com.metacontent.cobblenav.spawndata.collector.general.*
@@ -62,10 +63,11 @@ object ConditionCollectors {
     fun collectConditions(
         condition: SpawningCondition<*>,
         fittingContexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): List<MutableComponent> {
-        return generalCollectors.mapNotNull { it.collect(condition, fittingContexts, player) } +
-                getCollectors(condition).mapNotNull { it.collect(condition, fittingContexts, player) }
+        return generalCollectors.mapNotNull { it.collect(condition, fittingContexts, player, builder) } +
+                getCollectors(condition).mapNotNull { it.collect(condition, fittingContexts, player, builder) }
     }
 
     fun collectBlockConditions(
@@ -80,7 +82,7 @@ object ConditionCollectors {
         collectors.clear()
         blockCollectors.clear()
 
-//        registerGeneral(BiomeCollector())
+        registerGeneral(BiomeCollector())
         registerGeneral(MoonPhaseCollector())
         registerGeneral(UnderOpenSkyCollector())
         registerGeneral(YHeightCollector())

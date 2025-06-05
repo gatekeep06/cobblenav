@@ -11,7 +11,7 @@ data class SpawnData(
     val renderable: RenderablePokemon,
     val spawnAspects: Set<String>,
     val spawnChance: Float,
-    val biome: ResourceLocation?,
+    val platform: ResourceLocation?,
     val spawningContext: String,
     val encountered: Boolean,
     val conditions: MutableList<MutableComponent>,
@@ -34,7 +34,7 @@ data class SpawnData(
         renderable.saveToBuffer(buffer)
         buffer.writeCollection(spawnAspects) { buf, aspect -> buf.writeString(aspect) }
         buffer.writeFloat(spawnChance)
-        buffer.writeNullable(biome) { buf, id -> buf.writeResourceLocation(id) }
+        buffer.writeNullable(platform) { buf, id -> buf.writeResourceLocation(id) }
         buffer.writeString(spawningContext)
         buffer.writeBoolean(encountered)
         buffer.writeCollection(conditions) { buf, component -> (buf as RegistryFriendlyByteBuf).writeText(component) }

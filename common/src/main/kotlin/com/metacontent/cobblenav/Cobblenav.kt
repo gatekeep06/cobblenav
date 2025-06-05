@@ -2,7 +2,9 @@ package com.metacontent.cobblenav
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
@@ -31,6 +33,8 @@ object Cobblenav {
         registerArgumentTypes()
         implementation.registerCommands()
         implementation.injectLootTables()
+
+        CobblemonDataProvider.register(BiomePlatforms)
 
         CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
             CloseFishingnavPacket().sendToPlayer(event.player)

@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
@@ -12,7 +13,8 @@ class LightCollector : GeneralConditionCollector() {
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): MutableComponent? {
         formatValueRange(condition.minLight, condition.maxLight)?.let {
             return Component.translatable("gui.cobblenav.spawn_data.light", it)

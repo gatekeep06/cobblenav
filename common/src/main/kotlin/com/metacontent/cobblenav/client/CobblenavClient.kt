@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import com.metacontent.cobblenav.api.platform.BiomePlatforms
+import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
@@ -51,6 +51,6 @@ object CobblenavClient {
     }
 
     fun reloadAssets(resourceManager: ResourceManager) {
-        BiomePlatforms.reload(resourceManager)
+        BiomePlatformRenderDataRepository.reload(resourceManager)
     }
 }

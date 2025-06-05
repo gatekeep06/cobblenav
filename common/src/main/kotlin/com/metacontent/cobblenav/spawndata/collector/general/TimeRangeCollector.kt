@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.client.gui.util.getTimeString
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -13,7 +14,8 @@ class TimeRangeCollector : GeneralConditionCollector() {
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): MutableComponent? {
         condition.timeRange?.let { time ->
             val range = time.ranges.firstOrNull { it.contains(player.level().dayTime % 23999) }

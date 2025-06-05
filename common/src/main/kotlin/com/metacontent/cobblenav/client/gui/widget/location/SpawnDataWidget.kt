@@ -10,7 +10,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.api.platform.BiomePlatforms
+import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
@@ -51,7 +51,7 @@ class SpawnDataWidget(
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
     private val isFishing = spawnData.spawningContext == FishingSpawningCondition.NAME
-    private val platform = BiomePlatforms.get(spawnData.biome)
+    private val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -64,8 +64,7 @@ class SpawnDataWidget(
         if (!isFishing) {
             blitk(
                 matrixStack = poseStack,
-                texture = if (selected && platform.selectedBackground != null) platform.selectedBackground else platform.background
-                    ?: BiomePlatforms.DEFAULT.background,
+                texture = if (selected) platform.selectedBackground else platform.background,
                 x = x,
                 y = y,
                 width = WIDTH,
@@ -115,8 +114,7 @@ class SpawnDataWidget(
         if (!isFishing) {
             blitk(
                 matrixStack = poseStack,
-                texture = if (selected && platform.selectedForeground != null) platform.selectedForeground else platform.foreground
-                    ?: BiomePlatforms.DEFAULT.foreground,
+                texture = if (selected) platform.selectedForeground else platform.foreground,
                 x = x,
                 y = y,
                 width = WIDTH,
