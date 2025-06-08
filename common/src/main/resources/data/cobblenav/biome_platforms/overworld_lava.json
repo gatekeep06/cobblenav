@@ -1,0 +1,14 @@
+{
+    "id": "cobblenav:overworld_lava",
+    "conditions": {
+        "fluids": [
+            "minecraft:lava"
+        ]
+    },
+    "anticonditions": {
+        "biomes": [
+            "cobblemon:is_nether",
+            "minecraft:is_nether"
+        ]
+    }
+}
