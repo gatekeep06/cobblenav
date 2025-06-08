@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
@@ -23,7 +22,7 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.text.DecimalFormat
 
-class SpawnDataWidget(
+open class SpawnDataWidget(
     x: Int,
     y: Int,
     val spawnData: SpawnData,
@@ -50,8 +49,7 @@ class SpawnDataWidget(
     private val state = FloatingState()
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
-    private val isFishing = spawnData.spawningContext == FishingSpawningCondition.NAME
-    private val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
+    protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -61,10 +59,10 @@ class SpawnDataWidget(
             displayer.hoveredWidget = this
         }
 
-        if (!isFishing) {
+        platform.getBackground(selected)?.let {
             blitk(
                 matrixStack = poseStack,
-                texture = if (selected) platform.selectedBackground else platform.background,
+                texture = it,
                 x = x,
                 y = y,
                 width = WIDTH,
@@ -79,7 +77,7 @@ class SpawnDataWidget(
                     poseStack = poseStack,
                     pokemon = spawnData.renderable,
                     x = x.toFloat() + width / 2,
-                    y = y.toFloat() + 1 - (if (selected && !isFishing) platform.selectedPokemonOffset else 0),
+                    y = y.toFloat() - platform.getOffset(selected),
                     z = 100f,
                     delta = delta,
                     state = state,
@@ -111,10 +109,10 @@ class SpawnDataWidget(
             )
         }
 
-        if (!isFishing) {
+        platform.getForeground(selected)?.let {
             blitk(
                 matrixStack = poseStack,
-                texture = if (selected) platform.selectedForeground else platform.foreground,
+                texture = it,
                 x = x,
                 y = y,
                 width = WIDTH,
