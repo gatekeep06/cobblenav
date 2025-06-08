@@ -4,9 +4,10 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.google.common.collect.Lists
-import com.metacontent.cobblenav.client.gui.widget.NotificationWidget
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
+import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
+import com.metacontent.cobblenav.client.gui.widget.NotificationWidget
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
@@ -26,15 +27,15 @@ abstract class PokenavScreen(
     component: Component
 ) : Screen(component), CobblemonRenderable {
     companion object {
-        const val WIDTH: Int = 350
-        const val HEIGHT: Int = 250
-        const val VERTICAL_BORDER_DEPTH: Int = 21
-        const val HORIZONTAL_BORDER_DEPTH: Int = 16
+        const val WIDTH = 350
+        const val HEIGHT = 250
+        const val VERTICAL_BORDER_DEPTH = 21
+        const val HORIZONTAL_BORDER_DEPTH = 16
         const val SCREEN_WIDTH = WIDTH - 2 * VERTICAL_BORDER_DEPTH
         const val SCREEN_HEIGHT = HEIGHT - 2 * HORIZONTAL_BORDER_DEPTH
-        const val ANIMATION_SPEED: Float = 20f
-        const val ANIMATION_OFFSET: Float = 20f
-        const val BACK_BUTTON_SIZE: Int = 14
+        const val ANIMATION_SPEED = 20f
+        const val ANIMATION_OFFSET = 20f
+        const val BACK_BUTTON_SIZE = 14
         val DETAILS = cobblenavResource("textures/gui/pokenav_details.png")
         val SCREEN_GLOW = cobblenavResource("textures/gui/pokenav_screen_glow.png")
         val BORDERS = cobblenavResource("textures/gui/pokenav_borders.png")
@@ -90,13 +91,12 @@ abstract class PokenavScreen(
         val scaledMouseX = (mouseX / scale).toInt()
         val scaledMouseY = (mouseY / scale).toInt()
         poseStack.translate(0f, animationOffset, 100f)
-        renderBaseElement(poseStack, BORDERS)
         renderScreenBackground(guiGraphics, SCREEN, color)
         guiGraphics.cobblenavScissor(
             screenX + VERTICAL_BORDER_DEPTH,
-            screenY + HORIZONTAL_BORDER_DEPTH,
+            screenY + HORIZONTAL_BORDER_DEPTH - 1,
             screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH,
-            screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
+            screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT + 1,
         )
         //render blockable widgets and the current screen's stuff
         renderOnBackLayer(guiGraphics, scaledMouseX, scaledMouseY, delta)
@@ -106,6 +106,14 @@ abstract class PokenavScreen(
         poseStack.pushPose()
         poseStack.translate(0f, 0f, 500f)
         if (blockWidgets) {
+            guiGraphics.drawBlurredArea(
+                x1 = screenX + VERTICAL_BORDER_DEPTH + 1,
+                y1 = screenY + HORIZONTAL_BORDER_DEPTH - 1,
+                x2 = screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH - 1,
+                y2 = screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT + 1,
+                blur = 1f,
+                delta = delta
+            )
             guiGraphics.fill(
                 screenX + VERTICAL_BORDER_DEPTH,
                 screenY + HORIZONTAL_BORDER_DEPTH,
@@ -120,6 +128,7 @@ abstract class PokenavScreen(
         guiGraphics.disableScissor()
         poseStack.pushPose()
         poseStack.translate(0f, 0f, 600f)
+        renderBaseElement(poseStack, BORDERS)
         blitk(
             poseStack,
             texture = SCREEN_GLOW,
@@ -129,7 +138,7 @@ abstract class PokenavScreen(
             height = HEIGHT,
             red = FastColor.ARGB32.red(color) / 128f,
             green = FastColor.ARGB32.green(color) / 128f,
-            blue = FastColor.ARGB32.blue(color) / 128f  ,
+            blue = FastColor.ARGB32.blue(color) / 128f,
         )
         poseStack.translate(0f, 0f, 1400f)
         renderBaseElement(poseStack, DETAILS)
@@ -150,7 +159,13 @@ abstract class PokenavScreen(
 
     open fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
 
-    private fun renderWidgets(widgets: List<AbstractWidget>, guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    private fun renderWidgets(
+        widgets: List<AbstractWidget>,
+        guiGraphics: GuiGraphics,
+        mouseX: Int,
+        mouseY: Int,
+        delta: Float
+    ) {
         val iterator = widgets.iterator()
         while (iterator.hasNext()) {
             iterator.next().render(guiGraphics, mouseX, mouseY, delta)
@@ -174,9 +189,9 @@ abstract class PokenavScreen(
         poseStack.translate(0f, 0f, -100f)
         guiGraphics.fill(
             screenX + VERTICAL_BORDER_DEPTH,
-            screenY + HORIZONTAL_BORDER_DEPTH,
+            screenY + HORIZONTAL_BORDER_DEPTH - 1,
             screenX + WIDTH - VERTICAL_BORDER_DEPTH,
-            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH,
+            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH + 1,
             color
         )
         poseStack.popPose()
