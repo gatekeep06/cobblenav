@@ -50,14 +50,14 @@ object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
             context.biomes + null,
             context.structures + null,
             setOf(context.fluid, null)
-        ).forEach {
+        ).forEach { combination ->
             val platform = platforms[PlatformCondition(
-                it[0] as? String?,
-                it[1] as? ResourceLocation?,
-                it[2] as? ResourceLocation?,
-                it[3] as? ResourceLocation?
+                combination[0] as? String?,
+                combination[1] as? ResourceLocation?,
+                combination[2] as? ResourceLocation?,
+                combination[3] as? ResourceLocation?
             )]
-            if (platform != null) return platform.id
+            if (platform != null && platform.anticonditions?.none { it.anyMatches(context) } != false) return platform.id
         }
         return null
     }
