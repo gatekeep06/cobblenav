@@ -7,4 +7,9 @@ data class PlatformCondition(
     val biome: ResourceLocation? = null,
     val structure: ResourceLocation? = null,
     val fluid: ResourceLocation? = null
-)
+) {
+    fun anyMatches(context: SpawnDataContext) = id == context.detailId
+            || fluid == context.fluid
+            || context.biomes.contains(biome)
+            || context.structures.contains(structure)
+}
