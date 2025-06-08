@@ -5,7 +5,6 @@ import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.util.interpolate
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
-import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.metacontent.cobblenav.util.WeightedBucket
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -23,7 +22,7 @@ class BucketViewWidget(
     horizontalPadding: Float = (width - columns * columnWidth) / (columns - 1f),
     val minHeight: Int,
     val bucket: WeightedBucket
-) : TableView<ScrollableItemWidget<SpawnDataWidget>>(
+) : TableView<ScrollableItemWidget<FishingDataWidget>>(
     x = x,
     y = y,
     width = width,

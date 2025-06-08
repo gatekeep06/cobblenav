@@ -7,6 +7,7 @@ import com.metacontent.cobblenav.client.gui.util.interpolate
 import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
 import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
+import com.metacontent.cobblenav.client.gui.widget.fishing.FishingDataWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -136,7 +137,7 @@ class FishingnavScreen(
                     }
                     .map {
                         ScrollableItemWidget(
-                            child = SpawnDataWidget(
+                            child = FishingDataWidget(
                                 x = 0,
                                 y = 0,
                                 spawnData = it,

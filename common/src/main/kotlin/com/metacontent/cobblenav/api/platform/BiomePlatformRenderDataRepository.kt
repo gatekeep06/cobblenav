@@ -21,6 +21,10 @@ object BiomePlatformRenderDataRepository : JsonDataRegistry<BiomePlatformRenderD
         selectedForeground = cobblenavResource("textures/gui/biome_platforms/default_foreground_selected.png"),
         selectedPokemonOffset = 2
     )
+    val FISHING = BiomePlatformRenderData(
+        id = cobblenavResource("fishing"),
+        foreground = null
+    )
 
     override val gson: Gson = GsonBuilder()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
