@@ -97,7 +97,10 @@ fun GuiGraphics.renderAdvancedTooltip(
     bodyHeight: Int = (body?.let { lineHeight * body.size + 1 } ?: 0),
     opacity: Float = 0.9f,
     headerColor: Int,
-    headerOutlineColor: Int = FastColor.ARGB32.multiply(headerColor, FastColor.ARGB32.color((opacity * 255).toInt(), 192, 192, 192)),
+    headerOutlineColor: Int = FastColor.ARGB32.multiply(
+        headerColor,
+        FastColor.ARGB32.color((opacity * 255).toInt(), 192, 192, 192)
+    ),
     bodyColor: Int = FastColor.ARGB32.color((255 * opacity).toInt(), 237, 237, 237),
     bodyOutlineColor: Int = bodyColor,
     blur: Float = 1f,
@@ -126,9 +129,23 @@ fun GuiGraphics.renderAdvancedTooltip(
 
     poseStack.pushPose()
     poseStack.translate(0f, 0f, 2000f)
-    this.drawBlurredArea(x, y, x + width, y + lineHeight + bodyHeight + itemHeight, blur, delta)
+    this.drawBlurredArea(
+        x1 = x,
+        y1 = y,
+        x2 = x + width,
+        y2 = y + lineHeight + bodyHeight + itemHeight,
+        blur = blur,
+        delta = delta
+    )
     this.fillWithOutline(x, y, x + width, y + lineHeight, headerColor, headerOutlineColor)
-    this.fillWithOutline(x, y + lineHeight, x + width, y + lineHeight + bodyHeight + itemHeight, bodyColor, bodyOutlineColor)
+    this.fillWithOutline(
+        x,
+        y + lineHeight,
+        x + width,
+        y + lineHeight + bodyHeight + itemHeight,
+        bodyColor,
+        bodyOutlineColor
+    )
 
     drawScaledText(
         context = this,

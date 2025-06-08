@@ -116,12 +116,12 @@ class StatsTableWidget(
         val poseStack = guiGraphics.pose()
 
         guiGraphics.drawBlurredArea(
-            x + VERTICAL_MARGIN,
-            y + TOP_MARGIN - 1,
-            x + width - VERTICAL_MARGIN,
-            y + height - BOTTOM_MARGIN + 1,
-            3f,
-            f
+            x1 = x + VERTICAL_MARGIN,
+            y1 = y + TOP_MARGIN - 1,
+            x2 = x + width - VERTICAL_MARGIN,
+            y2 = y + height - BOTTOM_MARGIN + 1,
+            blur = 3f,
+            delta = f
         )
         blitk(
             matrixStack = poseStack,

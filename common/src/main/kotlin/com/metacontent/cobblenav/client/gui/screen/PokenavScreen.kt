@@ -102,10 +102,17 @@ abstract class PokenavScreen(
         renderOnBackLayer(guiGraphics, scaledMouseX, scaledMouseY, delta)
         renderWidgets(blockable, guiGraphics, scaledMouseX, scaledMouseY, delta)
         renderOnFrontLayer(guiGraphics, scaledMouseX, scaledMouseY, delta)
-        // if true block widgets and screen
         poseStack.pushPose()
         poseStack.translate(0f, 0f, 500f)
+        // if true block widgets and screen
         if (blockWidgets) {
+            guiGraphics.fill(
+                screenX + VERTICAL_BORDER_DEPTH,
+                screenY + HORIZONTAL_BORDER_DEPTH,
+                screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH,
+                screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
+                FastColor.ARGB32.color(70, 0, 0, 0)
+            )
             guiGraphics.drawBlurredArea(
                 x1 = screenX + VERTICAL_BORDER_DEPTH + 1,
                 y1 = screenY + HORIZONTAL_BORDER_DEPTH - 1,
@@ -113,13 +120,6 @@ abstract class PokenavScreen(
                 y2 = screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT + 1,
                 blur = 1f,
                 delta = delta
-            )
-            guiGraphics.fill(
-                screenX + VERTICAL_BORDER_DEPTH,
-                screenY + HORIZONTAL_BORDER_DEPTH,
-                screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH,
-                screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
-                FastColor.ARGB32.color(70, 0, 0, 0)
             )
         }
         //render unblockable widgets
