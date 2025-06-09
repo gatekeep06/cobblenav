@@ -15,6 +15,7 @@ import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
@@ -23,6 +24,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
+import org.joml.Vector3d
 import org.joml.Vector3f
 import java.text.DecimalFormat
 import kotlin.math.PI
@@ -124,17 +126,18 @@ open class SpawnDataWidget(
         }
 
         platform.getForeground(selected)?.let {
-            poseStack.pushPose()
-            poseStack.translate(0f, 0f, 300f)
-            blitk(
-                matrixStack = poseStack,
-                texture = it,
-                x = x,
-                y = y,
-                width = WIDTH,
-                height = HEIGHT
-            )
-            poseStack.popPose()
+            poseStack.pushAndPop(
+                translate = Vector3d(0.0, 0.0, 300.0)
+            ) {
+                blitk(
+                    matrixStack = poseStack,
+                    texture = it,
+                    x = x,
+                    y = y,
+                    width = WIDTH,
+                    height = HEIGHT
+                )
+            }
         }
 
         drawScaledText(
@@ -163,24 +166,23 @@ open class SpawnDataWidget(
     private fun renderPokeBall(guiGraphics: GuiGraphics, x: Double, y: Double) {
         val poseStack = guiGraphics.pose()
 
-        poseStack.pushPose()
-        poseStack.translate(x, y, 2.0)
-        poseStack.mulPose(
-            Quaternionf()
+        poseStack.pushAndPop(
+            translate = Vector3d(x, y, 2.0),
+            mulPose = Quaternionf()
                 .rotateZ(PI.toFloat())
-                .fromEulerXYZDegrees(pokemonRotation)
-        )
-        poseStack.scale(15f, 15f, -15f)
-        Minecraft.getInstance().itemRenderer.renderStatic(
-            stack,
-            ItemDisplayContext.GROUND,
-            255,
-            1000,
-            poseStack,
-            guiGraphics.bufferSource(),
-            Minecraft.getInstance().level,
-            0
-        )
-        poseStack.popPose()
+                .fromEulerXYZDegrees(pokemonRotation),
+            scale = Vector3f(15f, 15f, -15f)
+        ) {
+            Minecraft.getInstance().itemRenderer.renderStatic(
+                stack,
+                ItemDisplayContext.GROUND,
+                255,
+                1000,
+                poseStack,
+                guiGraphics.bufferSource(),
+                Minecraft.getInstance().level,
+                0
+            )
+        }
     }
 }

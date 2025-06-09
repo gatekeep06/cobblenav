@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
@@ -51,63 +52,64 @@ class FoundPokemonWidget(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
 
-        poseStack.pushPose()
-        poseStack.rotateAround(
-            Quaternionf().fromEulerXYZDegrees(
-                Vector3f(
-                    0f,
-                    0f,
-                    360f * (loopTimer.getProgress() + (1f - openingTimer.getProgress()))
-                )
-            ), x.toFloat(), y.toFloat(), 0f
-        )
-        for (barIndex in 0 until (BARS * openingTimer.getProgress()).toInt()) {
-            poseStack.pushPose()
+        poseStack.pushAndPop {
             poseStack.rotateAround(
-                Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, barIndex * 360f / BARS)),
-                x.toFloat(),
-                y.toFloat(),
-                0f
+                Quaternionf().fromEulerXYZDegrees(
+                    Vector3f(
+                        0f,
+                        0f,
+                        360f * (loopTimer.getProgress() + (1f - openingTimer.getProgress()))
+                    )
+                ), x.toFloat(), y.toFloat(), 0f
             )
-            guiGraphics.fill(
-                x - 2,
-                y + RADIUS,
-                x + 2,
-                y + RADIUS + BAR_LENGTH,
-                FastColor.ARGB32.color(128, 173, 232, 244)
-            )
-            poseStack.popPose()
+            for (barIndex in 0 until (BARS * openingTimer.getProgress()).toInt()) {
+                poseStack.pushAndPop {
+                    poseStack.rotateAround(
+                        Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, barIndex * 360f / BARS)),
+                        x.toFloat(),
+                        y.toFloat(),
+                        0f
+                    )
+                    guiGraphics.fill(
+                        x - 2,
+                        y + RADIUS,
+                        x + 2,
+                        y + RADIUS + BAR_LENGTH,
+                        FastColor.ARGB32.color(128, 173, 232, 244)
+                    )
+                }
+            }
         }
-        poseStack.popPose()
-        poseStack.pushPose()
-        poseStack.rotateAround(
-            Quaternionf().fromEulerXYZDegrees(
-                Vector3f(
-                    0f,
-                    0f,
-                    -360f * (loopTimer.getProgress() + (1f - openingTimer.getProgress()))
-                )
-            ), x.toFloat(), y.toFloat(), 0f
-        )
-        blitk(
-            matrixStack = poseStack,
-            texture = DECORATIONS_1,
-            x = x - RADIUS - BAR_LENGTH - 32,
-            y = y - RADIUS - BAR_LENGTH - 32,
-            width = 2 * (RADIUS + BAR_LENGTH + 32),
-            height = 2 * (RADIUS + BAR_LENGTH + 32),
-            alpha = 0.8f
-        )
-        blitk(
-            matrixStack = poseStack,
-            texture = DECORATIONS_2,
-            x = x - RADIUS + 4,
-            y = y - RADIUS + 4,
-            width = 2 * (RADIUS - 4),
-            height = 2 * (RADIUS - 4),
-            alpha = 0.8f
-        )
-        poseStack.popPose()
+
+        poseStack.pushAndPop {
+            poseStack.rotateAround(
+                Quaternionf().fromEulerXYZDegrees(
+                    Vector3f(
+                        0f,
+                        0f,
+                        -360f * (loopTimer.getProgress() + (1f - openingTimer.getProgress()))
+                    )
+                ), x.toFloat(), y.toFloat(), 0f
+            )
+            blitk(
+                matrixStack = poseStack,
+                texture = DECORATIONS_1,
+                x = x - RADIUS - BAR_LENGTH - 32,
+                y = y - RADIUS - BAR_LENGTH - 32,
+                width = 2 * (RADIUS + BAR_LENGTH + 32),
+                height = 2 * (RADIUS + BAR_LENGTH + 32),
+                alpha = 0.8f
+            )
+            blitk(
+                matrixStack = poseStack,
+                texture = DECORATIONS_2,
+                x = x - RADIUS + 4,
+                y = y - RADIUS + 4,
+                width = 2 * (RADIUS - 4),
+                height = 2 * (RADIUS - 4),
+                alpha = 0.8f
+            )
+        }
 
         drawPokemon(
             poseStack = poseStack,

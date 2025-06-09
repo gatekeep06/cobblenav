@@ -12,12 +12,11 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.GameRenderer
-import net.minecraft.core.Vec3i
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
-import net.minecraft.util.FastColor
 import org.joml.Quaternionf
+import org.joml.Vector3d
 import org.joml.Vector3f
 
 fun GuiGraphics.fillWithOutline(x1: Int, y1: Int, x2: Int, y2: Int, fillColor: Int, outlineColor: Int) {
@@ -83,9 +82,11 @@ fun GuiGraphics.cobblenavScissor(
     (y2 * scale).toInt()
 )
 
-fun GameRenderer.processBlurEffect(blur: Float, delta: Float) = (this as CustomizableBlurEffectProcessor).`cobblenav$processBlurEffect`(blur, delta)
+fun GameRenderer.processBlurEffect(blur: Float, delta: Float) =
+    (this as CustomizableBlurEffectProcessor).`cobblenav$processBlurEffect`(blur, delta)
 
-fun getTimeString(period: IntRange): String = String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
+fun getTimeString(period: IntRange): String =
+    String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
 
 fun getTimeString(time: Long): String {
     val adjustedTime = (time + 6000) % 23999
@@ -110,7 +111,8 @@ fun translateOr(
 }
 
 fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
-    return Minecraft.getInstance().font.splitter.splitLines(text, targetWidth, Style.EMPTY).map { Component.literal(it.string) }
+    return Minecraft.getInstance().font.splitter.splitLines(text, targetWidth, Style.EMPTY)
+        .map { Component.literal(it.string) }
 }
 
 fun interpolate(start: RGB, end: RGB, progress: Float): RGB {
@@ -123,4 +125,18 @@ fun interpolate(start: RGB, end: RGB, progress: Float): RGB {
 
 fun interpolateChannel(start: Int, end: Int, progress: Float): Int {
     return (start + (end - start) * progress).toInt().coerceIn(0, 255)
+}
+
+fun PoseStack.pushAndPop(
+    translate: Vector3d? = null,
+    mulPose: Quaternionf? = null,
+    scale: Vector3f? = null,
+    render: () -> Unit
+) {
+    this.pushPose()
+    translate?.let { this.translate(it.x, it.y, it.z) }
+    mulPose?.let { this.mulPose(it) }
+    scale?.let { this.scale(it.x, it.y, it.z) }
+    render()
+    this.popPose()
 }

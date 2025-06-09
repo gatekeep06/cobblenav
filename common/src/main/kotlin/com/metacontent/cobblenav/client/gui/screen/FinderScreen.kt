@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.button.TextButton
@@ -18,6 +19,8 @@ import com.metacontent.cobblenav.util.finder.FoundPokemon
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import org.joml.Vector3d
+import org.joml.Vector3f
 
 class FinderScreen(
     private val spawnData: SpawnData,
@@ -233,34 +236,36 @@ class FinderScreen(
     private fun renderPokeballAnimation(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
 
-        poseStack.pushPose()
-        poseStack.scale(scale, scale, 1f)
         guiGraphics.cobblenavScissor(
             screenX + VERTICAL_BORDER_DEPTH,
             screenY + HORIZONTAL_BORDER_DEPTH,
             screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH,
             screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT,
         )
-        poseStack.translate(0f, 0f, 400f)
-        blitk(
-            matrixStack = poseStack,
-            texture = POKEBALL_BOTTOM,
-            x = screenX + VERTICAL_BORDER_DEPTH,
-            y = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - closingTimer.getProgress() * POKEBALL_PART_HEIGHT,
-            width = POKEBALL_PART_WIDTH,
-            height = POKEBALL_PART_HEIGHT,
-            alpha = 1 - fadingTimer.getProgress()
-        )
-        blitk(
-            matrixStack = poseStack,
-            texture = POKEBALL_TOP,
-            x = screenX + VERTICAL_BORDER_DEPTH,
-            y = screenY + HORIZONTAL_BORDER_DEPTH - POKEBALL_PART_HEIGHT + closingTimer.getProgress() * POKEBALL_PART_HEIGHT,
-            width = POKEBALL_PART_WIDTH,
-            height = POKEBALL_PART_HEIGHT,
-            alpha = 1f - fadingTimer.getProgress()
-        )
-        poseStack.popPose()
+        poseStack.pushAndPop(
+            translate = Vector3d(0.0, 0.0, 400.0),
+            scale = Vector3f(scale, scale, 1f)
+        ) {
+            blitk(
+                matrixStack = poseStack,
+                texture = POKEBALL_BOTTOM,
+                x = screenX + VERTICAL_BORDER_DEPTH,
+                y = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - closingTimer.getProgress() * POKEBALL_PART_HEIGHT,
+                width = POKEBALL_PART_WIDTH,
+                height = POKEBALL_PART_HEIGHT,
+                alpha = 1 - fadingTimer.getProgress()
+            )
+            blitk(
+                matrixStack = poseStack,
+                texture = POKEBALL_TOP,
+                x = screenX + VERTICAL_BORDER_DEPTH,
+                y = screenY + HORIZONTAL_BORDER_DEPTH - POKEBALL_PART_HEIGHT + closingTimer.getProgress() * POKEBALL_PART_HEIGHT,
+                width = POKEBALL_PART_WIDTH,
+                height = POKEBALL_PART_HEIGHT,
+                alpha = 1f - fadingTimer.getProgress()
+            )
+        }
+
         guiGraphics.disableScissor()
     }
 

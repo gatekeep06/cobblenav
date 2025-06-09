@@ -2,26 +2,22 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.util.fillWithOutline
-import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
+import com.metacontent.cobblenav.client.gui.util.*
+import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
+import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
+import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.location.LocationInfoWidget
+import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
+import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
+import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.SavePreferencesPacket
-import com.metacontent.cobblenav.client.gui.util.Sorting
-import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
-import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
-import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
-import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
-import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
-import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
@@ -30,6 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import org.joml.Vector3d
 import kotlin.math.max
 import kotlin.math.min
 
@@ -56,7 +53,8 @@ class LocationScreen(
         val VIEW_OUTLINE_COLOR = FastColor.ARGB32.color(255, 84, 168, 134)
         const val VIEW_WIDTH = 298
         const val VIEW_HEIGHT = 182
-//        val VIEW = cobblenavResource("textures/gui/location/view.png")
+
+        //        val VIEW = cobblenavResource("textures/gui/location/view.png")
         val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
         val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
         val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
@@ -260,10 +258,11 @@ class LocationScreen(
 //            height = VIEW_WIDTH
 //        )
         if (loading) {
-            poseStack.pushPose()
-            poseStack.translate(0f, 0f, 400f)
-            renderLoadingAnimation(guiGraphics.pose(), delta)
-            poseStack.popPose()
+            poseStack.pushAndPop(
+                translate = Vector3d(0.0, 0.0, 400.0)
+            ) {
+                renderLoadingAnimation(guiGraphics.pose(), delta)
+            }
             return
         }
         if (tableView.isEmpty()) {
