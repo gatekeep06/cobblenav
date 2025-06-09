@@ -1,23 +1,20 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import com.cobblemon.mod.common.util.cobblemonResource
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
-import com.metacontent.cobblenav.util.toResourceLocation
-import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
-import kotlin.jvm.optionals.getOrNull
 
 object SpawnDataHelper {
     fun collect(
@@ -38,7 +35,9 @@ object SpawnDataHelper {
         val speciesRecord = detail.pokemon.species?.asIdentifierDefaultingNamespace()?.let {
             Cobblemon.playerDataManager.getPokedexData(player).getSpeciesRecord(it)
         }
-        val encountered = speciesRecord?.hasSeenForm(renderablePokemon.form.name) ?: false
+        val knowledge = speciesRecord?.getFormRecord(renderablePokemon.form.name)?.knowledge
+            ?: PokedexEntryProgress.NONE
+        val encountered = knowledge != PokedexEntryProgress.NONE
 
         if (!encountered && config.hideUnknownPokemon) {
             return null
@@ -65,14 +64,14 @@ object SpawnDataHelper {
         val platform = BiomePlatforms.firstFitting(builder.build())
 
         return SpawnData(
-            renderablePokemon,
-            aspects,
-            spawnChance,
-            platform,
-            detail.context.name,
-            encountered,
-            conditions,
-            BlockConditions(blocks)
+            renderable = renderablePokemon,
+            spawnAspects = aspects,
+            spawnChance = spawnChance,
+            platform = platform,
+            spawningContext = detail.context.name,
+            knowledge = knowledge,
+            conditions = conditions,
+            blockConditions = BlockConditions(blocks)
         )
     }
 }

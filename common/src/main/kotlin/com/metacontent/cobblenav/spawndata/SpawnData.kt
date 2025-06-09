@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.*
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -13,10 +14,12 @@ data class SpawnData(
     val spawnChance: Float,
     val platform: ResourceLocation?,
     val spawningContext: String,
-    val encountered: Boolean,
+    val knowledge: PokedexEntryProgress,
     val conditions: MutableList<MutableComponent>,
     val blockConditions: BlockConditions
 ) : Encodable {
+    val encountered = knowledge != PokedexEntryProgress.ENCOUNTERED
+
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnData = SpawnData(
             RenderablePokemon.loadFromBuffer(buffer),
@@ -24,7 +27,7 @@ data class SpawnData(
             buffer.readFloat(),
             buffer.readNullable { it.readResourceLocation() },
             buffer.readString(),
-            buffer.readBoolean(),
+            buffer.readEnum(PokedexEntryProgress::class.java),
             buffer.readList { (it as RegistryFriendlyByteBuf).readText().copy() },
             BlockConditions.decode(buffer)
         )
@@ -36,7 +39,7 @@ data class SpawnData(
         buffer.writeFloat(spawnChance)
         buffer.writeNullable(platform) { buf, id -> buf.writeResourceLocation(id) }
         buffer.writeString(spawningContext)
-        buffer.writeBoolean(encountered)
+        buffer.writeEnum(knowledge)
         buffer.writeCollection(conditions) { buf, component -> (buf as RegistryFriendlyByteBuf).writeText(component) }
         blockConditions.encode(buffer)
     }
