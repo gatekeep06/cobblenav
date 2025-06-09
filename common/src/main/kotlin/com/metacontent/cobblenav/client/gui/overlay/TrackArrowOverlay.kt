@@ -2,10 +2,8 @@ package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
@@ -15,7 +13,9 @@ import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
 import org.joml.Vector3f
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
 class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
     private val minecraft = Minecraft.getInstance()
