@@ -37,7 +37,9 @@ class CobblenavConfig : Config<CobblenavConfig>() {
         "area_type_block"       to true,
         "grounded_type_block"   to true,
         "seafloor_type_block"   to true,
-        "fishing_block"         to true
+        "fishing_block"         to true,
+        "count"                 to true,
+        "streak"                to true
     )
 
     override fun applyToLoadedConfig(default: CobblenavConfig) {
