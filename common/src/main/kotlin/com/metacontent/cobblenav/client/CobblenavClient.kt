@@ -9,6 +9,7 @@ import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
 import com.metacontent.cobblenav.client.settings.PokefinderSettings
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.item.Pokefinder
+import com.metacontent.cobblenav.spawndata.collector.ClientCollectors
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -31,6 +32,7 @@ object CobblenavClient {
         this.implementation = implementation
         PlatformEvents.CLIENT_PLAYER_LOGIN.subscribe {
             pokefinderSettings = settingsManager.load(PokefinderSettings.NAME, PokefinderSettings::class.java) as PokefinderSettings
+            ClientCollectors.init()
         }
         PlatformEvents.CLIENT_PLAYER_LOGOUT.subscribe {
             if (pokefinderSettings?.changed == true) {

@@ -25,8 +25,6 @@ fun GuiGraphics.renderSpawnDataTooltip(
 ) {
     val body = mutableListOf<MutableComponent>(
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
-        Component.translatable("gui.cobblenav.spawn_data.encountered")
-            .append(Component.translatable("gui.cobblenav.${spawnData.encountered}"))
     )
 
     spawnData.conditions.forEach {
