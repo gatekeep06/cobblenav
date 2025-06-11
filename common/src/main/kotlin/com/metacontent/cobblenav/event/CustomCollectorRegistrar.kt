@@ -6,5 +6,5 @@ import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 interface CustomCollectorRegistrar {
     fun register(collector: ConditionCollector<*>): CustomCollectorRegistrar
 
-    fun registerBlock(collector: BlockConditionCollector<*>): CustomCollectorRegistrar
+    fun register(collector: BlockConditionCollector<*>): CustomCollectorRegistrar
 }

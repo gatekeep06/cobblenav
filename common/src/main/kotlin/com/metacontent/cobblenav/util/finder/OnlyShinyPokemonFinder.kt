@@ -6,9 +6,9 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 
 object OnlyShinyPokemonFinder : PokemonFinder() {
-    override fun select(pokemonEntities: List<PokemonEntity>, player: ServerPlayer, level: ServerLevel): FoundPokemon {
+    override fun select(pokemonEntities: List<PokemonEntity>, player: ServerPlayer, serverLevel: ServerLevel): FoundPokemon {
         val shinyPokemonEntities = pokemonEntities.filter { it.pokemon.shiny }
-        val entity = selectNearest(shinyPokemonEntities, player, level) ?: return FoundPokemon.NOT_FOUND
+        val entity = selectNearest(shinyPokemonEntities, player, serverLevel) ?: return FoundPokemon.NOT_FOUND
         val pokemon = entity.pokemon
         return FoundPokemon(
             found = true,
