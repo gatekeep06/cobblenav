@@ -81,7 +81,7 @@ class LocationScreen(
             onSortingChange()
         }
     private lateinit var biome: String
-    private var loading = false
+    var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     override var hoveredWidget: SpawnDataWidget? = null

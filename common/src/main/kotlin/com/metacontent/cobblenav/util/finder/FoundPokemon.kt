@@ -1,9 +1,10 @@
 package com.metacontent.cobblenav.util.finder
 
 import com.cobblemon.mod.common.api.net.Encodable
-import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.readText
+import com.cobblemon.mod.common.util.writeString
+import com.cobblemon.mod.common.util.writeText
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 
@@ -46,27 +47,18 @@ data class FoundPokemon(
         buffer.writeFloat(rating)
     }
 
-    data class Builder(
-        var found: Boolean = NOT_FOUND.found,
-        var entityId: Int = NOT_FOUND.entityId,
-        var aspects: Set<String> = NOT_FOUND.aspects,
-        var level: Int = NOT_FOUND.level,
-        var potentialStars: Int = NOT_FOUND.potentialStars,
-        var ability: Component = NOT_FOUND.ability,
-        var isAbilityHidden: Boolean = NOT_FOUND.isAbilityHidden,
-        var eggMove: Component = NOT_FOUND.eggMove,
+    class Builder {
+        var found: Boolean = NOT_FOUND.found
+        var entityId: Int = NOT_FOUND.entityId
+        var aspects: Set<String> = NOT_FOUND.aspects
+        var level: Int = NOT_FOUND.level
+        var potentialStars: Int = NOT_FOUND.potentialStars
+        var ability: Component = NOT_FOUND.ability
+        var isAbilityHidden: Boolean = NOT_FOUND.isAbilityHidden
+        var eggMove: Component = NOT_FOUND.eggMove
         var rating: Float = NOT_FOUND.rating
-    ) {
-        fun found(found: Boolean) = apply { this.found = found }
-        fun entityId(entityId: Int) = apply { this.entityId = entityId }
-        fun aspects(aspects: Set<String>) = apply { this.aspects = aspects }
-        fun level(level: Int) = apply { this.level = level }
-        fun potentialStars(potentialStars: Int) = apply { this.potentialStars = potentialStars }
-        fun ability(ability: Component) = apply { this.ability = ability }
-        fun abilityHidden(isAbilityHidden: Boolean) = apply { this.isAbilityHidden = isAbilityHidden }
-        fun eggMove(eggMove: Component) = apply { this.eggMove = eggMove }
-        fun rating(rating: Float) = apply { this.rating = rating }
 
-        fun build() = FoundPokemon(found, entityId, aspects, level, potentialStars, ability, isAbilityHidden, eggMove, rating)
+        fun build() =
+            FoundPokemon(found, entityId, aspects, level, potentialStars, ability, isAbilityHidden, eggMove, rating)
     }
 }

@@ -18,7 +18,7 @@ abstract class PokemonFinder {
     abstract fun select(
         pokemonEntities: List<PokemonEntity>,
         player: ServerPlayer,
-        level: ServerLevel = player.serverLevel()
+        serverLevel: ServerLevel = player.serverLevel()
     ): FoundPokemon
 
     protected fun selectNearest(
