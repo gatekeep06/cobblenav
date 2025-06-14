@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.util.CustomizableBlurEffectProcessor
+import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -140,3 +141,5 @@ fun PoseStack.pushAndPop(
     render()
     this.popPose()
 }
+
+fun gui(path: String) = cobblenavResource("textures/gui/$path.png")

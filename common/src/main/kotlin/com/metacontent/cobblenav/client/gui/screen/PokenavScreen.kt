@@ -7,6 +7,7 @@ import com.google.common.collect.Lists
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.NotificationWidget
 import com.metacontent.cobblenav.os.PokenavOS
@@ -38,12 +39,12 @@ abstract class PokenavScreen(
         const val ANIMATION_SPEED = 20f
         const val ANIMATION_OFFSET = 20f
         const val BACK_BUTTON_SIZE = 14
-        val DETAILS = cobblenavResource("textures/gui/pokenav_details.png")
-        val SCREEN_GLOW = cobblenavResource("textures/gui/pokenav_screen_glow.png")
-        val BORDERS = cobblenavResource("textures/gui/pokenav_borders.png")
-        val SCREEN = cobblenavResource("textures/gui/pokenav_screen.png")
-        val BACK_BUTTON = cobblenavResource("textures/gui/button/back.png")
-        val SUPPORT = cobblenavResource("textures/gui/button/support_button.png")
+        val DETAILS = gui("pokenav_details")
+        val SCREEN_GLOW = gui("pokenav_screen_glow")
+        val BORDERS = gui("pokenav_borders")
+        val SCREEN = gui("pokenav_screen")
+        val BACK_BUTTON = gui("button/back")
+        val SUPPORT = gui("button/support_button")
     }
 
     val scale = CobblenavClient.config.screenScale
