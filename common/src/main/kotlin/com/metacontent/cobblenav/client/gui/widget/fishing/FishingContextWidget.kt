@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.widget.fishing
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.api.fishingcontext.CloudRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
@@ -40,9 +41,6 @@ class FishingContextWidget(
         val MOON = cobblenavResource("textures/gui/fishing/moon.png")
         val HOOK = cobblenavResource("textures/gui/fishing/hook.png")
         val STARS = cobblenavResource("textures/gui/fishing/stars.png")
-        val CLOUDS = listOf(
-            cobblenavResource("textures/gui/fishing/cloud.png")
-        )
     }
 
     private val centerX
@@ -50,6 +48,7 @@ class FishingContextWidget(
     private val centerY
         get() = y + height
 
+    private val cloudTextures = CloudRepository.clouds.toList()
     private val clouds = mutableListOf<Cloud>()
     private val xRange = -CLOUD_WIDTH..width
     private val yRange = 0..(height - 10 - CLOUD_HEIGHT)
@@ -172,7 +171,7 @@ class FishingContextWidget(
         clouds.forEach { cloud ->
             blitk(
                 matrixStack = guiGraphics.pose(),
-                texture = CLOUDS[cloud.type],
+                texture = cloudTextures.getOrNull(cloud.type),
                 x = x + cloud.position.x,
                 y = y + cloud.position.y,
                 width = CLOUD_WIDTH,
