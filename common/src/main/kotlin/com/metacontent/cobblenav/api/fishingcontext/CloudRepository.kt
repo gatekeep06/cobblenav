@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 
-object CloudRepository : JsonDataRegistry<List<ResourceLocation>> {
+object CloudRepository : JsonDataRegistry<CloudRepository.CloudList> {
     override val gson: Gson = GsonBuilder()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .setPrettyPrinting()
@@ -22,21 +22,24 @@ object CloudRepository : JsonDataRegistry<List<ResourceLocation>> {
     override val observable = SimpleObservable<CloudRepository>()
     override val resourcePath = "clouds"
     override val type = PackType.CLIENT_RESOURCES
-
-    @Suppress("UNCHECKED_CAST")
-    override val typeToken: TypeToken<List<ResourceLocation>> =
-        TypeToken.getParameterized(List::class.java, ResourceLocation::class.java) as TypeToken<List<ResourceLocation>>
+    override val typeToken: TypeToken<CloudList> = TypeToken.get(CloudList::class.java)
 
     val clouds = mutableSetOf<ResourceLocation>()
 
     override fun sync(player: ServerPlayer) {}
 
-    override fun reload(data: Map<ResourceLocation, List<ResourceLocation>>) {
+    override fun reload(data: Map<ResourceLocation, CloudList>) {
         clouds.clear()
         data.forEach { (_, list) ->
-            clouds.addAll(list)
+            if (list.replace) clouds.clear()
+            clouds.addAll(list.ids)
         }
         observable.emit(this)
         Cobblenav.LOGGER.info("Loaded {} clouds", clouds.size)
     }
+
+    data class CloudList(
+        val replace: Boolean,
+        val ids: List<ResourceLocation>
+    )
 }
