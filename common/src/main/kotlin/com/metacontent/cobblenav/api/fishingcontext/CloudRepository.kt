@@ -18,9 +18,9 @@ object CloudRepository : JsonDataRegistry<CloudRepository.CloudList> {
         .setPrettyPrinting()
         .disableHtmlEscaping()
         .create()
-    override val id = cobblenavResource("biome_platform_textures")
+    override val id = cobblenavResource("clouds")
     override val observable = SimpleObservable<CloudRepository>()
-    override val resourcePath = "clouds"
+    override val resourcePath = "fishing_context"
     override val type = PackType.CLIENT_RESOURCES
     override val typeToken: TypeToken<CloudList> = TypeToken.get(CloudList::class.java)
 
@@ -31,7 +31,7 @@ object CloudRepository : JsonDataRegistry<CloudRepository.CloudList> {
     override fun reload(data: Map<ResourceLocation, CloudList>) {
         clouds.clear()
         data.forEach { (_, list) ->
-            if (list.replace) clouds.clear()
+            if (list.replace == true) clouds.clear()
             clouds.addAll(list.ids)
         }
         observable.emit(this)
@@ -39,7 +39,7 @@ object CloudRepository : JsonDataRegistry<CloudRepository.CloudList> {
     }
 
     data class CloudList(
-        val replace: Boolean,
+        val replace: Boolean?,
         val ids: List<ResourceLocation>
     )
 }
