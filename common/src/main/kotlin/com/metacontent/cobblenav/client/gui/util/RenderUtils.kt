@@ -128,6 +128,23 @@ fun interpolateChannel(start: Int, end: Int, progress: Float): Int {
     return (start + (end - start) * progress).toInt().coerceIn(0, 255)
 }
 
+fun dayCycleColor(dayTime: Long, dayColor: RGB, nightColor: RGB): RGB {
+    return when (val normalizedTime = dayTime % 24000) {
+        in 12040..13670 -> {
+            val progress = (normalizedTime - 12040) / 1630f
+            interpolate(dayColor, nightColor, progress)
+        }
+
+        in 22331..23961 -> {
+            val progress = (normalizedTime - 22331) / 1630f
+            interpolate(nightColor, dayColor, progress)
+        }
+
+        in 13670..22331 -> nightColor
+        else -> dayColor
+    }
+}
+
 fun PoseStack.pushAndPop(
     translate: Vector3d? = null,
     mulPose: Quaternionf? = null,

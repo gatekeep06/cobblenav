@@ -3,10 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.entity.PoseType
-import com.metacontent.cobblenav.client.gui.util.RGB
-import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.interpolate
-import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
+import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
 import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
@@ -44,7 +41,7 @@ class FishingnavScreen(
         const val BUTTON_WIDTH = 15
         const val BUTTON_HEIGHT = 16
         const val BUTTON_GAP = 14
-        private val DAY_COLOR = RGB(117, 230, 218)
+        private val DAY_COLOR = RGB(115, 215, 255)
         private val NIGHT_COLOR = RGB(2, 1, 39)
         val PANEL = gui("fishing/panel")
         val DEPTH = gui("fishing/depth_symbol")
@@ -55,23 +52,7 @@ class FishingnavScreen(
     }
 
     override val color: Int
-        get() {
-            val normalizedTime = (player?.clientLevel?.dayTime ?: 0) % 24000
-            return when (normalizedTime) {
-                in 12040..13670 -> {
-                    val progress = (normalizedTime - 12040) / 1630f
-                    interpolate(DAY_COLOR, NIGHT_COLOR, progress).toColor()
-                }
-
-                in 22331..23961 -> {
-                    val progress = (normalizedTime - 22331) / 1630f
-                    interpolate(NIGHT_COLOR, DAY_COLOR, progress).toColor()
-                }
-
-                in 13670..22331 -> NIGHT_COLOR.toColor()
-                else -> DAY_COLOR.toColor()
-            }
-        }
+        get() = dayCycleColor(player?.clientLevel?.dayTime ?: 0L, DAY_COLOR, NIGHT_COLOR).toColor()
 
     var loading = false
     override var hoveredWidget: SpawnDataWidget? = null
@@ -153,7 +134,7 @@ class FishingnavScreen(
                 width = fishingTable.width,
                 columns = 5,
                 minHeight = BUCKET_VIEW_MIN_HEIGHT,
-                index = index,
+                depthProgress = index / buckets.size.toFloat(),
                 bucket = bucket,
                 verticalPadding = 4f
             )

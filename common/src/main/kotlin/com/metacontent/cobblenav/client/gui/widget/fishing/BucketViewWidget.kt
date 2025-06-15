@@ -2,20 +2,16 @@ package com.metacontent.cobblenav.client.gui.widget.fishing
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.client.gui.util.RGB
-import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.interpolate
-import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.util.WeightedBucket
-import com.metacontent.cobblenav.util.cobblenavResource
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import org.joml.Vector3d
 import kotlin.math.max
-import kotlin.math.sqrt
 
 class BucketViewWidget(
     x: Int,
@@ -26,7 +22,7 @@ class BucketViewWidget(
     verticalPadding: Float = 0f,
     horizontalPadding: Float = (width - columns * columnWidth) / (columns - 1f),
     val minHeight: Int,
-    val index: Int,
+    val depthProgress: Float,
     val bucket: WeightedBucket
 ) : TableView<ScrollableItemWidget<FishingDataWidget>>(
     x = x,
@@ -42,12 +38,22 @@ class BucketViewWidget(
         const val BUCKET_PADDING = 4
         const val BUCKET_WIDTH = 60
         const val DITHERING_HEIGHT = 20
-        val UP_COLOR = RGB(0, 64, 128)
-        val DOWN_COLOR = RGB(0, 13, 25)
+        val UP_DAY_COLOR = RGB(0, 104, 179)
+        val UP_NIGHT_COLOR = RGB(0, 51, 102)
+        val DOWN_COLOR = RGB(0, 0, 0)
         val DITHERING = gui("fishing/dithering")
     }
 
-    val color = interpolate(UP_COLOR, DOWN_COLOR, index / 4f)
+    val color
+        get() = interpolate(
+            dayCycleColor(
+                Minecraft.getInstance().level?.dayTime ?: 0L,
+                UP_DAY_COLOR,
+                UP_NIGHT_COLOR
+            ),
+            DOWN_COLOR,
+            depthProgress
+        )
 
     init {
         height = minHeight
@@ -63,7 +69,7 @@ class BucketViewWidget(
             y + height,
             color.toColor()
         )
-        if (index != 0) {
+        if (depthProgress != 0f) {
             blitk(
                 matrixStack = poseStack,
                 texture = DITHERING,
