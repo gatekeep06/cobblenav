@@ -1,10 +1,15 @@
 package com.metacontent.cobblenav.client.gui.widget.fishing
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import com.cobblemon.mod.common.entity.PoseType
+import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.api.fishingcontext.CloudRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
+import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.systems.RenderSystem
@@ -13,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
+import org.joml.Quaternionf
 import org.joml.Vector2f
 import org.joml.Vector3d
 import org.joml.Vector3f
@@ -37,6 +43,7 @@ class FishingContextWidget(
         const val CLOUD_HEIGHT = 16
         const val MAX_CLOUD_OPACITY = 0.8f
         const val MAX_STARS_OPACITY = 1f
+        const val WINGULL_CHANCE = 6
         val SUN = cobblenavResource("textures/gui/fishing/sun.png")
         val MOON = cobblenavResource("textures/gui/fishing/moon.png")
         val HOOK = cobblenavResource("textures/gui/fishing/hook.png")
@@ -52,6 +59,13 @@ class FishingContextWidget(
     private val clouds = mutableListOf<Cloud>()
     private val xRange = -CLOUD_WIDTH..width
     private val yRange = 0..(height - 10 - CLOUD_HEIGHT)
+    private val displayWingull = (level?.random?.nextInt(100) ?: 0) <= WINGULL_CHANCE
+    private val wingull by lazy {
+        PokemonProperties.parse("species=wingull").asRenderablePokemon()
+    }
+    private val wingullState by lazy { FloatingState() }
+    private var wingullPosition = 0f
+    private var wingullVelocity = 0.2f
     private var cloudOpacity = 0f
     private var starsOpacity = 0f
 
@@ -165,6 +179,25 @@ class FishingContextWidget(
         }
 
         renderClouds(guiGraphics, i, j, f)
+
+        if (displayWingull) {
+            if (wingullPosition > 6 * width || wingullPosition < -5 * width) {
+                wingullVelocity = -wingullVelocity
+            }
+            drawPokemon(
+                poseStack = poseStack,
+                pokemon = wingull,
+                x = x - 10 + wingullPosition,
+                y = y + 10f,
+                z = 10f,
+                delta = f,
+                state = wingullState,
+                poseType = PoseType.FLY,
+                scale = 5f,
+                rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(0f, if (wingullVelocity > 0) 270f else 90f, 0f))
+            )
+            wingullPosition += wingullVelocity
+        }
     }
 
     private fun renderClouds(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
