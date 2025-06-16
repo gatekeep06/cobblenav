@@ -10,7 +10,7 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val useSwimmingAnimationIfSubmerged = true
     val pokefinderOverlayOffset = 10
     val trackArrowYOffset = 80
-    val maxCloudNumber = 12
+    val maxCloudNumber = 8
     val maxCloudVelocity = 6
     val collectableClientConditions = mutableMapOf(
         "encounter" to true,
