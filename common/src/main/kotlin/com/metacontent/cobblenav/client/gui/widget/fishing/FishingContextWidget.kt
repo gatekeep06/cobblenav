@@ -10,6 +10,7 @@ import com.metacontent.cobblenav.api.fishingcontext.CloudRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.systems.RenderSystem
@@ -26,6 +27,7 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 class FishingContextWidget(
     x: Int,
@@ -39,15 +41,15 @@ class FishingContextWidget(
         const val SUN_HEIGHT = 21
         const val HOOK_WIDTH = 10
         const val HOOK_HEIGHT = 12
-        const val CLOUD_WIDTH = 30
-        const val CLOUD_HEIGHT = 16
-        const val MAX_CLOUD_OPACITY = 0.8f
+        const val CLOUD_WIDTH = 40
+        const val CLOUD_HEIGHT = 21
+        const val MAX_CLOUD_OPACITY = 0.95f
         const val MAX_STARS_OPACITY = 1f
         const val WINGULL_CHANCE = 6
-        val SUN = cobblenavResource("textures/gui/fishing/sun.png")
-        val MOON = cobblenavResource("textures/gui/fishing/moon.png")
-        val HOOK = cobblenavResource("textures/gui/fishing/hook.png")
-        val STARS = cobblenavResource("textures/gui/fishing/stars.png")
+        val SUN = gui("fishing/sun")
+        val MOON = gui("fishing/moon")
+        val HOOK = gui("fishing/hook")
+        val STARS = gui("fishing/stars")
     }
 
     private val centerX
@@ -59,7 +61,7 @@ class FishingContextWidget(
     private val clouds = mutableListOf<Cloud>()
     private val xRange = -CLOUD_WIDTH..width
     private val yRange = 0..(height - 10 - CLOUD_HEIGHT)
-    private val displayWingull = (level?.random?.nextInt(100) ?: 0) <= WINGULL_CHANCE
+    private val displayWingull = Random.Default.nextInt(100) <= WINGULL_CHANCE
     private val wingull by lazy {
         PokemonProperties.parse("species=wingull").asRenderablePokemon()
     }
@@ -181,7 +183,7 @@ class FishingContextWidget(
         renderClouds(guiGraphics, i, j, f)
 
         if (displayWingull) {
-            if (wingullPosition > 6 * width || wingullPosition < -5 * width) {
+            if (wingullPosition > 3 * width || wingullPosition < -2 * width) {
                 wingullVelocity = -wingullVelocity
             }
             drawPokemon(
