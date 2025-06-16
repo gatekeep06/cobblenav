@@ -20,7 +20,7 @@ object CloudRepository : JsonDataRegistry<CloudRepository.CloudList> {
         .create()
     override val id = cobblenavResource("clouds")
     override val observable = SimpleObservable<CloudRepository>()
-    override val resourcePath = "fishing_context"
+    override val resourcePath = "clouds"
     override val type = PackType.CLIENT_RESOURCES
     override val typeToken: TypeToken<CloudList> = TypeToken.get(CloudList::class.java)
 
