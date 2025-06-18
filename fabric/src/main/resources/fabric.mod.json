@@ -5,10 +5,9 @@
   "name": "Cobblenav",
   "description": "Cobblenav (Cobblemon Pokenav) is a sidemod that adds a pokenav item similar to the one featured in the Pokemon RS games",
   "authors": [
-    "gatekeep"
+    "gatekeep06"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "MPL-2.0",
