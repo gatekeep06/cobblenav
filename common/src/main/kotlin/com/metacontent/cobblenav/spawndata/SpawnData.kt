@@ -3,7 +3,10 @@ package com.metacontent.cobblenav.spawndata
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.readText
+import com.cobblemon.mod.common.util.writeString
+import com.cobblemon.mod.common.util.writeText
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
@@ -18,7 +21,7 @@ data class SpawnData(
     val conditions: MutableList<MutableComponent>,
     val blockConditions: BlockConditions
 ) : Encodable {
-    val encountered = knowledge != PokedexEntryProgress.ENCOUNTERED
+    val encountered = knowledge != PokedexEntryProgress.NONE
 
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnData = SpawnData(
