@@ -35,7 +35,7 @@ object SpawnDataHelper {
         val speciesRecord = detail.pokemon.species?.asIdentifierDefaultingNamespace()?.let {
             Cobblemon.playerDataManager.getPokedexData(player).getSpeciesRecord(it)
         }
-        val knowledge = speciesRecord?.getFormRecord(renderablePokemon.form.name)?.knowledge
+        val knowledge = speciesRecord?.getFormRecord(detail.pokemon.form ?: "Normal")?.knowledge
             ?: PokedexEntryProgress.NONE
         val encountered = knowledge != PokedexEntryProgress.NONE
 
