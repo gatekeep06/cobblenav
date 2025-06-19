@@ -7,6 +7,7 @@ import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.overlay.TrackArrowOverlay
 import com.metacontent.cobblenav.client.settings.ClientSettingsDataManager
 import com.metacontent.cobblenav.client.settings.PokefinderSettings
+import com.metacontent.cobblenav.client.settings.PokenavSettings
 import com.metacontent.cobblenav.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.item.Pokefinder
@@ -20,6 +21,7 @@ object CobblenavClient {
     lateinit var implementation: ClientImplementation
     lateinit var config: ClientCobblenavConfig
     private val settingsManager = ClientSettingsDataManager
+    var pokenavSettings: PokenavSettings? = null
     var pokefinderSettings: PokefinderSettings? = null
     val pokefinderOverlay: PokefinderOverlay by lazy {
         val overlay = PokefinderOverlay()
@@ -32,11 +34,16 @@ object CobblenavClient {
         config = Config.load(ClientCobblenavConfig::class.java)
         this.implementation = implementation
         PlatformEvents.CLIENT_PLAYER_LOGIN.subscribe {
+            pokenavSettings =
+                settingsManager.load(PokenavSettings.NAME, PokenavSettings::class.java) as PokenavSettings
             pokefinderSettings =
                 settingsManager.load(PokefinderSettings.NAME, PokefinderSettings::class.java) as PokefinderSettings
             ClientCollectors.init()
         }
         PlatformEvents.CLIENT_PLAYER_LOGOUT.subscribe {
+            if (pokenavSettings?.changed == true) {
+                settingsManager.save(pokenavSettings!!)
+            }
             if (pokefinderSettings?.changed == true) {
                 settingsManager.save(pokefinderSettings!!)
             }

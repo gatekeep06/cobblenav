@@ -19,9 +19,12 @@ data class BlockConditions(
 
     val asItemStacks by lazy {
         blocks.map {
-            var block = BuiltInRegistries.BLOCK.get(it)
-            if (block is GrowingPlantBlock) {
-                block = (block as GrowingPlantBlockMixin).invokeGetHeadBlock()
+            val block = BuiltInRegistries.BLOCK.get(it).let { block ->
+                if (block is GrowingPlantBlock) {
+                    (block as GrowingPlantBlockMixin).invokeGetHeadBlock()
+                } else {
+                    block
+                }
             }
             ItemStack(block)
         }

@@ -9,7 +9,6 @@
         "GuiMixin"
     ],
     "mixins": [
-        "EntityMixin",
         "PokeRodFishingBobberEntityMixin",
         "PokeRodItemMixin"
     ],

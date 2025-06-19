@@ -122,7 +122,6 @@ class FishingnavScreen(
 
     fun receiveInitData(
         buckets: List<WeightedBucket>,
-        applyBuckets: Boolean,
         pokeBall: ResourceLocation,
         lineColor: String,
         baitItem: ItemStack

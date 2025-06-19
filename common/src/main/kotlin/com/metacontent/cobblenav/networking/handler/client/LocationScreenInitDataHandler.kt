@@ -9,7 +9,7 @@ object LocationScreenInitDataHandler : ClientNetworkPacketHandler<LocationScreen
     override fun handle(packet: LocationScreenInitDataPacket, client: Minecraft) {
         val screen = client.screen
         if (screen is LocationScreen) {
-            screen.receiveInitData(packet.buckets, packet.biome, packet.bucketIndex, packet.sorting, packet.applyBucket)
+            screen.receiveInitData(packet.buckets, packet.biome)
         }
     }
 }
