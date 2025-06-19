@@ -3,10 +3,7 @@ package com.metacontent.cobblenav.client.gui.widget
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
-import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
-import com.metacontent.cobblenav.client.gui.util.splitText
+import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.button.PokenavButton
 import com.metacontent.cobblenav.util.cobblenavResource
@@ -37,10 +34,10 @@ class ContextMenuWidget(
         const val BUTTON_SPACE: Int = 3
         const val OPENING: Float = 2f
         val COLOR: Int = FastColor.ARGB32.color(225, 132, 195, 219)
-        val MENU_TOP = cobblenavResource("textures/gui/context_menu_top.png")
-        val MENU_BOTTOM = cobblenavResource("textures/gui/context_menu_bottom.png")
-        val ACCEPT = cobblenavResource("textures/gui/button/accept_button.png")
-        val CANCEL = cobblenavResource("textures/gui/button/cancel_button.png")
+        val MENU_TOP = gui("context_menu_top")
+        val MENU_BOTTOM = gui("context_menu_bottom")
+        val ACCEPT = gui("button/accept_button")
+        val CANCEL = gui("button/cancel_button")
     }
 
     private var acceptButton: IconButton? = null

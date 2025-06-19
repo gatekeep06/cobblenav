@@ -5,10 +5,10 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.InfoButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.finder.PokemonFinder
 import com.mojang.blaze3d.vertex.PoseStack
@@ -37,12 +37,12 @@ class StatsTableWidget(
         const val NOTIFICATION_WIDTH = 7
         const val NOTIFICATION_HEIGHT = 8
         const val NOTIFICATION_OFFSET = 1
-        val TABLE = cobblenavResource("textures/gui/finder/stats_table.png")
-        val NAME = cobblenavResource("textures/gui/finder/name.png")
-        val TYPE = cobblenavResource("textures/gui/finder/type.png")
-        val ABILITY = cobblenavResource("textures/gui/finder/ability.png")
-        val EGG_MOVE = cobblenavResource("textures/gui/finder/egg_move.png")
-        val NOTIFICATION = cobblenavResource("textures/gui/finder/notification.png")
+        val TABLE = gui("finder/stats_table")
+        val NAME = gui("finder/name")
+        val TYPE = gui("finder/type")
+        val ABILITY = gui("finder/ability")
+        val EGG_MOVE = gui("finder/egg_move")
+        val NOTIFICATION = gui("finder/notification")
     }
 
     private val iconTable = TableView<InfoButton>(

@@ -1,8 +1,8 @@
 package com.metacontent.cobblenav.client.gui.widget.button
 
 import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.renderMultilineTextTooltip
-import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
@@ -22,10 +22,23 @@ class InfoButton(
     vOffset: Int = 0,
     private val parent: PokenavScreen,
     private val headerColor: Int = FastColor.ARGB32.color(255, 173, 232, 244)
-) : IconButton(pX, pY, pWidth, pHeight, false, { it.isFocused = !it.isFocused }, texture, header, textureWidth, textureHeight, uOffset, vOffset) {
+) : IconButton(
+    pX,
+    pY,
+    pWidth,
+    pHeight,
+    false,
+    { it.isFocused = !it.isFocused },
+    texture,
+    header,
+    textureWidth,
+    textureHeight,
+    uOffset,
+    vOffset
+) {
     companion object {
         const val TARGET_WIDTH: Int = 170
-        val TEXTURE = cobblenavResource("textures/gui/button/support_button.png")
+        val TEXTURE = gui("button/support_button")
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {

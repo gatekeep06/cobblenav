@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.TextFieldWidget
 import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.util.cobblenavResource
@@ -29,8 +30,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         const val Y_TEXT_OFFSET: Int = 4
         const val Y_FIELD_OFFSET: Int = 14
         const val Y_CHECK_BOX_OFFSET: Int = 10
-        val BACKGROUND = cobblenavResource("textures/gui/pokefinder/background.png")
-        val LOGO = cobblenavResource("textures/gui/pokefinder/logo.png")
+        val BACKGROUND = gui("pokefinder/background")
+        val LOGO = gui("pokefinder/logo")
     }
 
     val player: LocalPlayer? = Minecraft.getInstance().player

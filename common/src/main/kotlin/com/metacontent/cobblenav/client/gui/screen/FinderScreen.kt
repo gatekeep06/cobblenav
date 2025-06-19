@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
@@ -14,7 +15,6 @@ import com.metacontent.cobblenav.client.gui.widget.finder.StatsTableWidget
 import com.metacontent.cobblenav.networking.packet.server.FindPokemonPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -44,12 +44,12 @@ class FinderScreen(
         const val STAR_OFFSET = 10
         const val STAR_GAP = 10
         const val FIND_BUTTON_TEXT = "gui.cobblenav.finder.find_button"
-        val POKEBALL_TOP = cobblenavResource("textures/gui/finder/pokeball_screen_top.png")
-        val POKEBALL_BOTTOM = cobblenavResource("textures/gui/finder/pokeball_screen_bottom.png")
-        val DECORATIONS_0 = cobblenavResource("textures/gui/finder/finder_decorations_0.png")
-        val FIND_BUTTON = cobblenavResource("textures/gui/button/find_button.png")
-        val POKEFINDER = cobblenavResource("textures/gui/button/pokefinder_button.png")
-        val STAR = cobblenavResource("textures/gui/finder/potential_star.png")
+        val POKEBALL_TOP = gui("finder/pokeball_screen_top")
+        val POKEBALL_BOTTOM = gui("finder/pokeball_screen_bottom")
+        val DECORATIONS_0 = gui("finder/finder_decorations_0")
+        val FIND_BUTTON = gui("button/find_button")
+        val POKEFINDER = gui("button/pokefinder_button")
+        val STAR = gui("finder/potential_star")
     }
 
     override val color = FastColor.ARGB32.color(255, 190, 72, 72)

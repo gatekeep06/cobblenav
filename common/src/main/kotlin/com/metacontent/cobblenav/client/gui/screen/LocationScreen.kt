@@ -22,7 +22,6 @@ import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -37,7 +36,7 @@ class LocationScreen(
     animateOpening: Boolean = false
 ) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataTooltipDisplayer {
     companion object {
-        val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
+        val LOADING = gui("location/loading_animation")
         const val ANIMATION_SHEET_WIDTH = 144
         const val FRAME_WIDTH = 18
         const val FRAME_HEIGHT = 22
@@ -56,9 +55,9 @@ class LocationScreen(
         const val VIEW_HEIGHT = 182
 
         //        val VIEW = cobblenavResource("textures/gui/location/view.png")
-        val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
-        val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
-        val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
+        val SORT_ASCENDING = gui("button/sort_button_ascending")
+        val SORT_DESCENDING = gui("button/sort_button_descending")
+        val REFRESH = gui("button/refresh_button")
     }
 
     var viewX = 0

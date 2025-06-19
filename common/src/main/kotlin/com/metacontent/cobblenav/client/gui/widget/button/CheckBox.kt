@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.client.gui.widget.button
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.client.gui.util.gui
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.MutableComponent
@@ -24,7 +24,7 @@ class CheckBox(
 }) {
     companion object {
         val COLOR = FastColor.ARGB32.color(255, 240, 240, 240)
-        val CHECKMARK = cobblenavResource("textures/gui/button/checked.png")
+        val CHECKMARK = gui("button/checked")
     }
 
     var checked = default
@@ -46,8 +46,7 @@ class CheckBox(
                     width = height,
                     height = height
                 )
-            }
-            else {
+            } else {
                 guiGraphics.fill(x + 2, y + 2, x + height - 2, y + height - 2, COLOR)
             }
         }

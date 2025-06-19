@@ -9,9 +9,9 @@ import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -36,9 +36,9 @@ class FoundPokemonWidget(
         const val NOTIFICATION_HEIGHT = 15
         const val NOTIFICATION_OFFSET = 30
         const val SHINY_ASPECT = "shiny"
-        val DECORATIONS_1 = cobblenavResource("textures/gui/finder/finder_decorations_1.png")
-        val DECORATIONS_2 = cobblenavResource("textures/gui/finder/finder_decorations_2.png")
-        val NOTIFICATION = cobblenavResource("textures/gui/finder/shiny_notification.png")
+        val DECORATIONS_1 = gui("finder/finder_decorations_1")
+        val DECORATIONS_2 = gui("finder/finder_decorations_2")
+        val NOTIFICATION = gui("finder/shiny_notification")
     }
 
     private val pose =

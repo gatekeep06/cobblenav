@@ -15,9 +15,9 @@ import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -45,7 +45,7 @@ open class SpawnDataWidget(
         const val MODEL_HEIGHT = 35
         const val POKE_BALL_OFFSET = 6
         val FORMAT = DecimalFormat("#.##")
-        val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
+        val BROKEN_MODEL = gui("location/broken_model")
     }
 
     private var chanceString = getChanceString(chanceMultiplier)

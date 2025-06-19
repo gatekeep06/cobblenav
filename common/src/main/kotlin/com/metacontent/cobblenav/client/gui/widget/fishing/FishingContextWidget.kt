@@ -12,7 +12,6 @@ import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics

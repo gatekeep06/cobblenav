@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -15,10 +16,10 @@ import net.minecraft.server.packs.PackType
 object BiomePlatformRenderDataRepository : JsonDataRegistry<BiomePlatformRenderData> {
     val DEFAULT = BiomePlatformRenderData(
         id = cobblenavResource("default"),
-        background = cobblenavResource("textures/gui/biome_platforms/default.png"),
-        foreground = cobblenavResource("textures/gui/biome_platforms/default_foreground.png"),
-        selectedBackground = cobblenavResource("textures/gui/biome_platforms/default_selected.png"),
-        selectedForeground = cobblenavResource("textures/gui/biome_platforms/default_foreground_selected.png"),
+        background = gui("biome_platforms/default"),
+        foreground = gui("biome_platforms/default_foreground"),
+        selectedBackground = gui("biome_platforms/default_selected"),
+        selectedForeground = gui("biome_platforms/default_foreground_selected"),
         selectedPokemonOffset = 2
     )
     val FISHING = BiomePlatformRenderData(

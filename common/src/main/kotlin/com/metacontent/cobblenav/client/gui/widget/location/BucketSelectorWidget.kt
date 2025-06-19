@@ -4,9 +4,9 @@ import com.cobblemon.mod.common.api.text.onHover
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.translateOr
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
-import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -22,8 +22,8 @@ class BucketSelectorWidget(
         const val BUTTON_HEIGHT: Int = 9
         const val SPACE: Int = 1
         const val BUCKET_KEY_BASE: String = "bucket.cobblenav"
-        val NEXT = cobblenavResource("textures/gui/button/next_button.png")
-        val PREV = cobblenavResource("textures/gui/button/prev_button.png")
+        val NEXT = gui("button/next_button")
+        val PREV = gui("button/prev_button")
     }
 
     private val prevButton = IconButton(

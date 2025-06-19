@@ -5,9 +5,9 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.item.Pokefinder
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -29,8 +29,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         const val COMPASS_HEIGHT = 23
         const val COMPASS_OFFSET = 4
         const val RADAR_SCALE = 0.5
-        val BACKGROUND = cobblenavResource("textures/gui/pokefinder/overlay.png")
-        val COMPASS = cobblenavResource("textures/gui/pokefinder/compass.png")
+        val BACKGROUND = gui("pokefinder/overlay")
+        val COMPASS = gui("pokefinder/compass")
     }
 
     private val minecraft = Minecraft.getInstance()
