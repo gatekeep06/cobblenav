@@ -36,6 +36,8 @@ class CobblenavNeoForge : Implementation {
             this@CobblenavNeoForge.commandArgumentTypes.register(this)
             Cobblenav.init(this@CobblenavNeoForge)
             addListener(networkManager::registerMessages)
+        }
+        with(NeoForge.EVENT_BUS) {
             addListener(::onWanderingTraderRegistry)
         }
         if (FMLEnvironment.dist == Dist.CLIENT) {
