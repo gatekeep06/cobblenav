@@ -13,6 +13,7 @@
 - Added small Cobblemon Counter integration.
 - Added blur when blocking widgets.
 - Added display of PokéBalls near caught pokémon.
+- Added a parameter to the client config to disable the blur effect. Due to a conflict with an unknown mod, the blur effect may cause display issues in the UI.
 - Fixed an issue where the radial menu could be opened when opening the context menu.
 - A lot of refactoring.
 
