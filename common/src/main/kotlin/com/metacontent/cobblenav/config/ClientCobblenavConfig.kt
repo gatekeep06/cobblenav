@@ -5,6 +5,7 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     override val fileName = "client-config.json"
 
     val screenScale = 1f
+    val enableBlurEffect = true
     val sendErrorMessagesToChat = true
     val obscureUnknownPokemon = true
     val useSwimmingAnimationIfSubmerged = true
@@ -13,10 +14,10 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val maxCloudNumber = 8
     val maxCloudVelocity = 6
     val collectableClientConditions = mutableMapOf(
-        "encounter" to true,
-        "overall_counts" to true,
-        "streak_counts" to true,
-        "fishing_count" to true
+        "encounter"         to true,
+        "overall_counts"    to true,
+        "streak_counts"     to true,
+        "fishing_count"     to true
     )
 
     override fun applyToLoadedConfig(default: ClientCobblenavConfig) {

@@ -64,6 +64,7 @@ fun GuiGraphics.drawBlurredArea(
     blur: Float = 1f,
     delta: Float
 ) {
+    if (!CobblenavClient.config.enableBlurEffect) return
     this.cobblenavScissor(x1, y1, x2, y2)
     Minecraft.getInstance().gameRenderer.processBlurEffect(blur, delta)
     Minecraft.getInstance().mainRenderTarget.bindWrite(false)
