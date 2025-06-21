@@ -10,8 +10,8 @@ import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
-import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
+import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
@@ -83,14 +83,28 @@ object Cobblenav {
         CobblenavEvents.TITLES_GRANTED.subscribe { event ->
             event.player?.let { player ->
                 val titles = event.titleIds.mapNotNull { TrainerTitles.getTitle(it) }
-                titles.forEach { player.sendSystemMessage(Component.translatable("message.cobblenav.title_granted", it.name())) }
+                titles.forEach {
+                    player.sendSystemMessage(
+                        Component.translatable(
+                            "message.cobblenav.title_granted",
+                            it.name()
+                        )
+                    )
+                }
             }
         }
 
         CobblenavEvents.TITLES_REMOVED.subscribe { event ->
             event.player?.let { player ->
                 val titles = event.titleIds.mapNotNull { TrainerTitles.getTitle(it) }
-                titles.forEach { player.sendSystemMessage(Component.translatable("message.cobblenav.title_removed", it.name())) }
+                titles.forEach {
+                    player.sendSystemMessage(
+                        Component.translatable(
+                            "message.cobblenav.title_removed",
+                            it.name()
+                        )
+                    )
+                }
             }
         }
 
@@ -114,7 +128,11 @@ object Cobblenav {
     }
 
     private fun registerArgumentTypes() {
-        implementation.registerCommandArgument(cobblenavResource("trainer_title"), TrainerTitleArgument::class, SingletonArgumentInfo.contextFree(TrainerTitleArgument::title))
+        implementation.registerCommandArgument(
+            cobblenavResource("trainer_title"),
+            TrainerTitleArgument::class,
+            SingletonArgumentInfo.contextFree(TrainerTitleArgument::title)
+        )
     }
 
     fun resolveWandererTrades() = listOf(

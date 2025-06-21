@@ -2,8 +2,8 @@ package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.Cobblemon
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.CustomClientCollectorRegistrar
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.spawndata.collector.client.EncounterCollector

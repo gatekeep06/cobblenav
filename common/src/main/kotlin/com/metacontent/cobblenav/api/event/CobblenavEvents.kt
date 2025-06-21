@@ -8,6 +8,8 @@ import com.metacontent.cobblenav.api.event.fishing.FishTravelStartedEvent
 import com.metacontent.cobblenav.api.event.profile.ProfileDataCreated
 import com.metacontent.cobblenav.api.event.profile.TitlesGranted
 import com.metacontent.cobblenav.api.event.profile.TitlesRemoved
+import com.metacontent.cobblenav.event.CustomClientCollectorRegistrar
+import com.metacontent.cobblenav.event.CustomCollectorRegistrar
 
 object CobblenavEvents {
     @JvmStatic
@@ -30,4 +32,10 @@ object CobblenavEvents {
 
     @JvmStatic
     val CONTACTS_REMOVED = EventObservable<ContactsRemoved>()
+
+    val REGISTER_CUSTOM_COLLECTORS = EventObservable<CustomCollectorRegistrar>()
+
+    // CLIENT EVENTS
+
+    val REGISTER_CUSTOM_CLIENT_COLLECTORS = EventObservable<CustomClientCollectorRegistrar>()
 }

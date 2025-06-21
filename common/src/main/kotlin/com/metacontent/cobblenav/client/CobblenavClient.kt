@@ -11,9 +11,9 @@ import com.metacontent.cobblenav.client.settings.PokenavSettings
 import com.metacontent.cobblenav.config.ClientCobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.item.Pokefinder
+import com.metacontent.cobblenav.spawndata.collector.ClientCollectors
 import com.metacontent.cobblenav.storage.client.ClientContactPlayerData
 import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
-import com.metacontent.cobblenav.spawndata.collector.ClientCollectors
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
