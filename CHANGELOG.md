@@ -1,3 +1,21 @@
+# Update 2.2.3
+
+- Updated the FishingNav UI:
+  - Reduced size of fishing context widget.
+  - Added a panel with buttons to close the menu, refresh data, and switch between buckets.
+  - Added rare occurrence of Wingull.
+  - Minor color changes.
+  - Minor UI additions.
+  - Clouds can now be added via a resource pack.
+- Overhauled preference saving. Preferences are now saved locally in the client's pokenav settings file, located at `<game-dir>/cobblenav/settings/pokenav.json`, rather than in the player's nbt file on the server.
+- Revamped biome platform system.
+- Added a few new platforms.
+- Added small Cobblemon Counter integration.
+- Added blur when blocking widgets.
+- Added display of PokéBalls near caught pokémon.
+- Fixed an issue where the radial menu could be opened when opening the context menu.
+- A lot of refactoring.
+
 # Hotfix 2.2.2
 
 - Added the `enableMythsAndLegendsIntegration` parameter to the config to enable Myths And Legends condition collectors. Disabled by default, as many players are using an older, incompatible version of MaL and are unable to update.
