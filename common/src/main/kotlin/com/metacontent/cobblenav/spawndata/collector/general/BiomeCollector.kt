@@ -2,7 +2,9 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
-import com.cobblemon.mod.common.util.cobblemonResource
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
+import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.util.toResourceLocation
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
@@ -14,10 +16,10 @@ class BiomeCollector : GeneralConditionCollector() {
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): MutableComponent? {
-        val biomes = Component.translatable("gui.cobblenav.spawn_data.habitat")
-        condition.biomes
+        val biomes = condition.biomes
             ?.mapNotNull { it.toResourceLocation() }
             ?.filter {
                 contexts.any { context ->
@@ -27,10 +29,13 @@ class BiomeCollector : GeneralConditionCollector() {
                         ?.tags()?.map { it.location }?.toList() ?: return@any false
                     return@any biomeLocation == it || biomeTags.contains(it)
                 }
-            }
-            ?.distinct()
-            ?.forEach { biomes.append(Component.translatable(it.toLanguageKey("biome"))) }
-        if (biomes.siblings.isEmpty()) biomes.append(cobblemonResource("is_overworld").toLanguageKey("biome"))
-        return biomes
+            }?.toSet()
+        val habitat = Component.translatable("gui.cobblenav.spawn_data.habitat")
+        biomes?.let { set ->
+            builder.biomes = set
+            set.forEach { habitat.append(Component.translatable(it.toLanguageKey("biome")))  }
+        }
+        if (habitat.siblings.isEmpty()) habitat.append(cobblenavResource("any").toLanguageKey("biome"))
+        return habitat
     }
 }

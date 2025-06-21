@@ -27,8 +27,10 @@ object FindPokemonHandler : ServerNetworkPacketHandler<FindPokemonPacket> {
                     height,
                     width
                 )
-            ) {
-                pokemonEntity -> pokemonEntity.pokemon.isWild() && pokemonEntity.pokemon.species.name == packet.species && pokemonEntity.pokemon.aspects.containsAll(packet.aspects)
+            ) { pokemonEntity ->
+                pokemonEntity.pokemon.isWild()
+                        && pokemonEntity.pokemon.species.name == packet.species
+                        && pokemonEntity.pokemon.aspects.containsAll(packet.aspects)
             }
             FoundPokemonPacket(BestPokemonFinder.select(pokemonEntities, player)).sendToPlayer(player)
         }

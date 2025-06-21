@@ -1,27 +1,28 @@
 package com.metacontent.cobblenav.client.gui.overlay
 
-import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.CobblemonItems
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemDisplayContext
+import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
+import org.joml.Vector3d
 import org.joml.Vector3f
+import kotlin.math.PI
 import kotlin.math.atan2
+import kotlin.math.sqrt
 
 class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
-    companion object {
-        const val ARROW_SIZE: Int = 35
-        const val BASE_SIZE: Int = 37
-        val ARROW = cobblenavResource("textures/gui/finder/arrow.png")
-        val BASE = cobblenavResource("textures/gui/finder/arrow_base.png")
-    }
-
     private val minecraft = Minecraft.getInstance()
     private val offset = CobblenavClient.config.trackArrowYOffset
+    private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
     var tracking = false
     var entityId = -1
         set(value) {
@@ -40,35 +41,44 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
         val player = minecraft.player ?: return
 
         val poseStack = guiGraphics.pose()
-        val scale = minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
+        val scale =
+            minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
         val scaledOffset = (offset / scale).toInt()
         val x = minecraft.window.guiScaledWidth / 2
         val y = minecraft.window.guiScaledHeight - scaledOffset
-        val arrowSize = (ARROW_SIZE / scale).toInt()
-        val baseSize = (BASE_SIZE / scale).toInt()
 
-        val distanceVec = entity.position().vectorTo(player.position())
-        val angle = Math.toDegrees(atan2(distanceVec.z, distanceVec.x)).toFloat()
+        val distanceVec = player.position().vectorTo(entity.position())
+        val yaw = atan2(distanceVec.z, distanceVec.x).toFloat()
+        val horizontalDistance = sqrt(distanceVec.x * distanceVec.x + distanceVec.z * distanceVec.z)
+        val pitch = atan2(distanceVec.y, horizontalDistance).toFloat()
 
-        poseStack.pushPose()
-        poseStack.translate(x.toDouble(), y.toDouble(), 0.0)
-        blitk(
-            matrixStack = poseStack,
-            texture = BASE,
-            x = -baseSize / 2f,
-            y = -baseSize / 2f,
-            width = baseSize,
-            height = baseSize,
+        poseStack.pushAndPop(
+            translate = Vector3d(x.toDouble(), y.toDouble(), 0.0),
+            mulPose = Quaternionf()
+                .rotateZ(PI.toFloat())
+                .fromEulerXYZDegrees(Vector3f(player.xRot, -player.yRot, 0f))
+                .rotateY(0.5f * PI.toFloat() + yaw)
+                .rotateX(-pitch),
+            scale = Vector3f(50f, 50f, -50f)
+        ) {
+            minecraft.itemRenderer.renderStatic(
+                stack,
+                ItemDisplayContext.GROUND,
+                255,
+                1000,
+                poseStack,
+                guiGraphics.bufferSource(),
+                minecraft.level,
+                0
+            )
+        }
+
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.translatable("gui.cobblenav.finder.distance", distanceVec.length().toInt()),
+            x = x,
+            y = y + 20,
+            centered = true
         )
-        poseStack.mulPose(Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, 45f + angle - player.yHeadRot)))
-        blitk(
-            matrixStack = poseStack,
-            texture = ARROW,
-            x = 0,
-            y = -arrowSize,
-            width = arrowSize,
-            height = arrowSize
-        )
-        poseStack.popPose()
     }
 }

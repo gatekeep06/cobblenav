@@ -1,0 +1,8 @@
+{
+    "id": "cobblenav:water",
+    "background": "cobblenav:textures/gui/biome_platforms/water.png",
+    "foreground": "cobblenav:textures/gui/biome_platforms/default_foreground.png",
+    "selectedBackground": "cobblenav:textures/gui/biome_platforms/water_selected.png",
+    "selectedForeground": "cobblenav:textures/gui/biome_platforms/default_foreground_selected.png",
+    "selectedPokemonOffset": 2
+}

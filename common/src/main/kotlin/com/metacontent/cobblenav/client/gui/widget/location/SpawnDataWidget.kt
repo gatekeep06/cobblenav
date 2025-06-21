@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
+import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
@@ -9,35 +11,41 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemDisplayContext
+import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
+import org.joml.Vector3d
 import org.joml.Vector3f
 import java.text.DecimalFormat
+import kotlin.math.PI
 
-class SpawnDataWidget(
+open class SpawnDataWidget(
     x: Int,
     y: Int,
     val spawnData: SpawnData,
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
     private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
-    private val pokemonRotation: Vector3f = Vector3f(13F, 35F, 0F),
+    private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
-        const val WIDTH: Int = 40
-        const val HEIGHT: Int = 50
-        const val MODEL_HEIGHT: Int = 40
+        const val WIDTH = 45
+        const val HEIGHT = 45
+        const val MODEL_HEIGHT = 35
+        const val POKE_BALL_OFFSET = 6
         val FORMAT = DecimalFormat("#.##")
-        val BACKGROUND = cobblenavResource("textures/gui/location/pokeball_background.png")
-        val BROKEN_MODEL = cobblenavResource("textures/gui/location/broken_model.png")
+        val BROKEN_MODEL = gui("location/broken_model")
     }
 
     private var chanceString = getChanceString(chanceMultiplier)
@@ -49,28 +57,43 @@ class SpawnDataWidget(
     private val state = FloatingState()
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
+    protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
+    private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        if (ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()) {
-            blitk(
-                matrixStack = poseStack,
-                texture = BACKGROUND,
-                x = x + 2,
-                y = y + 2,
-                width = MODEL_HEIGHT - 4,
-                height = MODEL_HEIGHT - 4,
-                alpha = 0.5f
-            )
+        val selected = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
+
+        if (selected) {
             displayer.hoveredWidget = this
         }
+
+        platform.getBackground(selected)?.let {
+            blitk(
+                matrixStack = poseStack,
+                texture = it,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT
+            )
+            if (spawnData.knowledge == PokedexEntryProgress.CAUGHT) {
+                renderPokeBall(
+                    guiGraphics = guiGraphics,
+                    x = x.toDouble() + POKE_BALL_OFFSET,
+                    y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET - platform.getOffset(selected)
+                )
+            }
+        }
+
         if (!isModelBroken) {
             try {
+//                guiGraphics.fill(x, y, x + width, y + height, FastColor.ARGB32.color(100, 255, 255, 255))
                 drawPokemon(
                     poseStack = poseStack,
                     pokemon = spawnData.renderable,
                     x = x.toFloat() + width / 2,
-                    y = y.toFloat() + 8,
+                    y = y.toFloat() - platform.getOffset(selected),
                     z = 100f,
                     delta = delta,
                     state = state,
@@ -78,8 +101,7 @@ class SpawnDataWidget(
                     rotation = Quaternionf().fromEulerXYZDegrees(pokemonRotation),
                     obscured = obscured
                 )
-            }
-            catch (e: IllegalArgumentException) {
+            } catch (e: IllegalArgumentException) {
                 isModelBroken = true
                 val message = Component.translatable(
                     "gui.cobblenav.pokemon_rendering_exception",
@@ -92,8 +114,7 @@ class SpawnDataWidget(
                     Minecraft.getInstance().player?.sendSystemMessage(message.red())
                 }
             }
-        }
-        else {
+        } else {
             blitk(
                 matrixStack = poseStack,
                 texture = BROKEN_MODEL,
@@ -103,10 +124,26 @@ class SpawnDataWidget(
                 height = MODEL_HEIGHT - 4
             )
         }
+
+        platform.getForeground(selected)?.let {
+            poseStack.pushAndPop(
+                translate = Vector3d(0.0, 0.0, 300.0)
+            ) {
+                blitk(
+                    matrixStack = poseStack,
+                    texture = it,
+                    x = x,
+                    y = y,
+                    width = WIDTH,
+                    height = HEIGHT
+                )
+            }
+        }
+
         drawScaledText(
             guiGraphics,
             text = Component.literal(chanceString),
-            x = x + width / 2, y = y + MODEL_HEIGHT,
+            x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
             maxCharacterWidth = width,
             centered = true,
             shadow = true
@@ -124,5 +161,28 @@ class SpawnDataWidget(
     private fun getChanceString(chanceMultiplier: Float): String {
         val finalChance = spawnData.spawnChance * chanceMultiplier
         return if (finalChance <= 0.005f) ">0.01%" else FORMAT.format(finalChance) + "%"
+    }
+
+    private fun renderPokeBall(guiGraphics: GuiGraphics, x: Double, y: Double) {
+        val poseStack = guiGraphics.pose()
+
+        poseStack.pushAndPop(
+            translate = Vector3d(x, y, 2.0),
+            mulPose = Quaternionf()
+                .rotateZ(PI.toFloat())
+                .fromEulerXYZDegrees(pokemonRotation),
+            scale = Vector3f(15f, 15f, -15f)
+        ) {
+            Minecraft.getInstance().itemRenderer.renderStatic(
+                stack,
+                ItemDisplayContext.GROUND,
+                255,
+                1000,
+                poseStack,
+                guiGraphics.bufferSource(),
+                Minecraft.getInstance().level,
+                0
+            )
+        }
     }
 }

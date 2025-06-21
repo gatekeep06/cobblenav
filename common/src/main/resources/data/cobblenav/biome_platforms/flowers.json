@@ -1,0 +1,8 @@
+{
+    "id": "cobblenav:flowers",
+    "conditions": {
+        "biomes": [
+            "cobblemon:is_floral"
+        ]
+    }
+}

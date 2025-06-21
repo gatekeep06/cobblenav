@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.getTimeString
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -19,7 +20,7 @@ class StatusBarWidget(
         const val WIDTH: Int = DECORATION_WIDTH + CLOCKS_WIDTH + SPACE
         const val HEIGHT: Int = 6
         const val TEXT_SCALE: Float = 0.7f
-        val TEXTURE = cobblenavResource("textures/gui/status_bar.png")
+        val TEXTURE = gui("status_bar")
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {

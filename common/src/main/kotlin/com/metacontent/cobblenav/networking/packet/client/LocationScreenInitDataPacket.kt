@@ -10,19 +10,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 
 class LocationScreenInitDataPacket(
     val buckets: List<WeightedBucket>,
-    val biome: String,
-    val bucketIndex: Int,
-    val sorting: Sorting,
-    val applyBucket: Boolean
+    val biome: String
 ) : CobblenavNetworkPacket<LocationScreenInitDataPacket> {
     companion object {
         val ID = cobblenavResource("location_screen_init_data")
         fun decode(buffer: RegistryFriendlyByteBuf) = LocationScreenInitDataPacket(
             buffer.readList { WeightedBucket.decode(buffer) },
-            buffer.readString(),
-            buffer.readInt(),
-            buffer.readEnum(Sorting::class.java),
-            buffer.readBoolean()
+            buffer.readString()
         )
     }
 
@@ -31,8 +25,5 @@ class LocationScreenInitDataPacket(
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeCollection(buckets) { buf, bucket -> bucket.encode(buf as RegistryFriendlyByteBuf) }
         buffer.writeString(biome)
-        buffer.writeInt(bucketIndex)
-        buffer.writeEnum(sorting)
-        buffer.writeBoolean(applyBucket)
     }
 }

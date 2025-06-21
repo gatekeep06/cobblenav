@@ -1,3 +1,42 @@
+# Update 2.2.3
+
+- Updated the FishingNav UI:
+  - Reduced size of fishing context widget.
+  - Added a panel with buttons to close the menu, refresh data, and switch between buckets.
+  - Added rare occurrence of Wingull.
+  - Minor color changes.
+  - Minor UI additions.
+  - Clouds can now be added via a resource pack.
+- Overhauled preference saving. Preferences are now saved locally in the client's pokenav settings file, located at `<game-dir>/cobblenav/settings/pokenav.json`, rather than in the player's nbt file on the server.
+- Revamped biome platform system.
+- Added a few new platforms.
+- Added small Cobblemon Counter integration.
+- Added blur when blocking widgets.
+- Added display of PokéBalls near caught pokémon.
+- Added a parameter to the client config to disable the blur effect. Due to a conflict with an unknown mod, the blur effect may cause display issues in the UI.
+- Added Wanderer's PokéNav.
+- Fixed an issue where the radial menu could be opened when opening the context menu.
+- A lot of refactoring.
+
+# Hotfix 2.2.2
+
+- Added the `enableMythsAndLegendsIntegration` parameter to the config to enable Myths And Legends condition collectors. Disabled by default, as many players are using an older, incompatible version of MaL and are unable to update.
+- Fixed collector duplication when restarting the world.
+
+# Update 2.2.1
+
+- Removed unnecessary file name field from configs.
+- Added collectors for the Myths and Legends spawning conditions.
+- Changed the moment of collector registration.
+- Added event to register custom collectors.
+- Changed logging of collector registration.
+- Minor changes to UI colors.
+- Minor changes to table views.
+- Track arrow changed to PokéBall model. Further refinement needed.
+- Added biome platforms to the location screen. There are currently two platforms, and I'll be adding more in the future. You can add platforms through resource packs.
+- Finder screen now indicates that pokémon not found.
+- Removed biome collector.
+
 # Update 2.2.0
 
 - Added FishingNav:

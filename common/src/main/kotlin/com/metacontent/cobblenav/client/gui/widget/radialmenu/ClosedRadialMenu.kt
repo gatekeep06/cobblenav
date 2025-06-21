@@ -22,8 +22,7 @@ class ClosedRadialMenu(
             timer.tick(delta)
             rgb = 1.1f
             alpha = 1f
-        }
-        else if (timer.getProgress() != 0f) {
+        } else if (timer.getProgress() != 0f) {
             timer.reset()
         }
 
@@ -44,7 +43,7 @@ class ClosedRadialMenu(
     override val blockScreenWidgets: Boolean = false
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
+        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton) && !handler.getParentScreen().blockWidgets) {
             handler.changeState(OpeningRadialMenu(handler, x, y))
             return true
         }

@@ -5,12 +5,9 @@ import com.cobblemon.mod.common.api.fishing.PokeRods
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.util.enchantmentRegistry
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.FishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
-import com.metacontent.cobblenav.util.PreferencesSaver
 import com.metacontent.cobblenav.util.WeightedBucket
-import com.metacontent.cobblenav.util.savedPreferences
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -21,8 +18,6 @@ import net.minecraft.world.item.enchantment.Enchantments
 object RequestFishingnavScreenInitDataHandler : ServerNetworkPacketHandler<RequestFishingnavScreenInitDataPacket> {
     override fun handle(packet: RequestFishingnavScreenInitDataPacket, server: MinecraftServer, player: ServerPlayer) {
         server.execute {
-            val applyBuckets = player.savedPreferences().getBoolean(PreferencesSaver.APPLY_BUCKET_KEY)
-
             var pokeBall = ResourceLocation.withDefaultNamespace("air")
             var luckOfTheSeaLevel = 0
             var lineColor = ""
@@ -54,7 +49,7 @@ object RequestFishingnavScreenInitDataHandler : ServerNetworkPacketHandler<Reque
             val weightSum = adjustedWeights.values.sum()
             val buckets = adjustedWeights.map { WeightedBucket(it.key.name, it.value / weightSum) }
 
-            FishingnavScreenInitDataPacket(buckets, applyBuckets, pokeBall, lineColor, bait).sendToPlayer(player)
+            FishingnavScreenInitDataPacket(buckets, pokeBall, lineColor, bait).sendToPlayer(player)
         }
     }
 }

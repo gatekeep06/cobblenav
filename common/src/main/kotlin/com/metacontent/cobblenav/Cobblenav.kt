@@ -11,6 +11,7 @@ import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
+import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
@@ -23,6 +24,7 @@ import com.metacontent.cobblenav.util.PokenavSpawningProspector
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -42,7 +44,7 @@ object Cobblenav {
         implementation.registerCommands()
         implementation.injectLootTables()
 
-        ConditionCollectors.init()
+        CobblemonDataProvider.register(BiomePlatforms)
 
         CobblemonDataProvider.register(TrainerTitles)
 
@@ -105,9 +107,17 @@ object Cobblenav {
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
             }
         }
+
+        PlatformEvents.SERVER_STARTING.subscribe {
+            ConditionCollectors.init()
+        }
     }
 
     private fun registerArgumentTypes() {
         implementation.registerCommandArgument(cobblenavResource("trainer_title"), TrainerTitleArgument::class, SingletonArgumentInfo.contextFree(TrainerTitleArgument::title))
     }
+
+    fun resolveWandererTrades() = listOf(
+        VillagerTrades.ItemsForEmeralds(CobblenavItems.WANDERER_POKENAV, 24, 1, 1, 60)
+    )
 }

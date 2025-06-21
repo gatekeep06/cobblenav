@@ -1,9 +1,10 @@
 package com.metacontent.cobblenav.util
 
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.level.ServerPlayer
-
-fun ServerPlayer.savedPreferences(): CompoundTag = (this as PreferencesSaver).`cobblenav$getSavedPreferences`()
+import com.metacontent.cobblenav.mixin.GrowingPlantBlockMixin
+import net.minecraft.world.level.block.GrowingPlantBlock
+import net.minecraft.world.level.block.GrowingPlantHeadBlock
 
 fun PokeRodFishingBobberEntity.isTraveling(): Boolean = (this as FishTravelChecker).`cobblenav$isTraveling`()
+
+fun GrowingPlantBlock.getHeadBlock(): GrowingPlantHeadBlock = (this as GrowingPlantBlockMixin).invokeGetHeadBlock()

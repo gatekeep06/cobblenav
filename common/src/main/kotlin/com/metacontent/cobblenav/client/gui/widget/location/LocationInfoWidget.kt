@@ -5,8 +5,8 @@ import com.cobblemon.mod.common.api.text.onHover
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.translateOr
-import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -24,9 +24,9 @@ class LocationInfoWidget(
         const val WIDTH: Int = SYMBOL_WIDTH + SPACE + BIOME_WIDTH
         const val HEIGHT: Int = 14
         const val BIOME_KEY_BASE: String = "biome"
-        val DAY = cobblenavResource("textures/gui/location/day_symbol.png")
-        val NIGHT = cobblenavResource("textures/gui/location/night_symbol.png")
-        val UNKNOWN_BIOME = cobblenavResource("textures/gui/location/unknown_biome.png")
+        val DAY = gui("location/day_symbol")
+        val NIGHT = gui("location/night_symbol")
+        val UNKNOWN_BIOME = gui("location/unknown_biome")
     }
 
     private val biomeResourceLocation = ResourceLocation.parse(biome)
@@ -67,7 +67,12 @@ class LocationInfoWidget(
         )
 
         if (ishHovered(i, j) && !checkPair.first) {
-            guiGraphics.renderComponentHoverEffect(Minecraft.getInstance().font, checkPair.second.style, i - 100, j + height + 10)
+            guiGraphics.renderComponentHoverEffect(
+                Minecraft.getInstance().font,
+                checkPair.second.style,
+                i - 100,
+                j + height + 10
+            )
         }
     }
 }

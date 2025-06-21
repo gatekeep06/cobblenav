@@ -11,6 +11,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.npc.VillagerTrades
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.neoforged.api.distmarker.Dist
@@ -19,6 +20,7 @@ import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
+import net.neoforged.neoforge.event.village.WandererTradesEvent
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegisterEvent
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
@@ -34,6 +36,9 @@ class CobblenavNeoForge : Implementation {
             this@CobblenavNeoForge.commandArgumentTypes.register(this)
             Cobblenav.init(this@CobblenavNeoForge)
             addListener(networkManager::registerMessages)
+        }
+        with(NeoForge.EVENT_BUS) {
+            addListener(::onWanderingTraderRegistry)
         }
         if (FMLEnvironment.dist == Dist.CLIENT) {
             CobblenavNeoForgeClient.init()
@@ -86,5 +91,9 @@ class CobblenavNeoForge : Implementation {
                 CobblenavLootInjector.inject(event.name) { builder -> event.table.addPool(builder.build()) }
             }
         }
+    }
+
+    fun onWanderingTraderRegistry(event: WandererTradesEvent) {
+        event.rareTrades.addAll(Cobblenav.resolveWandererTrades())
     }
 }
