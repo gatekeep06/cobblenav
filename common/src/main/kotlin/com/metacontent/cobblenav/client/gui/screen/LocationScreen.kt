@@ -2,34 +2,31 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.util.fillWithOutline
-import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
+import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.util.*
+import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
+import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
+import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.location.LocationInfoWidget
-import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
-import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
-import com.metacontent.cobblenav.networking.packet.server.SavePreferencesPacket
-import com.metacontent.cobblenav.client.gui.util.Sorting
-import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
-import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
-import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
-import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
+import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
+import com.metacontent.cobblenav.client.settings.PokenavPreferences
+import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
+import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import org.joml.Vector3d
 import kotlin.math.max
 import kotlin.math.min
 
@@ -39,7 +36,7 @@ class LocationScreen(
     animateOpening: Boolean = false
 ) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataTooltipDisplayer {
     companion object {
-        val LOADING = cobblenavResource("textures/gui/location/loading_animation.png")
+        val LOADING = gui("location/loading_animation")
         const val ANIMATION_SHEET_WIDTH = 144
         const val FRAME_WIDTH = 18
         const val FRAME_HEIGHT = 22
@@ -56,10 +53,11 @@ class LocationScreen(
         val VIEW_OUTLINE_COLOR = FastColor.ARGB32.color(255, 84, 168, 134)
         const val VIEW_WIDTH = 298
         const val VIEW_HEIGHT = 182
-//        val VIEW = cobblenavResource("textures/gui/location/view.png")
-        val SORT_ASCENDING = cobblenavResource("textures/gui/button/sort_button_ascending.png")
-        val SORT_DESCENDING = cobblenavResource("textures/gui/button/sort_button_descending.png")
-        val REFRESH = cobblenavResource("textures/gui/button/refresh_button.png")
+
+        //        val VIEW = cobblenavResource("textures/gui/location/view.png")
+        val SORT_ASCENDING = gui("button/sort_button_ascending")
+        val SORT_DESCENDING = gui("button/sort_button_descending")
+        val REFRESH = gui("button/refresh_button")
     }
 
     var viewX = 0
@@ -83,7 +81,7 @@ class LocationScreen(
             onSortingChange()
         }
     private lateinit var biome: String
-    private var loading = false
+    var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     override var hoveredWidget: SpawnDataWidget? = null
@@ -115,11 +113,11 @@ class LocationScreen(
             pY = viewY - (BucketSelectorWidget.HEIGHT + BUTTON_HEIGHT) / 2,
             pWidth = BUTTON_WIDTH,
             pHeight = BUTTON_HEIGHT,
-            disabled = true,
             action = {
                 this.sorting = if (this.sorting == Sorting.ASCENDING) Sorting.DESCENDING else Sorting.ASCENDING
             },
-            texture = null,
+            texture = SORT_ASCENDING,
+            disabled = true
         ).also { addBlockableWidget(it) }
 
         RequestLocationScreenInitDataPacket().sendToServer()
@@ -174,7 +172,8 @@ class LocationScreen(
                 tableView.applyToAll { child ->
                     child.child.chanceMultiplier = if ((it as CheckBox).checked) currentBucket.chance else 1f
                 }
-            }
+            },
+            default = CobblenavClient.pokenavSettings?.preferences?.applyBucketChecked ?: false
         ).also { addBlockableWidget(it) }
 
         supportContextMenu = ContextMenuWidget(
@@ -208,17 +207,9 @@ class LocationScreen(
         ).also { addBlockableWidget(it) }
     }
 
-    fun receiveInitData(
-        buckets: List<WeightedBucket>,
-        biome: String,
-        bucketIndex: Int,
-        sorting: Sorting,
-        applyBucket: Boolean
-    ) {
-        checkBox.checked = applyBucket
-
+    fun receiveInitData(buckets: List<WeightedBucket>, biome: String) {
         this.buckets = buckets
-        this.bucketIndex = bucketIndex
+        this.bucketIndex = CobblenavClient.pokenavSettings?.preferences?.bucketIndex ?: 0
         bucketSelector = BucketSelectorWidget(
             viewX, viewY - BucketSelectorWidget.HEIGHT,
             this
@@ -231,7 +222,7 @@ class LocationScreen(
             biome = this.biome
         ).also { addBlockableWidget(it) }
 
-        this.sorting = sorting
+        sorting = CobblenavClient.pokenavSettings?.preferences?.sorting ?: Sorting.ASCENDING
         sortButton.disabled = false
     }
 
@@ -260,10 +251,11 @@ class LocationScreen(
 //            height = VIEW_WIDTH
 //        )
         if (loading) {
-            poseStack.pushPose()
-            poseStack.translate(0f, 0f, 400f)
-            renderLoadingAnimation(guiGraphics.pose(), delta)
-            poseStack.popPose()
+            poseStack.pushAndPop(
+                translate = Vector3d(0.0, 0.0, 400.0)
+            ) {
+                renderLoadingAnimation(guiGraphics.pose(), delta)
+            }
             return
         }
         if (tableView.isEmpty()) {
@@ -297,7 +289,13 @@ class LocationScreen(
     }
 
     private fun savePreferences() {
-        SavePreferencesPacket(bucketIndex, sorting, checkBox.checked).sendToServer()
+        CobblenavClient.pokenavSettings?.let {
+            it.preferences = PokenavPreferences(
+                bucketIndex = bucketIndex,
+                sorting = sorting,
+                applyBucketChecked = checkBox.checked
+            )
+        }
     }
 
     private fun requestSpawnData() {

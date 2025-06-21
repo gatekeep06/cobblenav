@@ -23,14 +23,12 @@ open class IconButton(
         var rgb = 1f
         if (disabled) {
             rgb -= 0.4f
-        }
-        else if (isHovered(i, j)) {
+        } else if (isHovered(i, j)) {
             rgb += 0.1f
         }
 
-        poseStack.pushPose()
         blitk(
-            guiGraphics.pose(), texture,
+            poseStack, texture,
             x, y,
             width = width,
             height = height,
@@ -42,6 +40,5 @@ open class IconButton(
             green = rgb,
             blue = rgb
         )
-        poseStack.popPose()
     }
 }

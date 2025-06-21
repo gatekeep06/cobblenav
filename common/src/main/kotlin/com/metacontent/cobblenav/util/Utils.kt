@@ -25,3 +25,13 @@ fun RegistryLikeCondition<*>.toResourceLocation(): ResourceLocation? {
     }
     return null
 }
+
+fun <T> combinations(vararg lists: Iterable<T>): List<List<T>> {
+    return lists.fold(listOf(listOf())) { acc, list ->
+        acc.flatMap { combination ->
+            list.map { element ->
+                combination + element
+            }
+        }
+    }
+}

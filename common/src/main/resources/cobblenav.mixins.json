@@ -9,11 +9,10 @@
         "GuiMixin"
     ],
     "mixins": [
-        "EntityMixin",
         "PokeRodFishingBobberEntityMixin",
         "PokeRodItemMixin"
     ],
     "injectors": {
         "defaultRequire": 1
-  }
+    }
 }

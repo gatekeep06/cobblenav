@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
 import com.metacontent.cobblenav.mixin.GrowingPlantBlockMixin
+import com.metacontent.cobblenav.util.getHeadBlock
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
@@ -19,9 +20,12 @@ data class BlockConditions(
 
     val asItemStacks by lazy {
         blocks.map {
-            var block = BuiltInRegistries.BLOCK.get(it)
-            if (block is GrowingPlantBlock) {
-                block = (block as GrowingPlantBlockMixin).invokeGetHeadBlock()
+            val block = BuiltInRegistries.BLOCK.get(it).let { block ->
+                if (block is GrowingPlantBlock) {
+                    block.getHeadBlock()
+                } else {
+                    block
+                }
             }
             ItemStack(block)
         }

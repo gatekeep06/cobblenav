@@ -18,5 +18,6 @@ enum class PokenavModelType(val modelName: String) {
     PURPLE("purple"),
     MAGENTA("magenta"),
     PINK("pink"),
-    GHOLDENGO("gholdengo")
+    GHOLDENGO("gholdengo"),
+    WANDERER("wanderer")
 }

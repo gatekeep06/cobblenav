@@ -1,11 +1,13 @@
 package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.item.Pokefinder
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
@@ -14,20 +16,21 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
 import org.joml.Quaternionf
+import org.joml.Vector3d
 import org.joml.Vector3f
 import kotlin.math.cos
 import kotlin.math.sin
 
 class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     companion object {
-        const val WIDTH: Int = 144
-        const val HEIGHT: Int = 96
-        const val COMPASS_WIDTH: Int = 23
-        const val COMPASS_HEIGHT: Int = 23
-        const val COMPASS_OFFSET: Int = 4
-        const val RADAR_SCALE: Double = 0.5
-        val BACKGROUND = cobblenavResource("textures/gui/pokefinder/overlay.png")
-        val COMPASS = cobblenavResource("textures/gui/pokefinder/compass.png")
+        const val WIDTH = 144
+        const val HEIGHT = 96
+        const val COMPASS_WIDTH = 23
+        const val COMPASS_HEIGHT = 23
+        const val COMPASS_OFFSET = 4
+        const val RADAR_SCALE = 0.5
+        val BACKGROUND = gui("pokefinder/overlay")
+        val COMPASS = gui("pokefinder/compass")
     }
 
     private val minecraft = Minecraft.getInstance()
@@ -44,7 +47,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         val settings = CobblenavClient.pokefinderSettings
 
         val isRightHand = minecraft.player?.mainHandItem?.item is Pokefinder
-        val scale = minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
+        val scale =
+            minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
         val scaledOffset = (offset / scale).toInt()
         val scaledWidth = (WIDTH / scale).toInt()
         val scaledHeight = (HEIGHT / scale).toInt()
@@ -76,17 +80,26 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
         entities.forEach {
             val vec = player.position().vectorTo(it.position()).scale(RADAR_SCALE)
-            poseStack.pushPose()
             val angle = Math.toRadians(180.0 - player.rotationVector.y)
             val posX = x + scaledWidth / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
             val posY = y + scaledHeight / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
-            poseStack.translate(posX, posY, 0.0)
-            guiGraphics.fill(
-                -1, -1,
-                1, 1,
-                FastColor.ARGB32.color(255, 255, 255, 255)
-            )
-            poseStack.popPose()
+            poseStack.pushAndPop(
+                translate = Vector3d(posX, posY, 0.0)
+            ) {
+                guiGraphics.fill(
+                    -1, -1,
+                    1, 1,
+                    FastColor.ARGB32.color(255, 255, 255, 255)
+                )
+                drawScaledText(
+                    context = guiGraphics,
+                    text = it.pokemon.getDisplayName(),
+                    x = 0,
+                    y = 2,
+                    centered = true,
+                    scale = 0.4f
+                )
+            }
         }
     }
 
@@ -95,21 +108,21 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         val compassHeight = (COMPASS_HEIGHT / scale).toInt()
         val compassOffset = (COMPASS_OFFSET / scale).toInt()
 
-        poseStack.pushPose()
-        poseStack.rotateAround(
-            Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, rotation)),
-            x + compassOffset + compassWidth / 2f,
-            y + compassOffset + compassHeight / 2f,
-            0f
-        )
-        blitk(
-            matrixStack = poseStack,
-            texture = COMPASS,
-            x = x + compassOffset,
-            y = y + compassOffset,
-            width = compassWidth,
-            height = compassHeight
-        )
-        poseStack.popPose()
+        poseStack.pushAndPop {
+            poseStack.rotateAround(
+                Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, rotation)),
+                x + compassOffset + compassWidth / 2f,
+                y + compassOffset + compassHeight / 2f,
+                0f
+            )
+            blitk(
+                matrixStack = poseStack,
+                texture = COMPASS,
+                x = x + compassOffset,
+                y = y + compassOffset,
+                width = compassWidth,
+                height = compassHeight
+            )
+        }
     }
 }

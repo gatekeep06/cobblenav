@@ -2,10 +2,9 @@ package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
@@ -14,8 +13,11 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
+import org.joml.Vector3d
 import org.joml.Vector3f
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
 class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
     private val minecraft = Minecraft.getInstance()
@@ -50,27 +52,26 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
         val horizontalDistance = sqrt(distanceVec.x * distanceVec.x + distanceVec.z * distanceVec.z)
         val pitch = atan2(distanceVec.y, horizontalDistance).toFloat()
 
-        poseStack.pushPose()
-        poseStack.translate(x.toDouble(), y.toDouble(), 0.0)
-        poseStack.mulPose(
-            Quaternionf()
+        poseStack.pushAndPop(
+            translate = Vector3d(x.toDouble(), y.toDouble(), 0.0),
+            mulPose = Quaternionf()
                 .rotateZ(PI.toFloat())
                 .fromEulerXYZDegrees(Vector3f(player.xRot, -player.yRot, 0f))
                 .rotateY(0.5f * PI.toFloat() + yaw)
-                .rotateX(-pitch)
-        )
-        poseStack.scale(50f, 50f, -50f)
-        minecraft.itemRenderer.renderStatic(
-            stack,
-            ItemDisplayContext.GROUND,
-            255,
-            1000,
-            poseStack,
-            guiGraphics.bufferSource(),
-            minecraft.level,
-            0
-        )
-        poseStack.popPose()
+                .rotateX(-pitch),
+            scale = Vector3f(50f, 50f, -50f)
+        ) {
+            minecraft.itemRenderer.renderStatic(
+                stack,
+                ItemDisplayContext.GROUND,
+                255,
+                1000,
+                poseStack,
+                guiGraphics.bufferSource(),
+                minecraft.level,
+                0
+            )
+        }
 
         drawScaledText(
             context = guiGraphics,

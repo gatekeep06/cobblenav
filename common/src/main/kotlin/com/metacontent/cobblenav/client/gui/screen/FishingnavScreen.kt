@@ -1,12 +1,13 @@
 package com.metacontent.cobblenav.client.gui.screen
 
+import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.entity.PoseType
-import com.metacontent.cobblenav.client.gui.util.RGB
-import com.metacontent.cobblenav.client.gui.util.interpolate
-import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
+import com.metacontent.cobblenav.client.gui.util.*
+import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
 import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
+import com.metacontent.cobblenav.client.gui.widget.fishing.FishingDataWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -29,31 +30,31 @@ class FishingnavScreen(
 ) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataTooltipDisplayer {
     companion object {
         const val POKEMON_CHANCE = 0.85f
-        const val WEATHER_WIDGET_HEIGHT = 80
+        const val WEATHER_WIDGET_HEIGHT = 40
         const val BUCKET_VIEW_MIN_HEIGHT = 100
-        private val DAY_COLOR = RGB(117, 230, 218)
+        const val PANEL_WIDTH = 20
+        const val DEPTH_WIDTH = 9
+        const val DEPTH_HEIGHT = 12
+        const val SWITCH_OFF_SIZE = 15
+        const val NAV_BUTTON_WIDTH = 11
+        const val NAV_BUTTON_HEIGHT = 8
+        const val BUTTON_WIDTH = 15
+        const val BUTTON_HEIGHT = 16
+        const val BUTTON_GAP = 14
+        private val DAY_COLOR = RGB(115, 215, 255)
         private val NIGHT_COLOR = RGB(2, 1, 39)
+        val PANEL = gui("fishing/panel")
+        val DEPTH = gui("fishing/depth_symbol")
+        val SWITCH_OFF = gui("radialmenu/switch_off")
+        val UP = gui("button/up_button")
+        val DOWN = gui("button/down_button")
+        val REFRESH = gui("button/refresh_button")
     }
 
     override val color: Int
-        get() {
-            val normalizedTime = (player?.clientLevel?.dayTime ?: 0) % 24000
-            return when (normalizedTime) {
-                in 12040..13670 -> {
-                    val progress = (normalizedTime - 12040) / 1630f
-                    interpolate(DAY_COLOR, NIGHT_COLOR, progress).toColor()
-                }
+        get() = dayCycleColor(player?.clientLevel?.dayTime ?: 0L, DAY_COLOR, NIGHT_COLOR).toColor()
 
-                in 22331..23961 -> {
-                    val progress = (normalizedTime - 22331) / 1630f
-                    interpolate(NIGHT_COLOR, DAY_COLOR, progress).toColor()
-                }
-
-                in 13670..22331 -> NIGHT_COLOR.toColor()
-                else -> DAY_COLOR.toColor()
-            }
-        }
-
+    var loading = false
     override var hoveredWidget: SpawnDataWidget? = null
     lateinit var buckets: List<WeightedBucket>
     private lateinit var fishingContextWidget: FishingContextWidget
@@ -61,21 +62,22 @@ class FishingnavScreen(
     private lateinit var baseTable: TableView<SoundlessWidget>
     private lateinit var fishingTable: TableView<AbstractWidget>
     private lateinit var bucketViews: List<BucketViewWidget>
+    private lateinit var refreshButton: IconButton
 
     override fun initScreen() {
         RequestFishingnavScreenInitDataPacket().sendToServer()
 
         baseTable = TableView(
-            x = screenX + VERTICAL_BORDER_DEPTH,
+            x = screenX + VERTICAL_BORDER_DEPTH + PANEL_WIDTH,
             y = screenY + HORIZONTAL_BORDER_DEPTH,
-            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH - PANEL_WIDTH,
             columns = 1,
             horizontalGap = 0f
         )
         scrollableView = ScrollableView(
-            x = screenX + VERTICAL_BORDER_DEPTH,
+            x = screenX + VERTICAL_BORDER_DEPTH + PANEL_WIDTH,
             y = screenY + HORIZONTAL_BORDER_DEPTH,
-            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH - PANEL_WIDTH,
             height = HEIGHT - 2 * HORIZONTAL_BORDER_DEPTH,
             child = baseTable
         ).also { addBlockableWidget(it) }
@@ -88,28 +90,51 @@ class FishingnavScreen(
         )
         fishingContextWidget = FishingContextWidget(
             x = 0, y = 0,
-            width = WIDTH - 2 * VERTICAL_BORDER_DEPTH,
+            width = baseTable.width,
             height = WEATHER_WIDGET_HEIGHT,
             level = player?.clientLevel
         )
         baseTable.add(fishingContextWidget)
+
+        IconButton(
+            pX = screenX + VERTICAL_BORDER_DEPTH + 2,
+            pY = screenY + HORIZONTAL_BORDER_DEPTH + 2,
+            pWidth = SWITCH_OFF_SIZE,
+            pHeight = SWITCH_OFF_SIZE,
+            texture = SWITCH_OFF,
+            action = { this.onClose() }
+        ).also { addBlockableWidget(it) }
+
+        refreshButton = IconButton(
+            pX = screenX + VERTICAL_BORDER_DEPTH + 2,
+            pY = screenY + HEIGHT / 2 - 2 * BUTTON_GAP - NAV_BUTTON_HEIGHT - BUTTON_HEIGHT,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            disabled = loading,
+            action = {
+                scrollableView.reset()
+                bucketViews.forEach { it.clear() }
+                requestFishingData()
+            },
+            texture = REFRESH
+        ).also { addBlockableWidget(it) }
     }
 
     fun receiveInitData(
         buckets: List<WeightedBucket>,
-        applyBuckets: Boolean,
         pokeBall: ResourceLocation,
         lineColor: String,
         baitItem: ItemStack
     ) {
         this.buckets = buckets
-        bucketViews = buckets.map {
+        bucketViews = buckets.mapIndexed { index, bucket ->
             BucketViewWidget(
                 x = 0, y = 0,
                 width = fishingTable.width,
                 columns = 5,
                 minHeight = BUCKET_VIEW_MIN_HEIGHT,
-                bucket = it,
+                depthProgress = index / buckets.size.toFloat(),
+                bucket = bucket,
                 verticalPadding = 4f
             )
         }.also {
@@ -121,6 +146,53 @@ class FishingnavScreen(
         fishingContextWidget.pokeBallStack = ItemStack(BuiltInRegistries.ITEM.get(pokeBall))
         fishingContextWidget.baitStack = baitItem
 
+        IconButton(
+            pX = screenX + VERTICAL_BORDER_DEPTH + 4,
+            pY = screenY + HEIGHT / 2 - BUTTON_GAP - NAV_BUTTON_HEIGHT,
+            pWidth = NAV_BUTTON_WIDTH,
+            pHeight = NAV_BUTTON_HEIGHT,
+            texture = UP,
+            action = {
+                if (scrollableView.scrolled <= fishingContextWidget.height) {
+                    scrollableView.scrolled = 0
+                    return@IconButton
+                }
+                var heightSum = fishingContextWidget.height
+                bucketViews.firstOrNull {
+                    if (scrollableView.scrolled > heightSum + it.height) {
+                        heightSum += it.height
+                        return@firstOrNull false
+                    }
+                    return@firstOrNull true
+                }
+                scrollableView.scrolled = heightSum
+            }
+        ).also { addBlockableWidget(it) }
+        IconButton(
+            pX = screenX + VERTICAL_BORDER_DEPTH + 4,
+            pY = screenY + HEIGHT / 2 + BUTTON_GAP,
+            pWidth = NAV_BUTTON_WIDTH,
+            pHeight = NAV_BUTTON_HEIGHT,
+            texture = DOWN,
+            action = {
+                var heightSum = fishingContextWidget.height
+                bucketViews.firstOrNull {
+                    if (scrollableView.scrolled >= heightSum) {
+                        heightSum += it.height
+                        return@firstOrNull false
+                    }
+                    return@firstOrNull true
+                }
+                scrollableView.scrolled = heightSum
+            }
+        ).also { addBlockableWidget(it) }
+
+        requestFishingData()
+    }
+
+    private fun requestFishingData() {
+        loading = true
+        refreshButton.disabled = true
         RequestFishingMapPacket().sendToServer()
     }
 
@@ -136,7 +208,7 @@ class FishingnavScreen(
                     }
                     .map {
                         ScrollableItemWidget(
-                            child = SpawnDataWidget(
+                            child = FishingDataWidget(
                                 x = 0,
                                 y = 0,
                                 spawnData = it,
@@ -154,6 +226,31 @@ class FishingnavScreen(
         }
         fishingTable.initItems()
         baseTable.initItems()
+        loading = false
+        refreshButton.disabled = false
+    }
+
+    override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        val poseStack = guiGraphics.pose()
+
+        blitk(
+            matrixStack = poseStack,
+            texture = PANEL,
+            x = screenX + VERTICAL_BORDER_DEPTH,
+            y = screenY + HORIZONTAL_BORDER_DEPTH,
+            width = PANEL_WIDTH,
+            height = HEIGHT - 2 * HORIZONTAL_BORDER_DEPTH
+        )
+
+        blitk(
+            matrixStack = poseStack,
+            texture = DEPTH,
+            x = screenX + VERTICAL_BORDER_DEPTH + (PANEL_WIDTH - DEPTH_WIDTH) / 2,
+            y = screenY + (HEIGHT - DEPTH_HEIGHT) / 2,
+            width = DEPTH_WIDTH,
+            height = DEPTH_HEIGHT,
+            alpha = 0.6f
+        )
     }
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {

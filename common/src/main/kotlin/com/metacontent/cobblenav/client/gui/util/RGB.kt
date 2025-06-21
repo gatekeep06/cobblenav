@@ -7,5 +7,15 @@ data class RGB(
     val g: Int,
     val b: Int
 ) {
-    fun toColor(opacity: Int = 255) = FastColor.ARGB32.color(opacity, r, g, b)
+    companion object {
+        const val MAX_VALUE = 255
+    }
+
+    fun toColor(opacity: Int = MAX_VALUE) = FastColor.ARGB32.color(opacity, r, g, b)
+
+    fun red() = r.toFloat() / MAX_VALUE
+
+    fun green() = g.toFloat() / MAX_VALUE
+
+    fun blue() = b.toFloat() / MAX_VALUE
 }

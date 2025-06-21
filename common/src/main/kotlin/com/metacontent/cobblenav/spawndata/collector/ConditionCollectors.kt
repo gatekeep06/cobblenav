@@ -1,9 +1,11 @@
 package com.metacontent.cobblenav.spawndata.collector
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.spawndata.collector.block.*
 import com.metacontent.cobblenav.spawndata.collector.general.*
@@ -13,6 +15,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.CustomCollectorRegistrar
+import com.metacontent.cobblenav.spawndata.collector.special.counter.CountCollector
+import com.metacontent.cobblenav.spawndata.collector.special.counter.StreakCollector
 import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.ItemsCollector
 import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.KeyItemCollector
 import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.PokemonCollector
@@ -45,7 +49,7 @@ object ConditionCollectors {
         collectors += collector
     }
 
-    internal fun registerBlock(collector: BlockConditionCollector<*>) {
+    internal fun register(collector: BlockConditionCollector<*>) {
         if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
         if (!collector.isModDependencySatisfied()) return
         blockCollectors += collector
@@ -62,10 +66,11 @@ object ConditionCollectors {
     fun collectConditions(
         condition: SpawningCondition<*>,
         fittingContexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): List<MutableComponent> {
-        return generalCollectors.mapNotNull { it.collect(condition, fittingContexts, player) } +
-                getCollectors(condition).mapNotNull { it.collect(condition, fittingContexts, player) }
+        return generalCollectors.mapNotNull { it.collect(condition, fittingContexts, player, builder) } +
+                getCollectors(condition).mapNotNull { it.collect(condition, fittingContexts, player, builder) }
     }
 
     fun collectBlockConditions(
@@ -80,7 +85,7 @@ object ConditionCollectors {
         collectors.clear()
         blockCollectors.clear()
 
-//        registerGeneral(BiomeCollector())
+        registerGeneral(BiomeCollector())
         registerGeneral(MoonPhaseCollector())
         registerGeneral(UnderOpenSkyCollector())
         registerGeneral(YHeightCollector())
@@ -108,10 +113,14 @@ object ConditionCollectors {
             register(ZygardeCubeChargeCollector())
         }
 
-        registerBlock(AreaTypeBlockCollector())
-        registerBlock(GroundedTypeBlockCollector())
-        registerBlock(SeafloorTypeBlockCollector())
-        registerBlock(FishingBlockCollector())
+        val api = Cobblemon.implementation.modAPI
+        register(CountCollector(api))
+        register(StreakCollector(api))
+
+        register(AreaTypeBlockCollector())
+        register(GroundedTypeBlockCollector())
+        register(SeafloorTypeBlockCollector())
+        register(FishingBlockCollector())
 
         CobblenavEvents.REGISTER_CUSTOM_COLLECTORS.emit(object : CustomCollectorRegistrar {
             override fun register(collector: ConditionCollector<*>): CustomCollectorRegistrar {
@@ -119,8 +128,8 @@ object ConditionCollectors {
                 return this
             }
 
-            override fun registerBlock(collector: BlockConditionCollector<*>): CustomCollectorRegistrar {
-                ConditionCollectors.registerBlock(collector)
+            override fun register(collector: BlockConditionCollector<*>): CustomCollectorRegistrar {
+                ConditionCollectors.register(collector)
                 return this
             }
         })

@@ -9,4 +9,5 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
     modImplementation "com.cobblemon:mod:$cobblemon_version"
     modCompileOnly "maven.modrinth:cobblemon-myths-and-legends-sidemod:$mal_fabric_version"
+    modCompileOnly "maven.modrinth:cobblemon-counter:$counter_fabric_version"
 }

@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.SurfaceTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
 import net.minecraft.network.chat.Component
@@ -17,7 +18,8 @@ class DepthSurfaceCollector: ConditionCollector<SurfaceTypeSpawningCondition<*>>
     override fun collect(
         condition: SurfaceTypeSpawningCondition<*>,
         contexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): MutableComponent? {
         formatValueRange(condition.minDepth, condition.maxDepth)?.let {
             return Component.translatable("gui.cobblenav.spawn_data.depth", it)

@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.github.d0ctorleon.mythsandlegends.cobblemon.spawning.condition.item.custom.CustomItemsCondition
+import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -16,7 +17,8 @@ class ItemsCollector : ConditionCollector<SpawningCondition<*>> {
     override fun collect(
         condition: SpawningCondition<*>,
         contexts: List<SpawningContext>,
-        player: ServerPlayer
+        player: ServerPlayer,
+        builder: SpawnDataContext.Builder
     ): MutableComponent? {
         val items = condition.appendages.filterIsInstance<CustomItemsCondition>()
             .firstOrNull()?.itemConditions ?: return null
