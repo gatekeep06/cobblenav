@@ -53,7 +53,7 @@ data class ContactPlayerData(
             executeAndSafe(player.uuid, action)
         }
 
-        fun onBattleEnd(event: BattleVictoryEvent) {
+        internal fun onBattleEnd(event: BattleVictoryEvent) {
             val id = BattleId(event.battle.battleId)
             val winners = event.winners.toParticipants()
             val losers = event.losers.toParticipants()
