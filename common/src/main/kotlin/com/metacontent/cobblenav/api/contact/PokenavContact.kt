@@ -1,101 +1,82 @@
 package com.metacontent.cobblenav.api.contact
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.readList
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
-import com.metacontent.cobblenav.util.getProfileData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
-import java.text.DateFormat
-import java.util.Date
+import java.util.*
 
 data class PokenavContact(
-    val contactId: ContactID,
+    val id: String,
+    val type: ContactType,
     val name: String,
-    val battleRecords: List<BattleRecord>,
+    val battles: MutableList<BattleId>,
     val date: Date = Date()
 ) {
     companion object {
         val CODEC: Codec<PokenavContact> = RecordCodecBuilder.create<PokenavContact> { instance ->
             instance.group(
-                ContactID.CODEC.fieldOf("contactId").forGetter { it.contactId },
+                PrimitiveCodec.STRING.fieldOf("id").forGetter { it.id },
+                ContactType.CODEC.fieldOf("type").forGetter { it.type },
                 PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
-                BattleRecord.CODEC.listOf().fieldOf("battleRecords").forGetter { it.battleRecords },
+                BattleId.CODEC.listOf().fieldOf("battles").forGetter { it.battles },
                 PrimitiveCodec.LONG.fieldOf("date").forGetter { it.date.time }
-            ).apply(instance) { contactId, name, battleRecords, date ->
-                PokenavContact(contactId, name, battleRecords, Date(date))
+            ).apply(instance) { id, type, name, battles, date ->
+                PokenavContact(id, type, name, battles, Date(date))
             }
         }
     }
 
     fun toClientContact(): ClientPokenavContact {
-        val profile = Cobblemon.playerDataManager.getProfileData(contactId.uuid)
+        val profile = type.profileDataExtractor(id)
         return ClientPokenavContact(
-            contactID = contactId,
+            id = id,
             name = name,
             titleId = profile.titleId,
-            partnerPokemon = profile.partnerPokemonCache?.asRenderablePokemon(),
-            battleRecords = battleRecords,
+            partnerPokemon = profile.partnerPokemon?.asRenderablePokemon(),
+            battles = battles,
             date = date
         )
     }
-
-    fun getSummary(): String {
-        val stats = getBattleStats()
-        return "$name (${DateFormat.getDateInstance().format(date)}) w: ${stats.wins} l: ${stats.losses} a: ${stats.ally}"
-    }
-
-    fun getBattleStats(): BattleStats {
-        var wins = 0
-        var losses = 0
-        var ally = 0
-        battleRecords.forEach {
-            when (it.type) {
-                RecordType.WIN -> wins++
-                RecordType.LOSS -> losses++
-                RecordType.ALLY -> ally++
-            }
-        }
-        return BattleStats(wins, losses, ally)
-    }
-
-    data class BattleStats(
-        val wins: Int,
-        val losses: Int,
-        val ally: Int
-    )
 }
 
 data class ClientPokenavContact(
-    val contactID: ContactID,
+    val id: String,
     val name: String,
     val titleId: ResourceLocation?,
     val partnerPokemon: RenderablePokemon?,
-    val battleRecords: List<BattleRecord>,
+    val battles: List<BattleId>,
     val date: Date
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = ClientPokenavContact(
-            contactID = ContactID.decode(buffer),
+            id = buffer.readString(),
             name = buffer.readString(),
             titleId = buffer.readNullable { it.readResourceLocation() },
             partnerPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(buffer) },
-            battleRecords = buffer.readList { BattleRecord.decode(it as RegistryFriendlyByteBuf) },
+            battles = buffer.readList { BattleId.decode(it as RegistryFriendlyByteBuf) },
             date = buffer.readDate()
         )
     }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        contactID.encode(buffer)
+        buffer.writeString(id)
         buffer.writeString(name)
         buffer.writeNullable(titleId) { pb, value -> pb.writeResourceLocation(value) }
         buffer.writeNullable(partnerPokemon) { pb, value -> value.saveToBuffer(pb as RegistryFriendlyByteBuf) }
-        buffer.writeCollection(battleRecords) { pb, value -> value.encode(pb as RegistryFriendlyByteBuf) }
+        buffer.writeCollection(battles) { bf, id -> id.encode(bf as RegistryFriendlyByteBuf) }
         buffer.writeDate(date)
     }
 }
+
+data class ContactProfileData(
+    val titleId: ResourceLocation?,
+    val partnerPokemon: PokemonProperties?
+)

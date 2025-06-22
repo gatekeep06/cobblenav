@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.command
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.text.red
-import com.metacontent.cobblenav.api.contact.ContactID
+import com.metacontent.cobblenav.api.contact.ContactType
 import com.metacontent.cobblenav.api.contact.PokenavContact
 import com.metacontent.cobblenav.storage.ContactPlayerData
 import com.metacontent.cobblenav.util.getContactData
@@ -10,7 +10,8 @@ import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.Commands.*
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.Component
 
@@ -32,16 +33,16 @@ object ContactCommand : Command {
         val command = literal(BASE)
         val commandList = literal(LIST)
             .then(argument(PLAYER_ARGUMENT, EntityArgument.player()).executes(::executeList))
-        val commandCheck = literal(CHECK)
-            .then(
-                argument(PLAYER_ARGUMENT, EntityArgument.player())
-                    .then(argument(CONTACT_PLAYER_ARGUMENT, EntityArgument.player()).executes(::executeCheck))
-                    .then(
-                        literal(BY_NAME).then(
-                            argument(CONTACT_NAME_ARGUMENT, StringArgumentType.word()).executes(::executeCheckByName)
-                        )
-                    )
-            )
+//        val commandCheck = literal(CHECK)
+//            .then(
+//                argument(PLAYER_ARGUMENT, EntityArgument.player())
+//                    .then(argument(CONTACT_PLAYER_ARGUMENT, EntityArgument.player()).executes(::executeCheck))
+//                    .then(
+//                        literal(BY_NAME).then(
+//                            argument(CONTACT_NAME_ARGUMENT, StringArgumentType.word()).executes(::executeCheckByName)
+//                        )
+//                    )
+//            )
         val commandAdd = literal(ADD)
             .then(
                 argument(PLAYERS_ARGUMENT, EntityArgument.players())
@@ -63,7 +64,7 @@ object ContactCommand : Command {
         command
             .requires { it.player?.hasPermissions(1) == true }
             .then(commandList)
-            .then(commandCheck)
+//            .then(commandCheck)
             .then(commandAdd)
             .then(commandRemove)
             .then(commandClear)
@@ -80,51 +81,52 @@ object ContactCommand : Command {
         return 1
     }
 
-    private fun executeCheck(context: CommandContext<CommandSourceStack>): Int {
-        val source = context.source.playerOrException
-        val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
-        val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid
-        val data = Cobblemon.playerDataManager.getContactData(player)
-        data.findByUuid(contactUuid)?.let {
-            source.sendSystemMessage(Component.literal(it.getSummary()))
-            return 1
-        }
-        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
-        return 0
-    }
-
-    private fun executeCheckByName(context: CommandContext<CommandSourceStack>): Int {
-        val source = context.source.playerOrException
-        val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
-        val name = StringArgumentType.getString(context, CONTACT_NAME_ARGUMENT)
-        val data = Cobblemon.playerDataManager.getContactData(player)
-        data.findByName(name)?.let {
-            source.sendSystemMessage(Component.literal(it.getSummary()))
-            return 1
-        }
-        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
-        return 0
-    }
+//    private fun executeCheck(context: CommandContext<CommandSourceStack>): Int {
+//        val source = context.source.playerOrException
+//        val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
+//        val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid
+//        val data = Cobblemon.playerDataManager.getContactData(player)
+//        data.findByUuid(contactUuid)?.let {
+//            source.sendSystemMessage(Component.literal(it.getSummary()))
+//            return 1
+//        }
+//        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
+//        return 0
+//    }
+//
+//    private fun executeCheckByName(context: CommandContext<CommandSourceStack>): Int {
+//        val source = context.source.playerOrException
+//        val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
+//        val name = StringArgumentType.getString(context, CONTACT_NAME_ARGUMENT)
+//        val data = Cobblemon.playerDataManager.getContactData(player)
+//        data.findByName(name)?.let {
+//            source.sendSystemMessage(Component.literal(it.getSummary()))
+//            return 1
+//        }
+//        source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
+//        return 0
+//    }
 
     private fun executeAdd(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val contactPlayer = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT)
         players.forEach {
             val contact = PokenavContact(
-                contactId = ContactID(contactPlayer.uuid),
+                id = contactPlayer.uuid.toString(),
+                type = ContactType.PLAYER,
                 name = contactPlayer.name.string,
-                battleRecords = mutableListOf()
+                battles = mutableListOf()
             )
-            ContactPlayerData.executeAndSafe(it) { data -> data.addContact(contact) }
+            ContactPlayerData.executeAndSafe(it) { data -> data.updateContacts(contact) }
         }
         return 1
     }
 
     private fun executeRemove(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
-        val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid
+        val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid.toString()
         players.forEach {
-            ContactPlayerData.executeAndSafe(it) { data -> data.removeContact(ContactID(contactUuid)) }
+            ContactPlayerData.executeAndSafe(it) { data -> data.removeContact(contactUuid) }
         }
         return 1
     }
@@ -136,9 +138,8 @@ object ContactCommand : Command {
             ContactPlayerData.executeAndSafe(it) { data ->
                 val contact = data.findByName(name)
                 return@executeAndSafe if (contact != null) {
-                    data.removeContact(contact.contactId)
-                }
-                else {
+                    data.removeContact(contact.id)
+                } else {
                     false
                 }
             }
@@ -153,8 +154,7 @@ object ContactCommand : Command {
                 return@executeAndSafe if (data.contacts.isNotEmpty()) {
                     data.clearContacts()
                     true
-                }
-                else {
+                } else {
                     false
                 }
             }

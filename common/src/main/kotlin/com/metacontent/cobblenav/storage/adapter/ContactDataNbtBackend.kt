@@ -14,6 +14,6 @@ class ContactDataNbtBackend : NbtBackedPlayerData<ContactPlayerData>(
 ) {
     override val codec: Codec<ContactPlayerData> = ContactPlayerData.CODEC
     override val defaultData = { uuid: UUID ->
-        ContactPlayerData(uuid, mutableMapOf()).also { CobblenavEvents.CONTACT_DATA_CREATED.post(ContactDataCreated(it)) }
+        ContactPlayerData(uuid, hashMapOf(), hashMapOf()).also { CobblenavEvents.CONTACT_DATA_CREATED.post(ContactDataCreated(it)) }
     }
 }

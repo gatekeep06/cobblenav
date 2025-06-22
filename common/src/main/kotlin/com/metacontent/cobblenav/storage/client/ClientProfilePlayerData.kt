@@ -10,7 +10,7 @@ import java.util.UUID
 
 data class ClientProfilePlayerData(
     var title: TrainerTitle? = null,
-    val allowedTitles: MutableSet<TrainerTitle> = mutableSetOf(),
+    var allowedTitles: MutableSet<TrainerTitle> = mutableSetOf(),
     var partnerPokemonUuid: UUID? = null
 ) : ClientInstancedPlayerData {
     companion object {
@@ -30,7 +30,9 @@ data class ClientProfilePlayerData(
 
         fun incrementalAfterDecode(data: ClientInstancedPlayerData) {
             if (data !is ClientProfilePlayerData) return
-            CobblenavClient.clientProfileData.allowedTitles.addAll(data.allowedTitles)
+            CobblenavClient.clientProfileData.allowedTitles = data.allowedTitles
+            data.title?.let { CobblenavClient.clientProfileData.title = it }
+            data.partnerPokemonUuid?.let { CobblenavClient.clientProfileData.partnerPokemonUuid = it }
         }
     }
 

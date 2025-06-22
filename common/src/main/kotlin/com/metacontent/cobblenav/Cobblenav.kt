@@ -18,6 +18,7 @@ import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
+import com.metacontent.cobblenav.storage.ContactPlayerData
 import com.metacontent.cobblenav.storage.adapter.ContactDataNbtBackend
 import com.metacontent.cobblenav.storage.adapter.ProfileDataNbtBackend
 import com.metacontent.cobblenav.util.PokenavSpawningProspector
@@ -115,6 +116,8 @@ object Cobblenav {
                 }
             }
         }
+
+        CobblemonEvents.BATTLE_VICTORY.subscribe { ContactPlayerData.onBattleEnd(it) }
 
         if (config.syncLabelsWithClient) {
             CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
