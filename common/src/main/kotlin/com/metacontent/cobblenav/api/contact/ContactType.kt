@@ -4,9 +4,9 @@ import com.cobblemon.mod.common.Cobblemon
 import com.metacontent.cobblenav.util.getProfileData
 import com.mojang.serialization.Codec
 import net.minecraft.util.StringRepresentable
-import java.util.UUID
+import java.util.*
 
-enum class ContactType(val profileDataExtractor: (String) -> ContactProfileData) : StringRepresentable{
+enum class ContactType(val profileDataExtractor: (String) -> ContactProfileData) : StringRepresentable {
     PLAYER({ id ->
         val profile = Cobblemon.playerDataManager.getProfileData(UUID.fromString(id))
         ContactProfileData(profile.titleId, profile.partnerPokemonCache)

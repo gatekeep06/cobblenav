@@ -24,8 +24,10 @@ data class BattleRecord(
         val CODEC: Codec<BattleRecord> = RecordCodecBuilder.create { instance ->
             instance.group(
                 BattleId.CODEC.fieldOf("id").forGetter { it.id },
-                Codec.unboundedMap(PrimitiveCodec.STRING, ListCodec(PokemonProperties.CODEC, 0, 512)).fieldOf("winners").forGetter { it.winners },
-                Codec.unboundedMap(PrimitiveCodec.STRING, ListCodec(PokemonProperties.CODEC, 0, 512)).fieldOf("losers").forGetter { it.losers },
+                Codec.unboundedMap(PrimitiveCodec.STRING, ListCodec(PokemonProperties.CODEC, 0, 512)).fieldOf("winners")
+                    .forGetter { it.winners },
+                Codec.unboundedMap(PrimitiveCodec.STRING, ListCodec(PokemonProperties.CODEC, 0, 512)).fieldOf("losers")
+                    .forGetter { it.losers },
                 RecordType.CODEC.fieldOf("type").forGetter { it.type }
             ).apply(instance) { id, winners, losers, type ->
                 BattleRecord(id, winners, losers, type)

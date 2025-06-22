@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.storage.client
 
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
-import com.cobblemon.mod.common.util.readMap
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.api.contact.BattleId
@@ -11,7 +10,6 @@ import com.metacontent.cobblenav.api.contact.ClientPokenavContact
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
-import java.util.*
 
 data class ClientContactPlayerData(
     val contacts: HashMap<String, ClientPokenavContact> = hashMapOf(),

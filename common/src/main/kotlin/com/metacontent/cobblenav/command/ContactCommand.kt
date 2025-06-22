@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.command
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.text.red
 import com.metacontent.cobblenav.api.contact.ContactType
 import com.metacontent.cobblenav.api.contact.PokenavContact
 import com.metacontent.cobblenav.storage.ContactPlayerData

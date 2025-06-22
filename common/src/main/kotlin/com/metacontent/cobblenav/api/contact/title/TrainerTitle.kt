@@ -1,7 +1,9 @@
 package com.metacontent.cobblenav.api.contact.title
 
 import com.cobblemon.mod.common.api.net.Encodable
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -22,9 +24,11 @@ data class TrainerTitle(
         )
     }
 
-    fun name(): MutableComponent = overrideName?.let { Component.translatable(it) } ?: Component.translatable(id.toLanguageKey("title"))
+    fun name(): MutableComponent =
+        overrideName?.let { Component.translatable(it) } ?: Component.translatable(id.toLanguageKey("title"))
 
-    fun banner(): ResourceLocation = overrideBannerId ?: ResourceLocation.fromNamespaceAndPath(id.namespace, "textures/gui/banner/${id.path}")
+    fun banner(): ResourceLocation =
+        overrideBannerId ?: ResourceLocation.fromNamespaceAndPath(id.namespace, "textures/gui/banner/${id.path}")
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeIdentifier(id)

@@ -7,12 +7,8 @@ import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
-import com.metacontent.cobblenav.api.contact.BattleId
-import com.metacontent.cobblenav.api.contact.BattleRecord
+import com.metacontent.cobblenav.api.contact.*
 import com.metacontent.cobblenav.api.contact.BattleRecord.Companion.toParticipants
-import com.metacontent.cobblenav.api.contact.ContactType
-import com.metacontent.cobblenav.api.contact.PokenavContact
-import com.metacontent.cobblenav.api.contact.RecordType
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactsRemoved

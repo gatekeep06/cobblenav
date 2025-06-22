@@ -1,8 +1,8 @@
 package com.metacontent.cobblenav.api.event
 
 import com.cobblemon.mod.common.api.reactive.EventObservable
-import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactDataCreated
+import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactsRemoved
 import com.metacontent.cobblenav.api.event.contact.ContactsUpdated
 import com.metacontent.cobblenav.api.event.fishing.FishTravelStartedEvent

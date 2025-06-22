@@ -1,16 +1,15 @@
 package com.metacontent.cobblenav.command
 
 import com.cobblemon.mod.common.Cobblemon
-import com.metacontent.cobblenav.api.contact.title.TrainerTitle
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.command.argument.TrainerTitleArgument
 import com.metacontent.cobblenav.storage.ProfilePlayerData
 import com.metacontent.cobblenav.util.getProfileData
-import com.metacontent.cobblenav.util.join
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.Commands.*
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.Component
 
@@ -102,8 +101,7 @@ object TitleCommand : Command {
                 return@executeAndSafe if (data.grantedTitles.isNotEmpty()) {
                     data.clearTitles()
                     true
-                }
-                else {
+                } else {
                     false
                 }
             }

@@ -6,7 +6,7 @@ import com.metacontent.cobblenav.api.contact.title.TrainerTitle
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
-import java.util.UUID
+import java.util.*
 
 data class ClientProfilePlayerData(
     var title: TrainerTitle? = null,

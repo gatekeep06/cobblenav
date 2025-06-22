@@ -8,7 +8,6 @@ import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
-import com.metacontent.cobblenav.api.event.profile.ProfileDataCreated
 import com.metacontent.cobblenav.api.event.profile.TitlesGranted
 import com.metacontent.cobblenav.api.event.profile.TitlesRemoved
 import com.metacontent.cobblenav.storage.client.ClientProfilePlayerData
@@ -34,8 +33,10 @@ data class ProfilePlayerData(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 ResourceLocation.CODEC.optionalFieldOf("titleId").forGetter { Optional.ofNullable(it.titleId) },
                 ResourceLocation.CODEC.listOf().fieldOf("grantedTitles").forGetter { it.grantedTitles.toList() },
-                PrimitiveCodec.STRING.optionalFieldOf("partnerPokemonUuid").forGetter { Optional.ofNullable(it.partnerPokemonUuid?.toString()) },
-                PokemonProperties.CODEC.optionalFieldOf("partnerPokemonCache").forGetter { Optional.ofNullable(it.partnerPokemonCache) }
+                PrimitiveCodec.STRING.optionalFieldOf("partnerPokemonUuid")
+                    .forGetter { Optional.ofNullable(it.partnerPokemonUuid?.toString()) },
+                PokemonProperties.CODEC.optionalFieldOf("partnerPokemonCache")
+                    .forGetter { Optional.ofNullable(it.partnerPokemonCache) }
             ).apply(instance) { uuid, titleId, grantedTitles, partnerPokemonUuid, partnerPokemonCache ->
                 ProfilePlayerData(
                     uuid = UUID.fromString(uuid),
