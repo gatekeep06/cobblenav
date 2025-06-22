@@ -6,10 +6,12 @@ import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
+import com.cobblemon.mod.common.entity.npc.NPCBattleActor
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.metacontent.cobblenav.api.contact.*
 import com.metacontent.cobblenav.api.contact.BattleRecord.Companion.toParticipants
+import com.metacontent.cobblenav.api.contact.npc.NPCProfiles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactsRemoved
@@ -71,7 +73,19 @@ data class ContactPlayerData(
                         }
                     }
 
-                    ActorType.NPC -> emptyList()
+                    ActorType.NPC -> {
+                        val npcActor = actor as? NPCBattleActor ?: return@flatMap emptyList()
+                        val contact = NPCProfiles.get(npcActor.npc.npc.id)?.let {
+                            PokenavContact(
+                                id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID,
+                                type = ContactType.NPC,
+                                name = it.name ?: npcActor.npc.name.string,
+                                battles = mutableListOf(id)
+                            )
+                        } ?: return@flatMap emptyList()
+                        return@flatMap listOf(contact)
+                    }
+
                     else -> emptyList()
                 }
             }

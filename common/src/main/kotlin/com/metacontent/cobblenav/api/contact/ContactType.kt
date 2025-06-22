@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav.api.contact
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.util.asResource
+import com.metacontent.cobblenav.api.contact.npc.NPCProfiles
 import com.metacontent.cobblenav.util.getProfileData
 import com.mojang.serialization.Codec
 import net.minecraft.util.StringRepresentable
@@ -12,7 +14,8 @@ enum class ContactType(val profileDataExtractor: (String) -> ContactProfileData)
         ContactProfileData(profile.titleId, profile.partnerPokemonCache)
     }),
     NPC({ id ->
-        ContactProfileData(null, null)
+        val profile = NPCProfiles.get(id.asResource())
+        ContactProfileData(profile?.title, profile?.partnerPokemon)
     });
 
     override fun getSerializedName() = this.name
