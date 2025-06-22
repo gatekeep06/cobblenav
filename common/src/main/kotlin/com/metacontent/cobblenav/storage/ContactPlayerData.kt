@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.storage
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
@@ -57,14 +58,21 @@ data class ContactPlayerData(
             val winners = event.winners.toParticipants()
             val losers = event.losers.toParticipants()
             val uuids = event.battle.actors.flatMap { actor -> actor.getPlayerUUIDs() }
-            val contacts = uuids.mapNotNull { uuid ->
-                uuid.getPlayer()?.let {
-                    PokenavContact(
-                        id = uuid.toString(),
-                        type = ContactType.PLAYER,
-                        name = it.name.string,
-                        battles = mutableListOf(id)
-                    )
+            val contacts = event.battle.actors.flatMap { actor ->
+                when (actor.type) {
+                    ActorType.PLAYER -> actor.getPlayerUUIDs().mapNotNull { uuid ->
+                        uuid.getPlayer()?.let {
+                            PokenavContact(
+                                id = uuid.toString(),
+                                type = ContactType.PLAYER,
+                                name = it.name.string,
+                                battles = mutableListOf(id)
+                            )
+                        }
+                    }
+
+                    ActorType.NPC -> emptyList()
+                    else -> emptyList()
                 }
             }
             uuids.forEach { playerUUID ->
