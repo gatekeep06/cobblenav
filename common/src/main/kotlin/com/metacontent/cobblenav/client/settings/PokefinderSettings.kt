@@ -40,6 +40,16 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
             changed = true
             field = value
         }
+    var uncaughtOnly = false
+        set(value) {
+            changed = true
+            field = value
+        }
+    var unseenOnly = false
+        set(value) {
+            changed = true
+            field = value
+        }
 
     fun check(pokemon: Pokemon): Boolean {
         return if (species.isNotEmpty() && !species.map(String::lowercase).contains(pokemon.species.name.lowercase())) {
@@ -58,6 +68,12 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
             false
         }
         else if (shinyOnly && !pokemon.shiny) {
+            false
+        }
+        else if (uncaughtOnly && pokemon.caught) { # TODO - Find property for caught (or calculate from pokedex list)
+            false
+        }
+        else if (unseenOnly && pokemon.seen) { # TODO - Find property for seen (or calculate from pokedex list)
             false
         }
         else {
