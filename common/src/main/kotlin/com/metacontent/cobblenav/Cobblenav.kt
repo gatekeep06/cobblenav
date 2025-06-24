@@ -118,6 +118,16 @@ object Cobblenav {
             }
         }
 
+        if (config.notifyOnContactUpdate) {
+            CobblenavEvents.CONTACTS_UPDATED.subscribe { event ->
+                event.player?.let { player ->
+                    event.contacts.forEach {
+                        player.sendSystemMessage(Component.translatable("message.cobblenav.contact_updated", it.name))
+                    }
+                }
+            }
+        }
+
         CobblemonEvents.BATTLE_VICTORY.subscribe { ContactPlayerData.onBattleEnd(it) }
 
         if (config.syncLabelsWithClient) {
