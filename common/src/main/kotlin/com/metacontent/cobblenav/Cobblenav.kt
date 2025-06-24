@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.api.contact.npc.NPCProfiles
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
@@ -46,8 +47,8 @@ object Cobblenav {
         implementation.injectLootTables()
 
         CobblemonDataProvider.register(BiomePlatforms)
-
         CobblemonDataProvider.register(TrainerTitles)
+        CobblemonDataProvider.register(NPCProfiles)
 
         CobblenavDataStoreTypes
 
