@@ -44,6 +44,11 @@ data class PokenavContact(
             date = date
         )
     }
+
+    fun summarizeBattles(): String = battles.values
+        .groupBy { it.result }
+        .map { "${it.key.name}: ${it.value.size}" }
+        .joinToString()
 }
 
 data class ClientPokenavContact(
