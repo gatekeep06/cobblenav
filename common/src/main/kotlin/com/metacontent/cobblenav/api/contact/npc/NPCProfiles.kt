@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.util.adapters.PokemonPropertiesAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -36,5 +37,6 @@ object NPCProfiles : JsonDataRegistry<NPCProfile> {
         data.forEach { (_, profile) ->
             profiles[profile.id] = profile
         }
+        Cobblenav.LOGGER.info("Loaded {} npc profiles", profiles.size)
     }
 }

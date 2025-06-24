@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.TrainerTitleRegistrySyncPacket
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.resources.ResourceLocation
@@ -44,5 +45,6 @@ object TrainerTitles : JsonDataRegistry<TrainerTitle> {
         data.forEach { (_, title) ->
             titles[title.id] = title
         }
+        Cobblenav.LOGGER.info("Loaded {} titles", titles.size)
     }
 }
