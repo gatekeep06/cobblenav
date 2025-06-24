@@ -19,4 +19,10 @@ class PokenavSettings : Settings<PokenavSettings>() {
             changed = true
             field = value
         }
+
+    var shareContacts = true
+        set(value) {
+            changed = true
+            field = value
+        }
 }

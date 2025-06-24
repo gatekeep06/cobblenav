@@ -71,7 +71,7 @@ object TitleCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val title = TrainerTitleArgument.getTitle(context, TITLE_ARGUMENT)
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data -> data.grantTitle(title.id) }
+            ProfilePlayerData.executeAndSave(it) { data -> data.grantTitle(title.id) }
         }
         return 1
     }
@@ -80,7 +80,7 @@ object TitleCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val strictUseTitles = TrainerTitles.getStrict().map { it.id }
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data -> data.grantTitles(strictUseTitles) }
+            ProfilePlayerData.executeAndSave(it) { data -> data.grantTitles(strictUseTitles) }
         }
         return 1
     }
@@ -89,7 +89,7 @@ object TitleCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val title = TrainerTitleArgument.getTitle(context, TITLE_ARGUMENT)
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data -> data.removeTitle(title.id) }
+            ProfilePlayerData.executeAndSave(it) { data -> data.removeTitle(title.id) }
         }
         return 1
     }
@@ -97,8 +97,8 @@ object TitleCommand : Command {
     private fun executeRemoveAll(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         players.forEach {
-            ProfilePlayerData.executeAndSafe(it) { data ->
-                return@executeAndSafe if (data.grantedTitles.isNotEmpty()) {
+            ProfilePlayerData.executeAndSave(it) { data ->
+                return@executeAndSave if (data.grantedTitles.isNotEmpty()) {
                     data.clearTitles()
                     true
                 } else {

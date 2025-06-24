@@ -114,9 +114,9 @@ object ContactCommand : Command {
                 id = contactPlayer.uuid.toString(),
                 type = ContactType.PLAYER,
                 name = contactPlayer.name.string,
-                battles = mutableListOf()
+                battles = hashMapOf()
             )
-            ContactPlayerData.executeAndSafe(it) { data -> data.updateContacts(contact) }
+            ContactPlayerData.executeAndSave(it) { data -> data.updateContacts(contact) }
         }
         return 1
     }
@@ -125,7 +125,7 @@ object ContactCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid.toString()
         players.forEach {
-            ContactPlayerData.executeAndSafe(it) { data -> data.removeContact(contactUuid) }
+            ContactPlayerData.executeAndSave(it) { data -> data.removeContact(contactUuid) }
         }
         return 1
     }
@@ -134,9 +134,9 @@ object ContactCommand : Command {
         val players = EntityArgument.getPlayers(context, PLAYER_ARGUMENT)
         val name = StringArgumentType.getString(context, CONTACT_NAME_ARGUMENT)
         players.forEach {
-            ContactPlayerData.executeAndSafe(it) { data ->
+            ContactPlayerData.executeAndSave(it) { data ->
                 val contact = data.findByName(name)
-                return@executeAndSafe if (contact != null) {
+                return@executeAndSave if (contact != null) {
                     data.removeContact(contact.id)
                 } else {
                     false
@@ -149,8 +149,8 @@ object ContactCommand : Command {
     private fun executeClear(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, PLAYERS_ARGUMENT)
         players.forEach {
-            ContactPlayerData.executeAndSafe(it) { data ->
-                return@executeAndSafe if (data.contacts.isNotEmpty()) {
+            ContactPlayerData.executeAndSave(it) { data ->
+                return@executeAndSave if (data.contacts.isNotEmpty()) {
                     data.clearContacts()
                     true
                 } else {

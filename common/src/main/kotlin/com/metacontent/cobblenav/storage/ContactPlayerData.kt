@@ -6,15 +6,21 @@ import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
+import com.cobblemon.mod.common.battles.actor.PlayerBattleActor
+import com.cobblemon.mod.common.entity.npc.NPCBattleActor
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
-import com.metacontent.cobblenav.api.contact.*
-import com.metacontent.cobblenav.api.contact.BattleRecord.Companion.toParticipants
+import com.metacontent.cobblenav.api.contact.BattleId
+import com.metacontent.cobblenav.api.contact.ContactBattleRecord.Companion.getBattleRecord
+import com.metacontent.cobblenav.api.contact.ContactType
+import com.metacontent.cobblenav.api.contact.PokenavContact
+import com.metacontent.cobblenav.api.contact.npc.NPCProfiles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactsRemoved
 import com.metacontent.cobblenav.api.event.contact.ContactsUpdated
 import com.metacontent.cobblenav.storage.client.ClientContactPlayerData
+import com.metacontent.cobblenav.util.ContactSharingManager
 import com.metacontent.cobblenav.util.getContactData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
@@ -25,70 +31,81 @@ import java.util.*
 data class ContactPlayerData(
     override val uuid: UUID,
     val contacts: HashMap<String, PokenavContact>,
-    val battles: HashMap<BattleId, BattleRecord>
 ) : InstancedPlayerData {
     companion object {
         val CODEC: Codec<ContactPlayerData> = RecordCodecBuilder.create { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 PokenavContact.CODEC.listOf().fieldOf("contacts").forGetter { it.contacts.values.toList() },
-                BattleRecord.CODEC.listOf().fieldOf("battles").forGetter { it.battles.values.toList() }
-            ).apply(instance) { uuid, contacts, battles ->
+            ).apply(instance) { uuid, contacts ->
                 ContactPlayerData(
                     UUID.fromString(uuid),
                     HashMap(contacts.associateBy(PokenavContact::id)),
-                    HashMap(battles.associateBy(BattleRecord::id))
                 )
             }
         }
 
-        fun executeAndSafe(uuid: UUID, action: (ContactPlayerData) -> Boolean) {
+        fun executeAndSave(uuid: UUID, action: (ContactPlayerData) -> Boolean) {
             val data = Cobblemon.playerDataManager.getContactData(uuid)
             if (action(data)) {
                 Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.CONTACTS)
             }
         }
 
-        fun executeAndSafe(player: ServerPlayer, action: (ContactPlayerData) -> Boolean) {
-            executeAndSafe(player.uuid, action)
+        fun executeAndSave(player: ServerPlayer, action: (ContactPlayerData) -> Boolean) {
+            executeAndSave(player.uuid, action)
         }
 
         internal fun onBattleEnd(event: BattleVictoryEvent) {
             val id = BattleId(event.battle.battleId)
-            val winners = event.winners.toParticipants()
-            val losers = event.losers.toParticipants()
-            val uuids = event.battle.actors.flatMap { actor -> actor.getPlayerUUIDs() }
-            val contacts = event.battle.actors.flatMap { actor ->
-                when (actor.type) {
-                    ActorType.PLAYER -> actor.getPlayerUUIDs().mapNotNull { uuid ->
-                        uuid.getPlayer()?.let {
-                            PokenavContact(
-                                id = uuid.toString(),
-                                type = ContactType.PLAYER,
-                                name = it.name.string,
-                                battles = mutableListOf(id)
-                            )
+            val playerActors = event.battle.actors.filterIsInstance<PlayerBattleActor>()
+            playerActors.forEach { playerActor ->
+                val player = playerActor.entity ?: return@forEach
+                executeAndSave(player) { data ->
+                    val contacts = event.battle.actors.flatMap { actor ->
+                        when (actor.type) {
+                            ActorType.PLAYER -> actor.getPlayerUUIDs().mapNotNull { uuid ->
+                                if (!ContactSharingManager.checkSharing(uuid)) return@mapNotNull null
+                                uuid.getPlayer()?.let {
+                                    PokenavContact(
+                                        id = uuid.toString(),
+                                        type = ContactType.PLAYER,
+                                        name = it.name.string,
+                                        battles = hashMapOf(
+                                            id to actor.getBattleRecord(
+                                                id,
+                                                playerActor,
+                                                event.winners
+                                            )
+                                        )
+                                    )
+                                }
+                            }
+
+                            ActorType.NPC -> {
+                                val npcActor = actor as? NPCBattleActor ?: return@flatMap emptyList()
+                                val contact = NPCProfiles.get(npcActor.npc.npc.id)?.let {
+                                    if (!it.shareContactAfterBattle) return@let null
+                                    PokenavContact(
+                                        id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID,
+                                        type = ContactType.NPC,
+                                        name = it.name ?: npcActor.npc.name.string,
+                                        battles = hashMapOf(
+                                            id to npcActor.getBattleRecord(
+                                                id,
+                                                playerActor,
+                                                event.winners
+                                            )
+                                        )
+                                    )
+                                } ?: return@flatMap emptyList()
+                                return@flatMap listOf(contact)
+                            }
+
+                            else -> emptyList()
                         }
                     }
-
-                    ActorType.NPC -> emptyList()
-                    else -> emptyList()
-                }
-            }
-            uuids.forEach { playerUUID ->
-                executeAndSafe(playerUUID) { data ->
-                    val battle = BattleRecord(
-                        id = id,
-                        winners = winners,
-                        losers = losers,
-                        type = if (winners.keys.contains(playerUUID.toString())) {
-                            RecordType.WIN
-                        } else {
-                            RecordType.LOSS
-                        }
-                    )
-                    data.battles[id] = battle
-                    return@executeAndSafe data.updateContacts(contacts)
+                    return@executeAndSave data.updateContacts(contacts)
                 }
             }
         }
@@ -114,7 +131,7 @@ data class ContactPlayerData(
             CobblenavEvents.CONTACTS_ADDED.post(ContactsAdded(player, listOf(contact)))
             true
         } else if (contact.battles.isNotEmpty()) {
-            existingContact.battles.addAll(contact.battles)
+            existingContact.battles.putAll(contact.battles)
             CobblenavEvents.CONTACTS_UPDATED.post(ContactsUpdated(player, listOf(existingContact)))
             true
         } else {
@@ -139,7 +156,7 @@ data class ContactPlayerData(
                 addedContacts.add(contact)
                 true
             } else if (contact.battles.isNotEmpty()) {
-                existingContact.battles.addAll(contact.battles)
+                existingContact.battles.putAll(contact.battles)
                 updatedContacts.add(existingContact)
                 true
             } else {
@@ -187,7 +204,6 @@ data class ContactPlayerData(
     override fun toClientData(): ClientInstancedPlayerData {
         return ClientContactPlayerData(
             HashMap(contacts.mapValues { it.value.toClientContact() }),
-            battles
         )
     }
 }

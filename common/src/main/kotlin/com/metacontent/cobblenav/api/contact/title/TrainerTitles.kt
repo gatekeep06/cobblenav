@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.TrainerTitleRegistrySyncPacket
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.resources.ResourceLocation
@@ -24,7 +25,7 @@ object TrainerTitles : JsonDataRegistry<TrainerTitle> {
     override val type = PackType.SERVER_DATA
     override val typeToken: TypeToken<TrainerTitle> = TypeToken.get(TrainerTitle::class.java)
 
-    private val titles = mutableMapOf<ResourceLocation, TrainerTitle>()
+    private val titles = hashMapOf<ResourceLocation, TrainerTitle>()
 
     fun getTitle(id: ResourceLocation): TrainerTitle? = titles[id]
 
@@ -41,9 +42,9 @@ object TrainerTitles : JsonDataRegistry<TrainerTitle> {
     }
 
     override fun reload(data: Map<ResourceLocation, TrainerTitle>) {
-        data.forEach {
-            it.value.id = it.key
-            titles[it.key] = it.value
+        data.forEach { (_, title) ->
+            titles[title.id] = title
         }
+        Cobblenav.LOGGER.info("Loaded {} titles", titles.size)
     }
 }
