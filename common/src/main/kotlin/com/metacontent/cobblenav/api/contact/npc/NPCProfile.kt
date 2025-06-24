@@ -8,5 +8,6 @@ data class NPCProfile(
     val name: String?,
     val title: ResourceLocation?,
     val partnerPokemon: PokemonProperties?,
-    val commonForAllEntities: Boolean
+    val commonForAllEntities: Boolean,
+    val shareContactAfterBattle: Boolean
 )

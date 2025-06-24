@@ -48,15 +48,15 @@ data class ProfilePlayerData(
             }
         }
 
-        fun executeAndSafe(uuid: UUID, action: (ProfilePlayerData) -> Boolean) {
+        fun executeAndSave(uuid: UUID, action: (ProfilePlayerData) -> Boolean) {
             val data = Cobblemon.playerDataManager.getProfileData(uuid)
             if (action(data)) {
                 Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.PROFILE)
             }
         }
 
-        fun executeAndSafe(player: ServerPlayer, action: (ProfilePlayerData) -> Boolean) {
-            executeAndSafe(player.uuid, action)
+        fun executeAndSave(player: ServerPlayer, action: (ProfilePlayerData) -> Boolean) {
+            executeAndSave(player.uuid, action)
         }
     }
 
