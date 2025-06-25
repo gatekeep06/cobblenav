@@ -98,9 +98,11 @@ object ContactCommand : Command {
         val source = context.source.playerOrException
         val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
         val name = StringArgumentType.getString(context, CONTACT_NAME_ARGUMENT)
-        val data = Cobblemon.playerDataManager.getContactData(player)
-        data.findByName(name)?.let {
-            source.sendSystemMessage(Component.literal(it.summarizeBattles()))
+        val contacts = Cobblemon.playerDataManager.getContactData(player).findByName(name)
+        if (contacts.isNotEmpty()) {
+            contacts.forEach {
+                source.sendSystemMessage(Component.literal(it.summarizeBattles()))
+            }
             return 1
         }
         source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
@@ -134,11 +136,11 @@ object ContactCommand : Command {
     private fun executeRemoveByName(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, PLAYER_ARGUMENT)
         val name = StringArgumentType.getString(context, CONTACT_NAME_ARGUMENT)
-        players.forEach {
-            ContactPlayerData.executeAndSave(it) { data ->
-                val contact = data.findByName(name)
-                return@executeAndSave if (contact != null) {
-                    data.removeContact(contact.id)
+        players.forEach { player ->
+            ContactPlayerData.executeAndSave(player) { data ->
+                val contacts = data.findByName(name)
+                return@executeAndSave if (contacts.isNotEmpty()) {
+                    contacts.map { data.removeContact(it.id) }.any { it }
                 } else {
                     false
                 }

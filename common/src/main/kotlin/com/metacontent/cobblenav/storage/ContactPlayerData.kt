@@ -121,7 +121,7 @@ data class ContactPlayerData(
 
     fun find(id: String) = contacts[id]
 
-    fun findByName(name: String) = contacts.values.firstOrNull { it.name == name }
+    fun findByName(name: String) = contacts.values.filter { it.name == name }
 
     fun updateContacts(contact: PokenavContact): Boolean {
         if (contact.id == uuid.toString()) return false
