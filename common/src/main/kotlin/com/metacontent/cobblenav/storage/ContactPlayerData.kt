@@ -45,15 +45,17 @@ data class ContactPlayerData(
             }
         }
 
-        fun executeAndSave(uuid: UUID, action: (ContactPlayerData) -> Boolean) {
+        fun executeAndSave(uuid: UUID, action: (ContactPlayerData) -> Boolean): Boolean {
             val data = Cobblemon.playerDataManager.getContactData(uuid)
             if (action(data)) {
                 Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.CONTACTS)
+                return true
             }
+            return false
         }
 
-        fun executeAndSave(player: ServerPlayer, action: (ContactPlayerData) -> Boolean) {
-            executeAndSave(player.uuid, action)
+        fun executeAndSave(player: ServerPlayer, action: (ContactPlayerData) -> Boolean): Boolean {
+            return executeAndSave(player.uuid, action)
         }
 
         internal fun onBattleEnd(event: BattleVictoryEvent) {
@@ -86,8 +88,11 @@ data class ContactPlayerData(
                                 val npcActor = actor as? NPCBattleActor ?: return@flatMap emptyList()
                                 val contact = NPCProfiles.get(npcActor.npc.npc.id)?.let {
                                     if (!it.shareContactAfterBattle) return@let null
+                                    val npcId =
+                                        if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID
+                                    if (data.find(npcId) == null && !it.recordBattles) return@let null
                                     PokenavContact(
-                                        id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID,
+                                        id = npcId,
                                         type = ContactType.NPC,
                                         name = it.name ?: npcActor.npc.name.string,
                                         battles = hashMapOf(
