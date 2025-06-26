@@ -130,6 +130,8 @@ object Cobblenav {
 
         CobblemonEvents.BATTLE_VICTORY.subscribe { ContactPlayerData.onBattleEnd(it) }
 
+        CobblenavMoLang.init()
+
         if (config.syncLabelsWithClient) {
             CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
