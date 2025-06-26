@@ -1,0 +1,6 @@
+{
+    "id": "cobblenav:john_pokenav",
+    "commonForAllEntities": true,
+    "shareContactAfterBattle": false,
+    "recordBattles": true
+}
