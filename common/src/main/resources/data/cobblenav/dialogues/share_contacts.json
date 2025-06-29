@@ -51,7 +51,7 @@
             "id": "exchange",
             "speaker": "npc",
             "lines": [
-                "We should exchange numbers — it’ll be fun to stay in touch!"
+                "We should exchange numbers — it’ll be fun!"
             ],
             "input": "q.dialogue.set_page('answer');"
         },
@@ -69,7 +69,7 @@
                         "text": "Sure, why not?",
                         "value": "yes",
                         "action": [
-                            "q.player.update_npc_contact(q.npc.class, q.npc.uuid, q.npc.name);",
+                            "q.player.add_npc_contact(q.npc.class, q.npc.uuid, q.npc.name);",
                             "q.dialogue.set_page('yes');"
                         ]
                     },
