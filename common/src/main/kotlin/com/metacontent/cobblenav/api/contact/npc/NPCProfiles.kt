@@ -19,6 +19,7 @@ object NPCProfiles : JsonDataRegistry<NPCProfile> {
         .disableHtmlEscaping()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .registerTypeAdapter(PokemonProperties::class.java, PokemonPropertiesAdapter(false))
+        .registerTypeAdapter(PostBattleContactProvider::class.java, PostBattleContactProviderAdapter)
         .setPrettyPrinting()
         .create()
     override val id = cobblenavResource("npc_profiles")

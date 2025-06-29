@@ -9,6 +9,6 @@ data class NPCProfile(
     val title: ResourceLocation?,
     val partnerPokemon: PokemonProperties?,
     val commonForAllEntities: Boolean,
-    val shareContactAfterBattle: Boolean,
+    val postBattleContact: PostBattleContactProvider,
     val recordBattles: Boolean
 )
