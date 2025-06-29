@@ -25,6 +25,8 @@ object PostBattleContactProviderAdapter : JsonDeserializer<PostBattleContactProv
                         )
                     )
 
+                    "battlerecord" -> BattleRecordProvider()
+
                     else -> NoContactProvider()
                 }
             }

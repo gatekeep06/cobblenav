@@ -26,6 +26,12 @@ class ImmediateContactProvider : PostBattleContactProvider {
     override fun provide(player: ServerPlayer, entity: NPCEntity, contact: PokenavContact): PokenavContact = contact
 }
 
+class BattleRecordProvider : PostBattleContactProvider {
+    override fun canShare() = true
+
+    override fun provide(player: ServerPlayer, entity: NPCEntity, contact: PokenavContact): PokenavContact? = null
+}
+
 class DialogueContactProvider(
     val dialogueId: ResourceLocation
 ) : PostBattleContactProvider {
