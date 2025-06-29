@@ -217,7 +217,7 @@ data class ContactPlayerData(
             SetClientPlayerDataPacket(
                 type = CobblenavDataStoreTypes.CONTACTS,
                 playerData = this.toClientData()
-            )
+            ).sendToPlayer(it)
         }
     }
 
