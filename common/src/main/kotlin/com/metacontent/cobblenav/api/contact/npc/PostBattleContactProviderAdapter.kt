@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
+import com.google.gson.reflect.TypeToken
 import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
 
@@ -22,6 +23,21 @@ object PostBattleContactProviderAdapter : JsonDeserializer<PostBattleContactProv
                         context.deserialize(
                             jsonObject.get("dialogue"),
                             ResourceLocation::class.java
+                        ),
+                        context.deserialize(
+                            jsonObject.get("lossDialogue"),
+                            ResourceLocation::class.java
+                        )
+                    )
+
+                    "randomdialogue" -> RandomDialogueContactProvider(
+                        context.deserialize(
+                            jsonObject.get("dialogues"),
+                            TypeToken.getParameterized(List::class.java, ResourceLocation::class.java).type
+                        ),
+                        context.deserialize(
+                            jsonObject.get("lossDialogues"),
+                            TypeToken.getParameterized(List::class.java, ResourceLocation::class.java).type
                         )
                     )
 

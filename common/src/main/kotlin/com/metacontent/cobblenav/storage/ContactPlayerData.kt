@@ -94,7 +94,12 @@ data class ContactPlayerData(
                             ActorType.NPC -> {
                                 val npcActor = actor as? NPCBattleActor ?: return@mapNotNull null
                                 return@mapNotNull NPCProfiles.get(npcActor.npc.npc.id)?.let {
-                                    if (!it.postBattleContact.canShare()) return@let null
+                                    if (!it.postBattleContact.canShare(
+                                            playerActor = contactReceiver,
+                                            npcActor = npcActor,
+                                            winners = event.winners
+                                        )
+                                    ) return@let null
                                     val id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID
                                     battles[id] = actor.getBattleRecord(
                                         id = battleId,
@@ -102,13 +107,14 @@ data class ContactPlayerData(
                                         winners = event.winners
                                     )
                                     return@let it.postBattleContact.provide(
-                                        player = player,
-                                        entity = npcActor.entity,
                                         contact = PokenavContact(
                                             id = id,
                                             type = ContactType.NPC,
                                             name = it.name ?: npcActor.npc.name.string
-                                        )
+                                        ),
+                                        playerActor = contactReceiver,
+                                        npcActor = npcActor,
+                                        winners = event.winners
                                     )
                                 }
                             }
