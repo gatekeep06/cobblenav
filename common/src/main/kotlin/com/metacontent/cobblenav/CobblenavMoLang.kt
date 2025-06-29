@@ -29,7 +29,7 @@ object CobblenavMoLang {
                 val data = Cobblemon.playerDataManager.getContactData(player)
                 return@put DoubleValue(data.find(id) != null)
             }
-            map.put("update_npc_contact") { params ->
+            map.put("add_npc_contact") { params ->
                 val profile = NPCProfiles.get(ResourceLocation.parse(params.getString(0)))
                     ?: return@put DoubleValue.ZERO
                 val id = if (profile.commonForAllEntities) profile.id.toString() else params.getString(1)
