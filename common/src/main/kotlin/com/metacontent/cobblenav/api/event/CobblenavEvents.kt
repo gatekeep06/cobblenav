@@ -4,7 +4,6 @@ import com.cobblemon.mod.common.api.reactive.EventObservable
 import com.metacontent.cobblenav.api.event.contact.ContactDataCreated
 import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactsRemoved
-import com.metacontent.cobblenav.api.event.contact.ContactsUpdated
 import com.metacontent.cobblenav.api.event.fishing.FishTravelStartedEvent
 import com.metacontent.cobblenav.api.event.profile.ProfileDataCreated
 import com.metacontent.cobblenav.api.event.profile.TitlesGranted
@@ -30,9 +29,6 @@ object CobblenavEvents {
 
     @JvmStatic
     val CONTACTS_ADDED = EventObservable<ContactsAdded>()
-
-    @JvmStatic
-    val CONTACTS_UPDATED = EventObservable<ContactsUpdated>()
 
     @JvmStatic
     val CONTACTS_REMOVED = EventObservable<ContactsRemoved>()
