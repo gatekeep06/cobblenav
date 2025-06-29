@@ -36,13 +36,12 @@ object CobblenavMoLang {
                 val contact = PokenavContact(
                     id = id,
                     type = ContactType.NPC,
-                    name = profile.name ?: params.getString(2),
-                    battles = hashMapOf()
+                    name = profile.name ?: params.getString(2)
                 )
                 val result = ContactPlayerData.executeAndSave(player) { data ->
-                    data.updateContacts(contact)
+                    data.addContact(contact)
                 }
-                return@put if (result) DoubleValue.ONE else DoubleValue.ZERO
+                return@put DoubleValue(result)
             }
         }
         map
