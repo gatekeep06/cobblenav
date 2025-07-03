@@ -200,6 +200,7 @@ data class ContactPlayerData(
 
     fun removeContact(id: String): Boolean {
         val contact = contacts.remove(id) ?: return false
+        battles.remove(id)
         CobblenavEvents.CONTACTS_REMOVED.post(ContactsRemoved(player, listOf(contact)))
         return true
     }
@@ -208,6 +209,7 @@ data class ContactPlayerData(
         if (contacts.isEmpty()) return false
         val values = contacts.values.toList()
         contacts.clear()
+        battles.clear()
         CobblenavEvents.CONTACTS_REMOVED.post(ContactsRemoved(player, values))
         return true
     }
@@ -223,7 +225,7 @@ data class ContactPlayerData(
 
     override fun toClientData(): ClientInstancedPlayerData {
         return ClientContactPlayerData(
-            HashMap(contacts.mapValues { it.value.toClientContact() }),
+            HashMap(contacts.mapValues { it.value.toClientContact(battles[it.key]) }),
         )
     }
 }

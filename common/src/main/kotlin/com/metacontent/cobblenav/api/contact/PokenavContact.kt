@@ -31,21 +31,17 @@ data class PokenavContact(
         }
     }
 
-    fun toClientContact(): ClientPokenavContact {
+    fun toClientContact(battles: List<ContactBattleRecord>?): ClientPokenavContact {
         val profile = type.profileDataExtractor(id)
         return ClientPokenavContact(
             id = id,
             name = name,
             titleId = profile.titleId,
             partnerPokemon = profile.partnerPokemon?.asRenderablePokemon(),
+            battles = battles?.associateBy { it.id }?.let { HashMap(it) } ?: hashMapOf(),
             date = date
         )
     }
-
-//    fun summarizeBattles(): String = battles.values
-//        .groupBy { it.result }
-//        .map { "${it.key.name}: ${it.value.size}" }
-//        .joinToString()
 }
 
 data class ClientPokenavContact(
@@ -53,6 +49,7 @@ data class ClientPokenavContact(
     val name: String,
     val titleId: ResourceLocation?,
     val partnerPokemon: RenderablePokemon?,
+    val battles: HashMap<BattleId, ContactBattleRecord>,
     val date: Date
 ) : Encodable {
     companion object {
@@ -61,6 +58,8 @@ data class ClientPokenavContact(
             name = buffer.readString(),
             titleId = buffer.readNullable { it.readResourceLocation() },
             partnerPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(buffer) },
+            battles = HashMap(buffer.readList { ContactBattleRecord.decode(it as RegistryFriendlyByteBuf) }
+                .associateBy { it.id }),
             date = buffer.readDate()
         )
     }
@@ -70,6 +69,7 @@ data class ClientPokenavContact(
         buffer.writeString(name)
         buffer.writeNullable(titleId) { pb, value -> pb.writeResourceLocation(value) }
         buffer.writeNullable(partnerPokemon) { pb, value -> value.saveToBuffer(pb as RegistryFriendlyByteBuf) }
+        buffer.writeCollection(battles.values) { pb, value -> value.encode(pb as RegistryFriendlyByteBuf) }
         buffer.writeDate(date)
     }
 }
