@@ -129,30 +129,6 @@ data class ContactPlayerData(
                 }
             }
         }
-
-//        private fun handlePlayerActor(actor: BattleActor): PokenavContact? {
-//            val playerActor = actor as? PlayerBattleActor ?: return null
-//            if (!ContactSharingManager.checkSharing(playerActor.uuid)) return null
-//            return playerActor.entity?.let {
-//                PokenavContact(
-//                    id = playerActor.uuid.toString(),
-//                    type = ContactType.PLAYER,
-//                    name = it.name.string
-//                )
-//            }
-//        }
-//
-//        private fun handleNPCActor(actor: BattleActor): PokenavContact? {
-//            val npcActor = actor as? NPCBattleActor ?: return null
-//            return NPCProfiles.get(npcActor.npc.npc.id)?.let {
-//                if (!it.postBattleContact.canShare()) return@let null
-//                PokenavContact(
-//                    id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID,
-//                    type = ContactType.NPC,
-//                    name = it.name ?: npcActor.npc.name.string
-//                )
-//            }
-//        }
     }
 
     private val player: ServerPlayer? by lazy { uuid.getPlayer() }
