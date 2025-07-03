@@ -46,7 +46,7 @@ data class ContactPlayerData(
                 ContactPlayerData(
                     UUID.fromString(uuid),
                     HashMap(contacts.associateBy(PokenavContact::id)),
-                    HashMap(battles)
+                    HashMap(battles.mapValues { it.value.toMutableList() })
                 )
             }
         }
