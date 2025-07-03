@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
+import com.metacontent.cobblenav.api.contact.ContactType
 import com.metacontent.cobblenav.api.contact.npc.NPCProfiles
 import com.metacontent.cobblenav.api.contact.title.TrainerTitles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
@@ -118,17 +119,9 @@ object Cobblenav {
             }
         }
 
-        if (config.notifyOnContactUpdate) {
-            CobblenavEvents.CONTACTS_UPDATED.subscribe { event ->
-                event.player?.let { player ->
-                    event.contacts.forEach {
-                        player.sendSystemMessage(Component.translatable("message.cobblenav.contact_updated", it.name))
-                    }
-                }
-            }
-        }
-
         CobblemonEvents.BATTLE_VICTORY.subscribe { ContactPlayerData.onBattleEnd(it) }
+
+        CobblenavMoLang.init()
 
         if (config.syncLabelsWithClient) {
             CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->

@@ -1,0 +1,110 @@
+{
+    "initializationAction": [
+        "c.npc.set_chatting();"
+    ],
+    "speakers": {
+        "npc": {
+            "name": {
+                "type": "expression",
+                "expression": "q.npc.name"
+            },
+            "face": "q.npc.face(false);"
+        },
+        "pokenav": {
+            "name": "PokéNav",
+            "face": "q.player.face();"
+        },
+        "player": {
+            "face": "q.player.face();",
+            "name": {
+                "type": "expression",
+                "expression": "q.player.username"
+            }
+        }
+    },
+    "pages": [
+        {
+            "id": "greeting",
+            "speaker": "player",
+            "lines": [
+                "Hi!"
+            ],
+            "input": "q.dialogue.set_page((!q.player.has_npc_contact(q.npc.class, q.npc.uuid) && q.player.has_pokenav()) ? 'player_has_pokenav' : 'busy');"
+        },
+        {
+            "id": "busy",
+            "speaker": "npc",
+            "lines": [
+                "Sorry, I'm a little busy with my PokéNav."
+            ],
+            "input": "q.dialogue.close();"
+        },
+        {
+            "id": "player_has_pokenav",
+            "speaker": "npc",
+            "lines": [
+                "Whoa! Is that a PokéNav? Sweet!"
+            ],
+            "input": "q.dialogue.set_page('exchange');"
+        },
+        {
+            "id": "exchange",
+            "speaker": "npc",
+            "lines": [
+                "We should exchange numbers — it’ll be fun!"
+            ],
+            "input": "q.dialogue.set_page('answer');"
+        },
+        {
+            "id": "answer",
+            "speaker": "player",
+            "lines": [
+                "..."
+            ],
+            "input": {
+                "type": "option",
+                "vertical": false,
+                "options": [
+                    {
+                        "text": "Sure, why not?",
+                        "value": "yes",
+                        "action": [
+                            "q.player.add_npc_contact(q.npc.class, q.npc.uuid, q.npc.name);",
+                            "q.dialogue.set_page('yes');"
+                        ]
+                    },
+                    {
+                        "text": "I’ll pass for now.",
+                        "value": "no",
+                        "action": "q.dialogue.set_page('no');"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "yes",
+            "speaker": "npc",
+            "lines": [
+                "Great! I’ll message you sometime!",
+                "Take care!"
+            ],
+            "input": "q.dialogue.set_page('contact_added');"
+        },
+        {
+            "id": "contact_added",
+            "speaker": "pokenav",
+            "lines": [
+                "(Contact added to PokéNav)"
+            ],
+            "input": "q.dialogue.close();"
+        },
+        {
+            "id": "no",
+            "speaker": "npc",
+            "lines": [
+                "Oh, alright… Maybe next time then!"
+            ],
+            "input": "q.dialogue.close();"
+        }
+    ]
+}

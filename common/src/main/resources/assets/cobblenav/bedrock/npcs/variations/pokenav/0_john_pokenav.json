@@ -1,0 +1,13 @@
+{
+    "name": "cobblenav:john_pokenav",
+    "order": 0,
+    "variations": [
+        {
+            "aspects": [],
+            "poser": "cobblemon:standard",
+            "model": "cobblemon:trainer.geo",
+            "texture": "cobblemon:textures/npcs/standard/trainer.png",
+            "layers": []
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "initializationAction": [
+        "c.npc.set_chatting();",
+        "q.player.has_npc_contact(q.npc.class, q.npc.uuid) ? q.dialogue.close();"
+    ],
+    "speakers": {
+        "npc": {
+            "name": {
+                "type": "expression",
+                "expression": "q.npc.name"
+            },
+            "face": "q.npc.face(false);"
+        },
+        "pokenav": {
+            "name": "PokéNav",
+            "face": "q.player.face();"
+        }
+    },
+    "pages": [
+        {
+            "id": "after-battle",
+            "speaker": "npc",
+            "lines": [
+                "Welp, I won... but I’m too tired to gloat. Remind me to brag later."
+            ],
+            "input": [
+                "q.player.add_npc_contact(q.npc.class, q.npc.uuid, q.npc.name);",
+                "q.dialogue.set_page('pokenav');"
+            ]
+        },
+        {
+            "id": "pokenav",
+            "speaker": "pokenav",
+            "lines": [
+                "(Contact added to PokéNav)"
+            ],
+            "input": "q.dialogue.close();"
+        }
+    ]
+}

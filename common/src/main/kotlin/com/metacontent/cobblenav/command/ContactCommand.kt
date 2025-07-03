@@ -84,10 +84,10 @@ object ContactCommand : Command {
     private fun executeCheck(context: CommandContext<CommandSourceStack>): Int {
         val source = context.source.playerOrException
         val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
-        val contactUuid = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid
+        val id = EntityArgument.getPlayer(context, CONTACT_PLAYER_ARGUMENT).uuid.toString()
         val data = Cobblemon.playerDataManager.getContactData(player)
-        data.find(contactUuid)?.let {
-            source.sendSystemMessage(Component.literal(it.summarizeBattles()))
+        data.summarizeBattles(id)?.let {
+            source.sendSystemMessage(Component.literal(it))
             return 1
         }
         source.sendSystemMessage(Component.translatable("message.cobblenav.contact_not_found").red())
@@ -98,10 +98,13 @@ object ContactCommand : Command {
         val source = context.source.playerOrException
         val player = EntityArgument.getPlayer(context, PLAYER_ARGUMENT)
         val name = StringArgumentType.getString(context, CONTACT_NAME_ARGUMENT)
-        val contacts = Cobblemon.playerDataManager.getContactData(player).findByName(name)
+        val data = Cobblemon.playerDataManager.getContactData(player)
+        val contacts = data.findByName(name)
         if (contacts.isNotEmpty()) {
-            contacts.forEach {
-                source.sendSystemMessage(Component.literal(it.summarizeBattles()))
+            contacts.forEach { contact ->
+                data.summarizeBattles(contact.id)?.let {
+                    source.sendSystemMessage(Component.literal(it))
+                }
             }
             return 1
         }
@@ -116,10 +119,9 @@ object ContactCommand : Command {
             val contact = PokenavContact(
                 id = contactPlayer.uuid.toString(),
                 type = ContactType.PLAYER,
-                name = contactPlayer.name.string,
-                battles = hashMapOf()
+                name = contactPlayer.name.string
             )
-            ContactPlayerData.executeAndSave(it) { data -> data.updateContacts(contact) }
+            ContactPlayerData.executeAndSave(it) { data -> data.addContact(contact) }
         }
         return 1
     }

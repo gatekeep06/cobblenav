@@ -16,7 +16,6 @@ data class PokenavContact(
     val id: String,
     val type: ContactType,
     val name: String,
-    val battles: HashMap<BattleId, ContactBattleRecord>,
     val date: Date = Date()
 ) {
     companion object {
@@ -25,30 +24,24 @@ data class PokenavContact(
                 PrimitiveCodec.STRING.fieldOf("id").forGetter { it.id },
                 ContactType.CODEC.fieldOf("type").forGetter { it.type },
                 PrimitiveCodec.STRING.fieldOf("name").forGetter { it.name },
-                ContactBattleRecord.CODEC.listOf().fieldOf("battles").forGetter { it.battles.values.toList() },
                 PrimitiveCodec.LONG.fieldOf("date").forGetter { it.date.time }
-            ).apply(instance) { id, type, name, battles, date ->
-                PokenavContact(id, type, name, HashMap(battles.associateBy { it.id }), Date(date))
+            ).apply(instance) { id, type, name, date ->
+                PokenavContact(id, type, name, Date(date))
             }
         }
     }
 
-    fun toClientContact(): ClientPokenavContact {
+    fun toClientContact(battles: List<ContactBattleRecord>?): ClientPokenavContact {
         val profile = type.profileDataExtractor(id)
         return ClientPokenavContact(
             id = id,
             name = name,
             titleId = profile.titleId,
             partnerPokemon = profile.partnerPokemon?.asRenderablePokemon(),
-            battles = battles,
+            battles = battles?.associateBy { it.id }?.let { HashMap(it) } ?: hashMapOf(),
             date = date
         )
     }
-
-    fun summarizeBattles(): String = battles.values
-        .groupBy { it.result }
-        .map { "${it.key.name}: ${it.value.size}" }
-        .joinToString()
 }
 
 data class ClientPokenavContact(
@@ -65,10 +58,8 @@ data class ClientPokenavContact(
             name = buffer.readString(),
             titleId = buffer.readNullable { it.readResourceLocation() },
             partnerPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(buffer) },
-            battles = HashMap(buffer.readMap(
-                { BattleId.decode(it as RegistryFriendlyByteBuf) },
-                { ContactBattleRecord.decode(it as RegistryFriendlyByteBuf) }
-            )),
+            battles = HashMap(buffer.readList { ContactBattleRecord.decode(it as RegistryFriendlyByteBuf) }
+                .associateBy { it.id }),
             date = buffer.readDate()
         )
     }
@@ -78,11 +69,7 @@ data class ClientPokenavContact(
         buffer.writeString(name)
         buffer.writeNullable(titleId) { pb, value -> pb.writeResourceLocation(value) }
         buffer.writeNullable(partnerPokemon) { pb, value -> value.saveToBuffer(pb as RegistryFriendlyByteBuf) }
-        buffer.writeMap(
-            battles,
-            { buf, key -> key.encode(buf as RegistryFriendlyByteBuf) },
-            { buf, value -> value.encode(buf as RegistryFriendlyByteBuf) }
-        )
+        buffer.writeCollection(battles.values) { pb, value -> value.encode(pb as RegistryFriendlyByteBuf) }
         buffer.writeDate(date)
     }
 }

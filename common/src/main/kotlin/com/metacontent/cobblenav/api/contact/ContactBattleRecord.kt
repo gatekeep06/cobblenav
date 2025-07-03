@@ -49,13 +49,15 @@ data class ContactBattleRecord(
             ContactBattleRecord(
                 id = id,
                 team = pokemonList.mapNotNull {
-                    if (it.facedOpponents.isNotEmpty()) {
+                    if (this == contactReceiver || it.facedOpponents.isNotEmpty()) {
                         it.originalPokemon.createPokemonProperties(EXTRACTORS)
                     } else {
                         null
                     }
                 },
-                result = if (this.getSide().actors.contains(contactReceiver)) {
+                result = if (this == contactReceiver) {
+                    BattleResult.SELF
+                } else if (this.getSide().actors.contains(contactReceiver)) {
                     BattleResult.ALLY
                 } else if (winners.contains(this)) {
                     BattleResult.LOSS
@@ -75,7 +77,8 @@ data class ContactBattleRecord(
 enum class BattleResult : StringRepresentable {
     WIN,
     LOSS,
-    ALLY;
+    ALLY,
+    SELF;
 
     override fun getSerializedName(): String = this.name
 

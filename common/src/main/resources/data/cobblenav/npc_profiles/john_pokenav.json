@@ -1,0 +1,7 @@
+{
+    "id": "cobblenav:john_pokenav",
+    "commonForAllEntities": true,
+    "postBattleContact": {
+        "type": "battlerecord"
+    }
+}

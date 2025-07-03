@@ -49,6 +49,8 @@ subprojects {
     dependencies {
         minecraft "net.minecraft:minecraft:$minecraft_version"
         mappings loom.officialMojangMappings()
+
+        implementation "com.bedrockk:molang:1.2.0"
     }
 
     java {

@@ -11,6 +11,7 @@ import com.cobblemon.mod.common.entity.npc.NPCBattleActor
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
 import com.metacontent.cobblenav.api.contact.BattleId
+import com.metacontent.cobblenav.api.contact.ContactBattleRecord
 import com.metacontent.cobblenav.api.contact.ContactBattleRecord.Companion.getBattleRecord
 import com.metacontent.cobblenav.api.contact.ContactType
 import com.metacontent.cobblenav.api.contact.PokenavContact
@@ -18,94 +19,113 @@ import com.metacontent.cobblenav.api.contact.npc.NPCProfiles
 import com.metacontent.cobblenav.api.event.CobblenavEvents
 import com.metacontent.cobblenav.api.event.contact.ContactsAdded
 import com.metacontent.cobblenav.api.event.contact.ContactsRemoved
-import com.metacontent.cobblenav.api.event.contact.ContactsUpdated
 import com.metacontent.cobblenav.storage.client.ClientContactPlayerData
 import com.metacontent.cobblenav.util.ContactSharingManager
 import com.metacontent.cobblenav.util.getContactData
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.mojang.serialization.codecs.UnboundedMapCodec
 import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
 data class ContactPlayerData(
     override val uuid: UUID,
     val contacts: HashMap<String, PokenavContact>,
+    val battles: HashMap<String, MutableList<ContactBattleRecord>>
 ) : InstancedPlayerData {
     companion object {
         val CODEC: Codec<ContactPlayerData> = RecordCodecBuilder.create { instance ->
             instance.group(
                 PrimitiveCodec.STRING.fieldOf("uuid").forGetter { it.uuid.toString() },
                 PokenavContact.CODEC.listOf().fieldOf("contacts").forGetter { it.contacts.values.toList() },
-            ).apply(instance) { uuid, contacts ->
+                UnboundedMapCodec(PrimitiveCodec.STRING, ContactBattleRecord.CODEC.listOf())
+                    .fieldOf("battles")
+                    .forGetter { it.battles }
+            ).apply(instance) { uuid, contacts, battles ->
                 ContactPlayerData(
                     UUID.fromString(uuid),
                     HashMap(contacts.associateBy(PokenavContact::id)),
+                    HashMap(battles.mapValues { it.value.toMutableList() })
                 )
             }
         }
 
-        fun executeAndSave(uuid: UUID, action: (ContactPlayerData) -> Boolean) {
+        fun executeAndSave(uuid: UUID, action: (ContactPlayerData) -> Boolean): Boolean {
             val data = Cobblemon.playerDataManager.getContactData(uuid)
             if (action(data)) {
                 Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.CONTACTS)
+                data.sync()
+                return true
             }
+            return false
         }
 
-        fun executeAndSave(player: ServerPlayer, action: (ContactPlayerData) -> Boolean) {
-            executeAndSave(player.uuid, action)
+        fun executeAndSave(player: ServerPlayer, action: (ContactPlayerData) -> Boolean): Boolean {
+            return executeAndSave(player.uuid, action)
         }
 
         internal fun onBattleEnd(event: BattleVictoryEvent) {
-            val id = BattleId(event.battle.battleId)
+            val battleId = BattleId(event.battle.battleId)
             val playerActors = event.battle.actors.filterIsInstance<PlayerBattleActor>()
-            playerActors.forEach { playerActor ->
-                val player = playerActor.entity ?: return@forEach
+            playerActors.forEach { contactReceiver ->
+                val player = contactReceiver.entity ?: return@forEach
                 executeAndSave(player) { data ->
-                    val contacts = event.battle.actors.flatMap { actor ->
+                    val battles = mutableMapOf<String, ContactBattleRecord>()
+                    val contacts = event.battle.actors.mapNotNull { actor ->
                         when (actor.type) {
-                            ActorType.PLAYER -> actor.getPlayerUUIDs().mapNotNull { uuid ->
-                                if (!ContactSharingManager.checkSharing(uuid)) return@mapNotNull null
-                                uuid.getPlayer()?.let {
+                            ActorType.PLAYER -> {
+                                val playerActor = actor as? PlayerBattleActor ?: return@mapNotNull null
+                                if (!ContactSharingManager.checkSharing(playerActor.uuid)) return@mapNotNull null
+                                battles[playerActor.uuid.toString()] = actor.getBattleRecord(
+                                    id = battleId,
+                                    contactReceiver = contactReceiver,
+                                    winners = event.winners
+                                )
+                                return@mapNotNull playerActor.entity?.let {
                                     PokenavContact(
-                                        id = uuid.toString(),
+                                        id = playerActor.uuid.toString(),
                                         type = ContactType.PLAYER,
-                                        name = it.name.string,
-                                        battles = hashMapOf(
-                                            id to actor.getBattleRecord(
-                                                id,
-                                                playerActor,
-                                                event.winners
-                                            )
-                                        )
+                                        name = it.name.string
                                     )
                                 }
                             }
 
                             ActorType.NPC -> {
-                                val npcActor = actor as? NPCBattleActor ?: return@flatMap emptyList()
-                                val contact = NPCProfiles.get(npcActor.npc.npc.id)?.let {
-                                    if (!it.shareContactAfterBattle) return@let null
-                                    PokenavContact(
-                                        id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID,
-                                        type = ContactType.NPC,
-                                        name = it.name ?: npcActor.npc.name.string,
-                                        battles = hashMapOf(
-                                            id to npcActor.getBattleRecord(
-                                                id,
-                                                playerActor,
-                                                event.winners
-                                            )
+                                val npcActor = actor as? NPCBattleActor ?: return@mapNotNull null
+                                return@mapNotNull NPCProfiles.get(npcActor.npc.npc.id)?.let {
+                                    if (!it.postBattleContact.canShare(
+                                            playerActor = contactReceiver,
+                                            npcActor = npcActor,
+                                            winners = event.winners
                                         )
+                                    ) return@let null
+                                    val id = if (it.commonForAllEntities) it.id.toString() else npcActor.npc.stringUUID
+                                    battles[id] = actor.getBattleRecord(
+                                        id = battleId,
+                                        contactReceiver = contactReceiver,
+                                        winners = event.winners
                                     )
-                                } ?: return@flatMap emptyList()
-                                return@flatMap listOf(contact)
+                                    return@let it.postBattleContact.provide(
+                                        contact = PokenavContact(
+                                            id = id,
+                                            type = ContactType.NPC,
+                                            name = it.name ?: npcActor.npc.name.string
+                                        ),
+                                        playerActor = contactReceiver,
+                                        npcActor = npcActor,
+                                        winners = event.winners
+                                    )
+                                }
                             }
 
-                            else -> emptyList()
+                            else -> null
                         }
                     }
-                    return@executeAndSave data.updateContacts(contacts)
+                    battles.forEach { entry ->
+                        data.battles.putIfAbsent(entry.key, mutableListOf(entry.value))?.add(entry.value)
+                    }
+                    return@executeAndSave data.addContacts(contacts) || battles.isNotEmpty()
                 }
             }
         }
@@ -123,87 +143,65 @@ data class ContactPlayerData(
 
     fun findByName(name: String) = contacts.values.filter { it.name == name }
 
-    fun updateContacts(contact: PokenavContact): Boolean {
+    fun addContact(contact: PokenavContact): Boolean {
         if (contact.id == uuid.toString()) return false
-        val existingContact = find(contact.id)
-        val updated = if (existingContact == null) {
-            contacts[contact.id] = contact
-            CobblenavEvents.CONTACTS_ADDED.post(ContactsAdded(player, listOf(contact)))
-            true
-        } else if (contact.battles.isNotEmpty()) {
-            existingContact.battles.putAll(contact.battles)
-            CobblenavEvents.CONTACTS_UPDATED.post(ContactsUpdated(player, listOf(existingContact)))
-            true
-        } else {
-            false
+        return (contacts.put(contact.id, contact) == null).also {
+            if (it) {
+                CobblenavEvents.CONTACTS_ADDED.post(ContactsAdded(player, listOf(contact)))
+            }
         }
-
-        if (updated) {
-            onContactListUpdated()
-            return true
-        }
-        return false
     }
 
-    fun updateContacts(contacts: List<PokenavContact>): Boolean {
-        val addedContacts = mutableListOf<PokenavContact>()
-        val updatedContacts = mutableListOf<PokenavContact>()
-        val updated = contacts.map { contact ->
-            if (contact.id == uuid.toString()) return@map false
-            val existingContact = find(contact.id)
-            return@map if (existingContact == null) {
-                this.contacts[contact.id] = contact
-                addedContacts.add(contact)
-                true
-            } else if (contact.battles.isNotEmpty()) {
-                existingContact.battles.putAll(contact.battles)
-                updatedContacts.add(existingContact)
-                true
-            } else {
+    fun addContacts(contacts: Iterable<PokenavContact>): Boolean {
+        val added = contacts.filter {
+            if (it.id == uuid.toString()) {
                 false
+            } else {
+                this.contacts.put(it.id, it) == null
             }
-        }.any { it }
-
-        if (updated) {
-            if (addedContacts.isNotEmpty()) {
-                CobblenavEvents.CONTACTS_ADDED.post(ContactsAdded(player, addedContacts))
-            }
-            if (updatedContacts.isNotEmpty()) {
-                CobblenavEvents.CONTACTS_UPDATED.post(ContactsUpdated(player, updatedContacts))
-            }
-            onContactListUpdated()
-            return true
         }
-        return false
+        return added.isNotEmpty().also {
+            if (it) {
+                CobblenavEvents.CONTACTS_ADDED.post(ContactsAdded(player, added))
+            }
+        }
+    }
+
+    fun summarizeBattles(id: String): String? {
+        return battles[id]
+            ?.groupBy { it.result }
+            ?.map { "${it.key.name}: ${it.value.size}" }
+            ?.joinToString()
     }
 
     fun removeContact(id: String): Boolean {
         val contact = contacts.remove(id) ?: return false
+        battles.remove(id)
         CobblenavEvents.CONTACTS_REMOVED.post(ContactsRemoved(player, listOf(contact)))
-        onContactListUpdated()
         return true
     }
 
-    fun clearContacts() {
-        if (contacts.isEmpty()) return
+    fun clearContacts(): Boolean {
+        if (contacts.isEmpty()) return false
         val values = contacts.values.toList()
         contacts.clear()
+        battles.clear()
         CobblenavEvents.CONTACTS_REMOVED.post(ContactsRemoved(player, values))
-        onContactListUpdated()
+        return true
     }
 
-    private fun onContactListUpdated() {
+    private fun sync() {
         player?.let {
             SetClientPlayerDataPacket(
                 type = CobblenavDataStoreTypes.CONTACTS,
                 playerData = this.toClientData()
-            )
+            ).sendToPlayer(it)
         }
     }
 
     override fun toClientData(): ClientInstancedPlayerData {
         return ClientContactPlayerData(
-            HashMap(contacts.mapValues { it.value.toClientContact() }),
+            HashMap(contacts.mapValues { it.value.toClientContact(battles[it.key]) }),
         )
     }
 }

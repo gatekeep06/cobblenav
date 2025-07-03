@@ -1,0 +1,9 @@
+{
+    "hitbox": "player",
+    "names": ["John PokéNav"],
+    "interaction": {
+        "type": "dialogue",
+        "dialogue": "cobblenav:share_contacts"
+    },
+    "canDespawn": false
+}
