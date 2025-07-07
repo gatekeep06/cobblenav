@@ -5,11 +5,13 @@ import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.github.d0ctorleon.mythsandlegends.cobblemon.spawning.condition.pokemon.PokemonCondition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
+import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class PokemonCollector : ConditionCollector<SpawningCondition<*>> {
+class PokemonCollector : ConditionCollector<SpawningCondition<*>>, ConfigureableCollector {
+    override val configName = "pokemon"
     override val conditionClass = SpawningCondition::class.java
     override var neededInstalledMods: List<String> = listOf("mythsandlegends")
     override var neededUninstalledMods: List<String> = emptyList()
