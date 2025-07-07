@@ -106,12 +106,10 @@ object ConditionCollectors {
         register(RodCollector())
         register(RodTypeCollector())
 
-        if (Cobblenav.config.enableMythsAndLegendsIntegration) {
-            register(KeyItemCollector())
-            register(ItemsCollector())
-            register(PokemonCollector())
-            register(ZygardeCubeChargeCollector())
-        }
+        register(KeyItemCollector())
+        register(ItemsCollector())
+        register(PokemonCollector())
+        register(ZygardeCubeChargeCollector())
 
         val api = Cobblemon.implementation.modAPI
         register(CountCollector(api))

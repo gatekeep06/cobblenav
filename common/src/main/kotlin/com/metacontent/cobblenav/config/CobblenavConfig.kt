@@ -4,7 +4,6 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     @Transient
     override val fileName = "server-config.json"
 
-    val enableMythsAndLegendsIntegration = false
     val hideUnknownPokemon = false
     val showPokemonTooltips = true
     val hideUnknownPokemonTooltips = false
