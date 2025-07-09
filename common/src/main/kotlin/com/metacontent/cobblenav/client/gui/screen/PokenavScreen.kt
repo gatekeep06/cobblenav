@@ -126,6 +126,7 @@ abstract class PokenavScreen(
                     delta = delta
                 )
             }
+            poseStack.translate(0f, 0f, 5000f)
             //render unblockable widgets
             renderWidgets(unblockable, guiGraphics, scaledMouseX, scaledMouseY, delta)
 
