@@ -81,7 +81,7 @@ class FinderScreen(
             pWidth = BACK_BUTTON_SIZE,
             pHeight = BACK_BUTTON_SIZE,
             texture = BACK_BUTTON,
-            action = { changeScreen(previousScreen ?: LocationScreen(os)) }
+            action = { toPreviousScreen() }
         ).also { addBlockableWidget(it) }
 
         supportContextMenu = ContextMenuWidget(

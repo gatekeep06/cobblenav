@@ -11,7 +11,6 @@ import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.NotificationWidget
 import com.metacontent.cobblenav.os.PokenavOS
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -302,6 +301,10 @@ abstract class PokenavScreen(
         onScreenChange()
         if (savePrevious) screen.previousScreen = this
         minecraft?.setScreen(screen)
+    }
+
+    fun toPreviousScreen() {
+        minecraft?.screen = previousScreen
     }
 
     override fun onClose() {
