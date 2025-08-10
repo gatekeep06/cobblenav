@@ -120,6 +120,20 @@ class LocationScreen(
             disabled = true
         ).also { addBlockableWidget(it) }
 
+        refreshButton = IconButton(
+            pX = viewX + BucketSelectorWidget.WIDTH + BUTTON_BLOCK_SPACE + BUTTON_WIDTH + BUTTON_SPACE,
+            pY = viewY - (BucketSelectorWidget.HEIGHT + BUTTON_HEIGHT) / 2,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            disabled = true,
+            action = {
+                scrollableView.reset()
+                tableView.clear()
+                requestSpawnData()
+            },
+            texture = REFRESH
+        ).also { addBlockableWidget(it) }
+
         RequestLocationScreenInitDataPacket().sendToServer()
 
 //        IconButton(
@@ -146,20 +160,6 @@ class LocationScreen(
             VIEW_WIDTH - 2,
             VIEW_HEIGHT - 2,
             child = tableView
-        ).also { addBlockableWidget(it) }
-
-        refreshButton = IconButton(
-            pX = viewX + BucketSelectorWidget.WIDTH + BUTTON_BLOCK_SPACE + BUTTON_WIDTH + BUTTON_SPACE,
-            pY = viewY - (BucketSelectorWidget.HEIGHT + BUTTON_HEIGHT) / 2,
-            pWidth = BUTTON_WIDTH,
-            pHeight = BUTTON_HEIGHT,
-            disabled = loading,
-            action = {
-                scrollableView.reset()
-                tableView.clear()
-                requestSpawnData()
-            },
-            texture = REFRESH
         ).also { addBlockableWidget(it) }
 
         checkBox = CheckBox(
