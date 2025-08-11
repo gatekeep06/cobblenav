@@ -37,6 +37,7 @@ open class SpawnDataWidget(
     private val onClick: (SpawnDataWidget) -> Unit = {},
     private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
     private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
+    private val isNearby: Boolean,
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
@@ -45,6 +46,7 @@ open class SpawnDataWidget(
         const val MODEL_HEIGHT = 35
         const val POKE_BALL_OFFSET = 6
         val FORMAT = DecimalFormat("#.##")
+        val NEARBY_MARK = gui("location/nearby_mark")
         val BROKEN_MODEL = gui("location/broken_model")
     }
 
