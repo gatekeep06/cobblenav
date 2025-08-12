@@ -17,6 +17,6 @@ class FishingDataWidget(
     pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
     pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
-) : SpawnDataWidget(x, y, spawnData, displayer, {}, pose, pokemonRotation, false, chanceMultiplier) {
+) : SpawnDataWidget(x, y, spawnData, displayer, {}, pose, pokemonRotation, chanceMultiplier) {
     override val platform = BiomePlatformRenderDataRepository.FISHING
 }

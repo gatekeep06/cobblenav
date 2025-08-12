@@ -340,17 +340,6 @@ class LocationScreen(
     }
 
     private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
-        val nearbyPokemon = player?.let { player ->
-            player.clientLevel.getEntitiesOfClass(
-                PokemonEntity::class.java,
-                AABB.ofSize(
-                    player.position(),
-                    200.0,
-                    200.0,
-                    200.0
-                )
-            ).map { it.pokemon.form.showdownId() }.toHashSet()
-        } ?: hashSetOf()
         val spawnDataWidgets = spawnDataList
             .sortedWith { firstData, secondData ->
                 compareValues(
@@ -366,7 +355,6 @@ class LocationScreen(
                         spawnData = it,
                         displayer = this,
                         onClick = { widget -> changeScreen(FinderScreen(widget.spawnData, os), true) },
-                        isNearby = nearbyPokemon.contains(it.renderable.form.showdownId()),
                         chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
                     ),
                     topEdge = screenY + HORIZONTAL_BORDER_DEPTH + 16,
@@ -374,6 +362,24 @@ class LocationScreen(
                 )
             }
         tableView.add(spawnDataWidgets)
+        checkNearbyPokemon()
+    }
+
+    fun checkNearbyPokemon() {
+        val nearbyPokemon = player?.let { player ->
+            player.clientLevel.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(
+                    player.position(),
+                    200.0,
+                    200.0,
+                    200.0
+                )
+            ).map { it.pokemon.form.showdownId() }.toHashSet()
+        } ?: hashSetOf()
+        tableView.applyToAll { item ->
+            item.child.isNearby = nearbyPokemon.contains(item.child.spawnData.renderable.form.showdownId())
+        }
     }
 
     override fun isBlockingTooltip() = blockWidgets

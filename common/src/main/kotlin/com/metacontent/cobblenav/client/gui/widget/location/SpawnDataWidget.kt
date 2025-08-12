@@ -37,7 +37,6 @@ open class SpawnDataWidget(
     private val onClick: (SpawnDataWidget) -> Unit = {},
     private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
     private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
-    private val isNearby: Boolean,
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
@@ -62,6 +61,7 @@ open class SpawnDataWidget(
     private var isModelBroken = false
     protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
+    var isNearby = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
