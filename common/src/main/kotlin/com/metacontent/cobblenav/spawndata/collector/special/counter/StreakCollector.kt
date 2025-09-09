@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
+import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
@@ -14,12 +15,12 @@ import us.timinc.mc.cobblemon.counter.spawningconditions.CountSpawningCondition
 class StreakCollector(api: ModAPI) : ConditionCollector<SpawningCondition<*>>, ConfigureableCollector {
     override val configName = "streak"
     override val conditionClass = SpawningCondition::class.java
-    override var neededInstalledMods: List<String> = if (api == ModAPI.FABRIC) {
-        listOf("cobblemon_counter")
+    override var neededInstalledMods: List<ModDependency> = if (api == ModAPI.FABRIC) {
+        "cobblemon_counter"
     } else {
-        listOf("cobbled_counter")
-    }
-    override var neededUninstalledMods: List<String> = emptyList()
+        "cobbled_counter"
+    }.let { listOf(ModDependency(it, "1.6-fabric-1.5.0")) }
+    override var neededUninstalledMods: List<ModDependency> = emptyList()
 
     override fun collect(
         condition: SpawningCondition<*>,
