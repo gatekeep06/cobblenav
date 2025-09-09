@@ -1,5 +1,6 @@
 # Update 2.2.4
 
+- Added mark indicating if a Pokémon is nearby.
 - Improved checking of installed mods. Now mod version will also be checked to avoid incompatibilities.
 
 # Update 2.2.3
@@ -11,7 +12,7 @@
   - Minor color changes.
   - Minor UI additions.
   - Clouds can now be added via a resource pack.
-- Overhauled preference saving. Preferences are now saved locally in the client's pokenav settings file, located at `<game-dir>/cobblenav/settings/pokenav.json`, rather than in the player's nbt file on the server.
+- Overhauled preference saving. Preferences are now saved locally in the client's PokéNav settings file, located at `<game-dir>/cobblenav/settings/pokenav.json`, rather than in the player's nbt file on the server.
 - Revamped biome platform system.
 - Added a few new platforms.
 - Added small Cobblemon Counter integration.

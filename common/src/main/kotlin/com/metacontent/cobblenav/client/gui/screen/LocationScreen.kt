@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
@@ -26,6 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import net.minecraft.world.phys.AABB
 import org.joml.Vector3d
 import kotlin.math.max
 import kotlin.math.min
@@ -360,6 +362,24 @@ class LocationScreen(
                 )
             }
         tableView.add(spawnDataWidgets)
+        checkNearbyPokemon()
+    }
+
+    fun checkNearbyPokemon() {
+        val nearbyPokemon = player?.let { player ->
+            player.clientLevel.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(
+                    player.position(),
+                    200.0,
+                    200.0,
+                    200.0
+                )
+            ).map { it.pokemon.form.showdownId() }.toHashSet()
+        } ?: hashSetOf()
+        tableView.applyToAll { item ->
+            item.child.isNearby = nearbyPokemon.contains(item.child.spawnData.renderable.form.showdownId())
+        }
     }
 
     override fun isBlockingTooltip() = blockWidgets

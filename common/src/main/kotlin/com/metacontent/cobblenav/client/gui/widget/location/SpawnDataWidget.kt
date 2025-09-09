@@ -44,7 +44,9 @@ open class SpawnDataWidget(
         const val HEIGHT = 45
         const val MODEL_HEIGHT = 35
         const val POKE_BALL_OFFSET = 6
+        const val MARK_SIZE = 6
         val FORMAT = DecimalFormat("#.##")
+        val NEARBY_MARK = gui("location/nearby_mark")
         val BROKEN_MODEL = gui("location/broken_model")
     }
 
@@ -59,6 +61,7 @@ open class SpawnDataWidget(
     private var isModelBroken = false
     protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
+    var isNearby = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -84,6 +87,17 @@ open class SpawnDataWidget(
                     y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET - platform.getOffset(selected)
                 )
             }
+        }
+
+        if (isNearby) {
+            blitk(
+                matrixStack = poseStack,
+                texture = NEARBY_MARK,
+                x = x + WIDTH - MARK_SIZE - 3,
+                y = y + 3,
+                width = MARK_SIZE,
+                height = MARK_SIZE
+            )
         }
 
         if (!isModelBroken) {
