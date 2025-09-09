@@ -1,3 +1,7 @@
+# Update 2.2.4
+
+- Improved checking of installed mods. Now mod version will also be checked to avoid incompatibilities.
+
 # Update 2.2.3
 
 - Updated the FishingNav UI:
