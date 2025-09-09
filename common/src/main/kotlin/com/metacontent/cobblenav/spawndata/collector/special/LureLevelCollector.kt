@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
+import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
@@ -12,8 +13,8 @@ import net.minecraft.server.level.ServerPlayer
 class LureLevelCollector : ConditionCollector<FishingSpawningCondition>, ConfigureableCollector {
     override val configName = "lure_level"
     override val conditionClass = FishingSpawningCondition::class.java
-    override var neededInstalledMods: List<String> = emptyList()
-    override var neededUninstalledMods: List<String> = emptyList()
+    override var neededInstalledMods: List<ModDependency> = emptyList()
+    override var neededUninstalledMods: List<ModDependency> = emptyList()
 
     override fun collect(
         condition: FishingSpawningCondition,
