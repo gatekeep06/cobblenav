@@ -2,6 +2,9 @@
 
 - Added mark indicating if a Pokémon is nearby.
 - Improved checking of installed mods. Now mod version will also be checked to avoid incompatibilities.
+- Removed the `enableMythsAndLegendsIntegration` parameter. MaL collectors can be now enabled/disabled in the same way as others.
+- Fixed blur issue.
+- Some Location screen fixes.
 
 # Update 2.2.3
 
