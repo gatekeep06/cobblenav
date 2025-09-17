@@ -12,19 +12,17 @@ import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
+import org.joml.Vector2i
 
 object BiomePlatformRenderDataRepository : JsonDataRegistry<BiomePlatformRenderData> {
     val DEFAULT = BiomePlatformRenderData(
         id = cobblenavResource("default"),
-        background = gui("biome_platforms/default"),
-        foreground = gui("biome_platforms/default_foreground"),
-        selectedBackground = gui("biome_platforms/default_selected"),
-        selectedForeground = gui("biome_platforms/default_foreground_selected"),
-        selectedPokemonOffset = 2
+        platform = gui("biome_platforms/default"),
+        platformHighlighting = HoverHighlighting(Vector2i(0, -2)),
+        hoveredPokemonOffset = Vector2i(0, -2)
     )
     val FISHING = BiomePlatformRenderData(
-        id = cobblenavResource("fishing"),
-        foreground = null
+        id = cobblenavResource("fishing")
     )
 
     override val gson: Gson = GsonBuilder()
@@ -44,7 +42,7 @@ object BiomePlatformRenderDataRepository : JsonDataRegistry<BiomePlatformRenderD
 
     override fun reload(data: Map<ResourceLocation, BiomePlatformRenderData>) {
         platforms.clear()
-        data.forEach { (_, platform) ->
+        data.forEach { (id, platform) ->
             platforms[platform.id] = platform
         }
         observable.emit(this)

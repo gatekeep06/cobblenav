@@ -1,8 +1,0 @@
-{
-    "id": "cobblenav:overworld_lava",
-    "background": "cobblenav:textures/gui/biome_platforms/lava.png",
-    "foreground": "cobblenav:textures/gui/biome_platforms/default_foreground.png",
-    "selectedBackground": "cobblenav:textures/gui/biome_platforms/lava_selected.png",
-    "selectedForeground": "cobblenav:textures/gui/biome_platforms/default_foreground_selected.png",
-    "selectedPokemonOffset": 2
-}

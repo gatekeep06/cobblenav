@@ -1,8 +1,12 @@
 {
     "id": "cobblenav:plains",
-    "background": "cobblenav:textures/gui/biome_platforms/plains.png",
-    "foreground": "cobblenav:textures/gui/biome_platforms/default_foreground.png",
-    "selectedBackground": "cobblenav:textures/gui/biome_platforms/plains_selected.png",
-    "selectedForeground": "cobblenav:textures/gui/biome_platforms/default_foreground_selected.png",
-    "selectedPokemonOffset": 2
+    "platform": "cobblenav:textures/gui/biome_platforms/plains.png",
+    "platformHighlighting": {
+        "offset": {
+            "y": -2
+        }
+    },
+    "hoveredPokemonOffset": {
+        "y": -2
+    }
 }

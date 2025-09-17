@@ -1,8 +1,0 @@
-{
-    "id": "cobblenav:flowers",
-    "background": "cobblenav:textures/gui/biome_platforms/flowers.png",
-    "foreground": "cobblenav:textures/gui/biome_platforms/flowers_foreground.png",
-    "selectedBackground": "cobblenav:textures/gui/biome_platforms/flowers_selected.png",
-    "selectedForeground": "cobblenav:textures/gui/biome_platforms/flowers_foreground_selected.png",
-    "selectedPokemonOffset": 2
-}

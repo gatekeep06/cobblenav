@@ -1,6 +1,6 @@
 {
-    "id": "cobblenav:water",
-    "platform": "cobblenav:textures/gui/biome_platforms/water.png",
+    "id": "cobblenav:lava",
+    "platform": "cobblenav:textures/gui/biome_platforms/lava.png",
     "platformHighlighting": {
         "offset": {
             "y": -2
