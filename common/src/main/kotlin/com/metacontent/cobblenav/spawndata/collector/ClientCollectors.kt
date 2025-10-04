@@ -1,6 +1,5 @@
 package com.metacontent.cobblenav.spawndata.collector
 
-import com.cobblemon.mod.common.Cobblemon
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.event.CobblenavEvents
@@ -29,12 +28,10 @@ object ClientCollectors {
     fun init() {
         collectors.clear()
 
-        val api = Cobblemon.implementation.modAPI
-
         register(EncounterCollector())
-        register(OverallCountCollector(api))
-        register(StreakCountCollector(api))
-        register(FishingCountCollector(api))
+        register(OverallCountCollector())
+        register(StreakCountCollector())
+        register(FishingCountCollector())
 
         CobblenavEvents.REGISTER_CUSTOM_CLIENT_COLLECTORS.emit(object : CustomClientCollectorRegistrar {
             override fun register(collector: ClientCollector): CustomClientCollectorRegistrar {

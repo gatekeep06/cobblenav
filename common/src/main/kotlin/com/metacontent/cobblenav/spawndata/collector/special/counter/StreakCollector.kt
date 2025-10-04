@@ -10,7 +10,6 @@ import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
-import us.timinc.mc.cobblemon.counter.spawningconditions.CountSpawningCondition
 
 class StreakCollector(api: ModAPI) : ConditionCollector<SpawningCondition<*>>, ConfigureableCollector {
     override val configName = "streak"
@@ -28,17 +27,17 @@ class StreakCollector(api: ModAPI) : ConditionCollector<SpawningCondition<*>>, C
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {
-        val appendage = condition.appendages
-            .firstOrNull { it is CountSpawningCondition } as CountSpawningCondition? ?: return null
+//        val appendage = condition.appendages
+//            .firstOrNull { it is CountSpawningCondition } as CountSpawningCondition? ?: return null
         val component = Component.empty()
-        appendage.streaks?.forEach {
-            component.append(
-                Component.translatable(
-                    "gui.cobblenav.spawn_data.counter.streak_condition.${it.type.type}",
-                    it.amount
-                )
-            )
-        }
+//        appendage.streaks?.forEach {
+//            component.append(
+//                Component.translatable(
+//                    "gui.cobblenav.spawn_data.counter.streak_condition.${it.type.type}",
+//                    it.amount
+//                )
+//            )
+//        }
         if (component.siblings.isEmpty()) return null
         return component
     }

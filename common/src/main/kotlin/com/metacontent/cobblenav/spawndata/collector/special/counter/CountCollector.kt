@@ -10,7 +10,6 @@ import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
-import us.timinc.mc.cobblemon.counter.spawningconditions.CountSpawningCondition
 
 class CountCollector(api: ModAPI) : ConditionCollector<SpawningCondition<*>>, ConfigureableCollector {
     override val configName = "count"
@@ -28,17 +27,17 @@ class CountCollector(api: ModAPI) : ConditionCollector<SpawningCondition<*>>, Co
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {
-        val appendage = condition.appendages
-            .firstOrNull { it is CountSpawningCondition } as CountSpawningCondition? ?: return null
+//        val appendage = condition.appendages
+//            .firstOrNull { it is CountSpawningCondition } as CountSpawningCondition? ?: return null
         val component = Component.empty()
-        appendage.counts?.forEach {
-            component.append(
-                Component.translatable(
-                    "gui.cobblenav.spawn_data.counter.count_condition.${it.type.type}",
-                    it.amount
-                )
-            )
-        }
+//        appendage.counts?.forEach {
+//            component.append(
+//                Component.translatable(
+//                    "gui.cobblenav.spawn_data.counter.count_condition.${it.type.type}",
+//                    it.amount
+//                )
+//            )
+//        }
         if (component.siblings.isEmpty()) return null
         return component
     }
