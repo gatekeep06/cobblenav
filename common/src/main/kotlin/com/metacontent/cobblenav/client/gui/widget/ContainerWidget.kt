@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.Cobblenav
 import net.minecraft.client.gui.components.AbstractWidget
 
 abstract class ContainerWidget<T : AbstractWidget>(
@@ -32,5 +33,10 @@ abstract class ContainerWidget<T : AbstractWidget>(
 
     override fun setHeight(i: Int) {
         child.height = i
+    }
+
+    override fun setFocused(bl: Boolean) {
+        super.setFocused(bl)
+        child.isFocused = bl
     }
 }

@@ -1,8 +1,12 @@
 package com.metacontent.cobblenav.client.settings
 
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
 import com.cobblemon.mod.common.util.adapters.IntRangeAdapter
+import com.cobblemon.mod.common.util.adapters.PokemonPropertiesAdapter
 import com.google.gson.GsonBuilder
 import com.metacontent.cobblenav.Cobblenav
+import net.minecraft.resources.ResourceLocation
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -12,7 +16,9 @@ object ClientSettingsDataManager {
     val GSON = GsonBuilder()
         .disableHtmlEscaping()
         .setPrettyPrinting()
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
         .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
+        .registerTypeAdapter(PokemonProperties::class.java, PokemonPropertiesAdapter(false))
         .create()
 
     private fun String.toPath() = "$DIRECTORY$this.json"

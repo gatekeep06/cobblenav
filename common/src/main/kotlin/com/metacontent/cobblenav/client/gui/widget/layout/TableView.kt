@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.layout
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.Sorting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -34,6 +35,23 @@ open class TableView<I : AbstractWidget>(
     fun add(widgets: List<I>) {
         items.addAll(widgets)
         widgets.forEach(this::addWidget)
+        initItems()
+    }
+
+    fun remove(widget: I) {
+        items.remove(widget)
+        removeWidget(widget)
+        initItems()
+    }
+
+    fun removeFirst(predicate: (I) -> Boolean) {
+        val index = items.indexOfFirst { predicate(it) }
+        items.removeAt(index)
+        initItems()
+    }
+
+    fun removeAt(index: Int) {
+        items.removeAt(index)
         initItems()
     }
 
@@ -90,5 +108,10 @@ open class TableView<I : AbstractWidget>(
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (!clicked(pMouseX, pMouseY)) return false
         return super.mouseClicked(pMouseX, pMouseY, pButton)
+    }
+
+    override fun setFocused(bl: Boolean) {
+        super.setFocused(bl)
+        items.forEach { it.isFocused = it.isHovered && it.visible }
     }
 }

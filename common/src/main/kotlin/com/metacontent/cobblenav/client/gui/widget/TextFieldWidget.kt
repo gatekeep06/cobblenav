@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget
 
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.fillWithOutline
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
@@ -11,8 +12,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 
 class TextFieldWidget(
-    val fieldX: Int,
-    val fieldY: Int,
+    var fieldX: Int,
+    var fieldY: Int,
     width: Int,
     height: Int,
     default: String = "",
@@ -80,5 +81,15 @@ class TextFieldWidget(
 
     override fun clicked(d: Double, e: Double): Boolean {
         return this.active && this.visible && (d >= x.toDouble() - 4) && (e >= y.toDouble() - (height - 8) / 2) && (d < (this.x + this.getWidth()).toDouble()) && (e < (this.y + this.getHeight() + (height - 8) / 2).toDouble())
+    }
+
+    override fun setX(i: Int) {
+        super.setX(i + 4)
+        fieldX = i
+    }
+
+    override fun setY(i: Int) {
+        super.setY(i + (height - 8) / 2)
+        fieldY = i
     }
 }

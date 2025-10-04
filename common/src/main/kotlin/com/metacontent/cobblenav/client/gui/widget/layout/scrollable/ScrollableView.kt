@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.layout.scrollable
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -58,5 +59,11 @@ class ScrollableView(
 
     fun reset() {
         scrolled = 0
+    }
+
+    override fun setFocused(bl: Boolean) {
+        super.setFocused(bl)
+        child.isFocused = bl
+        Cobblenav.LOGGER.error(child.isFocused.toString())
     }
 }
