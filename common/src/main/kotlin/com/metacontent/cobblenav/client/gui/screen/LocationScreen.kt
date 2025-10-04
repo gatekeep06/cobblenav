@@ -99,11 +99,11 @@ class LocationScreen(
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
         viewY = screenY + HORIZONTAL_BORDER_DEPTH + 20
 
-        RadialPopupMenu(
-            this,
-            screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
-            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
-        ).also { addUnblockableWidget(it) }
+//        RadialPopupMenu(
+//            this,
+//            screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
+//            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
+//        ).also { addUnblockableWidget(it) }
 
         StatusBarWidget(
             screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatusBarWidget.WIDTH - 2,
