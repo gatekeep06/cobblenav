@@ -145,6 +145,12 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         tableView.add(entries)
     }
 
+    fun removeEntry(entry: PokemonProperties) {
+        settigns?.removeEntry(entry)
+        initEntries()
+        scrollableView.reset()
+    }
+
     override fun isPauseScreen(): Boolean = false
 
     override fun keyPressed(i: Int, j: Int, k: Int): Boolean {

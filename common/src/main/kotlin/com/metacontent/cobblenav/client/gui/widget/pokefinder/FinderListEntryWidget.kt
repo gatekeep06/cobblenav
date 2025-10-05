@@ -47,8 +47,7 @@ class FinderListEntryWidget(
         pHeight = DELETE_SIZE,
         texture = DELETE,
         action = {
-            holder.settigns?.removeEntry(entry)
-            holder.initEntries()
+            holder.removeEntry(entry)
         }
     ).also { addWidget(it) }
 
