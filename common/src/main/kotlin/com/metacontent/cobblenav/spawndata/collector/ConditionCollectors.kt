@@ -116,8 +116,8 @@ object ConditionCollectors {
 
         // Counter
         val api = Cobblemon.implementation.modAPI
-        register(CountCollector(api))
-        register(StreakCollector(api))
+//        register(CountCollector(api))
+//        register(StreakCollector(api))
 
         // Block
         register(AreaTypeBlockCollector())
