@@ -5,6 +5,7 @@
 - Improved biome platforms.
 - Removed the `enableMythsAndLegendsIntegration` parameter. MaL collectors can be now enabled/disabled in the same way as others.
 - Fixed blur issue.
+- Fixed incompatibility with the newest Cobblemon Counter versions.
 - Some Location screen fixes.
 
 # Update 2.2.3
