@@ -3,6 +3,8 @@ package com.metacontent.cobblenav.client.gui.widget.fishing
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.entity.PoseType
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
+import com.metacontent.cobblenav.api.platform.DimensionPlate
+import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
@@ -19,4 +21,5 @@ class FishingDataWidget(
     chanceMultiplier: Float = 1f
 ) : SpawnDataWidget(x, y, spawnData, displayer, {}, pose, pokemonRotation, chanceMultiplier) {
     override val platform = BiomePlatformRenderDataRepository.FISHING
+    override val plate: DimensionPlate = DimensionPlateRepository.FISHING
 }

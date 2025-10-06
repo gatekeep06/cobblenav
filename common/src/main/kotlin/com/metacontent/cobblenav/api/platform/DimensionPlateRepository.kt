@@ -18,6 +18,9 @@ object DimensionPlateRepository : JsonDataRegistry<DimensionPlate> {
         dimension = cobblenavResource("default"),
         texture = gui("dimension_plates/overworld")
     )
+    val FISHING = DimensionPlate(
+        dimension = cobblenavResource("fishing")
+    )
 
     override val gson: Gson = GsonBuilder()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
