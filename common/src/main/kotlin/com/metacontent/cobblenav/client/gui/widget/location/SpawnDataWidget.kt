@@ -180,7 +180,7 @@ open class SpawnDataWidget(
 
     private fun getChanceString(chanceMultiplier: Float): String {
         val finalChance = spawnData.spawnChance * chanceMultiplier
-        return if (finalChance <= 0.005f) ">0.01%" else FORMAT.format(finalChance) + "%"
+        return if (finalChance <= 0.005f) "<0.01%" else FORMAT.format(finalChance) + "%"
     }
 
     private fun renderPokeBall(guiGraphics: GuiGraphics, x: Double, y: Double) {
