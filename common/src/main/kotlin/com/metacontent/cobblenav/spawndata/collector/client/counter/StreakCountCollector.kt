@@ -5,8 +5,8 @@ import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import us.timinc.mc.cobblemon.counter.CounterModClient
-import us.timinc.mc.cobblemon.counter.registry.CounterTypes
+import us.timinc.mc.cobblemon.counter.CounterMod
+import us.timinc.mc.cobblemon.counter.api.ClientCounterManager
 
 class StreakCountCollector(api: ModAPI) : CounterClientCollector(api) {
     override val configName = "streak_counts"
@@ -14,8 +14,8 @@ class StreakCountCollector(api: ModAPI) : CounterClientCollector(api) {
     override fun collect(spawnData: SpawnData, player: LocalPlayer): MutableComponent? {
         val resourceLocation = spawnData.renderable.species.resourceIdentifier
         val formName = spawnData.renderable.form.name
-        val captureStreak = CounterModClient.clientCounterData.getCounter(CounterTypes.CAPTURE).streak
-        val koStreak = CounterModClient.clientCounterData.getCounter(CounterTypes.KO).streak
+        val captureStreak = ClientCounterManager.clientCounterData.getCounter(CounterMod.CounterTypes.CAPTURE).streak
+        val koStreak = ClientCounterManager.clientCounterData.getCounter(CounterMod.CounterTypes.KO).streak
         val captureCount = if (captureStreak.wouldBreak(resourceLocation, formName)) {
             0
         } else {

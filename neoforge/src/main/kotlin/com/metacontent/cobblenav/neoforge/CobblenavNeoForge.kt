@@ -1,8 +1,9 @@
 package com.metacontent.cobblenav.neoforge
 
 import com.metacontent.cobblenav.*
-import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
+import com.metacontent.cobblenav.util.ModDependency
+import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.brigadier.arguments.ArgumentType
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
@@ -11,10 +12,10 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.entity.npc.VillagerTrades
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.neoforged.api.distmarker.Dist
+import net.neoforged.fml.ModList
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.neoforge.common.NeoForge
@@ -23,6 +24,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.village.WandererTradesEvent
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegisterEvent
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import kotlin.reflect.KClass
 
@@ -95,5 +97,13 @@ class CobblenavNeoForge : Implementation {
 
     fun onWanderingTraderRegistry(event: WandererTradesEvent) {
         event.rareTrades.addAll(Cobblenav.resolveWandererTrades())
+    }
+
+    override fun isModInstalled(mod: ModDependency): Boolean {
+        return ModList
+            .get()
+            .getModContainerById(mod.id)
+            .map { it.modInfo.version.compareTo(DefaultArtifactVersion(mod.version)) }
+            .orElse(-1) >= 0
     }
 }

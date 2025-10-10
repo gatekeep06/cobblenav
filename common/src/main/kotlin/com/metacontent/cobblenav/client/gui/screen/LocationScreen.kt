@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
@@ -26,6 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import net.minecraft.world.phys.AABB
 import org.joml.Vector3d
 import kotlin.math.max
 import kotlin.math.min
@@ -97,11 +99,11 @@ class LocationScreen(
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
         viewY = screenY + HORIZONTAL_BORDER_DEPTH + 20
 
-        RadialPopupMenu(
-            this,
-            screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
-            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
-        ).also { addUnblockableWidget(it) }
+//        RadialPopupMenu(
+//            this,
+//            screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
+//            screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
+//        ).also { addUnblockableWidget(it) }
 
         StatusBarWidget(
             screenX + WIDTH - VERTICAL_BORDER_DEPTH - StatusBarWidget.WIDTH - 2,
@@ -118,6 +120,20 @@ class LocationScreen(
             },
             texture = SORT_ASCENDING,
             disabled = true
+        ).also { addBlockableWidget(it) }
+
+        refreshButton = IconButton(
+            pX = viewX + BucketSelectorWidget.WIDTH + BUTTON_BLOCK_SPACE + BUTTON_WIDTH + BUTTON_SPACE,
+            pY = viewY - (BucketSelectorWidget.HEIGHT + BUTTON_HEIGHT) / 2,
+            pWidth = BUTTON_WIDTH,
+            pHeight = BUTTON_HEIGHT,
+            disabled = true,
+            action = {
+                scrollableView.reset()
+                tableView.clear()
+                requestSpawnData()
+            },
+            texture = REFRESH
         ).also { addBlockableWidget(it) }
 
         RequestLocationScreenInitDataPacket().sendToServer()
@@ -146,20 +162,6 @@ class LocationScreen(
             VIEW_WIDTH - 2,
             VIEW_HEIGHT - 2,
             child = tableView
-        ).also { addBlockableWidget(it) }
-
-        refreshButton = IconButton(
-            pX = viewX + BucketSelectorWidget.WIDTH + BUTTON_BLOCK_SPACE + BUTTON_WIDTH + BUTTON_SPACE,
-            pY = viewY - (BucketSelectorWidget.HEIGHT + BUTTON_HEIGHT) / 2,
-            pWidth = BUTTON_WIDTH,
-            pHeight = BUTTON_HEIGHT,
-            disabled = loading,
-            action = {
-                scrollableView.reset()
-                tableView.clear()
-                requestSpawnData()
-            },
-            texture = REFRESH
         ).also { addBlockableWidget(it) }
 
         checkBox = CheckBox(
@@ -360,6 +362,24 @@ class LocationScreen(
                 )
             }
         tableView.add(spawnDataWidgets)
+        checkNearbyPokemon()
+    }
+
+    fun checkNearbyPokemon() {
+        val nearbyPokemon = player?.let { player ->
+            player.clientLevel.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(
+                    player.position(),
+                    200.0,
+                    200.0,
+                    200.0
+                )
+            ).map { it.pokemon.form.showdownId() }.toHashSet()
+        } ?: hashSetOf()
+        tableView.applyToAll { item ->
+            item.child.isNearby = nearbyPokemon.contains(item.child.spawnData.renderable.form.showdownId())
+        }
     }
 
     override fun isBlockingTooltip() = blockWidgets

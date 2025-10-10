@@ -135,6 +135,7 @@ fun GuiGraphics.renderAdvancedTooltip(
         blur = blur,
         delta = delta
     )
+    poseStack.translate(0f, 0f, 2500f)
     this.fillWithOutline(x, y, x + width, y + lineHeight, headerColor, headerOutlineColor)
     this.fillWithOutline(
         x,

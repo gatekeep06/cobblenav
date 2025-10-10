@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
+import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
@@ -44,7 +45,9 @@ open class SpawnDataWidget(
         const val HEIGHT = 45
         const val MODEL_HEIGHT = 35
         const val POKE_BALL_OFFSET = 6
+        const val MARK_SIZE = 6
         val FORMAT = DecimalFormat("#.##")
+        val NEARBY_MARK = gui("location/nearby_mark")
         val BROKEN_MODEL = gui("location/broken_model")
     }
 
@@ -58,32 +61,43 @@ open class SpawnDataWidget(
     private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
     protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
+    protected open val plate = DimensionPlateRepository.get(Minecraft.getInstance().level?.dimension()?.location())
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
+    var isNearby = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        val selected = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
+        val hovered = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
 
-        if (selected) {
+        if (hovered) {
             displayer.hoveredWidget = this
         }
 
-        platform.getBackground(selected)?.let {
+        platform.renderPlatform(
+            poseStack = poseStack,
+            x = x,
+            y = y,
+            width = WIDTH,
+            height = HEIGHT,
+            hovered = hovered
+        )
+        if (spawnData.knowledge == PokedexEntryProgress.CAUGHT && platform.platform != null) {
+            renderPokeBall(
+                guiGraphics = guiGraphics,
+                x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),
+                y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET + platform.getPokemonYOffset(hovered)
+            )
+        }
+
+        if (isNearby) {
             blitk(
                 matrixStack = poseStack,
-                texture = it,
-                x = x,
-                y = y,
-                width = WIDTH,
-                height = HEIGHT
+                texture = NEARBY_MARK,
+                x = x + WIDTH - MARK_SIZE - 3,
+                y = y + 3,
+                width = MARK_SIZE,
+                height = MARK_SIZE
             )
-            if (spawnData.knowledge == PokedexEntryProgress.CAUGHT) {
-                renderPokeBall(
-                    guiGraphics = guiGraphics,
-                    x = x.toDouble() + POKE_BALL_OFFSET,
-                    y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET - platform.getOffset(selected)
-                )
-            }
         }
 
         if (!isModelBroken) {
@@ -92,8 +106,8 @@ open class SpawnDataWidget(
                 drawPokemon(
                     poseStack = poseStack,
                     pokemon = spawnData.renderable,
-                    x = x.toFloat() + width / 2,
-                    y = y.toFloat() - platform.getOffset(selected),
+                    x = x.toFloat() + width / 2 + platform.getPokemonXOffset(hovered),
+                    y = y.toFloat() + platform.getPokemonYOffset(hovered),
                     z = 100f,
                     delta = delta,
                     state = state,
@@ -101,7 +115,7 @@ open class SpawnDataWidget(
                     rotation = Quaternionf().fromEulerXYZDegrees(pokemonRotation),
                     obscured = obscured
                 )
-            } catch (e: IllegalArgumentException) {
+            } catch (e: Exception) {
                 isModelBroken = true
                 val message = Component.translatable(
                     "gui.cobblenav.pokemon_rendering_exception",
@@ -125,19 +139,25 @@ open class SpawnDataWidget(
             )
         }
 
-        platform.getForeground(selected)?.let {
-            poseStack.pushAndPop(
-                translate = Vector3d(0.0, 0.0, 300.0)
-            ) {
-                blitk(
-                    matrixStack = poseStack,
-                    texture = it,
-                    x = x,
-                    y = y,
-                    width = WIDTH,
-                    height = HEIGHT
-                )
-            }
+        poseStack.pushAndPop(
+            translate = Vector3d(0.0, 0.0, 300.0)
+        ) {
+            platform.renderDetails(
+                poseStack = poseStack,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT,
+                hovered = hovered
+            )
+            plate.render(
+                poseStack = poseStack,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT,
+                hovered = hovered
+            )
         }
 
         drawScaledText(
@@ -160,7 +180,7 @@ open class SpawnDataWidget(
 
     private fun getChanceString(chanceMultiplier: Float): String {
         val finalChance = spawnData.spawnChance * chanceMultiplier
-        return if (finalChance <= 0.005f) ">0.01%" else FORMAT.format(finalChance) + "%"
+        return if (finalChance <= 0.005f) "<0.01%" else FORMAT.format(finalChance) + "%"
     }
 
     private fun renderPokeBall(guiGraphics: GuiGraphics, x: Double, y: Double) {

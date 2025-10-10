@@ -29,9 +29,9 @@ object ClientCollectors {
     fun init() {
         collectors.clear()
 
-        val api = Cobblemon.implementation.modAPI
-
         register(EncounterCollector())
+
+        val api = Cobblemon.implementation.modAPI
         register(OverallCountCollector(api))
         register(StreakCountCollector(api))
         register(FishingCountCollector(api))

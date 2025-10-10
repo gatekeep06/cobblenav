@@ -39,7 +39,7 @@ class FishingContextWidget(
         const val SUN_WIDTH = 20
         const val SUN_HEIGHT = 21
         const val HOOK_WIDTH = 10
-        const val HOOK_HEIGHT = 12
+        const val HOOK_HEIGHT = 10
         const val CLOUD_WIDTH = 40
         const val CLOUD_HEIGHT = 21
         const val MAX_CLOUD_OPACITY = 0.95f
@@ -173,8 +173,7 @@ class FishingContextWidget(
                     x = x + (width - HOOK_WIDTH) / 2,
                     y = y + height - 1,
                     width = HOOK_WIDTH,
-                    height = HOOK_HEIGHT,
-                    alpha = 0.6f
+                    height = HOOK_HEIGHT
                 )
             }
         }

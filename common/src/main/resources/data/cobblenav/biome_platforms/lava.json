@@ -1,0 +1,8 @@
+{
+    "id": "cobblenav:lava",
+    "conditions": {
+        "fluids": [
+            "minecraft:lava"
+        ]
+    }
+}

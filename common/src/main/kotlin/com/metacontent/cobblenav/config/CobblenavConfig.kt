@@ -4,7 +4,6 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     @Transient
     override val fileName = "server-config.json"
 
-    val enableMythsAndLegendsIntegration = false
     val hideUnknownPokemon = false
     val showPokemonTooltips = true
     val hideUnknownPokemonTooltips = false
@@ -39,7 +38,11 @@ class CobblenavConfig : Config<CobblenavConfig>() {
         "seafloor_type_block"   to true,
         "fishing_block"         to true,
         "count"                 to true,
-        "streak"                to true
+        "streak"                to true,
+        "key_item"              to false,
+        "items"                 to false,
+        "pokemon"               to false,
+        "zygarde_cube_charge"   to false
     )
 
     override fun applyToLoadedConfig(default: CobblenavConfig) {

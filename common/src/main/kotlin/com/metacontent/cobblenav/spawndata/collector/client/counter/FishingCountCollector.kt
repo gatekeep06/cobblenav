@@ -1,13 +1,12 @@
 package com.metacontent.cobblenav.spawndata.collector.client.counter
 
 import com.cobblemon.mod.common.ModAPI
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import us.timinc.mc.cobblemon.counter.CounterModClient
-import us.timinc.mc.cobblemon.counter.registry.CounterTypes
+import us.timinc.mc.cobblemon.counter.CounterMod
+import us.timinc.mc.cobblemon.counter.api.ClientCounterManager
 
 class FishingCountCollector(api: ModAPI) : CounterClientCollector(api) {
     override val configName = "fishing_count"
@@ -16,7 +15,7 @@ class FishingCountCollector(api: ModAPI) : CounterClientCollector(api) {
         if (spawnData.spawningContext != "fishing") return null
         val resourceLocation = spawnData.renderable.species.resourceIdentifier
         val formName = spawnData.renderable.form.name
-        val counter = CounterModClient.clientCounterData.getCounter(CounterTypes.FISH)
+        val counter = ClientCounterManager.clientCounterData.getCounter(CounterMod.CounterTypes.FISH)
         val overallCount = counter.count[resourceLocation]?.let { it[formName] } ?: 0
         if (overallCount == 0) return null
         val streakCount = if (counter.streak.wouldBreak(resourceLocation, formName)) {

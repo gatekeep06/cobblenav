@@ -35,7 +35,7 @@ class FinderScreen(
         const val POKEBALL_PART_HEIGHT = 134
         const val FIND_BUTTON_WIDTH = 112
         const val FIND_BUTTON_HEIGHT = 33
-        const val FIND_BUTTON_OFFSET = 2
+        const val FIND_BUTTON_OFFSET = 0
         const val TABLE_OFFSET = 5
         const val BUTTON_SPACE = 5
         const val BUTTON_WIDTH = 15
@@ -81,7 +81,7 @@ class FinderScreen(
             pWidth = BACK_BUTTON_SIZE,
             pHeight = BACK_BUTTON_SIZE,
             texture = BACK_BUTTON,
-            action = { changeScreen(previousScreen ?: LocationScreen(os)) }
+            action = { toPreviousScreen() }
         ).also { addBlockableWidget(it) }
 
         supportContextMenu = ContextMenuWidget(
@@ -118,6 +118,8 @@ class FinderScreen(
                 FoundPokemonWidget(pokemonX, pokemonY, spawnData, pokemon).also { addBlockableWidget(it) }
             statsTableWidget =
                 StatsTableWidget(tableX, tableY, spawnData, pokemon, this).also { addBlockableWidget(it) }
+        } else {
+            (previousScreen as? LocationScreen)?.checkNearbyPokemon()
         }
 
         findButton = TextButton(
