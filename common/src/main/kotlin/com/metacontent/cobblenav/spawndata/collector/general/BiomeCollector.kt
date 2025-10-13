@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.toResourceLocation
@@ -15,14 +15,14 @@ class BiomeCollector : GeneralConditionCollector() {
 
     override fun collect(
         condition: SpawningCondition<*>,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {
         val biomes = condition.biomes
             ?.mapNotNull { it.toResourceLocation() }
             ?.filter {
-                contexts.any { context ->
+                spawnablePositions.any { context ->
                     val registry = context.biomeRegistry
                     val biomeLocation = registry.getKey(context.biome) ?: return@any false
                     val biomeTags = registry.getHolder(biomeLocation).getOrNull()

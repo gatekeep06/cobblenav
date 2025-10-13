@@ -19,29 +19,28 @@ object RequestFishingMapHandler : ServerNetworkPacketHandler<RequestFishingMapPa
             val bobber = player.fishing
             val rods = if (bobber is PokeRodFishingBobberEntity && bobber.rodStack != null) {
                 listOf(bobber.rodStack!!)
-            }
-            else {
+            } else {
                 (player.inventory.items + player.offhandItem).filter { it.`is`(CobblemonItemTags.POKE_RODS) }
             }
+
             val spawner = Cobblemon.bestSpawner.fishingSpawner
-            val causesMap = Cobblemon.bestSpawner.config.buckets.associate { bucket ->
-                bucket.name to rods.map { rod ->
-                    FishingSpawnCause(spawner, bucket, player, rod)
-                }
+            val causes = rods.map { rod ->
+                FishingSpawnCause(spawner, player, rod, 0)
             }
             val pos = player.fishing?.position()?.toBlockPos() ?: player.position().toBlockPos()
-            val contexts = causesMap.mapValues { entry ->
-                entry.value.mapNotNull { causes ->
-                    spawner.parseContext(causes, player.serverLevel(), pos)
-                }
+            val spawnablePositions = causes.mapNotNull { cause ->
+                spawner.parseSpawnablePosition(cause, player.serverLevel(), pos)
             }
-            val spawnDataMap = contexts.mapValues { entry ->
-                spawner.getSpawningSelector().getProbabilities(spawner, entry.value).mapNotNull { detailProbability ->
-                    (detailProbability.key as? PokemonSpawnDetail)?.let {
-                        SpawnDataHelper.collect(it, detailProbability.value, entry.value, player)
+
+            val spawnDataMap = Cobblemon.bestSpawner.config.buckets.associate { bucket ->
+                bucket.name to spawner.getSpawningSelector().getProbabilities(spawner, bucket, spawnablePositions)
+                    .mapNotNull { detailProbability ->
+                        (detailProbability.key as? PokemonSpawnDetail)?.let {
+                            SpawnDataHelper.collect(it, detailProbability.value, spawnablePositions, player)
+                        }
                     }
-                }
             }
+
             FishingMapPacket(spawnDataMap).sendToPlayer(player)
         }
     }

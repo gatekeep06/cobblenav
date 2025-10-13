@@ -2,6 +2,7 @@ package com.metacontent.cobblenav
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.spawning.CobblemonSpawningZoneGenerator
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
@@ -11,7 +12,6 @@ import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
-import com.metacontent.cobblenav.util.PokenavSpawningProspector
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +22,7 @@ object Cobblenav {
 
     lateinit var config: CobblenavConfig
     lateinit var implementation: Implementation
-    val prospector = PokenavSpawningProspector
+    val zoneGenerator = CobblemonSpawningZoneGenerator
 
     fun init(implementation: Implementation) {
         config = Config.load(CobblenavConfig::class.java)
@@ -32,7 +32,7 @@ object Cobblenav {
         implementation.registerCommands()
         implementation.injectLootTables()
 
-        CobblemonDataProvider.register(BiomePlatforms)
+        CobblemonDataProvider.register(BiomePlatforms, true)
 
         CobblenavEvents.FISH_TRAVEL_STARTED.subscribe { event ->
             CloseFishingnavPacket().sendToPlayer(event.player)

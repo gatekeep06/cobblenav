@@ -5,7 +5,7 @@ import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
 import com.cobblemon.mod.common.api.spawning.CobblemonWorldSpawnerManager
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
-import com.cobblemon.mod.common.api.spawning.spawner.SpawningArea
+import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
@@ -38,26 +38,31 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                     return@execute
                 }
 
-                val cause = SpawnCause(spawner, bucket, spawner.getCauseEntity())
-                val slice = Cobblenav.prospector.prospect(SpawningArea(
-                    cause, player.serverLevel(),
-                    ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
-                    ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
-                    ceil(player.z - config.checkSpawnWidth / 2f).toInt(),
-                    config.checkSpawnWidth,
-                    config.checkSpawnHeight,
-                    config.checkSpawnWidth
-                )) ?: run {
-                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
-                    return@execute
-                }
+                val cause = SpawnCause(spawner, spawner.getCauseEntity())
+                val zone = Cobblenav.zoneGenerator.generate(
+                    spawner = spawner,
+                    input = SpawningZoneInput(
+                        cause, player.serverLevel(),
+                        ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
+                        ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
+                        ceil(player.z - config.checkSpawnWidth / 2f).toInt(),
+                        config.checkSpawnWidth,
+                        config.checkSpawnHeight,
+                        config.checkSpawnWidth
+                    )) //?: run {
+//                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
+//                    return@execute
+//                }
 
-                val contexts = spawner.resolver.resolve(spawner, spawner.contextCalculators, slice)
-                val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, contexts)
+                val spawnablePositions = spawner.spawnablePositionResolver.resolve(
+                    spawner = spawner,
+                    spawnablePositionCalculators = spawner.spawnablePositionCalculators,
+                    zone = zone)
+                val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, bucket, spawnablePositions)
 
                 spawnProbabilities.forEach { (detail, spawnChance) ->
                     if (detail is PokemonSpawnDetail && detail.isValid()) {
-                        SpawnDataHelper.collect(detail, spawnChance, contexts, player)?.let { spawnDataList.add(it) }
+                        SpawnDataHelper.collect(detail, spawnChance, spawnablePositions, player)?.let { spawnDataList.add(it) }
                     }
                 }
             }
