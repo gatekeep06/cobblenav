@@ -3,7 +3,7 @@ package com.metacontent.cobblenav.util.finder
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.pokemon.abilities.HiddenAbility
+import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType
 import com.metacontent.cobblenav.Cobblenav
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
@@ -37,7 +37,8 @@ abstract class PokemonFinder {
     }
 
     fun getEggMoveName(pokemon: Pokemon): Component? {
-        val allMoves = (pokemon.moveSet.getMoves().map { it.template } + pokemon.benchedMoves.map { it.moveTemplate }).toSet()
+        val allMoves = (pokemon.moveSet.getMoves().map { it.template } + pokemon.benchedMoves.map { it.moveTemplate })
+            .toSet()
         val notEggMoves = pokemon.form.moves.levelUpMoves.flatMap { it.value } + pokemon.form.moves.evolutionMoves
         val eggMoves = pokemon.form.moves.eggMoves
         val eggMove = allMoves.firstOrNull { eggMoves.contains(it) && !notEggMoves.contains(it) }
@@ -47,9 +48,8 @@ abstract class PokemonFinder {
 
     fun getPerfectIvsAmount(pokemon: Pokemon): Int = pokemon.ivs.count { it.value == IVs.MAX_VALUE }
 
-    fun hasHiddenAbility(pokemon: Pokemon): Boolean {
-        val ability = pokemon.ability.template
-        val hiddenAbility = pokemon.form.abilities.firstOrNull { it is HiddenAbility }?.template ?: return false
-        return ability == hiddenAbility
-    }
+    fun hasHiddenAbility(pokemon: Pokemon) = pokemon.form.abilities.mapping
+        .flatMap { it.value }
+        .find { it.template == pokemon.ability.template }
+        ?.type == HiddenAbilityType
 }
