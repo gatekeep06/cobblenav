@@ -39,7 +39,7 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                 }
 
                 val cause = SpawnCause(spawner, spawner.getCauseEntity())
-                val zone = Cobblenav.zoneGenerator.generate(
+                val zone = spawner.spawningZoneGenerator.generate(
                     spawner = spawner,
                     input = SpawningZoneInput(
                         cause, player.serverLevel(),
@@ -49,20 +49,24 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
                         config.checkSpawnWidth,
                         config.checkSpawnHeight,
                         config.checkSpawnWidth
-                    )) //?: run {
+                    )
+                ) //?: run {
 //                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
 //                    return@execute
 //                }
 
-                val spawnablePositions = spawner.spawnablePositionResolver.resolve(
+                val spawnablePositions = Cobblenav.resolver.resolve(
                     spawner = spawner,
                     spawnablePositionCalculators = spawner.spawnablePositionCalculators,
-                    zone = zone)
-                val spawnProbabilities = spawner.getSpawningSelector().getProbabilities(spawner, bucket, spawnablePositions)
+                    zone = zone
+                )
+                val spawnProbabilities =
+                    spawner.getSpawningSelector().getProbabilities(spawner, bucket, spawnablePositions)
 
                 spawnProbabilities.forEach { (detail, spawnChance) ->
                     if (detail is PokemonSpawnDetail && detail.isValid()) {
-                        SpawnDataHelper.collect(detail, spawnChance, spawnablePositions, player)?.let { spawnDataList.add(it) }
+                        SpawnDataHelper.collect(detail, spawnChance, spawnablePositions, player)
+                            ?.let { spawnDataList.add(it) }
                     }
                 }
             }

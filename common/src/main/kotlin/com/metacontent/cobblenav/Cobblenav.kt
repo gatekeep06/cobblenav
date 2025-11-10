@@ -11,6 +11,7 @@ import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
+import com.metacontent.cobblenav.spawndata.PokenavSpawnablePositionResolver
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
@@ -22,7 +23,7 @@ object Cobblenav {
 
     lateinit var config: CobblenavConfig
     lateinit var implementation: Implementation
-    val zoneGenerator = CobblemonSpawningZoneGenerator
+    val resolver = PokenavSpawnablePositionResolver()
 
     fun init(implementation: Implementation) {
         config = Config.load(CobblenavConfig::class.java)
