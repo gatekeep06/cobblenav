@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.metacontent.cobblenav.util.toResourceLocation
@@ -21,13 +22,13 @@ class BiomeCollector : GeneralConditionCollector() {
     ): MutableComponent? {
         val biomes = condition.biomes
             ?.mapNotNull { it.toResourceLocation() }
-            ?.filter {
+            ?.filter { resourceLocation ->
                 spawnablePositions.any { context ->
                     val registry = context.biomeRegistry
                     val biomeLocation = registry.getKey(context.biome) ?: return@any false
                     val biomeTags = registry.getHolder(biomeLocation).getOrNull()
                         ?.tags()?.map { it.location }?.toList() ?: return@any false
-                    return@any biomeLocation == it || biomeTags.contains(it)
+                    return@any biomeLocation == resourceLocation || biomeTags.contains(resourceLocation)
                 }
             }?.toSet()
         val habitat = Component.translatable("gui.cobblenav.spawn_data.habitat")
