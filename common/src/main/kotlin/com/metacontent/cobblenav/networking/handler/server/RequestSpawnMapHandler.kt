@@ -2,10 +2,11 @@ package com.metacontent.cobblenav.networking.handler.server
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
-import com.cobblemon.mod.common.api.spawning.CobblemonWorldSpawnerManager
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
+import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePositionCalculator
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
+import com.cobblemon.mod.common.util.spawner
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
@@ -27,19 +28,15 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
 
         server.execute {
             if (cobblemonConfig.enableSpawning) {
-                val spawner = CobblemonWorldSpawnerManager.spawnersForPlayers[player.uuid] ?: run {
-                    Cobblenav.LOGGER.error("For some reason player spawner is null")
-                    SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
-                    return@execute
-                }
+                val spawner = player.spawner
                 val bucket = Cobblemon.bestSpawner.config.buckets.firstOrNull { it.name == packet.bucket } ?: run {
                     Cobblenav.LOGGER.error("For some reason bucket is null")
                     SpawnMapPacket(packet.bucket, emptyList()).sendToPlayer(player)
                     return@execute
                 }
 
-                val cause = SpawnCause(spawner, spawner.getCauseEntity())
-                val zone = spawner.spawningZoneGenerator.generate(
+                val cause = SpawnCause(spawner, player)
+                val zone = Cobblemon.spawningZoneGenerator.generate(
                     spawner = spawner,
                     input = SpawningZoneInput(
                         cause, player.serverLevel(),
@@ -57,11 +54,10 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
 
                 val spawnablePositions = Cobblenav.resolver.resolve(
                     spawner = spawner,
-                    spawnablePositionCalculators = spawner.spawnablePositionCalculators,
+                    spawnablePositionCalculators = SpawnablePositionCalculator.prioritizedAreaCalculators,
                     zone = zone
                 )
-                val spawnProbabilities =
-                    spawner.getSpawningSelector().getProbabilities(spawner, bucket, spawnablePositions)
+                val spawnProbabilities = spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
 
                 spawnProbabilities.forEach { (detail, spawnChance) ->
                     if (detail is PokemonSpawnDetail && detail.isValid()) {
