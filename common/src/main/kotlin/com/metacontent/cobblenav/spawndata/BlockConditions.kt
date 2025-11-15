@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
-import com.metacontent.cobblenav.mixin.GrowingPlantBlockMixin
 import com.metacontent.cobblenav.util.getHeadBlock
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -11,7 +10,7 @@ import net.minecraft.world.level.block.GrowingPlantBlock
 
 data class BlockConditions(
     val blocks: MutableSet<ResourceLocation>
-) : Encodable {
+) : Iterable<ResourceLocation>, Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = BlockConditions(
             buffer.readList { it.readResourceLocation() }.toMutableSet()
@@ -34,4 +33,6 @@ data class BlockConditions(
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeCollection(blocks) { buf, block -> buf.writeResourceLocation(block) }
     }
+
+    override fun iterator(): Iterator<ResourceLocation> = blocks.iterator()
 }

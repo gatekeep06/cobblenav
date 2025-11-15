@@ -18,16 +18,7 @@ class StructureCollector : GeneralConditionCollector() {
     ): MutableComponent? {
         condition.structures?.let { neededStructures ->
             val component = Component.translatable("gui.cobblenav.spawn_data.structures")
-            val structures = spawnablePositions.flatMap { context ->
-                val structureAccess = context.world.structureManager()
-                val cache = context.getStructureCache(context.position)
-                neededStructures.filter { str ->
-                    str.map(
-                        { cache.check(structureAccess, context.position, it) },
-                        { cache.check(structureAccess, context.position, it) }
-                    )
-                }
-            }.map { either ->
+            val structures = neededStructures.map { either ->
                 either.map({ it }, { it.location })
             }.toSet()
             builder.structures = structures

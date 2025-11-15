@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.util
 
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 
 fun GuiGraphics.renderSpawnDataTooltip(
-    spawnData: SpawnData,
+    spawnData: SpawnData1,
     chanceMultiplier: Float,
     mouseX: Int,
     mouseY: Int,

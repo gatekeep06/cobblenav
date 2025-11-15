@@ -15,7 +15,7 @@ import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import com.metacontent.cobblenav.util.WeightedBucket
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -196,7 +196,7 @@ class FishingnavScreen(
         RequestFishingMapPacket().sendToServer()
     }
 
-    fun receiveFishingMap(fishingMap: Map<String, List<SpawnData>>) {
+    fun receiveFishingMap(fishingMap: Map<String, List<SpawnData1>>) {
         fishingMap.forEach { (bucketName, spawnDatas) ->
             bucketViews.find { it.bucket.name == bucketName }?.let { view ->
                 view.add(spawnDatas

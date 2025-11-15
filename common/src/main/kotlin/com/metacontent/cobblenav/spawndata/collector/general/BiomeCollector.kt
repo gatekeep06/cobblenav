@@ -22,15 +22,7 @@ class BiomeCollector : GeneralConditionCollector() {
     ): MutableComponent? {
         val biomes = condition.biomes
             ?.mapNotNull { it.toResourceLocation() }
-            ?.filter { resourceLocation ->
-                spawnablePositions.any { context ->
-                    val registry = context.biomeRegistry
-                    val biomeLocation = registry.getKey(context.biome) ?: return@any false
-                    val biomeTags = registry.getHolder(biomeLocation).getOrNull()
-                        ?.tags()?.map { it.location }?.toList() ?: return@any false
-                    return@any biomeLocation == resourceLocation || biomeTags.contains(resourceLocation)
-                }
-            }?.toSet()
+            ?.toSet()
         val habitat = Component.translatable("gui.cobblenav.spawn_data.habitat")
         biomes?.let { set ->
             builder.biomes = set

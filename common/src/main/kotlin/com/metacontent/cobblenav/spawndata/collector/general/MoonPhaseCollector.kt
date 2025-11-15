@@ -17,6 +17,15 @@ class MoonPhaseCollector : GeneralConditionCollector() {
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {
+        if (condition.moonPhase == null) return null
+        val component = Component.translatable("gui.cobblenav.spawn_data.moon")
+        condition.moonPhase!!.ranges.forEach { ranges ->
+            ranges.forEach { phase ->
+                MoonPhase.entries.getOrNull(phase)?.let {
+                    component.append(Component.translatable("moon.cobblenav.${it.name.lowercase()}"))
+                }
+            }
+        }
         if (condition.moonPhase != null) {
             return Component.translatable("gui.cobblenav.spawn_data.moon")
                 .append(Component.translatable("moon.cobblenav.${MoonPhase.ofWorld(player.level()).name.lowercase()}"))

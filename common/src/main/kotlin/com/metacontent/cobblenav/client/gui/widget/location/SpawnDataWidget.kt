@@ -18,7 +18,7 @@ import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -33,7 +33,7 @@ import kotlin.math.PI
 open class SpawnDataWidget(
     x: Int,
     y: Int,
-    val spawnData: SpawnData,
+    val spawnData: SpawnData1,
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
     private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,

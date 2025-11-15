@@ -15,13 +15,11 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableV
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.location.LocationInfoWidget
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
-import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
-import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.client.settings.PokenavPreferences
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.os.PokenavOS
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import com.metacontent.cobblenav.util.WeightedBucket
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
@@ -65,7 +63,7 @@ class LocationScreen(
     var viewX = 0
     var viewY = 0
     override val color = FastColor.ARGB32.color(255, 63, 126, 101)
-    private val spawnDataMap = mutableMapOf<String, List<SpawnData>>()
+    private val spawnDataMap = mutableMapOf<String, List<SpawnData1>>()
     lateinit var buckets: List<WeightedBucket>
     var bucketIndex = -1
         set(value) {
@@ -228,7 +226,7 @@ class LocationScreen(
         sortButton.disabled = false
     }
 
-    fun receiveSpawnData(spawnDataList: List<SpawnData>) {
+    fun receiveSpawnData(spawnDataList: List<SpawnData1>) {
         this.spawnDataMap[currentBucket.name] = spawnDataList
         createSpawnDataWidgets(spawnDataList)
         loading = false
@@ -339,7 +337,7 @@ class LocationScreen(
         tableView.resort(sorting) { widget -> widget.child.spawnData.spawnChance }
     }
 
-    private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
+    private fun createSpawnDataWidgets(spawnDataList: List<SpawnData1>) {
         val spawnDataWidgets = spawnDataList
             .sortedWith { firstData, secondData ->
                 compareValues(

@@ -3,19 +3,19 @@ package com.metacontent.cobblenav.networking.packet.client
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.networking.packet.CobblenavNetworkPacket
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class SpawnMapPacket(
     val bucketName: String,
-    val spawnDataList: List<SpawnData>
+    val spawnDataList: List<SpawnData1>
 ) : CobblenavNetworkPacket<SpawnMapPacket> {
     companion object {
         val ID = cobblenavResource("spawn_map")
         fun decode(buffer: RegistryFriendlyByteBuf) = SpawnMapPacket(
             buffer.readString(),
-            buffer.readList { SpawnData.decode(it as RegistryFriendlyByteBuf) }
+            buffer.readList { SpawnData1.decode(it as RegistryFriendlyByteBuf) }
         )
     }
 

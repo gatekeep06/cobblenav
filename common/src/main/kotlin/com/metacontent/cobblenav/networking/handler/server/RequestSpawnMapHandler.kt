@@ -10,7 +10,7 @@ import com.cobblemon.mod.common.util.spawner
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.networking.packet.client.SpawnMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
@@ -24,7 +24,7 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
     ) {
         val cobblemonConfig = Cobblemon.config
         val config = Cobblenav.config
-        val spawnDataList = mutableListOf<SpawnData>()
+        val spawnDataList = mutableListOf<SpawnData1>()
 
         server.execute {
             if (cobblemonConfig.enableSpawning) {

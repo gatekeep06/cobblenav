@@ -15,7 +15,6 @@ import com.metacontent.cobblenav.networking.packet.client.FishingMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingMapPacket
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 
 object RequestFishingMapHandler : ServerNetworkPacketHandler<RequestFishingMapPacket> {

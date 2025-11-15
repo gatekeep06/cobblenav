@@ -22,7 +22,7 @@ object SpawnDataHelper {
         spawnChance: Float,
         spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer
-    ): SpawnData? {
+    ): SpawnData1? {
         val config = Cobblenav.config
 
         val renderablePokemon = detail.pokemon.let {
@@ -63,7 +63,7 @@ object SpawnDataHelper {
 
         val platform = BiomePlatforms.firstFitting(builder.build())
 
-        return SpawnData(
+        return SpawnData1(
             renderable = renderablePokemon,
             spawnAspects = aspects,
             spawnChance = spawnChance,

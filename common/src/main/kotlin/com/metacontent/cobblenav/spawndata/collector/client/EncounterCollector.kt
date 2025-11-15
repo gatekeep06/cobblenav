@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.spawndata.collector.client
 
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData1
 import com.metacontent.cobblenav.spawndata.collector.ClientCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
 import com.metacontent.cobblenav.util.ModDependency
@@ -13,7 +13,7 @@ class EncounterCollector : ClientCollector, ConfigureableCollector {
     override var neededInstalledMods: List<ModDependency> = emptyList()
     override var neededUninstalledMods: List<ModDependency> = emptyList()
 
-    override fun collect(spawnData: SpawnData, player: LocalPlayer): MutableComponent? {
+    override fun collect(spawnData: SpawnData1, player: LocalPlayer): MutableComponent? {
         return Component.translatable("gui.cobblenav.spawn_data.encountered")
             .append(Component.translatable("gui.cobblenav.${spawnData.encountered}"))
     }
