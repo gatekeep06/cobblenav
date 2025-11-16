@@ -8,13 +8,13 @@ import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
-import com.metacontent.cobblenav.spawndata.SpawnData1
+import com.metacontent.cobblenav.spawndata.SpawnData
 import org.joml.Vector3f
 
 class FishingDataWidget(
     x: Int,
     y: Int,
-    spawnData: SpawnData1,
+    spawnData: SpawnData,
     displayer: SpawnDataTooltipDisplayer,
     pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
     pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),

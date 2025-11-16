@@ -5,7 +5,7 @@ import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.CustomClientCollectorRegistrar
-import com.metacontent.cobblenav.spawndata.SpawnData1
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.spawndata.collector.client.EncounterCollector
 import com.metacontent.cobblenav.spawndata.collector.client.counter.FishingCountCollector
 import com.metacontent.cobblenav.spawndata.collector.client.counter.OverallCountCollector
@@ -22,7 +22,7 @@ object ClientCollectors {
         collectors += collector
     }
 
-    fun collect(spawnData: SpawnData1, player: LocalPlayer): List<MutableComponent> {
+    fun collect(spawnData: SpawnData, player: LocalPlayer): List<MutableComponent> {
         return collectors.mapNotNull { it.collect(spawnData, player) }
     }
 

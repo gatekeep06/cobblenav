@@ -11,7 +11,7 @@ import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
-import com.metacontent.cobblenav.spawndata.SpawnData1
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -21,7 +21,7 @@ import org.joml.Vector3f
 
 class FoundPokemonWidget(
     x: Int, y: Int,
-    val spawnData: SpawnData1,
+    val spawnData: SpawnData,
     val pokemon: FoundPokemon
 ) : SoundlessWidget(x, y, 0, 0, Component.literal("Found Pokemon")) {
     companion object {

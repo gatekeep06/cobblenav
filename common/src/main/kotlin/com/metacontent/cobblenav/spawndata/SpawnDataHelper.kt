@@ -22,15 +22,8 @@ object SpawnDataHelper {
         spawnChance: Float,
         spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer
-    ): SpawnData1? {
+    ): SpawnData? {
         val config = Cobblenav.config
-
-        val renderablePokemon = detail.pokemon.let {
-            val pokemon = Pokemon()
-            it.apply(pokemon)
-            SeasonFeatureHandler.updateSeason(pokemon, player.level(), player.onPos)
-            pokemon.asRenderablePokemon()
-        }
 
         val speciesRecord = detail.pokemon.species?.asIdentifierDefaultingNamespace()?.let {
             Cobblemon.playerDataManager.getPokedexData(player).getSpeciesRecord(it)
@@ -63,14 +56,9 @@ object SpawnDataHelper {
 
         val platform = BiomePlatforms.firstFitting(builder.build())
 
-        return SpawnData1(
-            renderable = renderablePokemon,
-            spawnAspects = aspects,
-            spawnChance = spawnChance,
-            platform = platform,
-            spawningContext = detail.spawnablePositionType.name,
-            knowledge = knowledge,
-            conditions = conditions,
+        return SpawnData(
+            id = detail.id,
+            result = ,
             blockConditions = BlockConditions(blocks)
         )
     }

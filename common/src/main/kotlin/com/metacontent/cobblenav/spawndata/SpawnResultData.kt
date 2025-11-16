@@ -3,22 +3,39 @@ package com.metacontent.cobblenav.spawndata
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.spawning.detail.NPCSpawnDetail
+import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
+import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.random
+import com.cobblemon.mod.common.util.randomNoCopy
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
+import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 interface SpawnResultData : Encodable {
     companion object {
-        val decoders: Map<String, (RegistryFriendlyByteBuf) -> SpawnResultData> = mutableMapOf(
-            PokemonSpawnResultData.TYPE to PokemonSpawnResultData::decodeResultData,
-            PokemonHerdSpawnResultData.TYPE to PokemonHerdSpawnResultData::decodeResultData,
-            NPCSpawnResultData.TYPE to NPCSpawnResultData::decodeResultData
-        )
+        private val transformers: MutableMap<String, (SpawnDetail) -> SpawnResultData?> = mutableMapOf()
+
+        private val decoders: MutableMap<String, (RegistryFriendlyByteBuf) -> SpawnResultData> = mutableMapOf()
+
+        fun register(
+            type: String,
+            transformer: (SpawnDetail) -> SpawnResultData?,
+            decoder: (RegistryFriendlyByteBuf) -> SpawnResultData
+        ) {
+            transformers[type] = transformer
+            decoders[type] = decoder
+        }
+
+        fun fromDetail(detail: SpawnDetail): SpawnResultData? = transformers[detail.id]?.invoke(detail)
 
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnResultData {
             val type = buffer.readString()
@@ -51,7 +68,18 @@ class PokemonSpawnResultData(
     val originalProperties: PokemonProperties
 ) : SpawnResultData {
     companion object {
-        const val TYPE = "pokemon"
+        fun transform(detail: SpawnDetail): PokemonSpawnResultData? {
+            if (detail !is PokemonSpawnDetail) {
+                Cobblenav.LOGGER.error("The provided SpawnDetail type (${detail.type}) does not match the key under which it is registered (${PokemonSpawnDetail.TYPE}).")
+                return null
+            }
+
+            val renderablePokemon = detail.pokemon.createAndGetAsRenderable()
+            return PokemonSpawnResultData(
+                pokemon = renderablePokemon,
+                originalProperties = detail.pokemon
+            )
+        }
 
         fun decodeResultData(buffer: RegistryFriendlyByteBuf): PokemonSpawnResultData = PokemonSpawnResultData(
             pokemon = RenderablePokemon.loadFromBuffer(buffer),
@@ -59,7 +87,7 @@ class PokemonSpawnResultData(
         )
     }
 
-    override val type = TYPE
+    override val type = PokemonSpawnDetail.TYPE
 
     val state: PosableState by lazy { FloatingState() }
 
@@ -85,28 +113,47 @@ class PokemonSpawnResultData(
 }
 
 class PokemonHerdSpawnResultData(
-    val leader: RenderablePokemon,
     val leftPokemon: RenderablePokemon?,
+    val middlePokemon: RenderablePokemon,
     val rightPokemon: RenderablePokemon?
 ) : SpawnResultData {
     companion object {
-        const val TYPE = "pokemon-herd"
+        fun transform(detail: SpawnDetail): PokemonHerdSpawnResultData? {
+            if (detail !is PokemonHerdSpawnDetail) {
+                Cobblenav.LOGGER.error("The provided SpawnDetail type (${detail.type}) does not match the key under which it is registered (${PokemonHerdSpawnDetail.TYPE}).")
+                return null
+            }
+
+            val pokemon = detail.herdablePokemon
+            val randomPokemon = (if (pokemon.size >= 3) {
+                pokemon.randomNoCopy(3)
+            } else if (pokemon.isNotEmpty()) {
+                pokemon.random(3)
+            } else {
+                return null
+            }).map { it.pokemon.createAndGetAsRenderable() }
+            return PokemonHerdSpawnResultData(
+                leftPokemon = randomPokemon.getOrNull(1),
+                middlePokemon = randomPokemon[0],
+                rightPokemon = randomPokemon.getOrNull(2)
+            )
+        }
 
         fun decodeResultData(buffer: RegistryFriendlyByteBuf): PokemonHerdSpawnResultData = PokemonHerdSpawnResultData(
-            leader = RenderablePokemon.loadFromBuffer(buffer),
+            middlePokemon = RenderablePokemon.loadFromBuffer(buffer),
             leftPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
             rightPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) }
         )
     }
 
-    override val type = TYPE
+    override val type = PokemonHerdSpawnDetail.TYPE
 
     override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
 
     }
 
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
-        leader.saveToBuffer(buffer)
+        middlePokemon.saveToBuffer(buffer)
         buffer.writeNullable(leftPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
         buffer.writeNullable(rightPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
     }
@@ -118,14 +165,12 @@ class NPCSpawnResultData(
     val npc: NPCClass
 ) : SpawnResultData {
     companion object {
-        const val TYPE = "npc"
-
         fun decodeResultData(buffer: RegistryFriendlyByteBuf): NPCSpawnResultData = NPCSpawnResultData(
             npc = NPCClass().also { it.decode(buffer) }
         )
     }
 
-    override val type = TYPE
+    override val type = NPCSpawnDetail.TYPE
     override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
         TODO("Not yet implemented")
     }

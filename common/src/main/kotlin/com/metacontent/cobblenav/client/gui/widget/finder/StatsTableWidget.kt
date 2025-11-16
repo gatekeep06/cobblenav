@@ -8,7 +8,7 @@ import com.metacontent.cobblenav.client.gui.util.drawBlurredArea
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.InfoButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
-import com.metacontent.cobblenav.spawndata.SpawnData1
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.finder.FoundPokemon
 import com.metacontent.cobblenav.util.finder.PokemonFinder
 import com.mojang.blaze3d.vertex.PoseStack
@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component
 
 class StatsTableWidget(
     x: Int, y: Int,
-    val spawnData: SpawnData1,
+    val spawnData: SpawnData,
     val pokemon: FoundPokemon,
     val parent: PokenavScreen
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Stats Table")) {
