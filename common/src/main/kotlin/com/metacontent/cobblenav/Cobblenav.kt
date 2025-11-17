@@ -2,7 +2,6 @@ package com.metacontent.cobblenav
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
-import com.cobblemon.mod.common.api.spawning.CobblemonSpawningZoneGenerator
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.data.CobblemonDataProvider
@@ -13,10 +12,10 @@ import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
-import com.metacontent.cobblenav.spawndata.PokemonHerdSpawnResultData
-import com.metacontent.cobblenav.spawndata.PokemonSpawnResultData
+import com.metacontent.cobblenav.spawndata.resultdata.PokemonHerdSpawnResultData
+import com.metacontent.cobblenav.spawndata.resultdata.PokemonSpawnResultData
 import com.metacontent.cobblenav.spawndata.PokenavSpawnablePositionResolver
-import com.metacontent.cobblenav.spawndata.SpawnResultData
+import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger

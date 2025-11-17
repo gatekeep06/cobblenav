@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.util.spawner
 import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
 
