@@ -22,9 +22,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 
 interface SpawnResultData : Encodable {
     companion object {
-        private val transformers: MutableMap<String, (SpawnDetail) -> SpawnResultData?> = mutableMapOf()
+        private val transformers: HashMap<String, (SpawnDetail) -> SpawnResultData?> = hashMapOf()
 
-        private val decoders: MutableMap<String, (RegistryFriendlyByteBuf) -> SpawnResultData> = mutableMapOf()
+        private val decoders: HashMap<String, (RegistryFriendlyByteBuf) -> SpawnResultData> = hashMapOf()
 
         fun register(
             type: String,
