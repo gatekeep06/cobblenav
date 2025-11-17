@@ -27,15 +27,15 @@ fun GuiGraphics.renderSpawnDataTooltip(
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
     )
 
-    spawnData.conditions.forEach {
-        val value = it.siblings.joinToString(separator = ", ") { sibling -> sibling.string }
-        it.siblings.clear()
-        it.append(value)
-        body.add(it)
-    }
+//    spawnData.conditions.forEach {
+//        val value = it.siblings.joinToString(separator = ", ") { sibling -> sibling.string }
+//        it.siblings.clear()
+//        it.append(value)
+//        body.add(it)
+//    }
 
     this.renderAdvancedTooltip(
-        header = if (spawnData.encountered) spawnData.renderable.species.translatedName else Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
+        header = /*if (spawnData.encountered) spawnData.renderable.species.translatedName else*/ Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
         body = body,
         items = spawnData.blockConditions.asItemStacks,
         mouseX = mouseX,
@@ -46,7 +46,7 @@ fun GuiGraphics.renderSpawnDataTooltip(
         y2 = y2,
         lineHeight = lineHeight,
         opacity = opacity,
-        headerColor = spawnData.renderable.form.primaryType.hue + ((opacity * 255).toInt() shl 24),
+        headerColor = /*spawnData.renderable.form.primaryType.hue + */((opacity * 255).toInt() shl 24),
         blur = 1f,
         delta = delta
     )

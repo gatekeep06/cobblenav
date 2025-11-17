@@ -111,7 +111,7 @@ class FinderScreen(
 
     fun receiveFoundPokemon(pokemon: FoundPokemon) {
         this.pokemon = pokemon
-        spawnData.renderable.aspects += pokemon.aspects
+//        spawnData.renderable.aspects += pokemon.aspects
 
         if (pokemon.found) {
             foundPokemonWidget =
@@ -138,24 +138,24 @@ class FinderScreen(
         ).also { addBlockableWidget(it) }
 
         val settings = CobblenavClient.pokefinderSettings
-        val name = spawnData.renderable.species.name
-        pokefinderButton = IconButton(
-            pX = findButton.x - BUTTON_SPACE - BUTTON_WIDTH,
-            pY = findButton.y + (findButton.height - BUTTON_HEIGHT) / 2,
-            pWidth = BUTTON_WIDTH,
-            pHeight = BUTTON_HEIGHT,
-            texture = POKEFINDER,
-            disabled = settings?.species?.contains(name.lowercase()) == true && settings.aspects == spawnData.spawnAspects,
-            action = { button ->
-                settings?.let {
-                    it.species += name
-                    it.aspects += spawnData.spawnAspects
-                    button.disabled = true
-                    notifications.add(Component.translatable("gui.cobblenav.notification.pokefinder_updated"))
-                    return@IconButton
-                }
-            }
-        ).also { addBlockableWidget(it) }
+//        val name = spawnData.renderable.species.name
+//        pokefinderButton = IconButton(
+//            pX = findButton.x - BUTTON_SPACE - BUTTON_WIDTH,
+//            pY = findButton.y + (findButton.height - BUTTON_HEIGHT) / 2,
+//            pWidth = BUTTON_WIDTH,
+//            pHeight = BUTTON_HEIGHT,
+//            texture = POKEFINDER,
+//            disabled = settings?.species?.contains(name.lowercase()) == true && settings.aspects == spawnData.spawnAspects,
+//            action = { button ->
+//                settings?.let {
+//                    it.species += name
+//                    it.aspects += spawnData.spawnAspects
+//                    button.disabled = true
+//                    notifications.add(Component.translatable("gui.cobblenav.notification.pokefinder_updated"))
+//                    return@IconButton
+//                }
+//            }
+//        ).also { addBlockableWidget(it) }
 
         IconButton(
             pX = pokefinderButton.x - BUTTON_SPACE - BUTTON_WIDTH,
@@ -273,6 +273,6 @@ class FinderScreen(
 
     private fun findPokemon() {
         loading = true
-        FindPokemonPacket(spawnData.renderable.species.name, spawnData.spawnAspects).sendToServer()
+//        FindPokemonPacket(spawnData.renderable.species.name, spawnData.spawnAspects).sendToServer()
     }
 }

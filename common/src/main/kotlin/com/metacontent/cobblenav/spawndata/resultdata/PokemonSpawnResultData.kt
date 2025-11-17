@@ -3,16 +3,20 @@ package com.metacontent.cobblenav.spawndata.resultdata
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
 
 class PokemonSpawnResultData(
     val pokemon: RenderablePokemon,
@@ -43,16 +47,30 @@ class PokemonSpawnResultData(
     val state: PosableState by lazy { FloatingState() }
 
     override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
-        drawPokemon(
-            poseStack = poseStack,
-            pokemon = pokemon,
-            x = x,
-            y = y,
-            z = z,
-            delta = delta,
-            state = state,
-            obscured = false
-        )
+        try {
+            drawPokemon(
+                poseStack = poseStack,
+                pokemon = pokemon,
+                x = x,
+                y = y,
+                z = z,
+                delta = delta,
+                state = state,
+                obscured = false
+            )
+        } catch (e: Exception) {
+            val message = Component.translatable(
+                "gui.cobblenav.pokemon_rendering_exception",
+                pokemon.species.translatedName.string,
+                pokemon.species.translatedName.string
+            )
+            Cobblenav.LOGGER.error(message.string)
+            Cobblenav.LOGGER.error(e.message)
+            if (CobblenavClient.config.sendErrorMessagesToChat) {
+                Minecraft.getInstance().player?.sendSystemMessage(message.red())
+            }
+            throw e
+        }
     }
 
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
@@ -61,4 +79,6 @@ class PokemonSpawnResultData(
     }
 
     override fun canBeTracked() = true
+
+    override fun containsResult(objects: Collection<*>) = objects.contains(pokemon.form.showdownId())
 }

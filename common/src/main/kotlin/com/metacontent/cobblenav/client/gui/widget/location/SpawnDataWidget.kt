@@ -2,9 +2,6 @@ package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
-import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
-import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
@@ -13,9 +10,7 @@ import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
-import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
-import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
@@ -36,7 +31,7 @@ open class SpawnDataWidget(
     val spawnData: SpawnData,
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
-    private val pose: PoseType = if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged) PoseType.SWIM else PoseType.PROFILE,
+    private val pose: PoseType = PoseType.PROFILE,
     private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
@@ -58,9 +53,8 @@ open class SpawnDataWidget(
             chanceString = getChanceString(value)
         }
     private val state = FloatingState()
-    private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
     private var isModelBroken = false
-    protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platform)
+    protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platformId)
     protected open val plate = DimensionPlateRepository.get(Minecraft.getInstance().level?.dimension()?.location())
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
     var isNearby = false
@@ -81,13 +75,13 @@ open class SpawnDataWidget(
             height = HEIGHT,
             hovered = hovered
         )
-        if (spawnData.knowledge == PokedexEntryProgress.CAUGHT && platform.platform != null) {
-            renderPokeBall(
-                guiGraphics = guiGraphics,
-                x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),
-                y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET + platform.getPokemonYOffset(hovered)
-            )
-        }
+//        if (spawnData.knowledge == PokedexEntryProgress.CAUGHT && platform.platform != null) {
+//            renderPokeBall(
+//                guiGraphics = guiGraphics,
+//                x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),
+//                y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET + platform.getPokemonYOffset(hovered)
+//            )
+//        }
 
         if (isNearby) {
             blitk(
@@ -103,30 +97,15 @@ open class SpawnDataWidget(
         if (!isModelBroken) {
             try {
 //                guiGraphics.fill(x, y, x + width, y + height, FastColor.ARGB32.color(100, 255, 255, 255))
-                drawPokemon(
+                spawnData.result.drawResult(
                     poseStack = poseStack,
-                    pokemon = spawnData.renderable,
                     x = x.toFloat() + width / 2 + platform.getPokemonXOffset(hovered),
                     y = y.toFloat() + platform.getPokemonYOffset(hovered),
                     z = 100f,
-                    delta = delta,
-                    state = state,
-                    poseType = pose,
-                    rotation = Quaternionf().fromEulerXYZDegrees(pokemonRotation),
-                    obscured = obscured
+                    delta = delta
                 )
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 isModelBroken = true
-                val message = Component.translatable(
-                    "gui.cobblenav.pokemon_rendering_exception",
-                    spawnData.renderable.species.translatedName.string,
-                    spawnData.renderable.species.translatedName.string
-                )
-                Cobblenav.LOGGER.error(message.string)
-                Cobblenav.LOGGER.error(e.message)
-                if (CobblenavClient.config.sendErrorMessagesToChat) {
-                    Minecraft.getInstance().player?.sendSystemMessage(message.red())
-                }
             }
         } else {
             blitk(

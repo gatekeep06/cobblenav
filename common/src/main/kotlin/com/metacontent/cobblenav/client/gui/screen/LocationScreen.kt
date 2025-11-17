@@ -376,7 +376,7 @@ class LocationScreen(
             ).map { it.pokemon.form.showdownId() }.toHashSet()
         } ?: hashSetOf()
         tableView.applyToAll { item ->
-            item.child.isNearby = nearbyPokemon.contains(item.child.spawnData.renderable.form.showdownId())
+            item.child.isNearby = item.child.spawnData.result.containsResult(nearbyPokemon)
         }
     }
 

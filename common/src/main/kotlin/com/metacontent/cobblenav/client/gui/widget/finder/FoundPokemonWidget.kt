@@ -41,13 +41,10 @@ class FoundPokemonWidget(
         val NOTIFICATION = gui("finder/shiny_notification")
     }
 
-    private val pose =
-        if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged)
-            PoseType.SWIM else PoseType.WALK
+    private val pose = PoseType.WALK
     private val state = FloatingState()
     private val openingTimer = Timer(OPENING)
     private val loopTimer = Timer(LOOP, true)
-    private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -111,19 +108,19 @@ class FoundPokemonWidget(
             )
         }
 
-        drawPokemon(
-            poseStack = poseStack,
-            pokemon = spawnData.renderable,
-            x = x.toFloat(),
-            y = y.toFloat() - POKEMON_OFFSET, //- if (spawnData.pose == PoseType.SWIM) 10 else 0,
-            z = 100f,
-            delta = delta,
-            state = state,
-            poseType = pose,
-            scale = SCALE,
-            rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
-            obscured = obscured
-        )
+//        drawPokemon(
+//            poseStack = poseStack,
+//            pokemon = spawnData.renderable,
+//            x = x.toFloat(),
+//            y = y.toFloat() - POKEMON_OFFSET, //- if (spawnData.pose == PoseType.SWIM) 10 else 0,
+//            z = 100f,
+//            delta = delta,
+//            state = state,
+//            poseType = pose,
+//            scale = SCALE,
+//            rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
+//            obscured = obscured
+//        )
 
         if (pokemon.aspects.contains(SHINY_ASPECT)) {
             blitk(

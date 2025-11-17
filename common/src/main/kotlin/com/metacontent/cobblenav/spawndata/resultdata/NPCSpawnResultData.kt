@@ -24,4 +24,6 @@ class NPCSpawnResultData(
     }
 
     override fun canBeTracked() = true
+
+    override fun containsResult(objects: Collection<*>) = false
 }
