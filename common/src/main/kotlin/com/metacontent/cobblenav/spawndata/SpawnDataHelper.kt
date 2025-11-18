@@ -16,6 +16,7 @@ import com.cobblemon.mod.common.util.spawner
 import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatformContext
+import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.resources.ResourceLocation
@@ -121,12 +122,14 @@ object SpawnDataHelper {
             blockConditions += ConditionCollectors.collectBlockConditions(condition)
         }
 
+        val platformId = BiomePlatforms.firstFitting(builder.build())
+
         return SpawnData(
             id = detail.id,
             result = SpawnResultData.fromDetail(detail) ?: return null,
             positionType = detail.spawnablePositionType.name,
             spawnChance = spawnChance,
-            platformId = null,
+            platformId = platformId,
             conditions = conditions,
             anticonditions = anticonditions,
             blockConditions = BlockConditions(blockConditions),
