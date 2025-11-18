@@ -119,7 +119,7 @@ object SpawnDataHelper {
         val blockAnticonditions = mutableSetOf<ResourceLocation>()
         detail.anticonditions.forEach { condition ->
             conditions += ConditionCollectors.collectConditions(detail, condition, player)
-            blockConditions += ConditionCollectors.collectBlockConditions(condition)
+            blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
         }
 
         val platformId = BiomePlatforms.firstFitting(builder.build())
