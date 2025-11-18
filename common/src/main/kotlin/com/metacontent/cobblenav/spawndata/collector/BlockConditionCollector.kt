@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.AreaSpawnablePosition
 import com.cobblemon.mod.common.registry.BlockIdentifierCondition
 import com.cobblemon.mod.common.registry.BlockTagCondition
 import com.metacontent.cobblenav.Cobblenav
@@ -11,9 +10,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 
 interface BlockConditionCollector<T : SpawningCondition<*>> : Collector<T> {
-    fun collect(condition: T, spawnablePositions: List<AreaSpawnablePosition>): Set<ResourceLocation>
+    fun collect(condition: T): Set<ResourceLocation>
 
-    fun MutableList<RegistryLikeCondition<Block>>.toBlockList(): List<ResourceLocation> {
+    fun Collection<RegistryLikeCondition<Block>>.toBlockSet(): Set<ResourceLocation> {
         return this.flatMap {
             if (it is BlockIdentifierCondition) {
                 return@flatMap listOf(it.identifier)
@@ -26,6 +25,6 @@ interface BlockConditionCollector<T : SpawningCondition<*>> : Collector<T> {
                 }
             }
             return@flatMap emptyList()
-        }
+        }.toSet()
     }
 }
