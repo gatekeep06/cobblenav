@@ -1,24 +1,24 @@
 package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.metacontent.cobblenav.api.platform.SpawnDataContext
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.metacontent.cobblenav.api.platform.BiomePlatformContext
+import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class YHeightCollector : GeneralConditionCollector() {
+    override val conditionName = "y_height"
     override val configName = "y_height"
 
     override fun collect(
+        detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
-        builder: SpawnDataContext.Builder
-    ): MutableComponent? {
-        formatValueRange(condition.minY, condition.maxY, true)?.let {
-            return Component.translatable("gui.cobblenav.spawn_data.height", it)
+        builder: BiomePlatformContext.Builder?
+    ): ConditionData? {
+        return formatValueRange(condition.minY, condition.maxY, true)?.let {
+            listOf(Component.translatable("gui.cobblenav.spawn_data.height", it)).wrap()
         }
-        return null
     }
 }

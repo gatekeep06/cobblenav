@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 
 class LightCollector : GeneralConditionCollector() {
+    override val conditionName = "light"
     override val configName = "light"
 
     override fun collect(
@@ -17,7 +18,7 @@ class LightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minLight, condition.maxLight)?.let {
-            ConditionData("light", listOf(Component.translatable("gui.cobblenav.spawn_data.light", it)))
+            listOf(Component.translatable("gui.cobblenav.spawn_data.light", it)).wrap()
         }
     }
 }

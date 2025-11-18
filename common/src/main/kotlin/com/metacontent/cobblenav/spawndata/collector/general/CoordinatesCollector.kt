@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 
 class CoordinatesCollector : GeneralConditionCollector() {
+    override val conditionName = "coordinates"
     override val configName = "coordinates"
 
     override fun collect(
@@ -19,6 +20,6 @@ class CoordinatesCollector : GeneralConditionCollector() {
         val values = mutableListOf<Component>()
         formatValueRange(condition.minX, condition.maxX)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.x", it)) }
         formatValueRange(condition.minZ, condition.maxZ)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.z", it)) }
-        return if (values.isNotEmpty()) ConditionData("coordinates", values) else null
+        return if (values.isNotEmpty()) values.wrap() else null
     }
 }

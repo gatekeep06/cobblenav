@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 
 class BiomeCollector : GeneralConditionCollector() {
+    override val conditionName = "biomes"
     override val configName = "biomes"
 
     override fun collect(
@@ -19,6 +20,6 @@ class BiomeCollector : GeneralConditionCollector() {
     ): ConditionData? {
         val biomes = condition.biomes?.mapNotNull { it.toResourceLocation() }?.toSet() ?: return null
         builder?.biomes = biomes
-        return ConditionData("habitat", biomes.map { Component.translatable(it.toLanguageKey("biome")) })
+        return biomes.map { Component.translatable(it.toLanguageKey("biome")) }.wrap()
     }
 }

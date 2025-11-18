@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 
 class MoonPhaseCollector : GeneralConditionCollector() {
+    override val conditionName = "moon_phase"
     override val configName = "moon_phase"
 
     override fun collect(
@@ -17,12 +18,10 @@ class MoonPhaseCollector : GeneralConditionCollector() {
         player: ServerPlayer,
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
-        if (condition.moonPhase == null) return null
-        val values = condition.moonPhase!!.ranges.flatMap { ranges ->
-            ranges.mapNotNull { phase ->
+        return condition.moonPhase?.ranges?.flatMap { range ->
+            range.mapNotNull { phase ->
                 Component.translatable("moon.cobblenav.${MoonPhase.entries.getOrNull(phase)?.name?.lowercase()}")
             }
-        }
-        return ConditionData("moon_phase", values)
+        }?.distinct()?.wrap()
     }
 }
