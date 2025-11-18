@@ -70,7 +70,7 @@ object ConditionCollectors {
     }
 
     fun collectBlockConditions(condition: SpawningCondition<*>): Set<ResourceLocation> {
-        return getBlockCollectors(condition).flatMap { it.collect(condition, contexts) }.toSet()
+        return getBlockCollectors(condition).flatMap { it.collect(condition) }.toSet()
     }
 
     fun init() {
