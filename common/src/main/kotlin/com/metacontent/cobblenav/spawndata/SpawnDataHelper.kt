@@ -107,6 +107,8 @@ object SpawnDataHelper {
         spawnChance: Float,
         player: ServerPlayer
     ): SpawnData? {
+        val result = SpawnResultData.fromDetail(detail) ?: return null
+
         val builder = BiomePlatformContext.Builder()
         val conditions = mutableListOf<ConditionData>()
         val blockConditions = mutableSetOf<ResourceLocation>()
@@ -126,7 +128,7 @@ object SpawnDataHelper {
 
         return SpawnData(
             id = detail.id,
-            result = SpawnResultData.fromDetail(detail) ?: return null,
+            result = result,
             positionType = detail.spawnablePositionType.name,
             spawnChance = spawnChance,
             platformId = platformId,
