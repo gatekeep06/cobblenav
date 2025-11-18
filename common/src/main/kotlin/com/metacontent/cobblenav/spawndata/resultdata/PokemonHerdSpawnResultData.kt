@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerPlayer
 
 class PokemonHerdSpawnResultData(
     val leftPokemon: RenderablePokemon?,
@@ -29,7 +30,7 @@ class PokemonHerdSpawnResultData(
     val allPokemon: List<PokemonProperties>
 ) : SpawnResultData {
     companion object {
-        fun transform(detail: SpawnDetail): PokemonHerdSpawnResultData? {
+        fun transform(detail: SpawnDetail, player: ServerPlayer): SpawnResultData? {
             if (detail !is PokemonHerdSpawnDetail) {
                 Cobblenav.LOGGER.error("The provided SpawnDetail type (${detail.type}) does not match the key under which it is registered (${PokemonHerdSpawnDetail.TYPE}).")
                 return null

@@ -5,12 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerPlayer
 
 class UnknownSpawnResultData : SpawnResultData {
     companion object {
         const val TYPE = "unknown-pokemon"
 
-        fun transform(detail: SpawnDetail): UnknownSpawnResultData {
+        fun transform(detail: SpawnDetail, player: ServerPlayer): UnknownSpawnResultData {
             return UnknownSpawnResultData()
         }
 

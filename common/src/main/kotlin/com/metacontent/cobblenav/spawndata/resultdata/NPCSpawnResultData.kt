@@ -4,6 +4,8 @@ import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.spawning.detail.NPCSpawnDetail
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 class NPCSpawnResultData(
     val npc: NPCClass
@@ -28,4 +30,6 @@ class NPCSpawnResultData(
     override fun containsResult(objects: Collection<*>) = false
 
     override fun getColor() = 0
+
+    override fun getResultName(): MutableComponent = Component.empty()
 }

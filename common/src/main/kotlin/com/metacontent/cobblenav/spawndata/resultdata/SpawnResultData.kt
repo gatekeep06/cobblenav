@@ -8,23 +8,24 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerPlayer
 
 interface SpawnResultData : Encodable {
     companion object {
-        private val transformers: HashMap<String, (SpawnDetail) -> SpawnResultData?> = hashMapOf()
+        private val transformers: HashMap<String, (SpawnDetail, ServerPlayer) -> SpawnResultData?> = hashMapOf()
 
         private val decoders: HashMap<String, (RegistryFriendlyByteBuf) -> SpawnResultData> = hashMapOf()
 
         fun register(
             type: String,
-            transformer: (SpawnDetail) -> SpawnResultData?,
+            transformer: (SpawnDetail, ServerPlayer) -> SpawnResultData?,
             decoder: (RegistryFriendlyByteBuf) -> SpawnResultData
         ) {
             transformers[type] = transformer
             decoders[type] = decoder
         }
 
-        fun fromDetail(detail: SpawnDetail): SpawnResultData? = transformers[detail.type]?.invoke(detail)
+        fun fromDetail(detail: SpawnDetail, player: ServerPlayer): SpawnResultData? = transformers[detail.type]?.invoke(detail, player)
 
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnResultData {
             val type = buffer.readString()
