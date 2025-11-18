@@ -24,20 +24,14 @@ fun GuiGraphics.renderSpawnDataTooltip(
     delta: Float = 0f
 ) {
     val body = mutableListOf<MutableComponent>(
+        Component.translatable("gui.cobblenav.spawn_data.id", spawnData.id),
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
+        Component.translatable("gui.cobblenav.spawn_data.position_type", spawnData.positionType)
     )
 
-//    spawnData.conditions.forEach {
-//        val value = it.siblings.joinToString(separator = ", ") { sibling -> sibling.string }
-//        it.siblings.clear()
-//        it.append(value)
-//        body.add(it)
-//    }
-
     this.renderAdvancedTooltip(
-        header = /*if (spawnData.encountered) spawnData.renderable.species.translatedName else*/ Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon"),
+        header = spawnData.result.getResultName(),
         body = body,
-        items = spawnData.blockConditions.asItemStacks,
         mouseX = mouseX,
         mouseY = mouseY,
         x1 = x1,
