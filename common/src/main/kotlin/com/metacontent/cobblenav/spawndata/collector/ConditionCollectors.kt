@@ -1,6 +1,5 @@
 package com.metacontent.cobblenav.spawndata.collector
 
-import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.Cobblenav
@@ -16,10 +15,6 @@ import com.metacontent.cobblenav.spawndata.collector.block.GroundedTypeBlockColl
 import com.metacontent.cobblenav.spawndata.collector.block.SeafloorTypeBlockCollector
 import com.metacontent.cobblenav.spawndata.collector.general.*
 import com.metacontent.cobblenav.spawndata.collector.special.*
-import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.ItemsCollector
-import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.KeyItemCollector
-import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.PokemonCollector
-import com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends.ZygardeCubeChargeCollector
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
