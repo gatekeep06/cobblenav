@@ -8,7 +8,6 @@ import com.cobblemon.mod.common.api.spawning.influence.BucketNormalizingInfluenc
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence.Companion.TYPICAL_VARIATION
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePositionCalculator
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
@@ -16,7 +15,10 @@ import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.util.spawner
 import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.platform.BiomePlatformContext
+import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
 
@@ -55,7 +57,7 @@ object SpawnDataHelper {
 
             spawnProbabilities.forEach { (detail, spawnChance) ->
                 if (detail.isValid()) {
-                    collect(detail, spawnChance, spawnablePositions, player)?.let { spawnDataList.add(it) }
+                    collect(detail, spawnChance, player)?.let { spawnDataList.add(it) }
                 }
             }
         }
@@ -94,7 +96,7 @@ object SpawnDataHelper {
         return Cobblemon.bestSpawner.config.buckets.associate { bucket ->
             bucket.name to spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
                 .mapNotNull { detailProbability ->
-                    collect(detailProbability.key, detailProbability.value, spawnablePositions, player)
+                    collect(detailProbability.key, detailProbability.value, player)
                 }
         }
     }
@@ -102,17 +104,33 @@ object SpawnDataHelper {
     fun collect(
         detail: SpawnDetail,
         spawnChance: Float,
-        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer
     ): SpawnData? {
+        val builder = BiomePlatformContext.Builder()
+        val conditions = mutableListOf<ConditionData>()
+        val blockConditions = mutableSetOf<ResourceLocation>()
+        detail.conditions.forEach { condition ->
+            conditions += ConditionCollectors.collectConditions(detail, condition, player, builder)
+            blockConditions += ConditionCollectors.collectBlockConditions(condition)
+        }
+
+        val anticonditions = mutableListOf<ConditionData>()
+        val blockAnticonditions = mutableSetOf<ResourceLocation>()
+        detail.anticonditions.forEach { condition ->
+            conditions += ConditionCollectors.collectConditions(detail, condition, player)
+            blockConditions += ConditionCollectors.collectBlockConditions(condition)
+        }
+
         return SpawnData(
             id = detail.id,
             result = SpawnResultData.fromDetail(detail) ?: return null,
             positionType = detail.spawnablePositionType.name,
             spawnChance = spawnChance,
             platformId = null,
-            conditions = mutableListOf(),
-            blockConditions = BlockConditions(mutableSetOf())
+            conditions = conditions,
+            anticonditions = anticonditions,
+            blockConditions = BlockConditions(blockConditions),
+            blockAnticonditions = BlockConditions(blockAnticonditions)
         )
     }
 }

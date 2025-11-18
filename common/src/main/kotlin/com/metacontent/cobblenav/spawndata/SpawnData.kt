@@ -15,8 +15,10 @@ data class SpawnData(
     val positionType: String,
     val spawnChance: Float,
     val platformId: ResourceLocation?,
-    val conditions: MutableList<ConditionData>,
-    val blockConditions: BlockConditions
+    val conditions: List<ConditionData>,
+    val anticonditions: List<ConditionData>,
+    val blockConditions: BlockConditions,
+    val blockAnticonditions: BlockConditions
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnData = SpawnData(
@@ -26,7 +28,9 @@ data class SpawnData(
             spawnChance = buffer.readFloat(),
             platformId = buffer.readNullable { it.readIdentifier() },
             conditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
-            blockConditions = BlockConditions.decode(buffer)
+            anticonditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
+            blockConditions = BlockConditions.decode(buffer),
+            blockAnticonditions = BlockConditions.decode(buffer)
         )
     }
 
@@ -37,6 +41,8 @@ data class SpawnData(
         buffer.writeFloat(spawnChance)
         buffer.writeNullable(platformId) { buf, id -> buf.writeIdentifier(id) }
         buffer.writeCollection(conditions) { buf, data -> ConditionData.BUFF_CODEC.encode(buf as RegistryFriendlyByteBuf, data) }
+        buffer.writeCollection(anticonditions) { buf, data -> ConditionData.BUFF_CODEC.encode(buf as RegistryFriendlyByteBuf, data) }
         blockConditions.encode(buffer)
+        blockAnticonditions.encode(buffer)
     }
 }
