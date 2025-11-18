@@ -26,4 +26,6 @@ class NPCSpawnResultData(
     override fun canBeTracked() = true
 
     override fun containsResult(objects: Collection<*>) = false
+
+    override fun getColor() = 0
 }

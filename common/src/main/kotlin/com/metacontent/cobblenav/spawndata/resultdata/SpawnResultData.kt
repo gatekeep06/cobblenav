@@ -50,4 +50,6 @@ interface SpawnResultData : Encodable {
     fun canBeTracked(): Boolean
 
     fun containsResult(objects: Collection<*>): Boolean
+
+    fun getColor(): Int
 }

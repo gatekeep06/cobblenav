@@ -81,4 +81,6 @@ class PokemonSpawnResultData(
     override fun canBeTracked() = true
 
     override fun containsResult(objects: Collection<*>) = objects.contains(pokemon.form.showdownId())
+
+    override fun getColor() = pokemon.form.primaryType.hue
 }

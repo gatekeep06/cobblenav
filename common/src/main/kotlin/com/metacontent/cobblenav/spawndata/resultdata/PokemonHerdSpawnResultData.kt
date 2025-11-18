@@ -105,4 +105,6 @@ class PokemonHerdSpawnResultData(
     override fun canBeTracked() = false
 
     override fun containsResult(objects: Collection<*>) = false
+
+    override fun getColor() = middlePokemon.form.primaryType.hue
 }

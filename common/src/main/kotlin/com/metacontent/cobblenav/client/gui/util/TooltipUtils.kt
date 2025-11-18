@@ -46,7 +46,7 @@ fun GuiGraphics.renderSpawnDataTooltip(
         y2 = y2,
         lineHeight = lineHeight,
         opacity = opacity,
-        headerColor = /*spawnData.renderable.form.primaryType.hue + */((opacity * 255).toInt() shl 24),
+        headerColor = spawnData.result.getColor() + ((opacity * 255).toInt() shl 24),
         blur = 1f,
         delta = delta
     )
