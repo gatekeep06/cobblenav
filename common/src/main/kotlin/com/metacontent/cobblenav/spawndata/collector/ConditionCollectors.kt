@@ -106,17 +106,6 @@ object ConditionCollectors {
         register(RodCollector())
         register(RodTypeCollector())
 
-        // Myths and Legends
-        register(KeyItemCollector())
-        register(ItemsCollector())
-        register(PokemonCollector())
-        register(ZygardeCubeChargeCollector())
-
-        // Counter
-        val api = Cobblemon.implementation.modAPI
-//        register(CountCollector(api))
-//        register(StreakCollector(api))
-
         // Block
         register(AreaTypeBlockCollector())
         register(GroundedTypeBlockCollector())
