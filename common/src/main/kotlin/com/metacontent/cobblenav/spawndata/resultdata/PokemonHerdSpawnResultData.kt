@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.asResource
 import com.cobblemon.mod.common.util.random
 import com.cobblemon.mod.common.util.randomNoCopy
 import com.cobblemon.mod.common.util.readString
@@ -19,6 +20,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 class PokemonHerdSpawnResultData(
     val leftPokemon: RenderablePokemon?,
@@ -107,4 +109,12 @@ class PokemonHerdSpawnResultData(
     override fun containsResult(objects: Collection<*>) = false
 
     override fun getColor() = middlePokemon.form.primaryType.hue
+
+    override fun getResultName(): MutableComponent {
+        val component = Component.translatable("gui.cobblenav.spawn_data.herd")
+        allPokemon.forEach { pokemon ->
+            pokemon.species?.asResource()?.let { component.append(Component.translatable("${it.namespace}.species.${it.path}.name")) }
+        }
+        return component
+    }
 }

@@ -17,6 +17,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 class PokemonSpawnResultData(
     val pokemon: RenderablePokemon,
@@ -83,4 +84,6 @@ class PokemonSpawnResultData(
     override fun containsResult(objects: Collection<*>) = objects.contains(pokemon.form.showdownId())
 
     override fun getColor() = pokemon.form.primaryType.hue
+
+    override fun getResultName(): MutableComponent = pokemon.species.translatedName
 }

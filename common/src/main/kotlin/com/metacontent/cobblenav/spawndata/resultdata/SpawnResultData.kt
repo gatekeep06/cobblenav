@@ -6,6 +6,8 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 interface SpawnResultData : Encodable {
     companion object {
@@ -52,4 +54,6 @@ interface SpawnResultData : Encodable {
     fun containsResult(objects: Collection<*>): Boolean
 
     fun getColor(): Int
+
+    fun getResultName(): MutableComponent
 }
