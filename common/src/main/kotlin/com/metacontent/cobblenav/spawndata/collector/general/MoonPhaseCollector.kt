@@ -2,34 +2,27 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.MoonPhase
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.metacontent.cobblenav.api.platform.SpawnDataContext
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.metacontent.cobblenav.api.platform.BiomePlatformContext
+import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class MoonPhaseCollector : GeneralConditionCollector() {
     override val configName = "moon_phase"
 
     override fun collect(
+        detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
-        builder: SpawnDataContext.Builder
-    ): MutableComponent? {
+        builder: BiomePlatformContext.Builder?
+    ): ConditionData? {
         if (condition.moonPhase == null) return null
-        val component = Component.translatable("gui.cobblenav.spawn_data.moon")
-        condition.moonPhase!!.ranges.forEach { ranges ->
-            ranges.forEach { phase ->
-                MoonPhase.entries.getOrNull(phase)?.let {
-                    component.append(Component.translatable("moon.cobblenav.${it.name.lowercase()}"))
-                }
+        val values = condition.moonPhase!!.ranges.flatMap { ranges ->
+            ranges.mapNotNull { phase ->
+                Component.translatable("moon.cobblenav.${MoonPhase.entries.getOrNull(phase)?.name?.lowercase()}")
             }
         }
-        if (condition.moonPhase != null) {
-            return Component.translatable("gui.cobblenav.spawn_data.moon")
-                .append(Component.translatable("moon.cobblenav.${MoonPhase.ofWorld(player.level()).name.lowercase()}"))
-        }
-        return null
+        return ConditionData("moon_phase", values)
     }
 }
