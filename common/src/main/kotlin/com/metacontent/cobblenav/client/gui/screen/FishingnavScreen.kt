@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack
 
 class FishingnavScreen(
     os: PokenavOS
-) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataTooltipDisplayer {
+) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataDisplayer {
     companion object {
         const val POKEMON_CHANCE = 0.85f
         const val WEATHER_WIDGET_HEIGHT = 40

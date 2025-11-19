@@ -7,7 +7,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
-import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
+import com.metacontent.cobblenav.client.gui.screen.SpawnDataDisplayer
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
@@ -26,7 +26,7 @@ open class SpawnDataWidget(
     x: Int,
     y: Int,
     val spawnData: SpawnData,
-    private val displayer: SpawnDataTooltipDisplayer,
+    private val displayer: SpawnDataDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {

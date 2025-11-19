@@ -34,7 +34,7 @@ class LocationScreen(
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean = false
-) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataTooltipDisplayer {
+) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataDisplayer {
     companion object {
         val LOADING = gui("location/loading_animation")
         const val ANIMATION_SHEET_WIDTH = 144
