@@ -102,6 +102,8 @@ class PokemonSpawnResultData(
     override fun shouldRenderPlatform() = renderer.shouldRenderPlatform()
 
     override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && knowledge == PokedexEntryProgress.CAUGHT
+
+    override fun getRotation() = renderer.rotation
 }
 
 abstract class PokemonSpawnResultRenderer {

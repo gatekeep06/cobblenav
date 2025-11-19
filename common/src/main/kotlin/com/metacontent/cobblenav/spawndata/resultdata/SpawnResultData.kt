@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
+import org.joml.Vector3f
 
 interface SpawnResultData : Encodable {
     companion object {
@@ -61,4 +62,6 @@ interface SpawnResultData : Encodable {
     fun shouldRenderPlatform(): Boolean
 
     fun shouldRenderPokeBall(): Boolean
+
+    fun getRotation(): Vector3f
 }

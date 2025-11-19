@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import org.joml.Vector3f
 
 class NPCSpawnResultData(
     val npc: NPCClass
@@ -38,6 +39,10 @@ class NPCSpawnResultData(
     }
 
     override fun shouldRenderPokeBall(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRotation(): Vector3f {
         TODO("Not yet implemented")
     }
 }

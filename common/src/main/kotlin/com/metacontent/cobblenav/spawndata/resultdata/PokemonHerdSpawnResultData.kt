@@ -23,6 +23,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
+import org.joml.Vector3f
 
 class PokemonHerdSpawnResultData(
     val leftPokemon: RenderablePokemon?,
@@ -123,4 +124,6 @@ class PokemonHerdSpawnResultData(
     override fun shouldRenderPlatform() = true
 
     override fun shouldRenderPokeBall() = true
+
+    override fun getRotation() = Vector3f(13F, 35F, 0F)
 }

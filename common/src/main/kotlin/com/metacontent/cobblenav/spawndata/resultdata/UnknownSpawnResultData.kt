@@ -11,6 +11,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
+import org.joml.Vector3f
 
 class UnknownSpawnResultData(
     val positionType: String
@@ -58,4 +59,6 @@ class UnknownSpawnResultData(
     override fun shouldRenderPlatform() = positionType != "fishing"
 
     override fun shouldRenderPokeBall() = false
+
+    override fun getRotation() = Vector3f(13F, 35F, 0F)
 }

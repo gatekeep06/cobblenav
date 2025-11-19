@@ -28,7 +28,6 @@ open class SpawnDataWidget(
     val spawnData: SpawnData,
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
-    private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
@@ -168,7 +167,7 @@ open class SpawnDataWidget(
             translate = Vector3d(x, y, 2.0),
             mulPose = Quaternionf()
                 .rotateZ(PI.toFloat())
-                .fromEulerXYZDegrees(pokemonRotation),
+                .fromEulerXYZDegrees(spawnData.result.getRotation()),
             scale = Vector3f(15f, 15f, -15f)
         ) {
             Minecraft.getInstance().itemRenderer.renderStatic(

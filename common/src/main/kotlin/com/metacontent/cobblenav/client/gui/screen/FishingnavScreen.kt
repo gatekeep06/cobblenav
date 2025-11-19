@@ -24,7 +24,6 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import org.joml.Vector3f
 
 class FishingnavScreen(
     os: PokenavOS
@@ -214,7 +213,6 @@ class FishingnavScreen(
                                 y = 0,
                                 spawnData = it,
                                 displayer = this,
-                                pokemonRotation = Vector3f(0f, 270f, 0f),
                                 chanceMultiplier = POKEMON_CHANCE * view.bucket.chance
                             ),
                             topEdge = screenY + HORIZONTAL_BORDER_DEPTH,
