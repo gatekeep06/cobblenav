@@ -9,6 +9,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
+import kotlin.math.min
 
 fun GuiGraphics.renderSpawnDataTooltip(
     spawnData: SpawnData,
@@ -24,8 +25,8 @@ fun GuiGraphics.renderSpawnDataTooltip(
     delta: Float = 0f
 ) {
     val body = mutableListOf<MutableComponent>(
-        Component.translatable("gui.cobblenav.spawn_data.id", spawnData.id),
         Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
+        Component.translatable("gui.cobblenav.spawn_data.id", spawnData.id),
         Component.translatable("gui.cobblenav.spawn_data.position_type", spawnData.positionType)
     )
 
@@ -86,7 +87,6 @@ fun GuiGraphics.renderAdvancedTooltip(
     x2: Int,
     y2: Int,
     lineHeight: Int = 12,
-    bodyHeight: Int = (body?.let { lineHeight * body.size + 1 } ?: 0),
     opacity: Float = 0.9f,
     headerColor: Int,
     headerOutlineColor: Int = FastColor.ARGB32.multiply(
@@ -100,7 +100,11 @@ fun GuiGraphics.renderAdvancedTooltip(
 ) {
     val poseStack = this.pose()
     val font = Minecraft.getInstance().font
-    val width = max(max(body?.maxOf { font.width(it) } ?: 0, font.width(header)) + 6, 80)
+    val width = min(max(body?.maxOf { font.width(it) } ?: 0, font.width(header)) + 6, 130)
+    val splittedHeader = splitText(header, width)
+    val splittedBody = body?.flatMap { splitText(it, width) }
+    val headerHeight = splittedHeader.size * lineHeight
+    val bodyHeight = (splittedBody?.size ?: 0) * lineHeight
     val itemHeight = (items?.let { if (it.isEmpty()) 0 else 18 + 16 * (it.size * 16 / width) } ?: 0)
 
     var x = mouseX + 5
@@ -115,8 +119,8 @@ fun GuiGraphics.renderAdvancedTooltip(
     if (y < y1) {
         y += (y1 - y)
     }
-    if (y + lineHeight + bodyHeight + itemHeight > y2) {
-        y -= (y + lineHeight + bodyHeight + itemHeight - y2)
+    if (y + headerHeight + bodyHeight + itemHeight > y2) {
+        y -= (y + headerHeight + bodyHeight + itemHeight - y2)
     }
 
     poseStack.pushPose()
@@ -125,30 +129,33 @@ fun GuiGraphics.renderAdvancedTooltip(
         x1 = x,
         y1 = y,
         x2 = x + width,
-        y2 = y + lineHeight + bodyHeight + itemHeight,
+        y2 = y + headerHeight + bodyHeight + itemHeight,
         blur = blur,
         delta = delta
     )
     poseStack.translate(0f, 0f, 2500f)
-    this.fillWithOutline(x, y, x + width, y + lineHeight, headerColor, headerOutlineColor)
+    this.fillWithOutline(x, y, x + width, y + headerHeight, headerColor, headerOutlineColor)
     this.fillWithOutline(
         x,
-        y + lineHeight,
+        y + headerHeight,
         x + width,
-        y + lineHeight + bodyHeight + itemHeight,
+        y + headerHeight + bodyHeight + itemHeight,
         bodyColor,
         bodyOutlineColor
     )
 
-    drawScaledText(
-        context = this,
-        text = header,
-        x = x + 3,
-        y = y + 3,
-        maxCharacterWidth = width - 6,
-    )
-    var lineY = y + lineHeight + 2
-    body?.forEach {
+    var lineY = y + 2
+    splittedHeader.forEach {
+        drawScaledText(
+            context = this,
+            text = it,
+            x = x + 3,
+            y = lineY,
+            maxCharacterWidth = width - 6,
+        )
+        lineY += lineHeight
+    }
+    splittedBody?.forEach {
         drawScaledText(
             context = this,
             text = it,
