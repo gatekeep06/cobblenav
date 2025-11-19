@@ -1,6 +1,6 @@
 {
     "comment": "This is a test of the herd system. Works a treat.",
-    "enabled": true,
+    "enabled": false,
     "neededInstalledMods": [],
     "neededUninstalledMods": [],
     "spawns": [

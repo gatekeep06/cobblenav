@@ -57,4 +57,8 @@ interface SpawnResultData : Encodable {
     fun getColor(): Int
 
     fun getResultName(): MutableComponent
+
+    fun shouldRenderPlatform(): Boolean
+
+    fun shouldRenderPokeBall(): Boolean
 }

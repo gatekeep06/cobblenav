@@ -32,4 +32,12 @@ class NPCSpawnResultData(
     override fun getColor() = 0
 
     override fun getResultName(): MutableComponent = Component.empty()
+
+    override fun shouldRenderPlatform(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun shouldRenderPokeBall(): Boolean {
+        TODO("Not yet implemented")
+    }
 }

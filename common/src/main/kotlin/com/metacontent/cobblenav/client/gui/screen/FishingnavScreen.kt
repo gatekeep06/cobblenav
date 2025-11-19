@@ -2,12 +2,13 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.cobblemon.mod.common.entity.PoseType
-import com.metacontent.cobblenav.client.gui.util.*
+import com.metacontent.cobblenav.client.gui.util.RGB
+import com.metacontent.cobblenav.client.gui.util.dayCycleColor
+import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
 import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
-import com.metacontent.cobblenav.client.gui.widget.fishing.FishingDataWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -208,12 +209,11 @@ class FishingnavScreen(
                     }
                     .map {
                         ScrollableItemWidget(
-                            child = FishingDataWidget(
+                            child = SpawnDataWidget(
                                 x = 0,
                                 y = 0,
                                 spawnData = it,
                                 displayer = this,
-                                pose = PoseType.SWIM,
                                 pokemonRotation = Vector3f(0f, 270f, 0f),
                                 chanceMultiplier = POKEMON_CHANCE * view.bucket.chance
                             ),

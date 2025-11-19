@@ -119,4 +119,8 @@ class PokemonHerdSpawnResultData(
         }
         return component
     }
+
+    override fun shouldRenderPlatform() = true
+
+    override fun shouldRenderPokeBall() = true
 }

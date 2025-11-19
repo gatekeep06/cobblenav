@@ -4,10 +4,7 @@ import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataTooltipDisplayer
@@ -31,7 +28,6 @@ open class SpawnDataWidget(
     val spawnData: SpawnData,
     private val displayer: SpawnDataTooltipDisplayer,
     private val onClick: (SpawnDataWidget) -> Unit = {},
-    private val pose: PoseType = PoseType.PROFILE,
     private val pokemonRotation: Vector3f = Vector3f(15F, 35F, 0F),
     chanceMultiplier: Float = 1f
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
@@ -52,7 +48,6 @@ open class SpawnDataWidget(
             field = value
             chanceString = getChanceString(value)
         }
-    private val state = FloatingState()
     private var isModelBroken = false
     protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platformId)
     protected open val plate = DimensionPlateRepository.get(Minecraft.getInstance().level?.dimension()?.location())
@@ -67,23 +62,26 @@ open class SpawnDataWidget(
             displayer.hoveredWidget = this
         }
 
-        platform.renderPlatform(
-            poseStack = poseStack,
-            x = x,
-            y = y,
-            width = WIDTH,
-            height = HEIGHT,
-            hovered = hovered
-        )
-//        if (spawnData.knowledge == PokedexEntryProgress.CAUGHT && platform.platform != null) {
-//            renderPokeBall(
-//                guiGraphics = guiGraphics,
-//                x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),
-//                y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET + platform.getPokemonYOffset(hovered)
-//            )
-//        }
+        if (spawnData.result.shouldRenderPlatform()) {
+            platform.renderPlatform(
+                poseStack = poseStack,
+                x = x,
+                y = y,
+                width = WIDTH,
+                height = HEIGHT,
+                hovered = hovered
+            )
+        }
 
-        if (isNearby) {
+        if (spawnData.result.shouldRenderPokeBall()) {
+            renderPokeBall(
+                guiGraphics = guiGraphics,
+                x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),
+                y = y.toDouble() + MODEL_HEIGHT / 2 + POKE_BALL_OFFSET + platform.getPokemonYOffset(hovered)
+            )
+        }
+
+        if (isNearby && spawnData.result.shouldRenderPlatform()) {
             blitk(
                 matrixStack = poseStack,
                 texture = NEARBY_MARK,
@@ -121,22 +119,24 @@ open class SpawnDataWidget(
         poseStack.pushAndPop(
             translate = Vector3d(0.0, 0.0, 300.0)
         ) {
-            platform.renderDetails(
-                poseStack = poseStack,
-                x = x,
-                y = y,
-                width = WIDTH,
-                height = HEIGHT,
-                hovered = hovered
-            )
-            plate.render(
-                poseStack = poseStack,
-                x = x,
-                y = y,
-                width = WIDTH,
-                height = HEIGHT,
-                hovered = hovered
-            )
+            if (spawnData.result.shouldRenderPlatform()) {
+                platform.renderDetails(
+                    poseStack = poseStack,
+                    x = x,
+                    y = y,
+                    width = WIDTH,
+                    height = HEIGHT,
+                    hovered = hovered
+                )
+                plate.render(
+                    poseStack = poseStack,
+                    x = x,
+                    y = y,
+                    width = WIDTH,
+                    height = HEIGHT,
+                    hovered = hovered
+                )
+            }
             drawScaledText(
                 guiGraphics,
                 text = Component.literal(chanceString),

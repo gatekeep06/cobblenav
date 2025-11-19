@@ -3,6 +3,8 @@ package com.metacontent.cobblenav.spawndata.resultdata
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.cobblemonResource
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -10,16 +12,18 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class UnknownSpawnResultData : SpawnResultData {
+class UnknownSpawnResultData(
+    val positionType: String
+) : SpawnResultData {
     companion object {
         const val TYPE = "unknown-pokemon"
         val UNKNOWN = cobblemonResource("textures/gui/pokedex/platform_unknown.png")
 
         fun transform(detail: SpawnDetail, player: ServerPlayer): UnknownSpawnResultData {
-            return UnknownSpawnResultData()
+            return UnknownSpawnResultData(detail.spawnablePositionType.name)
         }
 
-        fun decodeResultData(buffer: RegistryFriendlyByteBuf): UnknownSpawnResultData = UnknownSpawnResultData()
+        fun decodeResultData(buffer: RegistryFriendlyByteBuf): UnknownSpawnResultData = UnknownSpawnResultData(buffer.readString())
     }
 
     override val type = TYPE
@@ -39,7 +43,9 @@ class UnknownSpawnResultData : SpawnResultData {
         )
     }
 
-    override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {}
+    override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
+        buffer.writeString(positionType)
+    }
 
     override fun canBeTracked() = false
 
@@ -48,4 +54,8 @@ class UnknownSpawnResultData : SpawnResultData {
     override fun getColor() = 0x815989
 
     override fun getResultName(): MutableComponent = Component.translatable("gui.cobblenav.spawn_data.unknown_pokemon")
+
+    override fun shouldRenderPlatform() = positionType != "fishing"
+
+    override fun shouldRenderPokeBall() = false
 }
