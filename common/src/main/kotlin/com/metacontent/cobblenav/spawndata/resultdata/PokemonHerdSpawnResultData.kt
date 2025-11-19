@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.asResource
 import com.cobblemon.mod.common.util.random
 import com.cobblemon.mod.common.util.randomNoCopy
@@ -114,7 +115,7 @@ class PokemonHerdSpawnResultData(
     override fun getResultName(): MutableComponent {
         val component = Component.translatable("gui.cobblenav.spawn_data.herd")
         allPokemon.forEach { pokemon ->
-            pokemon.species?.asResource()?.let { component.append(Component.translatable("${it.namespace}.species.${it.path}.name")) }
+            pokemon.species?.asIdentifierDefaultingNamespace()?.let { component.append(Component.translatable("${it.namespace}.species.${it.path}.name")) }
         }
         return component
     }
