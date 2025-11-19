@@ -25,7 +25,8 @@ import net.minecraft.server.level.ServerPlayer
 
 class PokemonSpawnResultData(
     val pokemon: RenderablePokemon,
-    val originalProperties: PokemonProperties
+    val originalProperties: PokemonProperties,
+    val knowledge: PokedexEntryProgress
 ) : SpawnResultData {
     companion object {
         fun transform(detail: SpawnDetail, player: ServerPlayer): SpawnResultData? {
@@ -42,13 +43,15 @@ class PokemonSpawnResultData(
 
             return PokemonSpawnResultData(
                 pokemon = renderablePokemon,
-                originalProperties = detail.pokemon
+                originalProperties = detail.pokemon,
+                knowledge = knowledge
             )
         }
 
         fun decodeResultData(buffer: RegistryFriendlyByteBuf): PokemonSpawnResultData = PokemonSpawnResultData(
             pokemon = RenderablePokemon.loadFromBuffer(buffer),
-            originalProperties = PokemonProperties.parse(buffer.readString())
+            originalProperties = PokemonProperties.parse(buffer.readString()),
+            knowledge = buffer.readEnum(PokedexEntryProgress::class.java)
         )
     }
 
@@ -86,6 +89,7 @@ class PokemonSpawnResultData(
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         pokemon.saveToBuffer(buffer)
         buffer.writeString(originalProperties.asString())
+        buffer.writeEnum(knowledge)
     }
 
     override fun canBeTracked() = true
