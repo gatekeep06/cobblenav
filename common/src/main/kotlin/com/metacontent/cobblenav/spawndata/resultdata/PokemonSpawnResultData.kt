@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
@@ -7,6 +8,8 @@ import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
+import com.cobblemon.mod.common.util.asResource
+import com.cobblemon.mod.common.util.pokedex
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
@@ -32,6 +35,11 @@ class PokemonSpawnResultData(
             }
 
             val renderablePokemon = detail.pokemon.createAndGetAsRenderable()
+
+            val speciesRecord = player.pokedex().getSpeciesRecord(renderablePokemon.species.resourceIdentifier) ?: return UnknownSpawnResultData()
+            val knowledge = speciesRecord.getFormRecord(renderablePokemon.form.name)?.knowledge ?: return UnknownSpawnResultData()
+            if (knowledge == PokedexEntryProgress.NONE) return UnknownSpawnResultData()
+
             return PokemonSpawnResultData(
                 pokemon = renderablePokemon,
                 originalProperties = detail.pokemon
