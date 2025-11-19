@@ -137,16 +137,15 @@ open class SpawnDataWidget(
                 height = HEIGHT,
                 hovered = hovered
             )
+            drawScaledText(
+                guiGraphics,
+                text = Component.literal(chanceString),
+                x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
+                maxCharacterWidth = width,
+                centered = true,
+                shadow = true
+            )
         }
-
-        drawScaledText(
-            guiGraphics,
-            text = Component.literal(chanceString),
-            x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
-            maxCharacterWidth = width,
-            centered = true,
-            shadow = true
-        )
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
