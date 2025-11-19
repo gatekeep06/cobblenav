@@ -45,7 +45,7 @@ class PokemonHerdSpawnResultData(
                 pokemon.random(3)
             } else {
                 return null
-            }).map { it.createAndGetAsRenderable() }
+            }).map { it.createAndGetAsRenderable(player.serverLevel(), player.onPos) }
             return PokemonHerdSpawnResultData(
                 leftPokemon = randomPokemon.getOrNull(1),
                 middlePokemon = randomPokemon[0],

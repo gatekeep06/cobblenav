@@ -46,7 +46,7 @@ class PokemonSpawnResultData(
                 return null
             }
 
-            val renderablePokemon = detail.pokemon.createAndGetAsRenderable()
+            val renderablePokemon = detail.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
             val positionType = detail.spawnablePositionType.name
 
             val speciesRecord = player.pokedex().getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
