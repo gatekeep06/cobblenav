@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
@@ -84,7 +85,13 @@ class LocationScreen(
     var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
-    override var hoveredWidget: SpawnDataWidget? = null
+    override var displayedData: Collection<SpawnData>? = null
+    override var hoveredData: SpawnData? = null
+    override var selectedData: SpawnData? = null
+        set(value) {
+            field = value
+            Cobblenav.LOGGER.error(value?.id)
+        }
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
     private lateinit var scrollableView: ScrollableView
     private lateinit var bucketSelector: BucketSelectorWidget
@@ -170,7 +177,7 @@ class LocationScreen(
             text = Component.translatable("gui.cobblenav.apply_bucket"),
             afterClick = {
                 tableView.applyToAll { child ->
-                    child.child.chanceMultiplier = if ((it as CheckBox).checked) currentBucket.chance else 1f
+                    child.child.spawnData.chanceMultiplier = if ((it as CheckBox).checked) currentBucket.chance else 1f
                 }
             },
             default = CobblenavClient.pokenavSettings?.preferences?.applyBucketChecked ?: false
@@ -272,9 +279,9 @@ class LocationScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredWidget?.let {
+        hoveredData?.let {
             guiGraphics.renderSpawnDataTooltip(
-                spawnData = it.spawnData,
+                spawnData = it,
                 chanceMultiplier = it.chanceMultiplier,
                 mouseX = mouseX,
                 mouseY = mouseY,
@@ -285,7 +292,7 @@ class LocationScreen(
                 delta = delta
             )
         }
-        hoveredWidget = null
+        hoveredData = null
     }
 
     private fun savePreferences() {
@@ -338,6 +345,7 @@ class LocationScreen(
     }
 
     private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
+        displayedData = spawnDataList
         val spawnDataWidgets = spawnDataList
             .sortedWith { firstData, secondData ->
                 compareValues(
@@ -351,9 +359,7 @@ class LocationScreen(
                         x = 0,
                         y = 0,
                         spawnData = it,
-                        displayer = this,
-                        onClick = { widget -> changeScreen(FinderScreen(widget.spawnData, os), true) },
-                        chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
+                        displayer = this
                     ),
                     topEdge = screenY + HORIZONTAL_BORDER_DEPTH + 16,
                     bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - 15

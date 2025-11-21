@@ -34,6 +34,8 @@ data class SpawnData(
         )
     }
 
+    var chanceMultiplier = 1f
+
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(id)
         result.encode(buffer)

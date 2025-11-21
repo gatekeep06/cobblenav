@@ -55,7 +55,9 @@ class FishingnavScreen(
         get() = dayCycleColor(player?.clientLevel?.dayTime ?: 0L, DAY_COLOR, NIGHT_COLOR).toColor()
 
     var loading = false
-    override var hoveredWidget: SpawnDataWidget? = null
+    override var displayedData: Collection<SpawnData>? = null
+    override var hoveredData: SpawnData? = null
+    override var selectedData: SpawnData? = null
     lateinit var buckets: List<WeightedBucket>
     private lateinit var fishingContextWidget: FishingContextWidget
     private lateinit var scrollableView: ScrollableView
@@ -197,6 +199,7 @@ class FishingnavScreen(
     }
 
     fun receiveFishingMap(fishingMap: Map<String, List<SpawnData>>) {
+        displayedData = fishingMap.flatMap { it.value }
         fishingMap.forEach { (bucketName, spawnDatas) ->
             bucketViews.find { it.bucket.name == bucketName }?.let { view ->
                 view.add(spawnDatas
@@ -207,13 +210,13 @@ class FishingnavScreen(
                         )
                     }
                     .map {
+                        it.chanceMultiplier = view.bucket.chance * POKEMON_CHANCE
                         ScrollableItemWidget(
                             child = SpawnDataWidget(
                                 x = 0,
                                 y = 0,
                                 spawnData = it,
-                                displayer = this,
-                                chanceMultiplier = POKEMON_CHANCE * view.bucket.chance
+                                displayer = this
                             ),
                             topEdge = screenY + HORIZONTAL_BORDER_DEPTH,
                             bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH
@@ -253,9 +256,9 @@ class FishingnavScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredWidget?.let {
+        hoveredData?.let {
             guiGraphics.renderSpawnDataTooltip(
-                spawnData = it.spawnData,
+                spawnData = it,
                 chanceMultiplier = it.chanceMultiplier,
                 mouseX = mouseX,
                 mouseY = mouseY,
@@ -266,7 +269,7 @@ class FishingnavScreen(
                 delta = delta
             )
         }
-        hoveredWidget = null
+        hoveredData = null
     }
 
     override fun isBlockingTooltip() = blockWidgets

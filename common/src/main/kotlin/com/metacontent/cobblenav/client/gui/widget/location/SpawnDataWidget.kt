@@ -26,9 +26,7 @@ open class SpawnDataWidget(
     x: Int,
     y: Int,
     val spawnData: SpawnData,
-    private val displayer: SpawnDataDisplayer,
-    private val onClick: (SpawnDataWidget) -> Unit = {},
-    chanceMultiplier: Float = 1f
+    private val displayer: SpawnDataDisplayer
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
         const val WIDTH = 45
@@ -41,12 +39,6 @@ open class SpawnDataWidget(
         val BROKEN_MODEL = gui("location/broken_model")
     }
 
-    private var chanceString = getChanceString(chanceMultiplier)
-    var chanceMultiplier = chanceMultiplier
-        set(value) {
-            field = value
-            chanceString = getChanceString(value)
-        }
     private var isModelBroken = false
     protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platformId)
     protected open val plate = DimensionPlateRepository.get(Minecraft.getInstance().level?.dimension()?.location())
@@ -58,7 +50,7 @@ open class SpawnDataWidget(
         val hovered = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
 
         if (hovered) {
-            displayer.hoveredWidget = this
+            displayer.hoveredData = spawnData
         }
 
         if (spawnData.result.shouldRenderPlatform()) {
@@ -138,7 +130,7 @@ open class SpawnDataWidget(
             }
             drawScaledText(
                 guiGraphics,
-                text = Component.literal(chanceString),
+                text = Component.literal(getChanceString(spawnData.chanceMultiplier)),
                 x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
                 maxCharacterWidth = width,
                 centered = true,
@@ -149,7 +141,7 @@ open class SpawnDataWidget(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
-            onClick.invoke(this)
+            displayer.selectedData = spawnData
             return true
         }
         return false

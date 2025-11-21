@@ -1,9 +1,11 @@
 package com.metacontent.cobblenav.client.gui.screen
 
-import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
+import com.metacontent.cobblenav.spawndata.SpawnData
 
 interface SpawnDataDisplayer {
-    var hoveredWidget: SpawnDataWidget?
+    var displayedData: Collection<SpawnData>?
+    var hoveredData: SpawnData?
+    var selectedData: SpawnData?
 
     fun isBlockingTooltip(): Boolean
 }
