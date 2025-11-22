@@ -11,7 +11,6 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 
 object CobblenavLootInjector {
     private val injectableTables = setOf(
-        BuiltInLootTables.ANCIENT_CITY.location(),
         BuiltInLootTables.FISHING_TREASURE.location()
     )
 
