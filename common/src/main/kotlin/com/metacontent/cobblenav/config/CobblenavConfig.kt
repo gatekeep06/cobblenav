@@ -4,9 +4,8 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     @Transient
     override val fileName = "server-config.json"
 
-    val hideUnknownPokemon = false
-    val showPokemonTooltips = true
-    val hideUnknownPokemonTooltips = false
+    val hideUnknownSpawns = false
+    val hideConditionsOfUnknownSpawns = true
     val hideNaturalBlockConditions = true
     val syncLabelsWithClient = true
     val checkSpawnWidth = 8
@@ -15,7 +14,7 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     val searchAreaHeight = 200.0
     val pokemonFeatureWeights = FeatureWeights.BASE
     val collectableConditions = mutableMapOf(
-        "biomes"                 to true,
+        "biomes"                to true,
         "coordinates"           to true,
         "light"                 to true,
         "moon_phase"            to true,

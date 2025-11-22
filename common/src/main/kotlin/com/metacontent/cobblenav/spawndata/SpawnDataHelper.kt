@@ -112,18 +112,18 @@ object SpawnDataHelper {
         val builder = BiomePlatformContext.Builder()
         val conditions = mutableListOf<ConditionData>()
         val blockConditions = mutableSetOf<ResourceLocation>()
-        detail.conditions.forEach { condition ->
-            conditions += ConditionCollectors.collectConditions(detail, condition, player, builder)
-            blockConditions += ConditionCollectors.collectBlockConditions(condition)
-        }
-
         val anticonditions = mutableListOf<ConditionData>()
         val blockAnticonditions = mutableSetOf<ResourceLocation>()
-        detail.anticonditions.forEach { condition ->
-            conditions += ConditionCollectors.collectConditions(detail, condition, player)
-            blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
+        if (!result.isUnknown() || !Cobblenav.config.hideConditionsOfUnknownSpawns) {
+            detail.conditions.forEach { condition ->
+                conditions += ConditionCollectors.collectConditions(detail, condition, player, builder)
+                blockConditions += ConditionCollectors.collectBlockConditions(condition)
+            }
+            detail.anticonditions.forEach { condition ->
+                conditions += ConditionCollectors.collectConditions(detail, condition, player)
+                blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
+            }
         }
-
         val platformId = BiomePlatforms.firstFitting(builder.build())
 
         return SpawnData(

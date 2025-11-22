@@ -1,13 +1,11 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
@@ -17,21 +15,15 @@ import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.drawPokemon
-import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.item.ItemDisplayContext
-import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
-import org.joml.Vector3d
 import org.joml.Vector3f
-import kotlin.math.PI
 
 class PokemonSpawnResultData(
     val pokemon: RenderablePokemon,
@@ -49,11 +41,9 @@ class PokemonSpawnResultData(
             val renderablePokemon = detail.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
             val positionType = detail.spawnablePositionType.name
 
-            val speciesRecord = player.pokedex().getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
-                ?: return UnknownSpawnResultData(positionType)
-            val knowledge =
-                speciesRecord.getFormRecord(renderablePokemon.form.name)?.knowledge ?: return UnknownSpawnResultData(positionType)
-            if (knowledge == PokedexEntryProgress.NONE) return UnknownSpawnResultData(positionType)
+            val knowledge = player.pokedex().getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
+                ?.getFormRecord(renderablePokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
+            if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownSpawns) return UnknownSpawnResultData(positionType)
 
             return PokemonSpawnResultData(
                 pokemon = renderablePokemon,
@@ -104,6 +94,8 @@ class PokemonSpawnResultData(
     override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && knowledge == PokedexEntryProgress.CAUGHT
 
     override fun getRotation() = renderer.rotation
+
+    override fun isUnknown() = knowledge == PokedexEntryProgress.NONE
 }
 
 abstract class PokemonSpawnResultRenderer {

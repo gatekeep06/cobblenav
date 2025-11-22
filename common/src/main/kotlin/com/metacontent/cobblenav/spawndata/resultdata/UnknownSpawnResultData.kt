@@ -61,4 +61,6 @@ class UnknownSpawnResultData(
     override fun shouldRenderPokeBall() = false
 
     override fun getRotation() = Vector3f(13F, 35F, 0F)
+
+    override fun isUnknown() = true
 }

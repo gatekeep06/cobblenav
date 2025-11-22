@@ -126,4 +126,6 @@ class PokemonHerdSpawnResultData(
     override fun shouldRenderPokeBall() = true
 
     override fun getRotation() = Vector3f(13F, 35F, 0F)
+
+    override fun isUnknown() = false
 }

@@ -45,4 +45,8 @@ class NPCSpawnResultData(
     override fun getRotation(): Vector3f {
         TODO("Not yet implemented")
     }
+
+    override fun isUnknown(): Boolean {
+        TODO("Not yet implemented")
+    }
 }

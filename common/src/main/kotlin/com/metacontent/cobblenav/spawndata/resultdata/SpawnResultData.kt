@@ -64,4 +64,6 @@ interface SpawnResultData : Encodable {
     fun shouldRenderPokeBall(): Boolean
 
     fun getRotation(): Vector3f
+
+    fun isUnknown(): Boolean
 }
