@@ -3,6 +3,7 @@
 - Fixes for compatibility with the latest version of Cobblemon.
 - Fixed an issue with biome collector registration that resulted in missing biome data in tooltips and issues with biome platform selection.
 - Old PokéNav has been removed from the loot table of ancient city chests, also the chance of obtaining Old PokéNav through fishing has been reduced.
+- Fixed rendering of water block as an empty block.
 
 # Update 2.2.4
 
