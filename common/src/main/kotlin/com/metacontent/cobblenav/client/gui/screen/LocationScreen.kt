@@ -387,4 +387,6 @@ class LocationScreen(
     }
 
     override fun isBlockingTooltip() = blockWidgets
+
+    override fun selectedCanBeTracked() = selectedData?.result?.canBeTracked() == true
 }

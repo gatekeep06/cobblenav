@@ -8,4 +8,6 @@ interface SpawnDataDisplayer {
     var selectedData: SpawnData?
 
     fun isBlockingTooltip(): Boolean
+
+    fun selectedCanBeTracked(): Boolean
 }
