@@ -20,16 +20,20 @@ data class BlockConditions(
 
     val asItemStacks by lazy {
         blocks.map {
-            if (it.path == "water") return@map ItemStack(Items.WATER_BUCKET)
-
-            val block = BuiltInRegistries.BLOCK.get(it).let { block ->
-                if (block is GrowingPlantBlock) {
-                    block.getHeadBlock()
-                } else {
-                    block
+            when (it.path) {
+                "water" -> ItemStack(Items.WATER_BUCKET)
+                "lava" -> ItemStack(Items.LAVA_BUCKET)
+                else -> {
+                    val block = BuiltInRegistries.BLOCK.get(it).let { block ->
+                        if (block is GrowingPlantBlock) {
+                            block.getHeadBlock()
+                        } else {
+                            block
+                        }
+                    }
+                    ItemStack(block)
                 }
             }
-            ItemStack(block)
         }
     }
 
