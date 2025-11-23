@@ -3,8 +3,8 @@
   "category": "equipment",
   "pattern": [
     "CIC",
-    "EDE",
-    "CAC"
+    "ADA",
+    "CRC"
   ],
   "key": {
     "C": {
@@ -16,8 +16,8 @@
     "I": {
       "item": "minecraft:iron_ingot"
     },
-    "E": {
-      "item": "minecraft:echo_shard"
+    "R": {
+      "item": "minecraft:recovery_compass"
     },
     "A": {
       "item": "minecraft:amethyst_shard"

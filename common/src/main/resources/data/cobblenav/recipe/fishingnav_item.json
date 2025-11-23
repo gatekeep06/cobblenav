@@ -3,7 +3,7 @@
   "category": "equipment",
   "pattern": [
     "SCS",
-    "EGE",
+    "AGA",
     "SAS"
   ],
   "key": {
@@ -16,8 +16,8 @@
     "G": {
       "item": "cobblemon:water_gem"
     },
-    "E": {
-      "item": "minecraft:echo_shard"
+    "R": {
+      "item": "minecraft:recovery_compass"
     },
     "A": {
       "item": "minecraft:amethyst_shard"
