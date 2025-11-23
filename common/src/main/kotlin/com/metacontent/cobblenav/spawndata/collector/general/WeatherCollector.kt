@@ -1,25 +1,26 @@
 package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.metacontent.cobblenav.api.platform.SpawnDataContext
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.metacontent.cobblenav.api.platform.BiomePlatformContext
+import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class WeatherCollector : GeneralConditionCollector() {
+    override val conditionName = "weather"
     override val configName = "weather"
 
     override fun collect(
+        detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
-        builder: SpawnDataContext.Builder
-    ): MutableComponent? {
-        val weather = Component.translatable("gui.cobblenav.spawn_data.weather")
-        if (condition.isThundering == true) weather.append(Component.translatable("weather.cobblenav.thunder"))
-        if (condition.isRaining == true) weather.append(Component.translatable("weather.cobblenav.rain"))
-        if (condition.isRaining == false) weather.append(Component.translatable("weather.cobblenav.clear"))
-        return if (weather.siblings.isEmpty()) null else weather
+        builder: BiomePlatformContext.Builder?
+    ): ConditionData? {
+        val values = mutableListOf<Component>()
+        if (condition.isThundering == true) values.add(Component.translatable("weather.cobblenav.thunder"))
+        if (condition.isRaining == true) values.add(Component.translatable("weather.cobblenav.rain"))
+        if (condition.isRaining == false) values.add(Component.translatable("weather.cobblenav.clear"))
+        return if (values.isNotEmpty()) values.wrap() else null
     }
 }

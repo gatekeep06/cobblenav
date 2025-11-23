@@ -1,18 +1,19 @@
 package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.metacontent.cobblenav.api.platform.SpawnDataContext
-import net.minecraft.network.chat.MutableComponent
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.metacontent.cobblenav.api.platform.BiomePlatformContext
+import com.metacontent.cobblenav.spawndata.ConditionData
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 
 interface ConditionCollector<T : SpawningCondition<*>> : Collector<T> {
     fun collect(
+        detail: SpawnDetail,
         condition: T,
-        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
-        builder: SpawnDataContext.Builder
-    ): MutableComponent?
+        builder: BiomePlatformContext.Builder?
+    ): ConditionData?
 
     fun formatValueRange(min: Number?, max: Number?, useSpaces: Boolean = false): String? {
         return if (min != null && max != null) {
@@ -21,4 +22,6 @@ interface ConditionCollector<T : SpawningCondition<*>> : Collector<T> {
         else if (max != null) "≤$max"
         else null
     }
+
+    fun List<Component>.wrap() = ConditionData(conditionName, this)
 }

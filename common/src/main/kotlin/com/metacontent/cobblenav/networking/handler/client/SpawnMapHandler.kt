@@ -14,9 +14,9 @@ object SpawnMapHandler : ClientNetworkPacketHandler<SpawnMapPacket> {
             if (screen.currentBucket.name != packet.bucketName || !screen.loading || player == null) {
                 return
             }
-            packet.spawnDataList.forEach {
-                it.conditions.addAll(0, ClientCollectors.collect(it, player))
-            }
+//            packet.spawnDataList.forEach {
+//                it.conditions.addAll(0, ClientCollectors.collect(it, player))
+//            }
             screen.receiveSpawnData(packet.spawnDataList)
         }
     }

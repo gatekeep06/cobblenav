@@ -1,28 +1,25 @@
 package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.metacontent.cobblenav.api.platform.SpawnDataContext
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.client.gui.util.getTimeString
+import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class TimeRangeCollector : GeneralConditionCollector() {
+    override val conditionName = "time_range"
     override val configName = "time_range"
 
     override fun collect(
+        detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
-        builder: SpawnDataContext.Builder
-    ): MutableComponent? {
-        condition.timeRange?.let { time ->
-            val range = time.ranges.firstOrNull { it.contains(player.level().dayTime % 23999) }
-            if (range != null) {
-                return Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(range))
-            }
-        }
-        return null
+        builder: BiomePlatformContext.Builder?
+    ): ConditionData? {
+        return condition.moonPhase?.ranges?.map { ranges ->
+            Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(ranges))
+        }?.wrap()
     }
 }

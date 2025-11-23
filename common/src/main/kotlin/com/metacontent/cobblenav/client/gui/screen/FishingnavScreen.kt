@@ -2,12 +2,13 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.cobblemon.mod.common.entity.PoseType
-import com.metacontent.cobblenav.client.gui.util.*
+import com.metacontent.cobblenav.client.gui.util.RGB
+import com.metacontent.cobblenav.client.gui.util.dayCycleColor
+import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
 import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
-import com.metacontent.cobblenav.client.gui.widget.fishing.FishingDataWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -23,11 +24,10 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import org.joml.Vector3f
 
 class FishingnavScreen(
     os: PokenavOS
-) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataTooltipDisplayer {
+) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataDisplayer {
     companion object {
         const val POKEMON_CHANCE = 0.85f
         const val WEATHER_WIDGET_HEIGHT = 40
@@ -55,7 +55,9 @@ class FishingnavScreen(
         get() = dayCycleColor(player?.clientLevel?.dayTime ?: 0L, DAY_COLOR, NIGHT_COLOR).toColor()
 
     var loading = false
-    override var hoveredWidget: SpawnDataWidget? = null
+    override var displayedData: Collection<SpawnData>? = null
+    override var hoveredData: SpawnData? = null
+    override var selectedData: SpawnData? = null
     lateinit var buckets: List<WeightedBucket>
     private lateinit var fishingContextWidget: FishingContextWidget
     private lateinit var scrollableView: ScrollableView
@@ -197,6 +199,7 @@ class FishingnavScreen(
     }
 
     fun receiveFishingMap(fishingMap: Map<String, List<SpawnData>>) {
+        displayedData = fishingMap.flatMap { it.value }
         fishingMap.forEach { (bucketName, spawnDatas) ->
             bucketViews.find { it.bucket.name == bucketName }?.let { view ->
                 view.add(spawnDatas
@@ -207,15 +210,13 @@ class FishingnavScreen(
                         )
                     }
                     .map {
+                        it.chanceMultiplier = view.bucket.chance * POKEMON_CHANCE
                         ScrollableItemWidget(
-                            child = FishingDataWidget(
+                            child = SpawnDataWidget(
                                 x = 0,
                                 y = 0,
                                 spawnData = it,
-                                displayer = this,
-                                pose = PoseType.SWIM,
-                                pokemonRotation = Vector3f(0f, 270f, 0f),
-                                chanceMultiplier = POKEMON_CHANCE * view.bucket.chance
+                                displayer = this
                             ),
                             topEdge = screenY + HORIZONTAL_BORDER_DEPTH,
                             bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH
@@ -255,9 +256,9 @@ class FishingnavScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredWidget?.let {
+        hoveredData?.let {
             guiGraphics.renderSpawnDataTooltip(
-                spawnData = it.spawnData,
+                spawnData = it,
                 chanceMultiplier = it.chanceMultiplier,
                 mouseX = mouseX,
                 mouseY = mouseY,
@@ -268,8 +269,10 @@ class FishingnavScreen(
                 delta = delta
             )
         }
-        hoveredWidget = null
+        hoveredData = null
     }
 
     override fun isBlockingTooltip() = blockWidgets
+
+    override fun selectedCanBeTracked() = false
 }

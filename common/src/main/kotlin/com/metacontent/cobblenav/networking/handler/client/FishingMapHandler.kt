@@ -8,11 +8,11 @@ import net.minecraft.client.Minecraft
 
 object FishingMapHandler : ClientNetworkPacketHandler<FishingMapPacket> {
     override fun handle(packet: FishingMapPacket, client: Minecraft) {
-        client.player?.let {
-            packet.fishingMap.values.flatten().forEach { data ->
-                data.conditions.addAll(0, ClientCollectors.collect(data, it))
-            }
-        }
+//        client.player?.let {
+//            packet.fishingMap.values.flatten().forEach { data ->
+//                data.conditions.addAll(0, ClientCollectors.collect(data, it))
+//            }
+//        }
         (client.screen as? FishingnavScreen)?.receiveFishingMap(packet.fishingMap)
     }
 }

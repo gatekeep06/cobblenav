@@ -44,7 +44,7 @@ object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
         Cobblenav.LOGGER.info("Loaded {} biome platforms", platforms.size)
     }
 
-    fun firstFitting(context: SpawnDataContext): ResourceLocation? {
+    fun firstFitting(context: BiomePlatformContext): ResourceLocation? {
         combinations(
             setOf(context.detailId, null),
             context.biomes + null,

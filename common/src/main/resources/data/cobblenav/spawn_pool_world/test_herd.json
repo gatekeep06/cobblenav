@@ -1,0 +1,57 @@
+{
+    "comment": "This is a test of the herd system. Works a treat.",
+    "enabled": false,
+    "neededInstalledMods": [],
+    "neededUninstalledMods": [],
+    "spawns": [
+        {
+            "id": "pidgey-herd-test",
+            "presets": [
+                "natural"
+            ],
+            "type": "pokemon-herd",
+            "spawnablePositionType": "grounded",
+            "bucket": "common",
+            "levelRange": "10-40",
+            "weight": 100.0,
+            "maxHerdSize": 5,
+            "minDistanceBetweenSpawns": 1.5,
+            "herdablePokemon": [
+                {
+                    "pokemon": "pidgey",
+                    "levelRange": "10-40",
+                    "weight": 1,
+                    "levelRangeOffset": "-3-3"
+                },
+                {
+                    "pokemon": "pidgeotto",
+                    "isLeader": true,
+                    "levelRange": "21-30",
+                    "weight": 1,
+                    "maxTimes": 1,
+                    "levelRangeOffset": "4-7"
+                },
+                {
+                    "pokemon": "pidgeotto",
+                    "isLeader": false,
+                    "levelRange": "31-40",
+                    "weight": 5,
+                    "levelRangeOffset": "-3-3"
+                },
+                {
+                    "pokemon": "pidgeot",
+                    "isLeader": true,
+                    "levelRange": "31-40",
+                    "weight": 1,
+                    "maxTimes": 1,
+                    "levelRangeOffset": "4-7"
+                }
+            ],
+            "condition": {
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            }
+        }
+    ]
+}
