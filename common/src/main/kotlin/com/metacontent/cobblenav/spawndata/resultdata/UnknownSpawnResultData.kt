@@ -17,7 +17,7 @@ class UnknownSpawnResultData(
     val positionType: String
 ) : SpawnResultData {
     companion object {
-        const val TYPE = "unknown-pokemon"
+        const val TYPE = "unknown"
         val UNKNOWN = cobblemonResource("textures/gui/pokedex/platform_unknown.png")
 
         fun transform(detail: SpawnDetail, player: ServerPlayer): UnknownSpawnResultData {
