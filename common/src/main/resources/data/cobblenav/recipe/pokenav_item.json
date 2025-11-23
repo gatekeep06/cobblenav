@@ -3,8 +3,8 @@
   "category": "equipment",
   "pattern": [
     "CIC",
-    "EDU",
-    "CRC"
+    "EDE",
+    "CAC"
   ],
   "key": {
     "C": {
@@ -16,14 +16,11 @@
     "I": {
       "item": "minecraft:iron_ingot"
     },
-    "R": {
-      "item": "minecraft:redstone"
-    },
     "E": {
-      "item": "cobblemon:electirizer"
+      "item": "minecraft:echo_shard"
     },
-    "U": {
-      "item": "cobblemon:upgrade"
+    "A": {
+      "item": "minecraft:amethyst_shard"
     }
   },
   "result": {

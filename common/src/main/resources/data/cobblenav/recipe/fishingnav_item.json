@@ -3,8 +3,8 @@
   "category": "equipment",
   "pattern": [
     "SCS",
-    "EGU",
-    "SRS"
+    "EGE",
+    "SAS"
   ],
   "key": {
     "S": {
@@ -13,17 +13,14 @@
     "C": {
       "item": "minecraft:prismarine_crystals"
     },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "E": {
-      "item": "cobblemon:electirizer"
-    },
     "G": {
       "item": "cobblemon:water_gem"
     },
-    "U": {
-      "item": "cobblemon:upgrade"
+    "E": {
+      "item": "minecraft:echo_shard"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
     }
   },
   "result": {
