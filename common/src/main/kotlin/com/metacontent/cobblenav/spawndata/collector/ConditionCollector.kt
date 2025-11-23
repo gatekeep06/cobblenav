@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 interface ConditionCollector<T : SpawningCondition<*>> : Collector<T> {
     fun collect(
         condition: T,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent?
