@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -12,7 +12,7 @@ class YHeightCollector : GeneralConditionCollector() {
 
     override fun collect(
         condition: SpawningCondition<*>,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {

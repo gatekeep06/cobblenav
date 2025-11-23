@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.spawndata.collector.special.mythsandlegends
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.github.d0ctorleon.mythsandlegends.cobblemon.spawning.condition.item.KeyItemCondition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
@@ -19,7 +19,7 @@ class KeyItemCollector : ConditionCollector<SpawningCondition<*>>, Configureable
 
     override fun collect(
         condition: SpawningCondition<*>,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {

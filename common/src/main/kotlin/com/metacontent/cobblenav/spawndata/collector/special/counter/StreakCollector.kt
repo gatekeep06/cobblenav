@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.spawndata.collector.special.counter
 
 import com.cobblemon.mod.common.ModAPI
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
@@ -23,7 +23,7 @@ class StreakCollector(api: ModAPI) : ConditionCollector<SpawningCondition<*>>, C
 
     override fun collect(
         condition: SpawningCondition<*>,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {

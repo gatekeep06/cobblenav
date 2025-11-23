@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.metacontent.cobblenav.api.platform.SpawnDataContext
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
@@ -19,7 +19,7 @@ class RodCollector : ConditionCollector<FishingSpawningCondition>, Configureable
 
     override fun collect(
         condition: FishingSpawningCondition,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer,
         builder: SpawnDataContext.Builder
     ): MutableComponent? {

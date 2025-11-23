@@ -2,9 +2,9 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
-import com.cobblemon.mod.common.api.spawning.context.AreaSpawningContext
-import com.cobblemon.mod.common.api.spawning.context.SpawningContext
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
+import com.cobblemon.mod.common.api.spawning.position.AreaSpawnablePosition
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.pokemon.feature.SeasonFeatureHandler
 import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
@@ -20,7 +20,7 @@ object SpawnDataHelper {
     fun collect(
         detail: PokemonSpawnDetail,
         spawnChance: Float,
-        contexts: List<SpawningContext>,
+        spawnablePositions: List<SpawnablePosition>,
         player: ServerPlayer
     ): SpawnData? {
         val config = Cobblenav.config
@@ -50,13 +50,13 @@ object SpawnDataHelper {
         val builder = SpawnDataContext.Builder()
         builder.detailId = detail.id
         if (config.showPokemonTooltips && (!config.hideUnknownPokemonTooltips || encountered)) {
-            val condition = detail.conditions.firstOrNull { contexts.any { context -> it.isSatisfiedBy(context) } }
-            val fittingContexts = contexts.filter { condition?.isSatisfiedBy(it) == true }
+            val condition = detail.conditions.firstOrNull { spawnablePositions.any { context -> it.isSatisfiedBy(context) } }
+            val fittingPositions = spawnablePositions.filter { condition?.isSatisfiedBy(it) == true }
             condition?.let {
-                conditions += ConditionCollectors.collectConditions(it, fittingContexts, player, builder)
+                conditions += ConditionCollectors.collectConditions(it, fittingPositions, player, builder)
                 blocks += ConditionCollectors.collectBlockConditions(
                     it,
-                    fittingContexts.filterIsInstance<AreaSpawningContext>()
+                    fittingPositions.filterIsInstance<AreaSpawnablePosition>()
                 )
             }
         }
@@ -68,7 +68,7 @@ object SpawnDataHelper {
             spawnAspects = aspects,
             spawnChance = spawnChance,
             platform = platform,
-            spawningContext = detail.context.name,
+            spawningContext = detail.spawnablePositionType.name,
             knowledge = knowledge,
             conditions = conditions,
             blockConditions = BlockConditions(blocks)
