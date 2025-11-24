@@ -13,7 +13,7 @@
             "spawnablePositionType": "grounded",
             "bucket": "common",
             "levelRange": "10-40",
-            "weight": 100.0,
+            "weight": 1.0,
             "maxHerdSize": 5,
             "minDistanceBetweenSpawns": 1.5,
             "herdablePokemon": [
@@ -30,6 +30,12 @@
                     "weight": 1,
                     "maxTimes": 1,
                     "levelRangeOffset": "4-7"
+                },
+                {
+                    "pokemon": "magikarp",
+                    "levelRange": "10-20",
+                    "weight": 1,
+                    "levelRangeOffset": "-3-3"
                 }
             ],
             "condition": {
@@ -45,7 +51,7 @@
             "spawnablePositionType": "fishing",
             "bucket": "common",
             "levelRange": "10-40",
-            "weight": 100.0,
+            "weight": 1.0,
             "maxHerdSize": 5,
             "minDistanceBetweenSpawns": 1.5,
             "herdablePokemon": [
@@ -62,6 +68,12 @@
                     "weight": 1,
                     "maxTimes": 1,
                     "levelRangeOffset": "4-7"
+                },
+                {
+                    "pokemon": "magikarp",
+                    "levelRange": "10-20",
+                    "weight": 1,
+                    "levelRangeOffset": "-3-3"
                 }
             ],
             "condition": {
