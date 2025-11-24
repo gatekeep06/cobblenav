@@ -62,7 +62,7 @@
   "gui.cobblenav.shiny_only": "Shiny Only",
   "gui.cobblenav.empty_spawns_message": "There doesn't seem to be anyone living here",
   "gui.cobblenav.spawn_data.unknown_pokemon": "???",
-  "gui.cobblenav.spawn_data.herd": "",
+  "gui.cobblenav.spawn_data.herd": "%s Herd",
   "gui.cobblenav.spawn_data.spawn_chance": "Chance: %s%%",
   "gui.cobblenav.spawn_data.encountered": "Encountered: ",
   "gui.cobblenav.spawn_data.id": "ID: %s",

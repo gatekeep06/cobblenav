@@ -1,35 +1,27 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
-import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.cobblemon.mod.common.api.text.red
-import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
-import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
-import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
-import com.cobblemon.mod.common.util.asResource
-import com.cobblemon.mod.common.util.random
+import com.cobblemon.mod.common.util.pokedex
 import com.cobblemon.mod.common.util.randomNoCopy
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
-import org.joml.Vector3f
 
 class PokemonHerdSpawnResultData(
     val leftPokemon: RenderablePokemon?,
-    val middlePokemon: RenderablePokemon,
+    val leaderPokemon: RenderablePokemon,
     val rightPokemon: RenderablePokemon?,
-    val allPokemon: List<PokemonProperties>
+    val allPokemon: Map<RenderablePokemon, PokedexEntryProgress>,
+    val positionType: String
 ) : SpawnResultData {
     companion object {
         fun transform(detail: SpawnDetail, player: ServerPlayer): SpawnResultData? {
@@ -38,94 +30,98 @@ class PokemonHerdSpawnResultData(
                 return null
             }
 
-            val pokemon = detail.herdablePokemon.map { it.pokemon }
-            val randomPokemon = (if (pokemon.size >= 3) {
-                pokemon.randomNoCopy(3)
-            } else if (pokemon.isNotEmpty()) {
-                pokemon.random(3)
-            } else {
-                return null
-            }).map { it.createAndGetAsRenderable(player.serverLevel(), player.onPos) }
+            val heardables = detail.herdablePokemon.toMutableList()
+            if (heardables.isEmpty()) return null
+
+            val leader = heardables.filter { it.isLeader == true }.randomOrNull() ?: heardables.random()
+            heardables.remove(leader)
+
+            val herd = heardables.randomNoCopy(2)
+            val leftPokemon = herd.getOrNull(0)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
+            val rightPokemon = herd.getOrNull(1)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
+
+            val pokedex = player.pokedex()
+            val allPokemon = detail.herdablePokemon.associate {
+                val pokemon = it.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
+                val knowledge = pokedex
+                    .getSpeciesRecord(pokemon.species.resourceIdentifier)
+                    ?.getFormRecord(pokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
+                pokemon to knowledge
+            }
+
+            if (isUnknown(allPokemon.values) && Cobblenav.config.hideUnknownSpawns)
+                return UnknownSpawnResultData(detail.spawnablePositionType.name)
+
             return PokemonHerdSpawnResultData(
-                leftPokemon = randomPokemon.getOrNull(1),
-                middlePokemon = randomPokemon[0],
-                rightPokemon = randomPokemon.getOrNull(2),
-                allPokemon = pokemon
+                leftPokemon = leftPokemon,
+                leaderPokemon = leader.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos),
+                rightPokemon = rightPokemon,
+                allPokemon = allPokemon,
+                positionType = detail.spawnablePositionType.name
             )
         }
 
         fun decodeResultData(buffer: RegistryFriendlyByteBuf): PokemonHerdSpawnResultData = PokemonHerdSpawnResultData(
-            middlePokemon = RenderablePokemon.loadFromBuffer(buffer),
+            leaderPokemon = RenderablePokemon.loadFromBuffer(buffer),
             leftPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
             rightPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
-            allPokemon = buffer.readList { PokemonProperties.parse(it.readString()) }
+            allPokemon = buffer.readMap(
+                { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
+                { it.readEnum(PokedexEntryProgress::class.java) }
+            ),
+            positionType = buffer.readString()
         )
+
+        fun isUnknown(knowledge: Collection<PokedexEntryProgress>) =
+            knowledge.filter { it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
     }
 
     override val type = PokemonHerdSpawnDetail.TYPE
 
-    val state: PosableState by lazy { FloatingState() }
-
-    override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
-        drawExamplePokemon(middlePokemon, 15f, poseStack, x, y + 3, z + 100, delta)
-        leftPokemon?.let { drawExamplePokemon(it, 10f, poseStack, x - 10, y + 3, z - 100, delta) }
-        rightPokemon?.let { drawExamplePokemon(it, 10f, poseStack, x + 10, y + 3, z - 100, delta) }
+    private val leaderRenderer: PokemonSpawnResultRenderer by lazy {
+        when (positionType) {
+            "fishing" -> FishingSpawnResultRenderer()
+            else -> BasicSpawnResultRenderer()
+        }
+    }
+    private val herdRenderer: PokemonSpawnResultRenderer by lazy {
+        leaderRenderer.getHerdRenderer()
     }
 
-    fun drawExamplePokemon(pokemon: RenderablePokemon, scale: Float, poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
-        try {
-            drawPokemon(
-                poseStack = poseStack,
-                pokemon = pokemon,
-                x = x,
-                y = y,
-                z = z,
-                delta = delta,
-                state = state,
-                scale = scale,
-                obscured = false
-            )
-        } catch (e: Exception) {
-            val message = Component.translatable(
-                "gui.cobblenav.pokemon_rendering_exception",
-                pokemon.species.translatedName.string,
-                pokemon.species.translatedName.string
-            )
-            Cobblenav.LOGGER.error(message.string)
-            Cobblenav.LOGGER.error(e.message)
-            if (CobblenavClient.config.sendErrorMessagesToChat) {
-                Minecraft.getInstance().player?.sendSystemMessage(message.red())
-            }
-            throw e
-        }
+    override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
+        leaderRenderer.render(leaderPokemon, poseStack, x, y + 3, z + 100, delta)
+        leftPokemon?.let { herdRenderer.render(it, poseStack, x - 10, y + 3, z - 100, delta) }
+        rightPokemon?.let { herdRenderer.render(it, poseStack, x + 10, y + 3, z - 100, delta) }
     }
 
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
-        middlePokemon.saveToBuffer(buffer)
+        leaderPokemon.saveToBuffer(buffer)
         buffer.writeNullable(leftPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
         buffer.writeNullable(rightPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
-        buffer.writeCollection(allPokemon) { buf, properties -> buf.writeString(properties.asString()) }
+        buffer.writeMap(
+            allPokemon,
+            { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) },
+            { buf, knowledge -> buf.writeEnum(knowledge) }
+        )
+        buffer.writeString(positionType)
     }
 
     override fun canBeTracked() = false
 
     override fun containsResult(objects: Collection<*>) = false
 
-    override fun getColor() = middlePokemon.form.primaryType.hue
+    override fun getColor() = leaderPokemon.form.primaryType.hue
 
-    override fun getResultName(): MutableComponent {
-        val component = Component.translatable("gui.cobblenav.spawn_data.herd")
-        allPokemon.forEach { pokemon ->
-            pokemon.species?.asIdentifierDefaultingNamespace()?.let { component.append(Component.translatable("${it.namespace}.species.${it.path}.name")) }
-        }
-        return component
-    }
+    override fun getResultName(): MutableComponent = Component.translatable(
+        "gui.cobblenav.spawn_data.herd",
+        leaderPokemon.species.translatedName.string
+    )
 
-    override fun shouldRenderPlatform() = true
+    override fun shouldRenderPlatform() = leaderRenderer.shouldRenderPlatform()
 
-    override fun shouldRenderPokeBall() = true
+    override fun shouldRenderPokeBall() = leaderRenderer.shouldRenderPlatform() && allPokemon.values.all { it == PokedexEntryProgress.CAUGHT }
 
-    override fun getRotation() = Vector3f(13F, 35F, 0F)
+    override fun getRotation() = leaderRenderer.rotation
 
-    override fun isUnknown() = false
+    override fun isUnknown() = isUnknown(allPokemon.values)
 }
