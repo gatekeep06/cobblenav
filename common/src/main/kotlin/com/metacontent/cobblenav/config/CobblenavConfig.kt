@@ -7,6 +7,7 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     val hideUnknownSpawns = false
     val hideConditionsOfUnknownSpawns = true
     val hideNaturalBlockConditions = true
+    val percentageForKnownHerd = 0.5f
     val syncLabelsWithClient = true
     val checkSpawnWidth = 8
     val checkSpawnHeight = 16

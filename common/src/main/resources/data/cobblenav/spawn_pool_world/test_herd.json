@@ -1,6 +1,6 @@
 {
     "comment": "This is a test of the herd system. Works a treat.",
-    "enabled": false,
+    "enabled": true,
     "neededInstalledMods": [],
     "neededUninstalledMods": [],
     "spawns": [
@@ -13,38 +13,67 @@
             "spawnablePositionType": "grounded",
             "bucket": "common",
             "levelRange": "10-40",
-            "weight": 100.0,
+            "weight": 1.0,
             "maxHerdSize": 5,
             "minDistanceBetweenSpawns": 1.5,
             "herdablePokemon": [
                 {
-                    "pokemon": "pidgey",
+                    "pokemon": "magikarp",
                     "levelRange": "10-40",
                     "weight": 1,
                     "levelRangeOffset": "-3-3"
                 },
                 {
-                    "pokemon": "pidgeotto",
+                    "pokemon": "gyarados",
                     "isLeader": true,
-                    "levelRange": "21-30",
+                    "levelRange": "21-50",
                     "weight": 1,
                     "maxTimes": 1,
                     "levelRangeOffset": "4-7"
                 },
                 {
-                    "pokemon": "pidgeotto",
-                    "isLeader": false,
-                    "levelRange": "31-40",
-                    "weight": 5,
+                    "pokemon": "magikarp",
+                    "levelRange": "10-20",
+                    "weight": 1,
+                    "levelRangeOffset": "-3-3"
+                }
+            ],
+            "condition": {
+                "biomes": [
+                    "#cobblemon:is_overworld"
+                ]
+            }
+        },
+        {
+            "id": "pidgey-herd-test",
+            "presets": [],
+            "type": "pokemon-herd",
+            "spawnablePositionType": "fishing",
+            "bucket": "common",
+            "levelRange": "10-40",
+            "weight": 1.0,
+            "maxHerdSize": 5,
+            "minDistanceBetweenSpawns": 1.5,
+            "herdablePokemon": [
+                {
+                    "pokemon": "magikarp",
+                    "levelRange": "10-40",
+                    "weight": 1,
                     "levelRangeOffset": "-3-3"
                 },
                 {
-                    "pokemon": "pidgeot",
+                    "pokemon": "gyarados",
                     "isLeader": true,
-                    "levelRange": "31-40",
+                    "levelRange": "21-50",
                     "weight": 1,
                     "maxTimes": 1,
                     "levelRangeOffset": "4-7"
+                },
+                {
+                    "pokemon": "magikarp",
+                    "levelRange": "10-20",
+                    "weight": 1,
+                    "levelRangeOffset": "-3-3"
                 }
             ],
             "condition": {
