@@ -5,7 +5,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
-import com.metacontent.cobblenav.client.gui.widget.SpawnDataWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.metacontent.cobblenav.util.WeightedBucket
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
