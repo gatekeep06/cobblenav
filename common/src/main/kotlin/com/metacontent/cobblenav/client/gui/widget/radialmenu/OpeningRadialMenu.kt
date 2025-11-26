@@ -3,6 +3,8 @@ package com.metacontent.cobblenav.client.gui.widget.radialmenu
 import com.cobblemon.mod.common.api.gui.blitk
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
+import com.metacontent.cobblenav.os.PokenavOS
 import com.mojang.math.Axis
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -11,9 +13,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class OpeningRadialMenu(
-    handler: RadialMenuHandler,
+    os: PokenavOS,
+    statefulWidget: StatefulWidget,
     pX: Int, pY: Int
-) : RadialMenuState(handler, pX, pY, DIAMETER, DIAMETER, Component.literal("Opening Radial Menu")) {
+) : RadialMenuState(os, statefulWidget, pX, pY, DIAMETER, DIAMETER, Component.literal("Opening Radial Menu")) {
     companion object {
         const val ANIMATION_DURATION = 3f
         const val ROTATION = 180f
@@ -64,7 +67,7 @@ class OpeningRadialMenu(
         }
 
         if (timer.isOver()) {
-            handler.changeState(OpenedRadialMenu(handler, x, y))
+            statefulWidget.changeState(OpenedRadialMenu(os, statefulWidget, x, y))
         }
     }
 
