@@ -12,7 +12,7 @@ import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
-import com.metacontent.cobblenav.client.gui.widget.location.SpawnDataWidget
+import com.metacontent.cobblenav.client.gui.widget.SpawnDataWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.os.PokenavOS

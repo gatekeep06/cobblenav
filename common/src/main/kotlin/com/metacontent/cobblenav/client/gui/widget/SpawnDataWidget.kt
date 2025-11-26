@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.client.gui.widget.location
+package com.metacontent.cobblenav.client.gui.widget
 
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk
