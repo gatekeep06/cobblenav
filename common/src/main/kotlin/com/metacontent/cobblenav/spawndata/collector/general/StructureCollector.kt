@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class StructureCollector : GeneralConditionCollector() {
     override val conditionName = "structures"
+    override val conditionColor = 0x8B4513
     override val configName = "structures"
 
     override fun collect(

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class YHeightCollector : GeneralConditionCollector() {
     override val conditionName = "y_height"
+    override val conditionColor = 0x4B0082
     override val configName = "y_height"
 
     override fun collect(

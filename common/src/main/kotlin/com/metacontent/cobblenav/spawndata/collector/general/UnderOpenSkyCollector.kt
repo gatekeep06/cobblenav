@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class UnderOpenSkyCollector : GeneralConditionCollector() {
     override val conditionName = "under_open_sky"
+    override val conditionColor = 0x1E90FF
     override val configName = "under_open_sky"
 
     override fun collect(

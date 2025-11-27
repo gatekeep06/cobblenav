@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.widget.stateful
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
 
 abstract class StatefulWidget(
@@ -13,6 +14,7 @@ abstract class StatefulWidget(
     height: Int,
     component: Component
 ) : SoundlessWidget(x, y, width, height, component) {
+    protected val commonChildren = mutableListOf<AbstractWidget>()
     protected abstract var state: WidgetState
 
     open fun changeState(state: WidgetState) {
@@ -28,5 +30,13 @@ abstract class StatefulWidget(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         state.render(guiGraphics, i, j, f)
+    }
+
+    fun addCommonWidget(widget: AbstractWidget) {
+        commonChildren.add(widget)
+    }
+
+    fun removeCommonWidget(widget: AbstractWidget) {
+        commonChildren.remove(widget)
     }
 }

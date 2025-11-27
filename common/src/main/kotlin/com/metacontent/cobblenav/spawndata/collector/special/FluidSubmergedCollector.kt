@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class FluidSubmergedCollector : ConditionCollector<SubmergedTypeSpawningCondition<*>>, ConfigureableCollector {
     override val conditionName = "fluid_submerged"
+    override val conditionColor = 0x20B2AA
     override val configName = "fluid_submerged"
     override val conditionClass = SubmergedTypeSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()

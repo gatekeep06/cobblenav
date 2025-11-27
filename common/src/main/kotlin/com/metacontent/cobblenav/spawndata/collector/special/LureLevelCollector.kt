@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class LureLevelCollector : ConditionCollector<FishingSpawningCondition>, ConfigureableCollector {
     override val conditionName = "lure_level"
+    override val conditionColor = 0x8A2BE2
     override val configName = "lure_level"
     override val conditionClass = FishingSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()

@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class TimeRangeCollector : GeneralConditionCollector() {
     override val conditionName = "time_range"
+    override val conditionColor = 0xFF8C00
     override val configName = "time_range"
 
     override fun collect(

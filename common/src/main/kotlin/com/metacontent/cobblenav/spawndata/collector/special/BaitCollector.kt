@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class BaitCollector : ConditionCollector<FishingSpawningCondition>, ConfigureableCollector {
     override val conditionName = "bait"
+    override val conditionColor = 0xCD5C5C
     override val configName = "bait"
     override val conditionClass = FishingSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()

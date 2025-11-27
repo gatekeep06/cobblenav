@@ -23,5 +23,5 @@ interface ConditionCollector<T : SpawningCondition<*>> : Collector<T> {
         else null
     }
 
-    fun List<Component>.wrap() = ConditionData(conditionName, this)
+    fun List<Component>.wrap() = ConditionData(conditionName, conditionColor, this)
 }

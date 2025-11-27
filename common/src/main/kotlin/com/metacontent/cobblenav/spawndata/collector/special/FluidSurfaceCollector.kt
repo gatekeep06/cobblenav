@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class FluidSurfaceCollector : ConditionCollector<SurfaceTypeSpawningCondition<*>>, ConfigureableCollector {
     override val conditionName = "fluid_surface"
+    override val conditionColor = 0x5F9EA0
     override val configName = "fluid_surface"
     override val conditionClass = SurfaceTypeSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()

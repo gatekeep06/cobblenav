@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class CoordinatesCollector : GeneralConditionCollector() {
     override val conditionName = "coordinates"
+    override val conditionColor = 0x00008B
     override val configName = "coordinates"
 
     override fun collect(

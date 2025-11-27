@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class WeatherCollector : GeneralConditionCollector() {
     override val conditionName = "weather"
+    override val conditionColor = 0x4682B4
     override val configName = "weather"
 
     override fun collect(

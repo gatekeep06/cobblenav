@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class SkyLightCollector : GeneralConditionCollector() {
     override val conditionName = "sky_light"
+    override val conditionColor = 0x87CEEB
     override val configName = "sky_light"
 
     override fun collect(

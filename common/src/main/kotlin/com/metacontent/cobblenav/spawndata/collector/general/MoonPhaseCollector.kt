@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class MoonPhaseCollector : GeneralConditionCollector() {
     override val conditionName = "moon_phase"
+    override val conditionColor = 0x708090
     override val configName = "moon_phase"
 
     override fun collect(

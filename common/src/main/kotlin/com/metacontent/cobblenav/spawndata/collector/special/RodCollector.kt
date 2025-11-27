@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class RodCollector : ConditionCollector<FishingSpawningCondition>, ConfigureableCollector {
     override val conditionName = "rod"
+    override val conditionColor = 0xA0522D
     override val configName = "rod"
     override val conditionClass = FishingSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()
