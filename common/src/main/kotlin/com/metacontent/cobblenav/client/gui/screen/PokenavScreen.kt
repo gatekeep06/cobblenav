@@ -121,7 +121,7 @@ abstract class PokenavScreen(
                     y1 = screenY + HORIZONTAL_BORDER_DEPTH - 1,
                     x2 = screenX + VERTICAL_BORDER_DEPTH + SCREEN_WIDTH - 1,
                     y2 = screenY + HORIZONTAL_BORDER_DEPTH + SCREEN_HEIGHT + 1,
-                    blur = 1f,
+                    blur = 3f,
                     delta = delta
                 )
             }
