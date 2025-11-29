@@ -105,8 +105,8 @@ class BucketViewWidget(
         super.renderWidget(guiGraphics, i, j, f)
     }
 
-    override fun initItems() {
-        super.initItems()
+    override fun calculateItems() {
+        super.calculateItems()
         height = max(height + DITHERING_HEIGHT, minHeight)
     }
 }

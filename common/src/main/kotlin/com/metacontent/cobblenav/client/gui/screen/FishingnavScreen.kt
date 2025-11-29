@@ -225,8 +225,6 @@ class FishingnavScreen(
                 )
             }
         }
-        fishingTable.initItems()
-        baseTable.initItems()
         loading = false
         refreshButton.disabled = false
     }
