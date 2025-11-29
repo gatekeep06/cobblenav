@@ -120,7 +120,7 @@ object SpawnDataHelper {
                 blockConditions += ConditionCollectors.collectBlockConditions(condition)
             }
             detail.anticonditions.forEach { condition ->
-                conditions += ConditionCollectors.collectConditions(detail, condition, player)
+                anticonditions += ConditionCollectors.collectConditions(detail, condition, player)
                 blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
             }
         }
