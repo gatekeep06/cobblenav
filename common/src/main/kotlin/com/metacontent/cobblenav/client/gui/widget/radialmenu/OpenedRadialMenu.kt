@@ -34,22 +34,22 @@ class OpenedRadialMenu(
     private val buttons = listOf(
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen.changeScreen(MapScreen(os)) },
+            action = { statefulWidget.parentScreen?.changeScreen(MapScreen(os)) },
             texture = MAP
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen.changeScreen(LocationScreen(os)) },
+            action = { statefulWidget.parentScreen?.changeScreen(LocationScreen(os)) },
             texture = LOCATION
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen.changeScreen(ContactsScreen(os)) },
+            action = { statefulWidget.parentScreen?.changeScreen(ContactsScreen(os)) },
             texture = CONTACTS
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen.onClose() },
+            action = { statefulWidget.parentScreen?.onClose() },
             texture = SWITCH_OFF
         )
     ).also {

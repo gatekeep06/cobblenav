@@ -46,7 +46,7 @@ class ClosedRadialMenu(
     override val blockScreenWidgets: Boolean = false
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton) && !statefulWidget.parentScreen.blockWidgets) {
+        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton) && statefulWidget.parentScreen?.blockWidgets == false) {
             statefulWidget.changeState(OpeningRadialMenu(os, statefulWidget, x, y))
             return true
         }

@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
@@ -23,5 +24,14 @@ data class ConditionData(
         }
 
         val BUFF_CODEC: StreamCodec<RegistryFriendlyByteBuf, ConditionData> = ByteBufCodecs.fromCodecWithRegistries(CODEC)
+    }
+
+    fun toLine(): MutableComponent {
+        val line = Component.translatable("gui.cobblenav.spawn_data.$condition")
+        values.forEachIndexed { index, component ->
+            line.append(component)
+            if (index < values.size - 1) line.append(", ")
+        }
+        return line.withColor(color)
     }
 }

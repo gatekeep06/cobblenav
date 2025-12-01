@@ -19,7 +19,7 @@ class LightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minLight, condition.maxLight)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.light", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

@@ -39,9 +39,31 @@
                 }
             ],
             "condition": {
+                "dimensions": [
+                    "minecraft:overworld"
+                ],
                 "biomes": [
                     "#cobblemon:is_overworld"
-                ]
+                ],
+                "moonPhase": "0-7",
+                "canSeeSky": true,
+                "minX": -10000,
+                "minY": -10000,
+                "minZ": -10000,
+                "maxX": 10000,
+                "maxY": 10000,
+                "maxZ": 10000,
+                "minLight": 0,
+                "maxLight": 100,
+                "minSkyLight": 0,
+                "maxSkyLight": 15,
+                "isRaining": false,
+                "isThundering": false,
+                "timeRange": "day",
+                "structures": [
+                    "#cobblemon:ruin"
+                ],
+                "isSlimeChunk": false
             }
         },
         {

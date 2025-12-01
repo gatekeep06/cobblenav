@@ -19,8 +19,8 @@ class TimeRangeCollector : GeneralConditionCollector() {
         player: ServerPlayer,
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
-        return condition.moonPhase?.ranges?.map { ranges ->
-            Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(ranges))
+        return condition.timeRange?.ranges?.map { ranges ->
+            Component.translatable(getTimeString(ranges))
         }?.wrap()
     }
 }

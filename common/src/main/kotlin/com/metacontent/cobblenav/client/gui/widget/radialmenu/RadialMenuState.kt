@@ -12,7 +12,7 @@ abstract class RadialMenuState(
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
     component: Component
-) : WidgetState(handler, pX, pY, pWidth, pHeight, component) {
+) : WidgetState<StatefulWidget>(handler, pX, pY, pWidth, pHeight, component) {
     companion object {
         const val MENU_DIAMETER: Int = 20
         const val ANIMATION_SHEET_WIDTH: Int = 180

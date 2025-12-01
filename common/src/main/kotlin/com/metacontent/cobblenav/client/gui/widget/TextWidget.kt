@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.splitText
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
 open class TextWidget(
@@ -16,11 +17,11 @@ open class TextWidget(
     val lineOffset: Int = 1,
     val centered: Boolean = false,
     val shadow: Boolean = false
-) : SoundlessWidget(x, y, width, 0, text) {
-    private val splittedText = splitText(text, width)
+) : SoundlessWidget(x, y, width, 0, Component.empty()) {
+    val splittedText = splitText(text, width)
 
     init {
-        height = splittedText.size * lineHeight
+        height = splittedText.size * lineHeight + (splittedText.size - 1) * lineOffset
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {

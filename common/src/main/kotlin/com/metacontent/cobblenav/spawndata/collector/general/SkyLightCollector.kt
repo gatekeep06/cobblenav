@@ -19,7 +19,7 @@ class SkyLightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minSkyLight, condition.maxSkyLight)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.sky_light", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

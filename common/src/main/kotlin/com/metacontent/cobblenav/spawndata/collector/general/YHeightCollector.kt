@@ -19,7 +19,7 @@ class YHeightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minY, condition.maxY, true)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.height", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

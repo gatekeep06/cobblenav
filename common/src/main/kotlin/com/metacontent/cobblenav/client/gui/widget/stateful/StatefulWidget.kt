@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
 
 abstract class StatefulWidget(
-    val parentScreen: PokenavScreen,
+    val parentScreen: PokenavScreen? = null,
     x: Int,
     y: Int,
     width: Int,
@@ -15,16 +15,16 @@ abstract class StatefulWidget(
     component: Component
 ) : SoundlessWidget(x, y, width, height, component) {
     protected val commonChildren = mutableListOf<AbstractWidget>()
-    protected abstract var state: WidgetState
+    protected abstract var state: WidgetState<*>
 
-    open fun changeState(state: WidgetState) {
-        removeWidget(state)
+    open fun changeState(state: WidgetState<*>) {
+        removeWidget(this.state)
         this.state = initState(state)
     }
 
-    open fun initState(state: WidgetState): WidgetState {
+    open fun initState(state: WidgetState<*>): WidgetState<*> {
         addWidget(state)
-        parentScreen.blockWidgets = state.blockScreenWidgets
+        parentScreen?.blockWidgets = state.blockScreenWidgets
         return state
     }
 
@@ -38,5 +38,17 @@ abstract class StatefulWidget(
 
     fun removeCommonWidget(widget: AbstractWidget) {
         commonChildren.remove(widget)
+    }
+
+    override fun setX(i: Int) {
+        val delta = x - i
+        super.setX(i)
+        state.x -= delta
+    }
+
+    override fun setY(i: Int) {
+        val delta = y - i
+        super.setY(i)
+        state.y -= delta
     }
 }

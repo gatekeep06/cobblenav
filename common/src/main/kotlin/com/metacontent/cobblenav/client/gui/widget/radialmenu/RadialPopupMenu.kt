@@ -20,12 +20,12 @@ class RadialPopupMenu(
 
     override var state = initState(ClosedRadialMenu(parentScreen.os, this, pX, pY))
 
-    override fun changeState(state: WidgetState) {
+    override fun changeState(state: WidgetState<*>) {
         super.changeState(state)
         wrap(state)
     }
 
-    private fun wrap(state: WidgetState) {
+    private fun wrap(state: WidgetState<*>) {
         x += (width - state.width) / 2
         y += (height - state.height) / 2
         state.x = x
