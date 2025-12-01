@@ -11,6 +11,7 @@ import kotlin.math.min
 class ScrollableView(
     x: Int, y: Int,
     width: Int, height: Int,
+    val scissorSpreading: Int = 0,
     private val scrollMultiplier: Float = 20f,
     val child: AbstractWidget
 ) : SoundlessWidget(x, y, width, height, Component.literal("Scrollable View")) {
@@ -29,7 +30,7 @@ class ScrollableView(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (scrolled > 0 && scrolled > child.height - height) scrolled -= (scrollMultiplier * f).toInt()
 
-        guiGraphics.cobblenavScissor(x, y, x + width, y + height)
+        guiGraphics.cobblenavScissor(x, y - scissorSpreading, x + width, y + height + scissorSpreading)
         child.render(guiGraphics, i, j, f)
         scrollThumb.render(guiGraphics, i, j, f)
 //        guiGraphics.renderOutline(x, y, width, height, FastColor.ARGB32.color(255, 255, 255, 255))
