@@ -16,7 +16,7 @@ class ScrollableView(
 ) : SoundlessWidget(x, y, width, height, Component.literal("Scrollable View")) {
     var scrolled = 0
         set(value) {
-            field = max(min(value, child.height - height), 0)
+            field = max(min(value, child.height - height / 2), 0)
             onScroll()
         }
 
@@ -27,6 +27,8 @@ class ScrollableView(
     private val scrollThumb = ScrollThumbWidget(x + width - ScrollThumbWidget.WIDTH, y, this).also { addWidget(it) }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        if (scrolled > 0 && scrolled > child.height - height) scrolled -= (scrollMultiplier * f).toInt()
+
         guiGraphics.cobblenavScissor(x, y, x + width, y + height)
         child.render(guiGraphics, i, j, f)
         scrollThumb.render(guiGraphics, i, j, f)
