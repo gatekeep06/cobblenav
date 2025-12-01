@@ -5,7 +5,7 @@ import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
-class ExpandingTextSection(
+class CollapsingTextSection(
     statefulWidget: TextSectionWidget,
     x: Int,
     y: Int,
@@ -13,7 +13,7 @@ class ExpandingTextSection(
     height: Int
 ) : WidgetState<TextSectionWidget>(statefulWidget, x, y, width, height, Component.empty()) {
     companion object {
-        const val ANIMATION_TIME = 0.25f
+        const val ANIMATION_TIME = 0.1f
     }
 
     override val blockScreenWidgets = false
@@ -23,7 +23,7 @@ class ExpandingTextSection(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         timer.tick(f)
 
-        height = TextSectionWidget.HEADER_HEIGHT + (statefulWidget.expandablePartHeight * timer.getProgress()).toInt()
+        height = TextSectionWidget.HEADER_HEIGHT + (statefulWidget.expandablePartHeight * (1 - timer.getProgress())).toInt()
         statefulWidget.height = height
 
         statefulWidget.renderBody(guiGraphics, height)
@@ -31,7 +31,7 @@ class ExpandingTextSection(
         statefulWidget.renderFooter(guiGraphics.pose(), x, y + height - TextSectionWidget.FOOTER_HEIGHT)
 
         if (timer.isOver()) {
-            statefulWidget.changeState(ExpandedTextSection(statefulWidget, x, y, width, height))
+            statefulWidget.changeState(CollapsedTextSection(statefulWidget, x, y, width, height))
         }
     }
 
