@@ -11,12 +11,15 @@ import net.minecraft.world.level.block.GrowingPlantBlock
 
 data class BlockConditions(
     val blocks: MutableSet<ResourceLocation>
-) : Iterable<ResourceLocation>, Encodable {
+) : Collection<ResourceLocation>, Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = BlockConditions(
             buffer.readList { it.readResourceLocation() }.toMutableSet()
         )
     }
+
+    override val size: Int
+        get() = blocks.size
 
     val asItemStacks by lazy {
         blocks.map {
@@ -41,5 +44,11 @@ data class BlockConditions(
         buffer.writeCollection(blocks) { buf, block -> buf.writeResourceLocation(block) }
     }
 
-    override fun iterator(): Iterator<ResourceLocation> = blocks.iterator()
+    override fun iterator() = blocks.iterator()
+
+    override fun isEmpty() = blocks.isEmpty()
+
+    override fun contains(element: ResourceLocation) = blocks.contains(element)
+
+    override fun containsAll(elements: Collection<ResourceLocation>) = blocks.containsAll(elements)
 }
