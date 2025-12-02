@@ -27,6 +27,7 @@ class SectionWidget(
         const val HEADER_HEIGHT = 20
         const val FOOTER_HEIGHT = 2
         const val HEADER_SIDE_WIDTH = 6
+        const val ALPHA = 1f
         val HEADER_1 = gui("text_section_header_1")
         val HEADER_2 = gui("text_section_header_2")
         val HEADER_3 = gui("text_section_header_3")
@@ -52,7 +53,8 @@ class SectionWidget(
             height = HEADER_HEIGHT,
             red = color.red(),
             green = color.green(),
-            blue = color.blue()
+            blue = color.blue(),
+            alpha = ALPHA
         )
         blitk(
             matrixStack = guiGraphics.pose(),
@@ -63,7 +65,8 @@ class SectionWidget(
             height = HEADER_HEIGHT,
             red = color.red(),
             green = color.green(),
-            blue = color.blue()
+            blue = color.blue(),
+            alpha = ALPHA
         )
         blitk(
             matrixStack = guiGraphics.pose(),
@@ -74,7 +77,8 @@ class SectionWidget(
             height = HEADER_HEIGHT,
             red = color.red(),
             green = color.green(),
-            blue = color.blue()
+            blue = color.blue(),
+            alpha = ALPHA
         )
         drawScaledText(
             context = guiGraphics,
@@ -86,7 +90,7 @@ class SectionWidget(
     }
 
     fun renderBody(guiGraphics: GuiGraphics, height: Int = this.height - HEADER_HEIGHT) {
-        guiGraphics.fill(x, y + HEADER_HEIGHT / 2, x + width, y + height - FOOTER_HEIGHT, color.toColor())
+        guiGraphics.fill(x, y + HEADER_HEIGHT / 2, x + width, y + height - FOOTER_HEIGHT, color.toColor((ALPHA * RGB.MAX_VALUE).toInt()))
     }
 
     fun renderFooter(poseStack: PoseStack, x: Int, y: Int) {
@@ -99,7 +103,8 @@ class SectionWidget(
             height = FOOTER_HEIGHT,
             red = color.red(),
             green = color.green(),
-            blue = color.blue()
+            blue = color.blue(),
+            alpha = ALPHA
         )
     }
 }

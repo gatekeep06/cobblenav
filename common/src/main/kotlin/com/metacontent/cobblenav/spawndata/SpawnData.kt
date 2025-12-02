@@ -57,7 +57,7 @@ data class SpawnData(
                         width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
                         text = it.toLine()
                     )
-                } + BlockConditionWidget(blockConditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 4, 0, 0)
+                } + BlockConditionWidget(blockConditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 8, 0, 0)
             ),
             SectionWidget(
                 x = 0,
@@ -71,7 +71,7 @@ data class SpawnData(
                         width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
                         text = it.toLine()
                     )
-                } + BlockConditionWidget(blockAnticonditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 4, 1, 1),
+                } + BlockConditionWidget(blockAnticonditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 8, 0, 0),
                 color = RGB(248, 208, 213)
             )
         )

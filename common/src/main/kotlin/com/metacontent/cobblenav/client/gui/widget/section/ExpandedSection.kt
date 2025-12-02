@@ -15,7 +15,7 @@ class ExpandedSection(
     override val blockScreenWidgets = false
 
     private val tableView = TableView<AbstractWidget>(
-        x = x + 3,
+        x = x + 4,
         y = y + SectionWidget.HEADER_HEIGHT + statefulWidget.paragraphOffset.toInt(),
         width = width - 8,
         columns = 1,

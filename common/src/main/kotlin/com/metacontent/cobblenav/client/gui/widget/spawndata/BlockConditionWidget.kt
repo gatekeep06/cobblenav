@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.spawndata
 
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.spawndata.BlockConditions
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -29,9 +30,9 @@ class BlockConditionWidget(
         var lineY = y
         var itemCount = 0
         blockConditions.asItemStacks.forEach {
-            guiGraphics.renderFakeItem(it, x + horizontalGap + itemCount * ITEM_SIZE, lineY)
+            guiGraphics.renderFakeItem(it, x - 2 + itemCount * (ITEM_SIZE + horizontalGap), lineY)
             itemCount++
-            if ((itemCount + 1) * ITEM_SIZE > width) {
+            if (itemCount * (ITEM_SIZE + horizontalGap) >= width) {
                 lineY += ITEM_SIZE + verticalGap
                 itemCount = 0
             }
