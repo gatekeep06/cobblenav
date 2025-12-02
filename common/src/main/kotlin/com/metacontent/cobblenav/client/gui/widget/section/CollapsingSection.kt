@@ -31,7 +31,7 @@ class CollapsingSection(
         statefulWidget.renderFooter(guiGraphics.pose(), x, y + height - SectionWidget.FOOTER_HEIGHT)
 
         if (timer.isOver()) {
-            statefulWidget.changeState(CollapsedSection(statefulWidget, x, y, width, height))
+            statefulWidget.changeState(CollapsedSection(statefulWidget, x, y, width))
         }
     }
 

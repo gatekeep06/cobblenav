@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.section
 
 import com.metacontent.cobblenav.client.gui.util.Timer
+import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget.Companion.FOOTER_HEIGHT
 import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -23,15 +24,15 @@ class ExpandingSection(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         timer.tick(f)
 
-        height = SectionWidget.HEADER_HEIGHT + (statefulWidget.expandablePartHeight * timer.getProgress()).toInt()
+        height = SectionWidget.HEADER_HEIGHT + FOOTER_HEIGHT + (statefulWidget.expandablePartHeight * timer.getProgress()).toInt()
         statefulWidget.height = height
 
         statefulWidget.renderBody(guiGraphics, height)
         statefulWidget.renderTitle(guiGraphics, i, j, f)
-        statefulWidget.renderFooter(guiGraphics.pose(), x, y + height - SectionWidget.FOOTER_HEIGHT)
+        statefulWidget.renderFooter(guiGraphics.pose(), x, y + height - FOOTER_HEIGHT)
 
         if (timer.isOver()) {
-            statefulWidget.changeState(ExpandedSection(statefulWidget, x, y, width, height))
+            statefulWidget.changeState(ExpandedSection(statefulWidget, x, y, width))
         }
     }
 

@@ -10,9 +10,8 @@ class ExpandedSection(
     statefulWidget: SectionWidget,
     x: Int,
     y: Int,
-    width: Int,
-    height: Int
-) : WidgetState<SectionWidget>(statefulWidget, x, y, width, height, Component.empty()) {
+    width: Int
+) : WidgetState<SectionWidget>(statefulWidget, x, y, width, SectionWidget.HEADER_HEIGHT + SectionWidget.FOOTER_HEIGHT + statefulWidget.expandablePartHeight, Component.empty()) {
     override val blockScreenWidgets = false
 
     private val tableView = TableView<AbstractWidget>(

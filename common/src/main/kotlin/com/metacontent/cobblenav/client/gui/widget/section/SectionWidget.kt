@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
+import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -32,13 +33,14 @@ class SectionWidget(
         val FOOTER = gui("text_section_footer")
     }
 
-    val expandablePartHeight = (paragraphOffset * texts.size).toInt() + texts.sumOf { it.height } + FOOTER_HEIGHT
+    val expandablePartHeight = texts.sumOf { if (it.height != 0) it.height + paragraphOffset.toInt() else 0 }
 
-    init {
-        height += expandablePartHeight
+    override var state = initState(ExpandedSection(this, x, y, width))
+
+    override fun initState(state: WidgetState<*>): WidgetState<*> {
+        height = state.height
+        return super.initState(state)
     }
-
-    override var state = initState(ExpandedSection(this, x, y, width, height))
 
     fun renderTitle(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(

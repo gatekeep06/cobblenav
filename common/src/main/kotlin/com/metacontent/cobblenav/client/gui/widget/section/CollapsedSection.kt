@@ -8,9 +8,8 @@ class CollapsedSection(
     statefulWidget: SectionWidget,
     x: Int,
     y: Int,
-    width: Int,
-    height: Int
-) : WidgetState<SectionWidget>(statefulWidget, x, y, width, height, Component.empty()) {
+    width: Int
+) : WidgetState<SectionWidget>(statefulWidget, x, y, width, SectionWidget.HEADER_HEIGHT, Component.empty()) {
     override val blockScreenWidgets = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
