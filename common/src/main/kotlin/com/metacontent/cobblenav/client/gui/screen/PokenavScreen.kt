@@ -131,7 +131,7 @@ abstract class PokenavScreen(
 
             guiGraphics.disableScissor()
 
-            poseStack.translate(0f, 0f, 100f)
+            poseStack.translate(0f, 0f, 600f)
             renderBaseElement(poseStack, BORDERS)
             blitk(
                 poseStack,

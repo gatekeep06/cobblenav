@@ -90,7 +90,7 @@ open class SpawnDataWidget(
                     poseStack = poseStack,
                     x = x.toFloat() + width / 2 + platform.getPokemonXOffset(hovered),
                     y = y.toFloat() + platform.getPokemonYOffset(hovered),
-                    z = 100f,
+                    z = 300f,
                     delta = delta
                 )
             } catch (_: Exception) {
