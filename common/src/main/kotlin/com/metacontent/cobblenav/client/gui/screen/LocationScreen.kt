@@ -132,7 +132,6 @@ class LocationScreen(
             pHeight = BUTTON_HEIGHT,
             disabled = true,
             action = {
-                scrollableView.reset()
                 tableView.clear()
                 requestSpawnData()
             },
@@ -334,7 +333,6 @@ class LocationScreen(
     }
 
     private fun onBucketChange() {
-        scrollableView.reset()
         tableView.clear()
         val spawnDataList = spawnDataMap[currentBucket.name]
         if (spawnDataList == null) {
