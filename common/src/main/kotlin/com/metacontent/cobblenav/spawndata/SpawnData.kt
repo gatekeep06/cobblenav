@@ -43,7 +43,7 @@ data class SpawnData(
 
     var chanceMultiplier = 1f
 
-    val conditionWidgets: List<AbstractWidget> by lazy {
+    val dataWidgets: List<AbstractWidget> by lazy {
         val widgets = mutableListOf<AbstractWidget>(
             SectionWidget(
                 x = 0,

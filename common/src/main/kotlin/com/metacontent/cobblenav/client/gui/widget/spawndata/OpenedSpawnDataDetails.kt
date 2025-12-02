@@ -33,7 +33,7 @@ class OpenedSpawnDataDetails(
         columns = 1,
         verticalGap = 2f,
         horizontalGap = 0f
-    ).also { statefulWidget.displayer.selectedData?.let { data -> it.add(data.conditionWidgets) } }
+    ).also { statefulWidget.displayer.selectedData?.let { data -> it.add(data.dataWidgets) } }
     private val scrollableView = ScrollableView(
         x = statefulWidget.menuX,
         y = statefulWidget.sectionY,
