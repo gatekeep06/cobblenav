@@ -1,12 +1,15 @@
 package com.metacontent.cobblenav.client.gui.widget.spawndata
 
+import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
+import net.minecraft.util.FastColor
 import org.joml.Vector3d
 import org.joml.Vector3f
 
@@ -70,6 +73,15 @@ class OpenedSpawnDataDetails(
         poseStack.pushAndPop(
             translate = Vector3d(0.0, 0.0, 3000.0)
         ) {
+            drawScaledTextJustifiedRight(
+                context = guiGraphics,
+                text = Component.literal(statefulWidget.displayer.selectedData?.id ?: ""),
+                x = statefulWidget.menuX + SpawnDataDetailsWidget.MENU_WIDTH - 1,
+                y = y + statefulWidget.height - 4 - Minecraft.getInstance().font.lineHeight * 0.5f,
+                scaleX = 1f,
+                scaleY = 0.5f,
+                colour = FastColor.ARGB32.color(40, 99, 125, 138)
+            )
             scrollableView.render(guiGraphics, i, j, f)
         }
     }
