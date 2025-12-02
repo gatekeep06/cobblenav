@@ -19,8 +19,10 @@ class BlockConditionWidget(
     }
 
     init {
-        val rows = ceil((blockConditions.size * ITEM_SIZE + (blockConditions.size - 1) * horizontalGap) / width.toFloat()).toInt()
-        height = rows * ITEM_SIZE + (rows - 1) * verticalGap
+        if (blockConditions.isNotEmpty()) {
+            val rows = ceil((blockConditions.size * ITEM_SIZE + (blockConditions.size - 1) * horizontalGap) / width.toFloat()).toInt()
+            height = rows * ITEM_SIZE + (rows - 1) * verticalGap
+        }
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
