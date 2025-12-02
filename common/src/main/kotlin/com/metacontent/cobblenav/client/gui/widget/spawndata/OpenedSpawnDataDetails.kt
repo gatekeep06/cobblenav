@@ -39,7 +39,7 @@ class OpenedSpawnDataDetails(
         y = statefulWidget.sectionY,
         width = SpawnDataDetailsWidget.MENU_WIDTH,
         height = SpawnDataDetailsWidget.SCROLLABLE_HEIGHT,
-        scissorSpreading = 10,
+        scissorSpreading = 7,
         child = tableView
     ).also { addWidget(it) }
 
