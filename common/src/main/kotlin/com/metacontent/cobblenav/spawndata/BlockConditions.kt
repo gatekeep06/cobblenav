@@ -1,12 +1,14 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.util.getHeadBlock
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.GrowingPlantBlock
 
 data class BlockConditions(
@@ -26,6 +28,7 @@ data class BlockConditions(
             when (it.path) {
                 "water" -> ItemStack(Items.WATER_BUCKET)
                 "lava" -> ItemStack(Items.LAVA_BUCKET)
+                "frosted_ice" -> ItemStack(Blocks.ICE)
                 else -> {
                     val block = BuiltInRegistries.BLOCK.get(it).let { block ->
                         if (block is GrowingPlantBlock) {
