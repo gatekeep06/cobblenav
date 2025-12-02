@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.BlockConditionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.client.gui.components.AbstractWidget
@@ -56,7 +57,7 @@ data class SpawnData(
                         width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
                         text = it.toLine()
                     )
-                }
+                } + BlockConditionWidget(blockConditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 4, 0, 0)
             ),
             SectionWidget(
                 x = 0,
@@ -70,7 +71,7 @@ data class SpawnData(
                         width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
                         text = it.toLine()
                     )
-                },
+                } + BlockConditionWidget(blockAnticonditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 4, 1, 1),
                 color = RGB(248, 208, 213)
             )
         )

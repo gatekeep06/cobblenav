@@ -23,7 +23,7 @@ class CollapsingSection(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         timer.tick(f)
 
-        height = SectionWidget.HEADER_HEIGHT + (statefulWidget.expandablePartHeight * (1 - timer.getProgress())).toInt()
+        height = SectionWidget.HEADER_HEIGHT + SectionWidget.FOOTER_HEIGHT + (statefulWidget.expandablePartHeight * (1 - timer.getProgress())).toInt()
         statefulWidget.height = height
 
         statefulWidget.renderBody(guiGraphics, height)

@@ -32,7 +32,7 @@ class SectionWidget(
         val FOOTER = gui("text_section_footer")
     }
 
-    val expandablePartHeight = (paragraphOffset * texts.size).toInt() + texts.sumOf { it.height }
+    val expandablePartHeight = (paragraphOffset * texts.size).toInt() + texts.sumOf { it.height } + FOOTER_HEIGHT
 
     init {
         height += expandablePartHeight
