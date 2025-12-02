@@ -36,7 +36,7 @@ class ExpandedTextSection(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (isValidClickButton(pButton) && clicked(pMouseX, pMouseY)) {
-            statefulWidget.changeState(CollapsedTextSection(statefulWidget, x, y, width, TextSectionWidget.HEADER_HEIGHT))
+            statefulWidget.changeState(CollapsingTextSection(statefulWidget, x, y, width, TextSectionWidget.HEADER_HEIGHT))
             statefulWidget.height = TextSectionWidget.HEADER_HEIGHT
             return true
         }
