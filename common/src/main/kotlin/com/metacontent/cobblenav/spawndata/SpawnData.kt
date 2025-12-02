@@ -7,14 +7,13 @@ import com.cobblemon.mod.common.util.writeIdentifier
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
-import com.metacontent.cobblenav.client.gui.widget.section.TextSectionWidget
+import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.FastColor
 
 data class SpawnData(
     val id: String,
@@ -45,7 +44,7 @@ data class SpawnData(
 
     val conditionWidgets: List<AbstractWidget> by lazy {
         val widgets = mutableListOf<AbstractWidget>(
-            TextSectionWidget(
+            SectionWidget(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailsWidget.SECTION_WIDTH,
@@ -59,7 +58,7 @@ data class SpawnData(
                     )
                 }
             ),
-            TextSectionWidget(
+            SectionWidget(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailsWidget.SECTION_WIDTH,

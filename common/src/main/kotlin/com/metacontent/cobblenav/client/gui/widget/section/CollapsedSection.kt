@@ -4,13 +4,13 @@ import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
-class CollapsedTextSection(
-    statefulWidget: TextSectionWidget,
+class CollapsedSection(
+    statefulWidget: SectionWidget,
     x: Int,
     y: Int,
     width: Int,
     height: Int
-) : WidgetState<TextSectionWidget>(statefulWidget, x, y, width, height, Component.empty()) {
+) : WidgetState<SectionWidget>(statefulWidget, x, y, width, height, Component.empty()) {
     override val blockScreenWidgets = false
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
@@ -19,7 +19,7 @@ class CollapsedTextSection(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (isValidClickButton(pButton) && clicked(pMouseX, pMouseY)) {
-            statefulWidget.changeState(ExpandingTextSection(statefulWidget, x, y, width, height))
+            statefulWidget.changeState(ExpandingSection(statefulWidget, x, y, width, height))
             return true
         }
         return false

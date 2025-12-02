@@ -4,20 +4,20 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
-class TextSectionWidget(
+class SectionWidget(
     x: Int,
     y: Int,
     width: Int,
     val title: MutableComponent,
-    val texts: List<TextWidget>,
+    val texts: List<AbstractWidget>,
     val color: RGB = RGB(178, 228, 188),
 //    val headerColor: RGB = RGB(199, 239, 207),
     val paragraphOffset: Float = 3f
@@ -38,7 +38,7 @@ class TextSectionWidget(
         height += expandablePartHeight
     }
 
-    override var state = initState(ExpandedTextSection(this, x, y, width, height))
+    override var state = initState(ExpandedSection(this, x, y, width, height))
 
     fun renderTitle(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
