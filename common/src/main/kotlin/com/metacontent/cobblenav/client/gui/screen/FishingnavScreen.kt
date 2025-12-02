@@ -55,7 +55,7 @@ class FishingnavScreen(
         get() = dayCycleColor(player?.clientLevel?.dayTime ?: 0L, DAY_COLOR, NIGHT_COLOR).toColor()
 
     var loading = false
-    override var displayedData: Collection<SpawnData>? = null
+    override var displayedData: List<SpawnData>? = null
     override var hoveredData: SpawnData? = null
     override var selectedData: SpawnData? = null
     lateinit var buckets: List<WeightedBucket>

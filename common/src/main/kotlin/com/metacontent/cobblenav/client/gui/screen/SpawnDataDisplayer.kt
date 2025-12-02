@@ -3,7 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.metacontent.cobblenav.spawndata.SpawnData
 
 interface SpawnDataDisplayer {
-    var displayedData: Collection<SpawnData>?
+    var displayedData: List<SpawnData>?
     var hoveredData: SpawnData?
     var selectedData: SpawnData?
 
@@ -12,4 +12,9 @@ interface SpawnDataDisplayer {
     fun selectedCanBeTracked(): Boolean
 
     fun isDataSelected(): Boolean = selectedData != null
+
+    fun switchData(step: Int) {
+        val index = displayedData?.indexOf(selectedData)?.let { it + step } ?: -1
+        displayedData?.getOrNull(index)?.let { selectedData = it }
+    }
 }

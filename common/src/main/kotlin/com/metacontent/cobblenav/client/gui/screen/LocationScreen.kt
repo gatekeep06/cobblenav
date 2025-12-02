@@ -86,7 +86,7 @@ class LocationScreen(
     var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
-    override var displayedData: Collection<SpawnData>? = null
+    override var displayedData: List<SpawnData>? = null
     override var hoveredData: SpawnData? = null
     override var selectedData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
