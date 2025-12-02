@@ -28,16 +28,13 @@ open class TableView<I : AbstractWidget>(
 
     fun add(widget: I) {
         items.add(widget)
-        addWidget(widget)
     }
 
     fun add(widgets: List<I>) {
         items.addAll(widgets)
-        widgets.forEach(this::addWidget)
     }
 
     fun clear() {
-        items.forEach { removeWidget(it) }
         items.clear()
     }
 
@@ -76,6 +73,6 @@ open class TableView<I : AbstractWidget>(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (!clicked(pMouseX, pMouseY)) return false
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return items.any { it.mouseClicked(pMouseX, pMouseY, pButton) }
     }
 }
