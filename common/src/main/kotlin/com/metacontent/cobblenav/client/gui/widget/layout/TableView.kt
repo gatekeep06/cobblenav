@@ -16,7 +16,7 @@ open class TableView<I : AbstractWidget>(
     private val verticalGap: Float = 0f,
     private val horizontalGap: Float = (width - columns * columnWidth) / (columns - 1f),
 ) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
-    private val items = mutableListOf<I>()
+    internal var items = mutableListOf<I>()
     val rows
         get() = ceil(items.size.toFloat() / columns.toFloat()).toInt()
 

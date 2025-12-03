@@ -3,7 +3,7 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.metacontent.cobblenav.spawndata.SpawnData
 
 interface SpawnDataDisplayer {
-    var displayedData: List<SpawnData>?
+    val displayedData: List<SpawnData>?
     var hoveredData: SpawnData?
     var selectedData: SpawnData?
 
