@@ -6,7 +6,6 @@ import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
-import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -27,17 +26,13 @@ class OpenedSpawnDataDetails(
     Component.literal("Opened Spawn Data Details")
 ) {
     companion object {
-        const val BUTTON_WIDTH: Int = 10
-        const val BUTTON_HEIGHT: Int = 9
-        val NEXT = gui("button/next_button")
-        val PREV = gui("button/prev_button")
+        const val BUTTON_WIDTH: Int = 17
+        const val BUTTON_HEIGHT: Int = 23
+        val NEXT = gui("button/next_button_big")
+        val PREV = gui("button/prev_button_big")
     }
 
     override val blockScreenWidgets = true
-
-    init {
-        addWidget(statefulWidget.closeButton)
-    }
 
     private val tableView = TableView<AbstractWidget>(
         x = statefulWidget.sectionX,
@@ -56,21 +51,30 @@ class OpenedSpawnDataDetails(
         child = tableView
     ).also { addWidget(it) }
     private val prevButton = IconButton(
-        pX = x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2 - 70,
+        pX = x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2 - 75,
         pY = y + (height - BUTTON_HEIGHT) / 2,
         pWidth = BUTTON_WIDTH,
         pHeight = BUTTON_HEIGHT,
-        action = { statefulWidget.displayer.switchData(-1) },
+        action = { checkButtons(statefulWidget.displayer.switchData(-1)) },
         texture = PREV
     ).also { addWidget(it) }
     private val nextButton = IconButton(
-        pX = x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2 + 70 - BUTTON_WIDTH,
+        pX = x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2 + 75 - BUTTON_WIDTH,
         pY = y + (height - BUTTON_HEIGHT) / 2,
         pWidth = BUTTON_WIDTH,
         pHeight = BUTTON_HEIGHT,
-        action = { statefulWidget.displayer.switchData(1) },
+        action = { checkButtons(statefulWidget.displayer.switchData(1)) },
         texture = NEXT
     ).also { addWidget(it) }
+
+    init {
+        addWidget(statefulWidget.closeButton)
+        statefulWidget.displayer.selectedData?.let { data ->
+            statefulWidget.displayer.displayedData?.indexOf(data)?.let { index ->
+                checkButtons(index)
+            }
+        }
+    }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (!statefulWidget.displayer.isDataSelected()) {
@@ -116,5 +120,10 @@ class OpenedSpawnDataDetails(
             prevButton.render(guiGraphics, i, j, f)
             nextButton.render(guiGraphics, i, j, f)
         }
+    }
+
+    private fun checkButtons(currentIndex: Int) {
+        prevButton.disabled = currentIndex <= 0
+        nextButton.disabled = currentIndex >= (statefulWidget.displayer.displayedData?.size ?: 0) - 1
     }
 }

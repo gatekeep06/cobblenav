@@ -13,8 +13,9 @@ interface SpawnDataDisplayer {
 
     fun isDataSelected(): Boolean = selectedData != null
 
-    fun switchData(step: Int) {
+    fun switchData(step: Int): Int {
         val index = displayedData?.indexOf(selectedData)?.let { it + step } ?: -1
         displayedData?.getOrNull(index)?.let { selectedData = it }
+        return index
     }
 }
