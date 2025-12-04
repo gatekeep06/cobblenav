@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class TimeRangeCollector : GeneralConditionCollector() {
     override val conditionName = "time_range"
+    override val conditionColor = 0xFF8C00
     override val configName = "time_range"
 
     override fun collect(
@@ -18,8 +19,8 @@ class TimeRangeCollector : GeneralConditionCollector() {
         player: ServerPlayer,
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
-        return condition.moonPhase?.ranges?.map { ranges ->
-            Component.translatable("gui.cobblenav.spawn_data.time", getTimeString(ranges))
+        return condition.timeRange?.ranges?.map { ranges ->
+            Component.translatable(getTimeString(ranges))
         }?.wrap()
     }
 }

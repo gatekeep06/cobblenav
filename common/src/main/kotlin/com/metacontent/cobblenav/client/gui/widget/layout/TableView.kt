@@ -16,29 +16,25 @@ open class TableView<I : AbstractWidget>(
     private val verticalGap: Float = 0f,
     private val horizontalGap: Float = (width - columns * columnWidth) / (columns - 1f),
 ) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
-    private val items = mutableListOf<I>()
+    internal var items = mutableListOf<I>()
     val rows
         get() = ceil(items.size.toFloat() / columns.toFloat()).toInt()
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        calculateItems()
         items.forEach { it.render(guiGraphics, i, j, f) }
 //        guiGraphics.renderOutline(x, y, width, height, FastColor.ARGB32.color(255, 0, 0, 0))
     }
 
     fun add(widget: I) {
         items.add(widget)
-        addWidget(widget)
-        initItems()
     }
 
     fun add(widgets: List<I>) {
         items.addAll(widgets)
-        widgets.forEach(this::addWidget)
-        initItems()
     }
 
     fun clear() {
-        items.forEach { removeWidget(it) }
         items.clear()
     }
 
@@ -56,10 +52,10 @@ open class TableView<I : AbstractWidget>(
 
     fun isEmpty() = items.isEmpty()
 
-    open fun initItems() {
+    open fun calculateItems() {
         val contentWidth = columns * columnWidth + (columns - 1) * horizontalGap
         val padding = (width - contentWidth) / 2
-        var initializedHeight = 0
+        var calculatedHeight = 0
         for (i in 0 until rows) {
             var rowHeight = 0
             for (j in 0 until columns) {
@@ -67,28 +63,16 @@ open class TableView<I : AbstractWidget>(
                 if (items.size <= index) break
                 val item = items[index]
                 item.x = (padding + x + j * (columnWidth + horizontalGap)).toInt()
-                item.y = y + initializedHeight
+                item.y = y + calculatedHeight
                 rowHeight = max(rowHeight, item.height)
             }
-            initializedHeight += (rowHeight + verticalGap).toInt()
+            calculatedHeight += (rowHeight + verticalGap).toInt()
         }
-        height = initializedHeight
-    }
-
-    override fun setY(i: Int) {
-        val delta = y - i
-        super.setY(i)
-        items.forEach { it.y -= delta }
-    }
-
-    override fun setX(i: Int) {
-        val delta = x - i
-        super.setX(i)
-        items.forEach { it.x -= delta }
+        height = calculatedHeight
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (!clicked(pMouseX, pMouseY)) return false
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return items.any { it.mouseClicked(pMouseX, pMouseY, pButton) }
     }
 }

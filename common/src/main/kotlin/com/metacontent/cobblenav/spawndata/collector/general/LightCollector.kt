@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class LightCollector : GeneralConditionCollector() {
     override val conditionName = "light"
+    override val conditionColor = 0xFFD700
     override val configName = "light"
 
     override fun collect(
@@ -18,7 +19,7 @@ class LightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minLight, condition.maxLight)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.light", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

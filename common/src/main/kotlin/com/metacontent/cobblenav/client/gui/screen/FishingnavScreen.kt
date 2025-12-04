@@ -12,7 +12,7 @@ import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
-import com.metacontent.cobblenav.client.gui.widget.SpawnDataWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
@@ -55,7 +55,7 @@ class FishingnavScreen(
         get() = dayCycleColor(player?.clientLevel?.dayTime ?: 0L, DAY_COLOR, NIGHT_COLOR).toColor()
 
     var loading = false
-    override var displayedData: Collection<SpawnData>? = null
+    override var displayedData: List<SpawnData>? = null
     override var hoveredData: SpawnData? = null
     override var selectedData: SpawnData? = null
     lateinit var buckets: List<WeightedBucket>
@@ -225,8 +225,6 @@ class FishingnavScreen(
                 )
             }
         }
-        fishingTable.initItems()
-        baseTable.initItems()
         loading = false
         refreshButton.disabled = false
     }

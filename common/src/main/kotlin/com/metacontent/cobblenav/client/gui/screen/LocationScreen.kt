@@ -15,7 +15,8 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableI
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.location.LocationInfoWidget
-import com.metacontent.cobblenav.client.gui.widget.SpawnDataWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.metacontent.cobblenav.client.settings.PokenavPreferences
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
@@ -85,13 +86,10 @@ class LocationScreen(
     var loading = false
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
-    override var displayedData: Collection<SpawnData>? = null
+    override val displayedData: List<SpawnData>
+        get() = tableView.items.map { it.child.spawnData }
     override var hoveredData: SpawnData? = null
     override var selectedData: SpawnData? = null
-        set(value) {
-            field = value
-            Cobblenav.LOGGER.error(value?.id)
-        }
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
     private lateinit var scrollableView: ScrollableView
     private lateinit var bucketSelector: BucketSelectorWidget
@@ -99,6 +97,7 @@ class LocationScreen(
     private lateinit var refreshButton: IconButton
     private lateinit var checkBox: CheckBox
     private lateinit var supportContextMenu: ContextMenuWidget
+    private lateinit var spawnDataDetails: SpawnDataDetailsWidget
 
     override fun initScreen() {
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
@@ -134,7 +133,6 @@ class LocationScreen(
             pHeight = BUTTON_HEIGHT,
             disabled = true,
             action = {
-                scrollableView.reset()
                 tableView.clear()
                 requestSpawnData()
             },
@@ -200,6 +198,13 @@ class LocationScreen(
                 menu.openingTimer.reset()
             }
         )
+
+        spawnDataDetails = SpawnDataDetailsWidget(
+            displayer = this,
+            parentScreen = this,
+            x = screenX + VERTICAL_BORDER_DEPTH,
+            y = screenY + HORIZONTAL_BORDER_DEPTH
+        ).also { addUnblockableWidget(it) }
 
         IconButton(
             pX = viewX/*screenX + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + BUTTON_SPACE*/,
@@ -329,7 +334,6 @@ class LocationScreen(
     }
 
     private fun onBucketChange() {
-        scrollableView.reset()
         tableView.clear()
         val spawnDataList = spawnDataMap[currentBucket.name]
         if (spawnDataList == null) {
@@ -345,7 +349,6 @@ class LocationScreen(
     }
 
     private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
-        displayedData = spawnDataList
         val spawnDataWidgets = spawnDataList
             .sortedWith { firstData, secondData ->
                 compareValues(

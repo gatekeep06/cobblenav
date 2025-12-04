@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class SlimeChunkCollector : GeneralConditionCollector() {
     override val conditionName = "slime_chunk"
+    override val conditionColor = 0x32CD32
     override val configName = "slime_chunk"
 
     override fun collect(

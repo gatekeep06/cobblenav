@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class BiomeCollector : GeneralConditionCollector() {
     override val conditionName = "biomes"
+    override val conditionColor = 0x2E8B57
     override val configName = "biomes"
 
     override fun collect(

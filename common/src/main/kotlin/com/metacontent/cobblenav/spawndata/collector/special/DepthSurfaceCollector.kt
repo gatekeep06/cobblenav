@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class DepthSurfaceCollector : ConditionCollector<SurfaceTypeSpawningCondition<*>>, ConfigureableCollector {
     override val conditionName = "depth_surface"
+    override val conditionColor = 0x1E90FF
     override val configName = "depth_surface"
     override val conditionClass = SurfaceTypeSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()

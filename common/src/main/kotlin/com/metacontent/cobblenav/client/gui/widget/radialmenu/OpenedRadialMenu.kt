@@ -4,6 +4,8 @@ import com.metacontent.cobblenav.client.gui.screen.ContactsScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.screen.MapScreen
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
+import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
+import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import kotlin.math.PI
@@ -11,9 +13,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class OpenedRadialMenu(
-    handler: RadialMenuHandler,
+    os: PokenavOS,
+    statefulWidget: StatefulWidget,
     pX: Int, pY: Int
-) : RadialMenuState(handler, pX, pY, DIAMETER, DIAMETER, Component.literal("Opened Radial Menu")) {
+) : RadialMenuState(os, statefulWidget, pX, pY, DIAMETER, DIAMETER, Component.literal("Opened Radial Menu")) {
     companion object {
         const val DIAMETER: Int = 100
     }
@@ -25,31 +28,28 @@ class OpenedRadialMenu(
         texture = RADIAL_MENU,
         textureWidth = ANIMATION_SHEET_WIDTH,
         uOffset = ANIMATION_SHEET_WIDTH - MENU_DIAMETER,
-        action = { handler.changeState(ClosedRadialMenu(handler, x, y)) }
+        action = { statefulWidget.changeState(ClosedRadialMenu(os, statefulWidget, x, y)) }
     ).also { addWidget(it) }
 
     private val buttons = listOf(
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().changeScreen(MapScreen(handler.os)) },
-            texture = MAP,
-            disabled = !handler.os.canUseMap
+            action = { statefulWidget.parentScreen?.changeScreen(MapScreen(os)) },
+            texture = MAP
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().changeScreen(LocationScreen(handler.os)) },
-            texture = LOCATION,
-            disabled = !handler.os.canUseLocation
+            action = { statefulWidget.parentScreen?.changeScreen(LocationScreen(os)) },
+            texture = LOCATION
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().changeScreen(ContactsScreen(handler.os)) },
-            texture = CONTACTS,
-            disabled = !handler.os.canUseContacts
+            action = { statefulWidget.parentScreen?.changeScreen(ContactsScreen(os)) },
+            texture = CONTACTS
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { handler.getParentScreen().onClose() },
+            action = { statefulWidget.parentScreen?.onClose() },
             texture = SWITCH_OFF
         )
     ).also {
@@ -76,7 +76,7 @@ class OpenedRadialMenu(
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         val clicked = super.mouseClicked(pMouseX, pMouseY, pButton)
         if (!clicked) {
-            handler.changeState(ClosedRadialMenu(handler, x, y))
+            statefulWidget.changeState(ClosedRadialMenu(os, statefulWidget, x, y))
         }
         return clicked
     }

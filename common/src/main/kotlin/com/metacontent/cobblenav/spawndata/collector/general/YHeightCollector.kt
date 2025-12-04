@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class YHeightCollector : GeneralConditionCollector() {
     override val conditionName = "y_height"
+    override val conditionColor = 0x4B0082
     override val configName = "y_height"
 
     override fun collect(
@@ -18,7 +19,7 @@ class YHeightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minY, condition.maxY, true)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.height", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

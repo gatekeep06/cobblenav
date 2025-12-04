@@ -5,6 +5,7 @@ import com.metacontent.cobblenav.util.ModDependant
 
 interface Collector<T : SpawningCondition<*>> : ModDependant {
     val conditionName: String
+    val conditionColor: Int
     val conditionClass: Class<T>
 
     fun supports(condition: SpawningCondition<*>): Boolean {

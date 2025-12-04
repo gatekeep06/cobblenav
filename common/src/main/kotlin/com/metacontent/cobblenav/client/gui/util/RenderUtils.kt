@@ -114,7 +114,7 @@ fun translateOr(
 
 fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
     return Minecraft.getInstance().font.splitter.splitLines(text, targetWidth, Style.EMPTY)
-        .map { Component.literal(it.string) }
+        .map { Component.literal(it.string).withStyle(text.style) }
 }
 
 fun interpolate(start: RGB, end: RGB, progress: Float): RGB {

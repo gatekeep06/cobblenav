@@ -1,32 +1,31 @@
 package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
-import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
-import com.metacontent.cobblenav.os.PokenavOS
-import net.minecraft.client.gui.GuiGraphics
+import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
+import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.network.chat.Component
 
 class RadialPopupMenu(
-    private val parentScreen: PokenavScreen,
+    parentScreen: PokenavScreen,
     pX: Int, pY: Int
-) : SoundlessWidget(pX, pY, RadialMenuState.MENU_DIAMETER, RadialMenuState.MENU_DIAMETER, Component.literal("Radial Popup Menu")), RadialMenuHandler {
-    override val os = parentScreen.os
+) : StatefulWidget(
+    parentScreen,
+    pX,
+    pY,
+    RadialMenuState.MENU_DIAMETER,
+    RadialMenuState.MENU_DIAMETER,
+    Component.literal("Radial Popup Menu")
+) {
+    val os = parentScreen.os
 
-    private var state: RadialMenuState = ClosedRadialMenu(this, pX, pY).also { addWidget(it) }
+    override var state = initState(ClosedRadialMenu(parentScreen.os, this, pX, pY))
 
-    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        state.render(guiGraphics, mouseX, mouseY, delta)
-    }
-
-    override fun changeState(state: RadialMenuState) {
-        removeWidget(this.state)
-        this.state = state
-        addWidget(state)
-        parentScreen.blockWidgets = state.blockScreenWidgets
+    override fun changeState(state: WidgetState<*>) {
+        super.changeState(state)
         wrap(state)
     }
 
-    private fun wrap(state: RadialMenuState) {
+    private fun wrap(state: WidgetState<*>) {
         x += (width - state.width) / 2
         y += (height - state.height) / 2
         state.x = x
@@ -34,6 +33,4 @@ class RadialPopupMenu(
         width = state.width
         height = state.height
     }
-
-    override fun getParentScreen(): PokenavScreen = parentScreen
 }

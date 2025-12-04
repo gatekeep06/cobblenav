@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class CoordinatesCollector : GeneralConditionCollector() {
     override val conditionName = "coordinates"
+    override val conditionColor = 0x00008B
     override val configName = "coordinates"
 
     override fun collect(
@@ -18,8 +19,8 @@ class CoordinatesCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         val values = mutableListOf<Component>()
-        formatValueRange(condition.minX, condition.maxX)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.x", it)) }
-        formatValueRange(condition.minZ, condition.maxZ)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.z", it)) }
+        formatValueRange(condition.minX, condition.maxX, true)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.x", it)) }
+        formatValueRange(condition.minZ, condition.maxZ, true)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.z", it)) }
         return if (values.isNotEmpty()) values.wrap() else null
     }
 }

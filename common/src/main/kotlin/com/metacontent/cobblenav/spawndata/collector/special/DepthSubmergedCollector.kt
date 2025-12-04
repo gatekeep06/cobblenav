@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class DepthSubmergedCollector : ConditionCollector<SubmergedTypeSpawningCondition<*>>, ConfigureableCollector {
     override val conditionName = "depth_submerged"
+    override val conditionColor = 0x000080
     override val configName = "depth_submerged"
     override val conditionClass = SubmergedTypeSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()

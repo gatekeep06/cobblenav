@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 
 class SkyLightCollector : GeneralConditionCollector() {
     override val conditionName = "sky_light"
+    override val conditionColor = 0x87CEEB
     override val configName = "sky_light"
 
     override fun collect(
@@ -18,7 +19,7 @@ class SkyLightCollector : GeneralConditionCollector() {
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minSkyLight, condition.maxSkyLight)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.sky_light", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }
