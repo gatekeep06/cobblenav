@@ -18,7 +18,7 @@ class YHeightCollector : GeneralConditionCollector() {
         player: ServerPlayer,
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
-        return formatValueRange(condition.minY, condition.maxY, true)?.let {
+        return formatValueRange(condition.minY, condition.maxY)?.let {
             listOf(Component.literal(it)).wrap()
         }
     }

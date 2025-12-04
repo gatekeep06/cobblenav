@@ -25,7 +25,7 @@ class LureLevelCollector : ConditionCollector<FishingSpawningCondition>, Configu
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minLureLevel, condition.maxLureLevel)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.lure_level", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

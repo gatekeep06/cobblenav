@@ -101,7 +101,10 @@
             "condition": {
                 "biomes": [
                     "#cobblemon:is_overworld"
-                ]
+                ],
+                "bait": "cobblemon:love_sweet",
+                "minLureLevel": 0,
+                "maxLureLevel": 3
             }
         }
     ]

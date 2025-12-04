@@ -15,9 +15,9 @@ interface ConditionCollector<T : SpawningCondition<*>> : Collector<T> {
         builder: BiomePlatformContext.Builder?
     ): ConditionData?
 
-    fun formatValueRange(min: Number?, max: Number?, useSpaces: Boolean = false): String? {
+    fun formatValueRange(min: Number?, max: Number?): String? {
         return if (min != null && max != null) {
-            if (useSpaces) "$min - $max" else "$min-$max"
+            "$min - $max"
         } else if (min != null) "≥$min"
         else if (max != null) "≤$max"
         else null
