@@ -25,7 +25,7 @@ class DepthSubmergedCollector : ConditionCollector<SubmergedTypeSpawningConditio
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return formatValueRange(condition.minDepth, condition.maxDepth)?.let {
-            listOf(Component.translatable("gui.cobblenav.spawn_data.depth", it)).wrap()
+            listOf(Component.literal(it)).wrap()
         }
     }
 }

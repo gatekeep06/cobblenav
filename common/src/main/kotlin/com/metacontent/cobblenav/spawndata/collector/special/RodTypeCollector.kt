@@ -26,8 +26,8 @@ class RodTypeCollector : ConditionCollector<FishingSpawningCondition>, Configure
         builder: BiomePlatformContext.Builder?
     ): ConditionData? {
         return condition.rodType?.let { resourceLocation ->
-            PokeRods.getPokeRod(resourceLocation)?.let { type ->
-                listOf(Component.translatable(type.pokeBallId.toLanguageKey("item"))).wrap()
+            PokeRods.getPokeRod(resourceLocation)?.pokeBallId?.toLanguageKey("item")?.let {
+                listOf(Component.translatable(it)).wrap()
             }
         }
     }
