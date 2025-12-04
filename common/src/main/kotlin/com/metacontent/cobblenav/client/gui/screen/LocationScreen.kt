@@ -3,7 +3,6 @@ package com.metacontent.cobblenav.client.gui.screen
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.*
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
@@ -361,7 +360,9 @@ class LocationScreen(
                     child = SpawnDataWidget(
                         x = 0,
                         y = 0,
-                        spawnData = it,
+                        spawnData = it.also { data ->
+                            data.chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
+                        },
                         displayer = this
                     ),
                     topEdge = screenY + HORIZONTAL_BORDER_DEPTH + 16,
