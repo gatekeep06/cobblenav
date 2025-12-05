@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component
 import org.joml.Vector3d
 import org.joml.Vector3f
 
-class OpeningSpawnDataDetails(
+class OpeningSpawnDataDetail(
     statefulWidget: SpawnDataDetailWidget,
     x: Int,
     y: Int
@@ -54,7 +54,7 @@ class OpeningSpawnDataDetails(
         }
 
         if (timer.isOver()) {
-            statefulWidget.changeState(OpenedSpawnDataDetails(statefulWidget, x, y))
+            statefulWidget.changeState(OpenedSpawnDataDetail(statefulWidget, x, y))
         }
     }
 

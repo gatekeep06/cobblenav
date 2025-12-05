@@ -4,7 +4,7 @@ import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
-class ClosedSpawnDataDetails(
+class ClosedSpawnDataDetail(
     statefulWidget: SpawnDataDetailWidget,
     x: Int,
     y: Int
@@ -20,7 +20,7 @@ class ClosedSpawnDataDetails(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (statefulWidget.displayer.isDataSelected()) {
-            statefulWidget.changeState(OpeningSpawnDataDetails(statefulWidget, x, y))
+            statefulWidget.changeState(OpeningSpawnDataDetail(statefulWidget, x, y))
         }
     }
 

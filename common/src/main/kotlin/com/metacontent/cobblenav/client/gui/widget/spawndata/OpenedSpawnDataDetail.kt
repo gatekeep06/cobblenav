@@ -15,7 +15,7 @@ import net.minecraft.util.FastColor
 import org.joml.Vector3d
 import org.joml.Vector3f
 
-class OpenedSpawnDataDetails(
+class OpenedSpawnDataDetail(
     statefulWidget: SpawnDataDetailWidget, x: Int, y: Int
 ) : WidgetState<SpawnDataDetailWidget>(
     statefulWidget,
@@ -82,7 +82,7 @@ class OpenedSpawnDataDetails(
             removeWidget(scrollableView)
             removeWidget(prevButton)
             removeWidget(nextButton)
-            statefulWidget.changeState(ClosedSpawnDataDetails(statefulWidget, x, y))
+            statefulWidget.changeState(ClosedSpawnDataDetail(statefulWidget, x, y))
         }
 
         statefulWidget.displayer.selectedData?.dataWidgets?.let { tableView.items = it.toMutableList() }

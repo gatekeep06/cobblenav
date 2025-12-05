@@ -48,7 +48,7 @@ class SpawnDataDetailWidget(
         texture = CLOSE
     )
 
-    override var state = initState(ClosedSpawnDataDetails(this, x, y))
+    override var state = initState(ClosedSpawnDataDetail(this, x, y))
 
     fun renderMenu(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
