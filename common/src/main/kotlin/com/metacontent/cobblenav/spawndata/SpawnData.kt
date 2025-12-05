@@ -69,7 +69,7 @@ data class SpawnData(
             TextWidget(x = 0, y = 0, width = SpawnDataDetailWidget.SECTION_WIDTH - 8, text = it.toLine())
         }.toMutableList()
         blockAnticonditions.takeIf { it.isNotEmpty() }?.let {
-            conditionWidgets.add(
+            anticonditionWidgets.add(
                 BlockConditionWidget(
                     blockConditions = it,
                     x = 0,
