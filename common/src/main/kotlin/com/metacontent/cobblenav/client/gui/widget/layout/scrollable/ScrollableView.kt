@@ -17,7 +17,7 @@ class ScrollableView(
 ) : SoundlessWidget(x, y, width, height, Component.literal("Scrollable View")) {
     var scrolled = 0
         set(value) {
-            field = max(min(value, child.height - height), 0)
+            field = max(min(value, child.height - height + scrollMultiplier.toInt()), 0)
             onScroll()
         }
 
