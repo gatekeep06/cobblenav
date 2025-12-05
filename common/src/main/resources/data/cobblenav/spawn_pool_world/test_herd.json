@@ -102,7 +102,7 @@
                 "biomes": [
                     "#cobblemon:is_overworld"
                 ],
-                "bait": "cobblemon:love_sweet",
+                "bait": "cobblemon:liechi_berry",
                 "minLureLevel": 0,
                 "maxLureLevel": 3
             }
