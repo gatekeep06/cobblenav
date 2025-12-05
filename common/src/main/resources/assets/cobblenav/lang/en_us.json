@@ -63,6 +63,7 @@
   "gui.cobblenav.empty_spawns_message": "There doesn't seem to be anyone living here",
   "gui.cobblenav.spawn_data.title.conditions": "Conditions",
   "gui.cobblenav.spawn_data.title.anticonditions": "Anti-Conditions",
+  "gui.cobblenav.spawn_data.no_conditions": "None",
   "gui.cobblenav.spawn_data.unknown_pokemon": "???",
   "gui.cobblenav.spawn_data.herd": "%s Herd",
   "gui.cobblenav.spawn_data.spawn_chance": "Chance: %s%%",

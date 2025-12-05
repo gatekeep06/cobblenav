@@ -10,6 +10,8 @@ import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.BlockConditionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
+import com.metacontent.cobblenav.event.CobblenavEvents
+import com.metacontent.cobblenav.event.SpawnDataWidgetsCreatedEvent
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -44,36 +46,80 @@ data class SpawnData(
     var chanceMultiplier = 1f
 
     val dataWidgets: List<AbstractWidget> by lazy {
+        val conditionWidgets: MutableList<AbstractWidget> = conditions.map {
+            TextWidget(x = 0, y = 0, width = SpawnDataDetailsWidget.SECTION_WIDTH - 8, text = it.toLine())
+        }.toMutableList()
+        blockConditions.takeIf { it.isNotEmpty() }?.let {
+            conditionWidgets.add(
+                BlockConditionWidget(
+                    blockConditions = it,
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailsWidget.SECTION_WIDTH - 5,
+                    horizontalGap = 0,
+                    verticalGap = 0
+                )
+            )
+        }
+        CobblenavEvents.CONDITION_SECTION_WIDGETS_CREATED.emit(
+            SpawnDataWidgetsCreatedEvent(this, conditionWidgets)
+        )
+
+        val anticonditionWidgets: MutableList<AbstractWidget> = anticonditions.map {
+            TextWidget(x = 0, y = 0, width = SpawnDataDetailsWidget.SECTION_WIDTH - 8, text = it.toLine())
+        }.toMutableList()
+        blockAnticonditions.takeIf { it.isNotEmpty() }?.let {
+            conditionWidgets.add(
+                BlockConditionWidget(
+                    blockConditions = it,
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailsWidget.SECTION_WIDTH - 5,
+                    horizontalGap = 0,
+                    verticalGap = 0
+                )
+            )
+        }
+        CobblenavEvents.ANTICONDITION_SECTION_WIDGETS_CREATED.emit(
+            SpawnDataWidgetsCreatedEvent(this, anticonditionWidgets)
+        )
+
         val widgets = mutableListOf<AbstractWidget>(
             SectionWidget(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailsWidget.SECTION_WIDTH,
                 title = Component.translatable("gui.cobblenav.spawn_data.title.conditions"),
-                texts = conditions.map {
-                    TextWidget(
-                        x = 0,
-                        y = 0,
-                        width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
-                        text = it.toLine()
+                widgets = conditionWidgets.ifEmpty {
+                    listOf(
+                        TextWidget(
+                            x = 0,
+                            y = 0,
+                            width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
+                            text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
+                        )
                     )
-                } + BlockConditionWidget(blockConditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 5, 0, 0)
-            ),
-            SectionWidget(
+                }
+            ), SectionWidget(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailsWidget.SECTION_WIDTH,
                 title = Component.translatable("gui.cobblenav.spawn_data.title.anticonditions"),
-                texts = anticonditions.map {
-                    TextWidget(
-                        x = 0,
-                        y = 0,
-                        width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
-                        text = it.toLine()
+                widgets = anticonditionWidgets.ifEmpty {
+                    listOf(
+                        TextWidget(
+                            x = 0,
+                            y = 0,
+                            width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
+                            text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
+                        )
                     )
-                } + BlockConditionWidget(blockAnticonditions, 0, 0, SpawnDataDetailsWidget.SECTION_WIDTH - 5, 0, 0),
+                },
                 color = RGB(248, 208, 213)
             )
+        )
+        CobblenavEvents.SPAWN_DATA_WIDGETS_CREATED.emit(
+            SpawnDataWidgetsCreatedEvent(this, widgets)
         )
 
         widgets
@@ -85,8 +131,16 @@ data class SpawnData(
         buffer.writeString(positionType)
         buffer.writeFloat(spawnChance)
         buffer.writeNullable(platformId) { buf, id -> buf.writeIdentifier(id) }
-        buffer.writeCollection(conditions) { buf, data -> ConditionData.BUFF_CODEC.encode(buf as RegistryFriendlyByteBuf, data) }
-        buffer.writeCollection(anticonditions) { buf, data -> ConditionData.BUFF_CODEC.encode(buf as RegistryFriendlyByteBuf, data) }
+        buffer.writeCollection(conditions) { buf, data ->
+            ConditionData.BUFF_CODEC.encode(
+                buf as RegistryFriendlyByteBuf, data
+            )
+        }
+        buffer.writeCollection(anticonditions) { buf, data ->
+            ConditionData.BUFF_CODEC.encode(
+                buf as RegistryFriendlyByteBuf, data
+            )
+        }
         blockConditions.encode(buffer)
         blockAnticonditions.encode(buffer)
     }

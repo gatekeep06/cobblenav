@@ -18,7 +18,7 @@ class SectionWidget(
     y: Int,
     width: Int,
     val title: MutableComponent,
-    val texts: List<AbstractWidget>,
+    val widgets: List<AbstractWidget>,
     val color: RGB = RGB(178, 228, 188),
 //    val headerColor: RGB = RGB(199, 239, 207),
     val paragraphOffset: Float = 3f
@@ -34,7 +34,7 @@ class SectionWidget(
         val FOOTER = gui("text_section_footer")
     }
 
-    val expandablePartHeight = texts.sumOf { if (it.height != 0) it.height + paragraphOffset.toInt() else 0 }
+    val expandablePartHeight = widgets.sumOf { if (it.height != 0) it.height + paragraphOffset.toInt() else 0 }
 
     override var state = initState(ExpandedSection(this, x, y, width))
 

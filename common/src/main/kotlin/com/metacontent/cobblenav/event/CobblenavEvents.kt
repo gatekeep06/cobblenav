@@ -10,4 +10,10 @@ object CobblenavEvents {
     // CLIENT EVENTS
 
     val REGISTER_CUSTOM_CLIENT_COLLECTORS = EventObservable<CustomClientCollectorRegistrar>()
+
+    val CONDITION_SECTION_WIDGETS_CREATED = EventObservable<SpawnDataWidgetsCreatedEvent>()
+
+    val ANTICONDITION_SECTION_WIDGETS_CREATED = EventObservable<SpawnDataWidgetsCreatedEvent>()
+
+    val SPAWN_DATA_WIDGETS_CREATED = EventObservable<SpawnDataWidgetsCreatedEvent>()
 }

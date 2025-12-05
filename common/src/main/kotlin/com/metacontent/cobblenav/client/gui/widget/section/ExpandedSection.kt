@@ -22,7 +22,7 @@ class ExpandedSection(
         verticalGap = statefulWidget.paragraphOffset,
         horizontalGap = 0f
     ).also {
-        it.add(statefulWidget.texts)
+        it.add(statefulWidget.widgets)
         addWidget(it)
     }
 
