@@ -14,7 +14,7 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableI
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.location.LocationInfoWidget
-import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.metacontent.cobblenav.client.settings.PokenavPreferences
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
@@ -96,7 +96,7 @@ class LocationScreen(
     private lateinit var refreshButton: IconButton
     private lateinit var checkBox: CheckBox
     private lateinit var supportContextMenu: ContextMenuWidget
-    private lateinit var spawnDataDetails: SpawnDataDetailsWidget
+    private lateinit var spawnDataDetails: SpawnDataDetailWidget
 
     override fun initScreen() {
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
@@ -198,7 +198,7 @@ class LocationScreen(
             }
         )
 
-        spawnDataDetails = SpawnDataDetailsWidget(
+        spawnDataDetails = SpawnDataDetailWidget(
             displayer = this,
             parentScreen = this,
             x = screenX + VERTICAL_BORDER_DEPTH,

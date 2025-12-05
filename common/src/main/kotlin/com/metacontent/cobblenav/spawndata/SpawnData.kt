@@ -9,7 +9,7 @@ import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.BlockConditionWidget
-import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.SpawnDataWidgetsCreatedEvent
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
@@ -47,7 +47,7 @@ data class SpawnData(
 
     val dataWidgets: List<AbstractWidget> by lazy {
         val conditionWidgets: MutableList<AbstractWidget> = conditions.map {
-            TextWidget(x = 0, y = 0, width = SpawnDataDetailsWidget.SECTION_WIDTH - 8, text = it.toLine())
+            TextWidget(x = 0, y = 0, width = SpawnDataDetailWidget.SECTION_WIDTH - 8, text = it.toLine())
         }.toMutableList()
         blockConditions.takeIf { it.isNotEmpty() }?.let {
             conditionWidgets.add(
@@ -55,7 +55,7 @@ data class SpawnData(
                     blockConditions = it,
                     x = 0,
                     y = 0,
-                    width = SpawnDataDetailsWidget.SECTION_WIDTH - 5,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH - 5,
                     horizontalGap = 0,
                     verticalGap = 0
                 )
@@ -66,7 +66,7 @@ data class SpawnData(
         )
 
         val anticonditionWidgets: MutableList<AbstractWidget> = anticonditions.map {
-            TextWidget(x = 0, y = 0, width = SpawnDataDetailsWidget.SECTION_WIDTH - 8, text = it.toLine())
+            TextWidget(x = 0, y = 0, width = SpawnDataDetailWidget.SECTION_WIDTH - 8, text = it.toLine())
         }.toMutableList()
         blockAnticonditions.takeIf { it.isNotEmpty() }?.let {
             conditionWidgets.add(
@@ -74,7 +74,7 @@ data class SpawnData(
                     blockConditions = it,
                     x = 0,
                     y = 0,
-                    width = SpawnDataDetailsWidget.SECTION_WIDTH - 5,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH - 5,
                     horizontalGap = 0,
                     verticalGap = 0
                 )
@@ -88,14 +88,14 @@ data class SpawnData(
             SectionWidget(
                 x = 0,
                 y = 0,
-                width = SpawnDataDetailsWidget.SECTION_WIDTH,
+                width = SpawnDataDetailWidget.SECTION_WIDTH,
                 title = Component.translatable("gui.cobblenav.spawn_data.title.conditions"),
                 widgets = conditionWidgets.ifEmpty {
                     listOf(
                         TextWidget(
                             x = 0,
                             y = 0,
-                            width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
+                            width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
                             text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
                         )
                     )
@@ -103,14 +103,14 @@ data class SpawnData(
             ), SectionWidget(
                 x = 0,
                 y = 0,
-                width = SpawnDataDetailsWidget.SECTION_WIDTH,
+                width = SpawnDataDetailWidget.SECTION_WIDTH,
                 title = Component.translatable("gui.cobblenav.spawn_data.title.anticonditions"),
                 widgets = anticonditionWidgets.ifEmpty {
                     listOf(
                         TextWidget(
                             x = 0,
                             y = 0,
-                            width = SpawnDataDetailsWidget.SECTION_WIDTH - 8,
+                            width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
                             text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
                         )
                     )

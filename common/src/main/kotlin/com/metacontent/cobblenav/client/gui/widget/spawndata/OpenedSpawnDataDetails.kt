@@ -16,13 +16,13 @@ import org.joml.Vector3d
 import org.joml.Vector3f
 
 class OpenedSpawnDataDetails(
-    statefulWidget: SpawnDataDetailsWidget, x: Int, y: Int
-) : WidgetState<SpawnDataDetailsWidget>(
+    statefulWidget: SpawnDataDetailWidget, x: Int, y: Int
+) : WidgetState<SpawnDataDetailWidget>(
     statefulWidget,
     x,
     y,
-    SpawnDataDetailsWidget.WIDTH,
-    SpawnDataDetailsWidget.HEIGHT,
+    SpawnDataDetailWidget.WIDTH,
+    SpawnDataDetailWidget.HEIGHT,
     Component.literal("Opened Spawn Data Details")
 ) {
     companion object {
@@ -37,7 +37,7 @@ class OpenedSpawnDataDetails(
     private val tableView = TableView<AbstractWidget>(
         x = statefulWidget.sectionX,
         y = statefulWidget.sectionY,
-        width = SpawnDataDetailsWidget.SECTION_WIDTH,
+        width = SpawnDataDetailWidget.SECTION_WIDTH,
         columns = 1,
         verticalGap = 2f,
         horizontalGap = 0f
@@ -45,13 +45,13 @@ class OpenedSpawnDataDetails(
     private val scrollableView = ScrollableView(
         x = statefulWidget.menuX,
         y = statefulWidget.sectionY,
-        width = SpawnDataDetailsWidget.MENU_WIDTH,
-        height = SpawnDataDetailsWidget.SCROLLABLE_HEIGHT,
+        width = SpawnDataDetailWidget.MENU_WIDTH,
+        height = SpawnDataDetailWidget.SCROLLABLE_HEIGHT,
         scissorSpreading = 7,
         child = tableView
     ).also { addWidget(it) }
     private val prevButton = IconButton(
-        pX = x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2 - 75,
+        pX = x + (statefulWidget.width - SpawnDataDetailWidget.MENU_WIDTH) / 2 - 75,
         pY = y + (height - BUTTON_HEIGHT) / 2,
         pWidth = BUTTON_WIDTH,
         pHeight = BUTTON_HEIGHT,
@@ -59,7 +59,7 @@ class OpenedSpawnDataDetails(
         texture = PREV
     ).also { addWidget(it) }
     private val nextButton = IconButton(
-        pX = x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2 + 75 - BUTTON_WIDTH,
+        pX = x + (statefulWidget.width - SpawnDataDetailWidget.MENU_WIDTH) / 2 + 75 - BUTTON_WIDTH,
         pY = y + (height - BUTTON_HEIGHT) / 2,
         pWidth = BUTTON_WIDTH,
         pHeight = BUTTON_HEIGHT,
@@ -97,7 +97,7 @@ class OpenedSpawnDataDetails(
         ) {
             statefulWidget.displayer.selectedData?.result?.drawResult(
                 poseStack = poseStack,
-                x = (x + (statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2) / scale,
+                x = (x + (statefulWidget.width - SpawnDataDetailWidget.MENU_WIDTH) / 2) / scale,
                 y = (y + 20) / scale,
                 z = 0f / scale,
                 delta = f / 10
@@ -110,7 +110,7 @@ class OpenedSpawnDataDetails(
             drawScaledTextJustifiedRight(
                 context = guiGraphics,
                 text = Component.literal(statefulWidget.displayer.selectedData?.id ?: ""),
-                x = statefulWidget.menuX + SpawnDataDetailsWidget.MENU_WIDTH - 1,
+                x = statefulWidget.menuX + SpawnDataDetailWidget.MENU_WIDTH - 1,
                 y = y + statefulWidget.height - 4 - Minecraft.getInstance().font.lineHeight * 0.5f,
                 scaleX = 1f,
                 scaleY = 0.5f,

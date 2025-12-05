@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import org.joml.Vector3d
 
-class SpawnDataDetailsWidget(
+class SpawnDataDetailWidget(
     val displayer: SpawnDataDisplayer,
     parentScreen: PokenavScreen,
     x: Int,

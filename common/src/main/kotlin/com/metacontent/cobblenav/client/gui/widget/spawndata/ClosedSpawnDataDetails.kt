@@ -5,15 +5,15 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
 class ClosedSpawnDataDetails(
-    statefulWidget: SpawnDataDetailsWidget,
+    statefulWidget: SpawnDataDetailWidget,
     x: Int,
     y: Int
-) : WidgetState<SpawnDataDetailsWidget>(
+) : WidgetState<SpawnDataDetailWidget>(
     statefulWidget,
     x,
     y,
-    SpawnDataDetailsWidget.WIDTH,
-    SpawnDataDetailsWidget.HEIGHT,
+    SpawnDataDetailWidget.WIDTH,
+    SpawnDataDetailWidget.HEIGHT,
     Component.literal("Closed Spawn Data Details")
 ) {
     override val blockScreenWidgets = false

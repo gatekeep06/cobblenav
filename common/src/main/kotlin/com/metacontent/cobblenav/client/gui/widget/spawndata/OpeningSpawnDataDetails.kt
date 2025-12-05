@@ -9,15 +9,15 @@ import org.joml.Vector3d
 import org.joml.Vector3f
 
 class OpeningSpawnDataDetails(
-    statefulWidget: SpawnDataDetailsWidget,
+    statefulWidget: SpawnDataDetailWidget,
     x: Int,
     y: Int
-) : WidgetState<SpawnDataDetailsWidget>(
+) : WidgetState<SpawnDataDetailWidget>(
     statefulWidget,
     x,
     y,
-    SpawnDataDetailsWidget.WIDTH,
-    SpawnDataDetailsWidget.HEIGHT,
+    SpawnDataDetailWidget.WIDTH,
+    SpawnDataDetailWidget.HEIGHT,
     Component.literal("Opening Spawn Data Details")
 ) {
     companion object {
@@ -35,7 +35,7 @@ class OpeningSpawnDataDetails(
         val progress = timer.getProgress()
 
         poseStack.pushAndPop(
-            translate = Vector3d((1.0 - progress) * SpawnDataDetailsWidget.MENU_WIDTH, 0.0, 0.0)
+            translate = Vector3d((1.0 - progress) * SpawnDataDetailWidget.MENU_WIDTH, 0.0, 0.0)
         ) {
             statefulWidget.renderMenu(guiGraphics, i, j, f)
         }
@@ -46,8 +46,8 @@ class OpeningSpawnDataDetails(
         ) {
             statefulWidget.displayer.selectedData?.result?.drawResult(
                 poseStack = poseStack,
-                x = (x + ((statefulWidget.width - SpawnDataDetailsWidget.MENU_WIDTH) / 2)) / scale,
-                y = (y + 20 + SpawnDataDetailsWidget.MENU_HEIGHT / 2 * (1 - progress)) / scale,
+                x = (x + ((statefulWidget.width - SpawnDataDetailWidget.MENU_WIDTH) / 2)) / scale,
+                y = (y + 20 + SpawnDataDetailWidget.MENU_HEIGHT / 2 * (1 - progress)) / scale,
                 z = 1000f / scale,
                 delta = f / 10
             )

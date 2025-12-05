@@ -12,7 +12,7 @@ import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
-import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailsWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
@@ -66,7 +66,7 @@ class FishingnavScreen(
     private lateinit var fishingTable: TableView<AbstractWidget>
     private lateinit var bucketViews: List<BucketViewWidget>
     private lateinit var refreshButton: IconButton
-    private lateinit var spawnDataDetails: SpawnDataDetailsWidget
+    private lateinit var spawnDataDetails: SpawnDataDetailWidget
 
     override fun initScreen() {
         RequestFishingnavScreenInitDataPacket().sendToServer()
@@ -123,7 +123,7 @@ class FishingnavScreen(
             texture = REFRESH
         ).also { addBlockableWidget(it) }
 
-        spawnDataDetails = SpawnDataDetailsWidget(
+        spawnDataDetails = SpawnDataDetailWidget(
             displayer = this,
             parentScreen = this,
             x = screenX + VERTICAL_BORDER_DEPTH,
