@@ -1,23 +1,32 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
+import com.cobblemon.mod.common.api.drop.ItemDropEntry
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.pokedex
+import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
 class PokemonSpawnResultData(
     val pokemon: RenderablePokemon,
     val originalProperties: PokemonProperties,
+    val level: IntRange?,
+    val drops: Map<ResourceLocation, Float>?,
+    val heldItems: Map<ResourceLocation, Float>?,
     val knowledge: PokedexEntryProgress,
     val positionType: String
 ) : SpawnResultData {
@@ -34,11 +43,20 @@ class PokemonSpawnResultData(
             val knowledge = player.pokedex()
                 .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
                 ?.getFormRecord(renderablePokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
-            if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownSpawns) return UnknownSpawnResultData(positionType)
+            if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownSpawns) return UnknownSpawnResultData(
+                positionType
+            )
 
             return PokemonSpawnResultData(
                 pokemon = renderablePokemon,
                 originalProperties = detail.pokemon,
+                level = detail.levelRange,
+                drops = detail.drops?.entries?.filterIsInstance<ItemDropEntry>()?.associate {
+                    it.item to it.percentage
+                },
+                heldItems = detail.heldItems?.associate {
+                    ResourceLocation.parse(it.item) to it.percentage.toFloat()
+                },
                 knowledge = knowledge,
                 positionType = positionType
             )
@@ -47,6 +65,19 @@ class PokemonSpawnResultData(
         fun decodeResultData(buffer: RegistryFriendlyByteBuf): PokemonSpawnResultData = PokemonSpawnResultData(
             pokemon = RenderablePokemon.loadFromBuffer(buffer),
             originalProperties = PokemonProperties.parse(buffer.readString()),
+            level = buffer.readNullable { it.readVarInt()..it.readVarInt() },
+            drops = buffer.readNullable { buf ->
+                buf.readMap(
+                    { it.readIdentifier() },
+                    { it.readFloat() }
+                )
+            },
+            heldItems = buffer.readNullable { buf ->
+                buf.readMap(
+                    { it.readIdentifier() },
+                    { it.readFloat() }
+                )
+            },
             knowledge = buffer.readEnum(PokedexEntryProgress::class.java),
             positionType = buffer.readString()
         )
@@ -68,6 +99,24 @@ class PokemonSpawnResultData(
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         pokemon.saveToBuffer(buffer)
         buffer.writeString(originalProperties.asString())
+        buffer.writeNullable(level) { buf, l ->
+            buf.writeVarInt(l.first)
+            buf.writeVarInt(l.last)
+        }
+        buffer.writeNullable(drops) { buf, map ->
+            buf.writeMap(
+                map,
+                { b, rl -> b.writeIdentifier(rl) },
+                { b, f -> b.writeFloat(f) }
+            )
+        }
+        buffer.writeNullable(heldItems) { buf, map ->
+            buf.writeMap(
+                map,
+                { b, rl -> b.writeIdentifier(rl) },
+                { b, f -> b.writeFloat(f) }
+            )
+        }
         buffer.writeEnum(knowledge)
         buffer.writeString(positionType)
     }
