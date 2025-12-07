@@ -2,8 +2,10 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readNullable
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
@@ -22,6 +24,8 @@ data class SpawnData(
     val id: String,
     val result: SpawnResultData,
     val positionType: String,
+    val bucket: String,
+    val weight: Float,
     val spawnChance: Float,
     val platformId: ResourceLocation?,
     val conditions: List<ConditionData>,
@@ -34,7 +38,9 @@ data class SpawnData(
             id = buffer.readString(),
             result = SpawnResultData.decode(buffer),
             positionType = buffer.readString(),
-            spawnChance = buffer.readFloat(),
+            bucket = buffer.readString(),
+            weight = buffer.readFloat(),
+            spawnChance = buffer.readNullable { it.readFloat() },
             platformId = buffer.readNullable { it.readIdentifier() },
             conditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
             anticonditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
@@ -100,7 +106,8 @@ data class SpawnData(
                         )
                     )
                 }
-            ), SectionWidget(
+            ),
+            SectionWidget(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailWidget.SECTION_WIDTH,
@@ -118,6 +125,7 @@ data class SpawnData(
                 color = RGB(248, 208, 213)
             )
         )
+        result.dataWidgets?.let { widgets.addAll(0, it) }
         CobblenavEvents.SPAWN_DATA_WIDGETS_CREATED.emit(
             SpawnDataWidgetsCreatedEvent(this, widgets)
         )
@@ -129,7 +137,9 @@ data class SpawnData(
         buffer.writeString(id)
         result.encode(buffer)
         buffer.writeString(positionType)
-        buffer.writeFloat(spawnChance)
+        buffer.writeString(bucket)
+        buffer.writeFloat(weight)
+        buffer.writeNullable(spawnChance) { buf, chance -> buf.writeFloat(chance) }
         buffer.writeNullable(platformId) { buf, id -> buf.writeIdentifier(id) }
         buffer.writeCollection(conditions) { buf, data ->
             ConditionData.BUFF_CODEC.encode(

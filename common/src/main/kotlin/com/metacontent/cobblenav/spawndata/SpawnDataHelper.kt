@@ -131,6 +131,8 @@ object SpawnDataHelper {
             id = if (canBeShowed) detail.id else "???",
             result = result,
             positionType = detail.spawnablePositionType.name,
+            bucket = detail.bucket.name,
+            weight = detail.weight,
             spawnChance = spawnChance,
             platformId = platformId,
             conditions = conditions,
