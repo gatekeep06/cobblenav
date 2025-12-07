@@ -88,6 +88,31 @@ data class SpawnData(
 
         result.dataWidgets?.let { widgets.addAll(it) }
 
+        widgets.add(
+            SectionWidget(
+                x = 0,
+                y = 0,
+                width = SpawnDataDetailWidget.SECTION_WIDTH,
+                title = Component.translatable("gui.cobblenav.spawn_data.title.rarity"),
+                widgets = listOf(
+                    TextWidget(
+                        x = 0,
+                        y = 0,
+                        width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
+                        text = Component.translatable("gui.cobblenav.spawn_data.bucket")
+                            .append(Component.translatable("bucket.cobblenav.${bucket}"))
+                    ),
+                    TextWidget(
+                        x = 0,
+                        y = 0,
+                        width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
+                        text = Component.translatable("gui.cobblenav.spawn_data.weight", weight)
+                    )
+                ),
+                color = RGB(214, 180, 252)
+            )
+        )
+
         conditionWidgets.takeIf { it.isNotEmpty() }?.let {
             widgets.add(
                 SectionWidget(
