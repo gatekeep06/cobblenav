@@ -84,42 +84,34 @@ data class SpawnData(
             SpawnDataWidgetsCreatedEvent(this, anticonditionWidgets)
         )
 
-        val widgets = mutableListOf<AbstractWidget>(
-            SectionWidget(
-                x = 0,
-                y = 0,
-                width = SpawnDataDetailWidget.SECTION_WIDTH,
-                title = Component.translatable("gui.cobblenav.spawn_data.title.conditions"),
-                widgets = conditionWidgets.ifEmpty {
-                    listOf(
-                        TextWidget(
-                            x = 0,
-                            y = 0,
-                            width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
-                            text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
-                        )
-                    )
-                }
-            ),
-            SectionWidget(
-                x = 0,
-                y = 0,
-                width = SpawnDataDetailWidget.SECTION_WIDTH,
-                title = Component.translatable("gui.cobblenav.spawn_data.title.anticonditions"),
-                widgets = anticonditionWidgets.ifEmpty {
-                    listOf(
-                        TextWidget(
-                            x = 0,
-                            y = 0,
-                            width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
-                            text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
-                        )
-                    )
-                },
-                color = RGB(248, 208, 213)
+        val widgets = mutableListOf<AbstractWidget>()
+
+        result.dataWidgets?.let { widgets.addAll(it) }
+
+        conditionWidgets.takeIf { it.isNotEmpty() }?.let {
+            widgets.add(
+                SectionWidget(
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH,
+                    title = Component.translatable("gui.cobblenav.spawn_data.title.conditions"),
+                    widgets = it
+                )
             )
-        )
-        result.dataWidgets?.let { widgets.addAll(0, it) }
+        }
+        anticonditionWidgets.takeIf { it.isNotEmpty() }?.let {
+            widgets.add(
+                SectionWidget(
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH,
+                    title = Component.translatable("gui.cobblenav.spawn_data.title.anticonditions"),
+                    widgets = it,
+                    color = RGB(248, 208, 213)
+                )
+            )
+        }
+
         CobblenavEvents.SPAWN_DATA_WIDGETS_CREATED.emit(
             SpawnDataWidgetsCreatedEvent(this, widgets)
         )
