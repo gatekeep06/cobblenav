@@ -110,7 +110,7 @@ object SpawnDataHelper {
         val blockConditions = mutableSetOf<ResourceLocation>()
         val anticonditions = mutableListOf<ConditionData>()
         val blockAnticonditions = mutableSetOf<ResourceLocation>()
-        val canBeShowed = !result.isUnknown() || !Cobblenav.config.hideConditionsOfUnknownSpawns
+        val canBeShowed = !result.isUnknown() || !Cobblenav.config.hideUnknownSpawns
         if (canBeShowed) {
             detail.conditions.forEach { condition ->
                 conditions += ConditionCollectors.collectConditions(detail, condition, player, builder)
