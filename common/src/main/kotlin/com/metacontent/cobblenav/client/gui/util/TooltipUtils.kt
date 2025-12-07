@@ -1,51 +1,13 @@
 package com.metacontent.cobblenav.client.gui.util
 
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 import kotlin.math.min
-
-fun GuiGraphics.renderSpawnDataTooltip(
-    spawnData: SpawnData,
-    chanceMultiplier: Float,
-    mouseX: Int,
-    mouseY: Int,
-    x1: Int,
-    y1: Int,
-    x2: Int,
-    y2: Int,
-    lineHeight: Int = 12,
-    opacity: Float = 0.9f,
-    delta: Float = 0f
-) {
-    val body = mutableListOf<MutableComponent>(
-        Component.translatable("gui.cobblenav.spawn_data.spawn_chance", spawnData.spawnChance * chanceMultiplier),
-        Component.translatable("gui.cobblenav.spawn_data.id", spawnData.id),
-        Component.translatable("gui.cobblenav.spawn_data.position_type", spawnData.positionType)
-    )
-
-    this.renderAdvancedTooltip(
-        header = spawnData.result.getResultName(),
-        body = body,
-        mouseX = mouseX,
-        mouseY = mouseY,
-        x1 = x1,
-        y1 = y1,
-        x2 = x2,
-        y2 = y2,
-        lineHeight = lineHeight,
-        opacity = opacity,
-        headerColor = spawnData.result.getColor() + ((opacity * 255).toInt() shl 24),
-        blur = 1f,
-        delta = delta
-    )
-}
 
 fun GuiGraphics.renderMultilineTextTooltip(
     header: MutableComponent,

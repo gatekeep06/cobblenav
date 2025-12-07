@@ -10,7 +10,7 @@ import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataDisplayer
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
-import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -25,7 +25,7 @@ import kotlin.math.PI
 open class SpawnDataWidget(
     x: Int,
     y: Int,
-    val spawnData: SpawnData,
+    val spawnData: CheckedSpawnData,
     private val displayer: SpawnDataDisplayer
 ) : SoundlessWidget(x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Widget")) {
     companion object {
@@ -40,7 +40,7 @@ open class SpawnDataWidget(
     }
 
     private var isModelBroken = false
-    protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.platformId)
+    protected open val platform = BiomePlatformRenderDataRepository.get(spawnData.data.platformId)
     protected open val plate = DimensionPlateRepository.get(Minecraft.getInstance().level?.dimension()?.location())
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
     var isNearby = false
@@ -53,7 +53,7 @@ open class SpawnDataWidget(
             displayer.hoveredData = spawnData
         }
 
-        if (spawnData.result.shouldRenderPlatform()) {
+        if (spawnData.data.result.shouldRenderPlatform()) {
             platform.renderPlatform(
                 poseStack = poseStack,
                 x = x,
@@ -64,7 +64,7 @@ open class SpawnDataWidget(
             )
         }
 
-        if (spawnData.result.shouldRenderPokeBall()) {
+        if (spawnData.data.result.shouldRenderPokeBall()) {
             renderPokeBall(
                 guiGraphics = guiGraphics,
                 x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),
@@ -72,7 +72,7 @@ open class SpawnDataWidget(
             )
         }
 
-        if (isNearby && spawnData.result.shouldRenderPlatform()) {
+        if (isNearby && spawnData.data.result.shouldRenderPlatform()) {
             blitk(
                 matrixStack = poseStack,
                 texture = NEARBY_MARK,
@@ -86,7 +86,7 @@ open class SpawnDataWidget(
         if (!isModelBroken) {
             try {
 //                guiGraphics.fill(x, y, x + width, y + height, FastColor.ARGB32.color(100, 255, 255, 255))
-                spawnData.result.drawResult(
+                spawnData.data.result.drawResult(
                     poseStack = poseStack,
                     x = x.toFloat() + width / 2 + platform.getPokemonXOffset(hovered),
                     y = y.toFloat() + platform.getPokemonYOffset(hovered),
@@ -110,7 +110,7 @@ open class SpawnDataWidget(
         poseStack.pushAndPop(
             translate = Vector3d(0.0, 0.0, 300.0)
         ) {
-            if (spawnData.result.shouldRenderPlatform()) {
+            if (spawnData.data.result.shouldRenderPlatform()) {
                 platform.renderDetails(
                     poseStack = poseStack,
                     x = x,
@@ -130,7 +130,7 @@ open class SpawnDataWidget(
             }
             drawScaledText(
                 guiGraphics,
-                text = Component.literal(getChanceString(spawnData.chanceMultiplier)),
+                text = Component.literal(getChanceString()),
                 x = x + width / 2, y = y + MODEL_HEIGHT + 0.75f,
                 maxCharacterWidth = width,
                 centered = true,
@@ -141,14 +141,14 @@ open class SpawnDataWidget(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
-            displayer.selectedData = spawnData
+            displayer.selectedData = spawnData.data
             return true
         }
         return false
     }
 
-    private fun getChanceString(chanceMultiplier: Float): String {
-        val finalChance = spawnData.spawnChance * chanceMultiplier
+    private fun getChanceString(): String {
+        val finalChance = spawnData.chance * spawnData.chanceMultiplier
         return if (finalChance <= 0.005f) "<0.01%" else FORMAT.format(finalChance) + "%"
     }
 
@@ -159,7 +159,7 @@ open class SpawnDataWidget(
             translate = Vector3d(x, y, 2.0),
             mulPose = Quaternionf()
                 .rotateZ(PI.toFloat())
-                .fromEulerXYZDegrees(spawnData.result.getRotation()),
+                .fromEulerXYZDegrees(spawnData.data.result.getRotation()),
             scale = Vector3f(15f, 15f, -15f)
         ) {
             Minecraft.getInstance().itemRenderer.renderStatic(

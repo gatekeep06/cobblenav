@@ -5,7 +5,6 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.util.dayCycleColor
 import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.renderSpawnDataTooltip
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
 import com.metacontent.cobblenav.client.gui.widget.fishing.FishingContextWidget
@@ -17,6 +16,7 @@ import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingMapPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScreenInitDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
+import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
 import net.minecraft.client.gui.GuiGraphics
@@ -57,7 +57,7 @@ class FishingnavScreen(
 
     var loading = false
     override var displayedData: List<SpawnData>? = null
-    override var hoveredData: SpawnData? = null
+    override var hoveredData: CheckedSpawnData? = null
     override var selectedData: SpawnData? = null
     lateinit var buckets: List<WeightedBucket>
     private lateinit var fishingContextWidget: FishingContextWidget
@@ -207,33 +207,34 @@ class FishingnavScreen(
         RequestFishingMapPacket().sendToServer()
     }
 
-    fun receiveFishingMap(fishingMap: Map<String, List<SpawnData>>) {
+    fun receiveFishingMap(fishingMap: Map<String, List<CheckedSpawnData>>) {
         fishingMap.forEach { (bucketName, spawnDatas) ->
             bucketViews.find { it.bucket.name == bucketName }?.let { view ->
-                view.add(spawnDatas
-                    .sortedWith { firstData, secondData ->
-                        -compareValues(
-                            firstData.spawnChance,
-                            secondData.spawnChance
-                        )
-                    }
-                    .map {
-                        it.chanceMultiplier = view.bucket.chance * POKEMON_CHANCE
-                        ScrollableItemWidget(
-                            child = SpawnDataWidget(
-                                x = 0,
-                                y = 0,
-                                spawnData = it,
-                                displayer = this
-                            ),
-                            topEdge = screenY + HORIZONTAL_BORDER_DEPTH,
-                            bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH
-                        )
-                    }
+                view.add(
+                    spawnDatas
+                        .sortedWith { firstData, secondData ->
+                            -compareValues(
+                                firstData.chance,
+                                secondData.chance
+                            )
+                        }
+                        .map {
+                            it.chanceMultiplier = view.bucket.chance * POKEMON_CHANCE
+                            ScrollableItemWidget(
+                                child = SpawnDataWidget(
+                                    x = 0,
+                                    y = 0,
+                                    spawnData = it,
+                                    displayer = this
+                                ),
+                                topEdge = screenY + HORIZONTAL_BORDER_DEPTH,
+                                bottomEdge = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH
+                            )
+                        }
                 )
             }
         }
-        displayedData = bucketViews.flatMap { views -> views.items.map { it.child.spawnData } }
+        displayedData = bucketViews.flatMap { views -> views.items.map { it.child.spawnData.data } }
         loading = false
         refreshButton.disabled = false
     }
@@ -263,19 +264,16 @@ class FishingnavScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredData?.let {
-            guiGraphics.renderSpawnDataTooltip(
-                spawnData = it,
-                chanceMultiplier = it.chanceMultiplier,
-                mouseX = mouseX,
-                mouseY = mouseY,
-                x1 = screenX + VERTICAL_BORDER_DEPTH,
-                y1 = screenY + HORIZONTAL_BORDER_DEPTH,
-                x2 = screenX + WIDTH - VERTICAL_BORDER_DEPTH,
-                y2 = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH,
-                delta = delta
-            )
-        }
+        hoveredData?.renderTooltip(
+            guiGraphics = guiGraphics,
+            mouseX = mouseX,
+            mouseY = mouseY,
+            x1 = screenX + VERTICAL_BORDER_DEPTH,
+            y1 = screenY + HORIZONTAL_BORDER_DEPTH,
+            x2 = screenX + WIDTH - VERTICAL_BORDER_DEPTH,
+            y2 = screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH,
+            delta = delta
+        )
         hoveredData = null
     }
 

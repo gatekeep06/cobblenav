@@ -2,10 +2,8 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.readIdentifier
-import com.cobblemon.mod.common.util.readNullable
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
-import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
@@ -46,7 +44,6 @@ data class SpawnData(
             blockAnticonditions = BlockConditions.decode(buffer)
         )
     }
-
 
     val dataWidgets: List<AbstractWidget> by lazy {
         val conditionWidgets: MutableList<AbstractWidget> = conditions.map {
