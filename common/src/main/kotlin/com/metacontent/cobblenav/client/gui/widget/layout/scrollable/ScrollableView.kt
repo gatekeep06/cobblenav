@@ -28,7 +28,12 @@ class ScrollableView(
     private val scrollThumb = ScrollThumbWidget(x + width - ScrollThumbWidget.WIDTH, y, this).also { addWidget(it) }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        if (scrolled > 0 && scrolled > child.height - height) scrolled -= (scrollMultiplier * f).toInt()
+        if (scrolled > child.height - height) {
+            scrolled -= (scrollMultiplier * f).toInt()
+            if (scrolled < child.height - height) {
+                scrolled = child.height - height
+            }
+        }
 
         guiGraphics.cobblenavScissor(x, y - scissorSpreading, x + width, y + height + scissorSpreading)
         child.render(guiGraphics, i, j, f)
