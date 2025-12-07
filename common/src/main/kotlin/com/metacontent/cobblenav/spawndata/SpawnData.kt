@@ -40,7 +40,7 @@ data class SpawnData(
             positionType = buffer.readString(),
             bucket = buffer.readString(),
             weight = buffer.readFloat(),
-            spawnChance = buffer.readNullable { it.readFloat() },
+            spawnChance = buffer.readFloat(),
             platformId = buffer.readNullable { it.readIdentifier() },
             conditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
             anticonditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
@@ -139,7 +139,7 @@ data class SpawnData(
         buffer.writeString(positionType)
         buffer.writeString(bucket)
         buffer.writeFloat(weight)
-        buffer.writeNullable(spawnChance) { buf, chance -> buf.writeFloat(chance) }
+        buffer.writeFloat(spawnChance)
         buffer.writeNullable(platformId) { buf, id -> buf.writeIdentifier(id) }
         buffer.writeCollection(conditions) { buf, data ->
             ConditionData.BUFF_CODEC.encode(
