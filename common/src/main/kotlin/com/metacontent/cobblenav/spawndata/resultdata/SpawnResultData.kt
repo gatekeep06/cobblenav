@@ -5,8 +5,8 @@ import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 import org.joml.Vector3f
@@ -35,6 +35,8 @@ interface SpawnResultData : Encodable {
     }
 
     val type: String
+
+    val dataWidgets: List<AbstractWidget>?
 
     fun drawResult(
         poseStack: PoseStack,

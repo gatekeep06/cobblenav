@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.spawndata.resultdata
 import com.cobblemon.mod.common.api.npc.NPCClass
 import com.cobblemon.mod.common.api.spawning.detail.NPCSpawnDetail
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -18,6 +19,9 @@ class NPCSpawnResultData(
     }
 
     override val type = NPCSpawnDetail.TYPE
+
+    override val dataWidgets: List<AbstractWidget>? = null
+
     override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
         TODO("Not yet implemented")
     }

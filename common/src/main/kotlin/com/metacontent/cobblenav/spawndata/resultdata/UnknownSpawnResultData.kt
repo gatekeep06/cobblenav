@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -28,6 +29,8 @@ class UnknownSpawnResultData(
     }
 
     override val type = TYPE
+
+    override val dataWidgets: List<AbstractWidget>? = null
 
     override fun drawResult(poseStack: PoseStack, x: Float, y: Float, z: Float, delta: Float) {
         val width = SpawnDataWidget.MODEL_HEIGHT - 16

@@ -13,10 +13,13 @@ import com.cobblemon.mod.common.util.writeIdentifier
 import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.gui.widget.TextWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -84,6 +87,28 @@ class PokemonSpawnResultData(
     }
 
     override val type = PokemonSpawnDetail.TYPE
+
+    override val dataWidgets: List<AbstractWidget>? by lazy {
+        val widgets = mutableListOf<AbstractWidget>(
+            TextWidget(
+                x = 0,
+                y = 0,
+                width = SpawnDataDetailWidget.SECTION_WIDTH - 2,
+                text = pokemon.species.translatedName
+            )
+        )
+        level?.let {
+            widgets.add(
+                TextWidget(
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH - 2,
+                    text = Component.literal("${it.first} - ${it.last}")
+                )
+            )
+        }
+        widgets
+    }
 
     private val renderer: PokemonSpawnResultRenderer by lazy {
         when (positionType) {
