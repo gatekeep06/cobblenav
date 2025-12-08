@@ -119,6 +119,10 @@ object SpawnDataHelper {
                 anticonditions += ConditionCollectors.collectConditions(detail, condition, player)
                 blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
             }
+        } else {
+            val condition = ConditionData("unknown", 0xffffff, emptyList())
+            conditions += condition
+            anticonditions += condition
         }
         val platformId = BiomePlatforms.firstFitting(builder.build())
 
