@@ -50,6 +50,7 @@
   "gui.cobblenav.info_button.header.egg_move": "Egg Move",
   "gui.cobblenav.info_button.body.egg_move": "Egg move of the Pokémon found. Marked with an exclamation mark if present",
   "gui.cobblenav.notification.pokefinder_updated": "Pokémon added to PokéFinder",
+  "gui.cobblenav.notification.catalogue_updated": "The spawn catalogue has been updated with %s",
 
   "gui.cobblenav.species": "Species",
   "gui.cobblenav.aspects": "Aspects",
