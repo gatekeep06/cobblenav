@@ -28,15 +28,17 @@ class SpawnDataCatalogue(
             }
         }
 
-        fun executeAndSave(uuid: UUID, action: (SpawnDataCatalogue) -> Boolean) {
+        fun executeAndSave(uuid: UUID, action: (SpawnDataCatalogue) -> Boolean): Boolean {
             val data = Cobblemon.playerDataManager.getSpawnDataCatalogue(uuid)
-            if (action(data)) {
-                Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.SPAWN_DATA)
+            return action(data).also {
+                if (it) {
+                    Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.SPAWN_DATA)
+                }
             }
         }
 
-        fun executeAndSave(player: ServerPlayer, action: (SpawnDataCatalogue) -> Boolean) {
-            executeAndSave(player.uuid, action)
+        fun executeAndSave(player: ServerPlayer, action: (SpawnDataCatalogue) -> Boolean): Boolean {
+            return executeAndSave(player.uuid, action)
         }
     }
 
