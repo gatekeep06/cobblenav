@@ -21,6 +21,6 @@ public abstract class PokemonSpawnActionMixin {
         BucketPropertyType.apply(pokemon, detail.getBucket().name);
     }
 
-    @Shadow(remap = false)
+    @Shadow
     public abstract SpawnDetail getDetail();
 }
