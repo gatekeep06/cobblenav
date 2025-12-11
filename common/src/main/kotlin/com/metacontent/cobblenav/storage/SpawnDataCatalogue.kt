@@ -9,6 +9,7 @@ import com.metacontent.cobblenav.util.getSpawnDataCatalogue
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
@@ -42,7 +43,10 @@ class SpawnDataCatalogue(
 
     fun catalogue(id: String): Boolean {
         return spawnDetailIds.add(id).also {
-            if (it) onCatalogueUpdated()
+            if (it) {
+                player?.sendSystemMessage(Component.translatable("gui.cobblenav.notification.catalogue_updated", id))
+                onCatalogueUpdated()
+            }
         }
     }
 
