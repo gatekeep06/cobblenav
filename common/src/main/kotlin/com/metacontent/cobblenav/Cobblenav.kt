@@ -1,9 +1,14 @@
 package com.metacontent.cobblenav
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
+import com.cobblemon.mod.common.api.scheduling.ScheduledTask
+import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
+import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
 import com.cobblemon.mod.common.data.CobblemonDataProvider
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
@@ -12,12 +17,17 @@ import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
+import com.metacontent.cobblenav.properties.BucketPropertyType
+import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.PokenavSpawnablePositionResolver
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.PokemonHerdSpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.PokemonSpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
+import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
+import com.metacontent.cobblenav.storage.SpawnDataCatalogue
+import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -54,9 +64,43 @@ object Cobblenav {
             ConditionCollectors.init()
         }
 
+        PlatformEvents.SERVER_STARTED.subscribe { (server) ->
+            val spawnDataNbtFactory = CachedPlayerDataStoreFactory(SpawnDataCatalogueNbtBackend())
+            spawnDataNbtFactory.setup(server)
+
+            val manager = Cobblemon.playerDataManager
+            manager.setFactory(spawnDataNbtFactory, CobblenavDataStoreTypes.SPAWN_DATA)
+            manager.saveTasks[CobblenavDataStoreTypes.SPAWN_DATA] = ScheduledTask.Builder()
+                .execute { manager.saveAllOfOneType(CobblenavDataStoreTypes.SPAWN_DATA) }
+                .delay(30f)
+                .interval(120f)
+                .infiniteIterations()
+                .tracker(ServerTaskTracker)
+                .build()
+        }
+
         SpawnResultData.register(PokemonSpawnDetail.TYPE, PokemonSpawnResultData::transform, PokemonSpawnResultData::decodeResultData)
         SpawnResultData.register(PokemonHerdSpawnDetail.TYPE, PokemonHerdSpawnResultData::transform, PokemonHerdSpawnResultData::decodeResultData)
         SpawnResultData.register(UnknownSpawnResultData.TYPE, UnknownSpawnResultData::transform, UnknownSpawnResultData::decodeResultData)
+
+        CustomPokemonProperty.register(SpawnDetailIdPropertyType)
+        CustomPokemonProperty.register(BucketPropertyType)
+
+        CobblemonEvents.POKEMON_SCANNED.subscribe { (player, data, _) ->
+            SpawnDetailIdPropertyType.extract(data.pokemon)?.let { id ->
+                SpawnDataCatalogue.executeAndSave(player) { data ->
+                    data.catalogue(id)
+                }
+            }
+        }
+
+        CobblemonEvents.POKEMON_CAPTURED.subscribe { (pokemon, player, _) ->
+            SpawnDetailIdPropertyType.extract(pokemon)?.let { id ->
+                SpawnDataCatalogue.executeAndSave(player) { data ->
+                    data.catalogue(id)
+                }
+            }
+        }
     }
 
     private fun registerArgumentTypes() {
