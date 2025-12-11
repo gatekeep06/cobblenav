@@ -4,7 +4,6 @@ import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerD
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -29,7 +28,6 @@ class ClientSpawnDataCatalogue(
         fun incrementalAfterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
                 CobblenavClient.spawnDataCatalogue.spawnDetailIds.addAll(data.spawnDetailIds)
-                Cobblenav.LOGGER.error(CobblenavClient.spawnDataCatalogue.spawnDetailIds.joinToString())
             }
         }
     }
