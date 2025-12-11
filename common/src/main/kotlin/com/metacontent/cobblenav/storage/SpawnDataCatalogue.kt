@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.storage
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
@@ -49,6 +50,10 @@ class SpawnDataCatalogue(
             }
         }
     }
+    
+    fun contains(detailId: String) = spawnDetailIds.contains(detailId)
+
+    fun contains(detail: SpawnDetail) = contains(detail.id)
 
     private fun onCatalogueUpdated() {
         player?.let {

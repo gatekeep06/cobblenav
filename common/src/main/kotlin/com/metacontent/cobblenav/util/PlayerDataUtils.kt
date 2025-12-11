@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.util
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.storage.player.PlayerInstancedDataStoreManager
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.SpawnDataCatalogue
@@ -11,3 +12,5 @@ fun PlayerInstancedDataStoreManager.getSpawnDataCatalogue(playerId: UUID): Spawn
 
 fun PlayerInstancedDataStoreManager.getSpawnDataCatalogue(player: ServerPlayer): SpawnDataCatalogue =
     getSpawnDataCatalogue(player.uuid)
+
+fun ServerPlayer.spawnCatalogue() = Cobblemon.playerDataManager.getSpawnDataCatalogue(this)
