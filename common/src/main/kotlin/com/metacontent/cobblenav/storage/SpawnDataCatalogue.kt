@@ -50,7 +50,7 @@ class SpawnDataCatalogue(
             }
         }
     }
-    
+
     fun contains(detailId: String) = spawnDetailIds.contains(detailId)
 
     fun contains(detail: SpawnDetail) = contains(detail.id)

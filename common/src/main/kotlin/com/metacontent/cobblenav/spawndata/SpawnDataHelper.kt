@@ -19,6 +19,7 @@ import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
+import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
@@ -110,7 +111,9 @@ object SpawnDataHelper {
         val blockConditions = mutableSetOf<ResourceLocation>()
         val anticonditions = mutableListOf<ConditionData>()
         val blockAnticonditions = mutableSetOf<ResourceLocation>()
-        if (!result.isUnknown() || !Cobblenav.config.hideConditionsOfUnknownSpawns) {
+        val canShowConditions = (!result.isUnknown() || !Cobblenav.config.hideConditionsOfUnknownSpawns)
+                && player.spawnCatalogue().contains(detail)
+        if (canShowConditions) {
             detail.conditions.forEach { condition ->
                 conditions += ConditionCollectors.collectConditions(detail, condition, player, builder)
                 blockConditions += ConditionCollectors.collectBlockConditions(condition)
