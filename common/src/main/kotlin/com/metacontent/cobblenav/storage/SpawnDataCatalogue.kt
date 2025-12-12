@@ -16,8 +16,8 @@ import java.util.*
 
 class SpawnDataCatalogue(
     override val uuid: UUID,
-    val spawnDetailIds: MutableSet<String>
-) : InstancedPlayerData {
+    spawnDetailIds: MutableSet<String>
+) : AbstractSpawnDataCatalogue(spawnDetailIds), InstancedPlayerData {
     companion object {
         val CODEC: Codec<SpawnDataCatalogue> = RecordCodecBuilder.create<SpawnDataCatalogue> { instance ->
             instance.group(
@@ -52,10 +52,6 @@ class SpawnDataCatalogue(
             }
         }
     }
-
-    fun contains(detailId: String) = spawnDetailIds.contains(detailId)
-
-    fun contains(detail: SpawnDetail) = contains(detail.id)
 
     private fun onCatalogueUpdated() {
         player?.let {
