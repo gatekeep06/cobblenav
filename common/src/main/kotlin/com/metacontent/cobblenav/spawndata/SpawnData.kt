@@ -2,10 +2,8 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.readIdentifier
-import com.cobblemon.mod.common.util.readNullable
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
-import com.cobblemon.mod.common.util.writeNullable
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
@@ -26,7 +24,6 @@ data class SpawnData(
     val positionType: String,
     val bucket: String,
     val weight: Float,
-    val spawnChance: Float,
     val platformId: ResourceLocation?,
     val conditions: List<ConditionData>,
     val anticonditions: List<ConditionData>,
@@ -40,7 +37,6 @@ data class SpawnData(
             positionType = buffer.readString(),
             bucket = buffer.readString(),
             weight = buffer.readFloat(),
-            spawnChance = buffer.readFloat(),
             platformId = buffer.readNullable { it.readIdentifier() },
             conditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
             anticonditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
@@ -48,8 +44,6 @@ data class SpawnData(
             blockAnticonditions = BlockConditions.decode(buffer)
         )
     }
-
-    var chanceMultiplier = 1f
 
     val dataWidgets: List<AbstractWidget> by lazy {
         val conditionWidgets: MutableList<AbstractWidget> = conditions.map {
@@ -90,42 +84,59 @@ data class SpawnData(
             SpawnDataWidgetsCreatedEvent(this, anticonditionWidgets)
         )
 
-        val widgets = mutableListOf<AbstractWidget>(
+        val widgets = mutableListOf<AbstractWidget>()
+
+        result.dataWidgets?.let { widgets.addAll(it) }
+
+        widgets.add(
             SectionWidget(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailWidget.SECTION_WIDTH,
-                title = Component.translatable("gui.cobblenav.spawn_data.title.conditions"),
-                widgets = conditionWidgets.ifEmpty {
-                    listOf(
-                        TextWidget(
-                            x = 0,
-                            y = 0,
-                            width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
-                            text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
-                        )
+                title = Component.translatable("gui.cobblenav.spawn_data.title.rarity"),
+                widgets = listOf(
+                    TextWidget(
+                        x = 0,
+                        y = 0,
+                        width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
+                        text = Component.translatable("gui.cobblenav.spawn_data.bucket")
+                            .append(Component.translatable("bucket.cobblenav.${bucket}"))
+                    ),
+                    TextWidget(
+                        x = 0,
+                        y = 0,
+                        width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
+                        text = Component.translatable("gui.cobblenav.spawn_data.weight", weight)
                     )
-                }
-            ),
-            SectionWidget(
-                x = 0,
-                y = 0,
-                width = SpawnDataDetailWidget.SECTION_WIDTH,
-                title = Component.translatable("gui.cobblenav.spawn_data.title.anticonditions"),
-                widgets = anticonditionWidgets.ifEmpty {
-                    listOf(
-                        TextWidget(
-                            x = 0,
-                            y = 0,
-                            width = SpawnDataDetailWidget.SECTION_WIDTH - 8,
-                            text = Component.translatable("gui.cobblenav.spawn_data.no_conditions")
-                        )
-                    )
-                },
-                color = RGB(248, 208, 213)
+                ),
+                color = RGB(214, 180, 252)
             )
         )
-        result.dataWidgets?.let { widgets.addAll(0, it) }
+
+        conditionWidgets.takeIf { it.isNotEmpty() }?.let {
+            widgets.add(
+                SectionWidget(
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH,
+                    title = Component.translatable("gui.cobblenav.spawn_data.title.conditions"),
+                    widgets = it
+                )
+            )
+        }
+        anticonditionWidgets.takeIf { it.isNotEmpty() }?.let {
+            widgets.add(
+                SectionWidget(
+                    x = 0,
+                    y = 0,
+                    width = SpawnDataDetailWidget.SECTION_WIDTH,
+                    title = Component.translatable("gui.cobblenav.spawn_data.title.anticonditions"),
+                    widgets = it,
+                    color = RGB(248, 208, 213)
+                )
+            )
+        }
+
         CobblenavEvents.SPAWN_DATA_WIDGETS_CREATED.emit(
             SpawnDataWidgetsCreatedEvent(this, widgets)
         )
@@ -139,7 +150,6 @@ data class SpawnData(
         buffer.writeString(positionType)
         buffer.writeString(bucket)
         buffer.writeFloat(weight)
-        buffer.writeFloat(spawnChance)
         buffer.writeNullable(platformId) { buf, id -> buf.writeIdentifier(id) }
         buffer.writeCollection(conditions) { buf, data ->
             ConditionData.BUFF_CODEC.encode(

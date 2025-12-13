@@ -1,10 +1,11 @@
 package com.metacontent.cobblenav.client.gui.screen
 
+import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
 
 interface SpawnDataDisplayer {
     val displayedData: List<SpawnData>?
-    var hoveredData: SpawnData?
+    var hoveredData: CheckedSpawnData?
     var selectedData: SpawnData?
 
     fun isBlockingTooltip(): Boolean

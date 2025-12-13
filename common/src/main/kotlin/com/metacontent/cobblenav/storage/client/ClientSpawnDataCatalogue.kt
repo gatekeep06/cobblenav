@@ -5,12 +5,13 @@ import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.storage.AbstractSpawnDataCatalogue
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class ClientSpawnDataCatalogue(
-    val spawnDetailIds: MutableSet<String> = mutableSetOf()
-) : ClientInstancedPlayerData {
+    spawnDetailIds: MutableSet<String> = mutableSetOf()
+) : AbstractSpawnDataCatalogue(spawnDetailIds), ClientInstancedPlayerData {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket = SetClientPlayerDataPacket(
             type = CobblenavDataStoreTypes.SPAWN_DATA,

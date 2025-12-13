@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.storage
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
@@ -15,8 +16,8 @@ import java.util.*
 
 class SpawnDataCatalogue(
     override val uuid: UUID,
-    val spawnDetailIds: MutableSet<String>
-) : InstancedPlayerData {
+    spawnDetailIds: MutableSet<String>
+) : AbstractSpawnDataCatalogue(spawnDetailIds), InstancedPlayerData {
     companion object {
         val CODEC: Codec<SpawnDataCatalogue> = RecordCodecBuilder.create<SpawnDataCatalogue> { instance ->
             instance.group(
@@ -27,15 +28,17 @@ class SpawnDataCatalogue(
             }
         }
 
-        fun executeAndSave(uuid: UUID, action: (SpawnDataCatalogue) -> Boolean) {
+        fun executeAndSave(uuid: UUID, action: (SpawnDataCatalogue) -> Boolean): Boolean {
             val data = Cobblemon.playerDataManager.getSpawnDataCatalogue(uuid)
-            if (action(data)) {
-                Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.SPAWN_DATA)
+            return action(data).also {
+                if (it) {
+                    Cobblemon.playerDataManager.saveSingle(data, CobblenavDataStoreTypes.SPAWN_DATA)
+                }
             }
         }
 
-        fun executeAndSave(player: ServerPlayer, action: (SpawnDataCatalogue) -> Boolean) {
-            executeAndSave(player.uuid, action)
+        fun executeAndSave(player: ServerPlayer, action: (SpawnDataCatalogue) -> Boolean): Boolean {
+            return executeAndSave(player.uuid, action)
         }
     }
 

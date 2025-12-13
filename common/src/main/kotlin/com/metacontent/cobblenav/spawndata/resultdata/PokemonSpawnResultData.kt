@@ -6,14 +6,11 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
-import com.cobblemon.mod.common.util.pokedex
-import com.cobblemon.mod.common.util.readIdentifier
-import com.cobblemon.mod.common.util.readString
-import com.cobblemon.mod.common.util.writeIdentifier
-import com.cobblemon.mod.common.util.writeNullable
-import com.cobblemon.mod.common.util.writeString
+import com.cobblemon.mod.common.util.*
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
+import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
@@ -94,7 +91,8 @@ class PokemonSpawnResultData(
                 x = 0,
                 y = 0,
                 width = SpawnDataDetailWidget.SECTION_WIDTH - 2,
-                text = pokemon.species.translatedName
+                text = Component.translatable("gui.cobblenav.spawn_data.pokemon")
+                    .append(pokemon.species.translatedName)
             )
         )
         level?.let {
@@ -103,11 +101,20 @@ class PokemonSpawnResultData(
                     x = 0,
                     y = 0,
                     width = SpawnDataDetailWidget.SECTION_WIDTH - 2,
-                    text = Component.literal("${it.first} - ${it.last}")
+                    text = Component.translatable("gui.cobblenav.spawn_data.level", "${it.first} - ${it.last}")
                 )
             )
         }
-        widgets
+        listOf(
+            SectionWidget(
+                x = 0,
+                y = 0,
+                width = SpawnDataDetailWidget.SECTION_WIDTH,
+                title = Component.translatable("gui.cobblenav.spawn_data.title.result"),
+                widgets = widgets,
+                color = RGB(144, 213, 255)
+            )
+        )
     }
 
     private val renderer: PokemonSpawnResultRenderer by lazy {

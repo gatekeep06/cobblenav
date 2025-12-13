@@ -20,6 +20,7 @@ import com.metacontent.cobblenav.client.settings.PokenavPreferences
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.os.PokenavOS
+import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
 import com.mojang.blaze3d.vertex.PoseStack
@@ -64,7 +65,7 @@ class LocationScreen(
     var viewX = 0
     var viewY = 0
     override val color = FastColor.ARGB32.color(255, 63, 126, 101)
-    private val spawnDataMap = mutableMapOf<String, List<SpawnData>>()
+    private val spawnDataMap = mutableMapOf<String, List<CheckedSpawnData>>()
     lateinit var buckets: List<WeightedBucket>
     var bucketIndex = -1
         set(value) {
@@ -86,8 +87,8 @@ class LocationScreen(
     private val timer = Timer(LOADING_LOOP_DURATION, true)
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / FRAME_WIDTH
     override val displayedData: List<SpawnData>
-        get() = tableView.items.map { it.child.spawnData }
-    override var hoveredData: SpawnData? = null
+        get() = tableView.items.map { it.child.spawnData.data }
+    override var hoveredData: CheckedSpawnData? = null
     override var selectedData: SpawnData? = null
     private lateinit var tableView: TableView<ScrollableItemWidget<SpawnDataWidget>>
     private lateinit var scrollableView: ScrollableView
@@ -237,7 +238,7 @@ class LocationScreen(
         sortButton.disabled = false
     }
 
-    fun receiveSpawnData(spawnDataList: List<SpawnData>) {
+    fun receiveSpawnData(spawnDataList: List<CheckedSpawnData>) {
         this.spawnDataMap[currentBucket.name] = spawnDataList
         createSpawnDataWidgets(spawnDataList)
         loading = false
@@ -283,19 +284,16 @@ class LocationScreen(
 
     override fun renderOnFrontLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (blockWidgets || minecraft?.screen != this) return
-        hoveredData?.let {
-            guiGraphics.renderSpawnDataTooltip(
-                spawnData = it,
-                chanceMultiplier = it.chanceMultiplier,
-                mouseX = mouseX,
-                mouseY = mouseY,
-                x1 = viewX,
-                y1 = viewY,
-                x2 = viewX + VIEW_WIDTH,
-                y2 = viewY + VIEW_HEIGHT,
-                delta = delta
-            )
-        }
+        hoveredData?.renderTooltip(
+            guiGraphics = guiGraphics,
+            mouseX = mouseX,
+            mouseY = mouseY,
+            x1 = viewX,
+            y1 = viewY,
+            x2 = viewX + VIEW_WIDTH,
+            y2 = viewY + VIEW_HEIGHT,
+            delta = delta
+        )
         hoveredData = null
     }
 
@@ -344,15 +342,15 @@ class LocationScreen(
 
     private fun onSortingChange() {
         sortButton.texture = if (sorting == Sorting.ASCENDING) SORT_ASCENDING else SORT_DESCENDING
-        tableView.resort(sorting) { widget -> widget.child.spawnData.spawnChance }
+        tableView.resort(sorting) { widget -> widget.child.spawnData.chance }
     }
 
-    private fun createSpawnDataWidgets(spawnDataList: List<SpawnData>) {
+    private fun createSpawnDataWidgets(spawnDataList: List<CheckedSpawnData>) {
         val spawnDataWidgets = spawnDataList
             .sortedWith { firstData, secondData ->
                 compareValues(
-                    firstData.spawnChance,
-                    secondData.spawnChance
+                    firstData.chance,
+                    secondData.chance
                 ) * sorting.multiplier
             }
             .map {
@@ -386,7 +384,7 @@ class LocationScreen(
             ).map { it.pokemon.form.showdownId() }.toHashSet()
         } ?: hashSetOf()
         tableView.applyToAll { item ->
-            item.child.isNearby = item.child.spawnData.result.containsResult(nearbyPokemon)
+            item.child.isNearby = item.child.spawnData.data.result.containsResult(nearbyPokemon)
         }
     }
 
