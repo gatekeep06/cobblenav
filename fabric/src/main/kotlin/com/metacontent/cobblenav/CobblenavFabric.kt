@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav
 
+import com.metacontent.cobblenav.command.CobblenavCommands
 import com.metacontent.cobblenav.util.ModDependency
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.brigadier.arguments.ArgumentType

@@ -61,6 +61,8 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTING.subscribe {
+            CustomPokemonProperty.register(SpawnDetailIdPropertyType)
+            CustomPokemonProperty.register(BucketPropertyType)
             ConditionCollectors.init()
         }
 
@@ -82,9 +84,6 @@ object Cobblenav {
         SpawnResultData.register(PokemonSpawnDetail.TYPE, PokemonSpawnResultData::transform, PokemonSpawnResultData::decodeResultData)
         SpawnResultData.register(PokemonHerdSpawnDetail.TYPE, PokemonHerdSpawnResultData::transform, PokemonHerdSpawnResultData::decodeResultData)
         SpawnResultData.register(UnknownSpawnResultData.TYPE, UnknownSpawnResultData::transform, UnknownSpawnResultData::decodeResultData)
-
-        CustomPokemonProperty.register(SpawnDetailIdPropertyType)
-        CustomPokemonProperty.register(BucketPropertyType)
 
         CobblemonEvents.POKEMON_SCANNED.subscribe { (player, data, _) ->
             SpawnDetailIdPropertyType.extract(data.pokemon)?.let { id ->

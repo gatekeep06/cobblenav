@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.neoforge
 
 import com.metacontent.cobblenav.*
+import com.metacontent.cobblenav.command.CobblenavCommands
 import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
 import com.metacontent.cobblenav.util.ModDependency
 import com.metacontent.cobblenav.util.cobblenavResource

@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav
+package com.metacontent.cobblenav.command
 
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandBuildContext
@@ -7,5 +7,6 @@ import net.minecraft.commands.Commands
 
 object CobblenavCommands {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>, registry: CommandBuildContext, selection: Commands.CommandSelection) {
+        TestSpawnsCommand.register(dispatcher)
     }
 }
