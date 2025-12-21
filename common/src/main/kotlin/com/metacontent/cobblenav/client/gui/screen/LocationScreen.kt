@@ -25,6 +25,7 @@ import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.util.WeightedBucket
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
@@ -35,7 +36,8 @@ import kotlin.math.min
 class LocationScreen(
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
-    animateOpening: Boolean = false
+    animateOpening: Boolean = false,
+    val fixedAreaPoint: BlockPos? = null
 ) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Location")), SpawnDataDisplayer {
     companion object {
         val LOADING = gui("location/loading_animation")
@@ -310,7 +312,7 @@ class LocationScreen(
     private fun requestSpawnData() {
         loading = true
         refreshButton.disabled = true
-        RequestSpawnMapPacket(currentBucket.name).sendToServer()
+        RequestSpawnMapPacket(currentBucket.name, fixedAreaPoint).sendToServer()
     }
 
     override fun onScreenChange() {
