@@ -9,8 +9,6 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     val hideNaturalBlockConditions = true
     val percentageForKnownHerd = 0.5f
     val syncLabelsWithClient = true
-    val checkSpawnWidth = 8
-    val checkSpawnHeight = 16
     val searchAreaWidth = 200.0
     val searchAreaHeight = 200.0
     val pokemonFeatureWeights = FeatureWeights.BASE

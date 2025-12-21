@@ -30,10 +30,9 @@ import kotlin.math.ceil
 
 object SpawnDataHelper {
     fun checkPlayerSpawns(player: ServerPlayer, bucket: String): List<CheckedSpawnData> {
-        val cobblemonConfig = Cobblemon.config
-        val config = Cobblenav.config
+        val config = Cobblemon.config
 
-        if (!cobblemonConfig.enableSpawning) return emptyList()
+        if (!config.enableSpawning) return emptyList()
 
         val spawner = player.spawner
         val bucket = Cobblemon.bestSpawner.config.buckets.firstOrNull { it.name == bucket } ?: run {
@@ -46,12 +45,12 @@ object SpawnDataHelper {
             spawner = spawner,
             input = SpawningZoneInput(
                 cause, player.serverLevel(),
-                ceil(player.x - config.checkSpawnWidth / 2f).toInt(),
-                ceil(player.y - config.checkSpawnHeight / 2f).toInt(),
-                ceil(player.z - config.checkSpawnWidth / 2f).toInt(),
-                config.checkSpawnWidth,
-                config.checkSpawnHeight,
-                config.checkSpawnWidth
+                ceil(player.x - config.spawningZoneDiameter / 2f).toInt(),
+                ceil(player.y - config.spawningZoneHeight / 2f).toInt(),
+                ceil(player.z - config.spawningZoneDiameter / 2f).toInt(),
+                config.spawningZoneDiameter,
+                config.spawningZoneHeight,
+                config.spawningZoneDiameter
             )
         )
         val spawnablePositions = Cobblenav.resolver.resolve(
