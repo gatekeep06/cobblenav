@@ -20,13 +20,13 @@ import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.properties.BucketPropertyType
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.PokenavSpawnablePositionResolver
+import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.PokemonHerdSpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.PokemonSpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
-import com.metacontent.cobblenav.storage.SpawnDataCatalogue
 import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
@@ -61,6 +61,8 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTING.subscribe {
+            CustomPokemonProperty.register(SpawnDetailIdPropertyType)
+            CustomPokemonProperty.register(BucketPropertyType)
             ConditionCollectors.init()
         }
 
@@ -83,24 +85,7 @@ object Cobblenav {
         SpawnResultData.register(PokemonHerdSpawnDetail.TYPE, PokemonHerdSpawnResultData::transform, PokemonHerdSpawnResultData::decodeResultData)
         SpawnResultData.register(UnknownSpawnResultData.TYPE, UnknownSpawnResultData::transform, UnknownSpawnResultData::decodeResultData)
 
-        CustomPokemonProperty.register(SpawnDetailIdPropertyType)
-        CustomPokemonProperty.register(BucketPropertyType)
-
-        CobblemonEvents.POKEMON_SCANNED.subscribe { (player, data, _) ->
-            SpawnDetailIdPropertyType.extract(data.pokemon)?.let { id ->
-                SpawnDataCatalogue.executeAndSave(player) { data ->
-                    data.catalogue(id)
-                }
-            }
-        }
-
-        CobblemonEvents.POKEMON_CAPTURED.subscribe { (pokemon, player, _) ->
-            SpawnDetailIdPropertyType.extract(pokemon)?.let { id ->
-                SpawnDataCatalogue.executeAndSave(player) { data ->
-                    data.catalogue(id)
-                }
-            }
-        }
+        SpawnDataHelper.onInit()
     }
 
     private fun registerArgumentTypes() {

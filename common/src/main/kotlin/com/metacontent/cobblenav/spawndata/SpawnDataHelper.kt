@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
@@ -12,13 +13,16 @@ import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePosit
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.spawner
 import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
+import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
+import com.metacontent.cobblenav.storage.SpawnDataCatalogue
 import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -142,5 +146,29 @@ object SpawnDataHelper {
             blockConditions = BlockConditions(blockConditions),
             blockAnticonditions = BlockConditions(blockAnticonditions)
         )
+    }
+
+    fun onInit() {
+        CobblemonEvents.POKEMON_SCANNED.subscribe { (player, data, _) ->
+            player.catalogueDetailId(data.pokemon)
+        }
+
+        CobblemonEvents.POKEMON_CAPTURED.subscribe { (pokemon, player, _) ->
+            player.catalogueDetailId(pokemon)
+        }
+
+        CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe { event ->
+            event.spawnablePosition.cause.entity?.let {
+                if (it is ServerPlayer) it.catalogueDetailId(event.entity.pokemon)
+            }
+        }
+    }
+
+    fun ServerPlayer.catalogueDetailId(pokemon: Pokemon) {
+        SpawnDetailIdPropertyType.extract(pokemon)?.let { id ->
+            SpawnDataCatalogue.executeAndSave(this) { data ->
+                data.catalogue(id)
+            }
+        }
     }
 }
