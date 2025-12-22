@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
+import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
@@ -61,8 +62,6 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTING.subscribe {
-            CustomPokemonProperty.register(SpawnDetailIdPropertyType)
-            CustomPokemonProperty.register(BucketPropertyType)
             ConditionCollectors.init()
         }
 
@@ -86,6 +85,8 @@ object Cobblenav {
         SpawnResultData.register(UnknownSpawnResultData.TYPE, UnknownSpawnResultData::transform, UnknownSpawnResultData::decodeResultData)
 
         SpawnDataHelper.onInit()
+
+        registerCustomProperties()
     }
 
     private fun registerArgumentTypes() {
@@ -94,4 +95,13 @@ object Cobblenav {
     fun resolveWandererTrades() = listOf(
         VillagerTrades.ItemsForEmeralds(CobblenavItems.WANDERER_POKENAV, 24, 1, 1, 60)
     )
+
+    fun registerCustomProperties() {
+        registerProperty(SpawnDetailIdPropertyType)
+        registerProperty(BucketPropertyType)
+    }
+
+    fun registerProperty(property: CustomPokemonPropertyType<*>) {
+        CustomPokemonProperty.properties.add(property)
+    }
 }
