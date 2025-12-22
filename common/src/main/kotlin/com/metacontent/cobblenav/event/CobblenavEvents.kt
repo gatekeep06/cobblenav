@@ -7,6 +7,8 @@ object CobblenavEvents {
 
     val FISH_TRAVEL_STARTED = EventObservable<FishTravelStartedEvent>()
 
+    val POKEMON_ENCOUNTERED = EventObservable<PokemonEncounteredEvent>()
+
     // CLIENT EVENTS
 
     val REGISTER_CUSTOM_CLIENT_COLLECTORS = EventObservable<CustomClientCollectorRegistrar>()

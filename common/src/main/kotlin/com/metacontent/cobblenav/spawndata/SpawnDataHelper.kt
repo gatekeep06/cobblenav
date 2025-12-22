@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
@@ -10,7 +9,6 @@ import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence.Companion.TYPICAL_VARIATION
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
 import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePositionCalculator
-import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.block.entity.PokeSnackBlockEntity
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
@@ -20,6 +18,7 @@ import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
+import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
@@ -28,7 +27,6 @@ import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
-import kotlin.math.ceil
 
 object SpawnDataHelper {
     fun checkPlayerSpawns(player: ServerPlayer, bucket: String): List<CheckedSpawnData> {
@@ -180,19 +178,15 @@ object SpawnDataHelper {
     }
 
     fun onInit() {
-        CobblemonEvents.POKEMON_SCANNED.subscribe { (player, data, _) ->
-            player.catalogueDetailId(data.pokemon)
+        CobblenavEvents.POKEMON_ENCOUNTERED.subscribe { (pokemon, player) ->
+            player?.catalogueDetailId(pokemon)
         }
 
-        CobblemonEvents.POKEMON_CAPTURED.subscribe { (pokemon, player, _) ->
-            player.catalogueDetailId(pokemon)
-        }
-
-        CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe { event ->
-            event.spawnablePosition.cause.entity?.let {
-                if (it is ServerPlayer) it.catalogueDetailId(event.entity.pokemon)
-            }
-        }
+//        CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe { event ->
+//            event.spawnablePosition.cause.entity?.let {
+//                if (it is ServerPlayer) it.catalogueDetailId(event.entity.pokemon)
+//            }
+//        }
     }
 
     fun ServerPlayer.catalogueDetailId(pokemon: Pokemon) {

@@ -9,6 +9,7 @@
         "GuiMixin"
     ],
     "mixins": [
+        "PokedexManagerMixin",
         "PokemonSpawnActionMixin",
         "PokeRodFishingBobberEntityMixin",
         "PokeRodItemMixin"
