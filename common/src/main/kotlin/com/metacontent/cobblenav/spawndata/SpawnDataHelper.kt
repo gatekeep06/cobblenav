@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence.Companion.TYPICAL_VARIATION
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
 import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePositionCalculator
+import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.block.entity.PokeSnackBlockEntity
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
@@ -27,6 +28,7 @@ import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import kotlin.math.ceil
 
 object SpawnDataHelper {
     fun checkPlayerSpawns(player: ServerPlayer, bucket: String): List<CheckedSpawnData> {
@@ -43,16 +45,15 @@ object SpawnDataHelper {
         val cause = SpawnCause(spawner, player)
         val zone = Cobblemon.spawningZoneGenerator.generate(
             spawner = spawner,
-            input = spawner.getZoneInput(cause) ?: return emptyList()
-//                SpawningZoneInput(
-//                cause, player.serverLevel(),
-//                ceil(player.x - config.spawningZoneDiameter / 2f).toInt(),
-//                ceil(player.y - config.spawningZoneHeight / 2f).toInt(),
-//                ceil(player.z - config.spawningZoneDiameter / 2f).toInt(),
-//                config.spawningZoneDiameter,
-//                config.spawningZoneHeight,
-//                config.spawningZoneDiameter
-//            )
+            input = SpawningZoneInput(
+                cause, player.serverLevel(),
+                ceil(player.x - config.spawningZoneDiameter / 2f).toInt(),
+                ceil(player.y - config.spawningZoneHeight / 2f).toInt(),
+                ceil(player.z - config.spawningZoneDiameter / 2f).toInt(),
+                config.spawningZoneDiameter,
+                config.spawningZoneHeight,
+                config.spawningZoneDiameter
+            )
         )
         val spawnablePositions = Cobblenav.resolver.resolve(
             spawner = spawner,
