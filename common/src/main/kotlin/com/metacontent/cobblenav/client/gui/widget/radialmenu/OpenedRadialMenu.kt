@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
+import com.metacontent.cobblenav.client.gui.screen.CatalogueScreen
 import com.metacontent.cobblenav.client.gui.screen.ContactsScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.screen.MapScreen
@@ -36,6 +37,11 @@ class OpenedRadialMenu(
             pWidth = 16, pHeight = 16,
             action = { statefulWidget.parentScreen?.changeScreen(MapScreen(os)) },
             texture = MAP
+        ),
+        IconButton(
+            pWidth = 16, pHeight = 16,
+            action = { statefulWidget.parentScreen?.changeScreen(CatalogueScreen(os)) },
+            texture = CATALOGUE
         ),
         IconButton(
             pWidth = 16, pHeight = 16,

@@ -25,7 +25,7 @@ class OpeningRadialMenu(
 
     private val frameAmount: Int = ANIMATION_SHEET_WIDTH / DIAMETER
     private val timer = Timer(ANIMATION_DURATION)
-    private val buttons = listOf(SWITCH_OFF, CONTACTS, LOCATION, MAP)
+    private val buttons = listOf(SWITCH_OFF, CONTACTS, LOCATION, CATALOGUE, MAP)
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         timer.tick(delta)

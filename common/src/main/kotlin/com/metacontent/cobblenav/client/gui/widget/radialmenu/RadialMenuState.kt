@@ -20,6 +20,7 @@ abstract class RadialMenuState(
         val MAP = gui("radialmenu/map")
         val LOCATION = gui("radialmenu/location")
         val CONTACTS = gui("radialmenu/contacts")
+        val CATALOGUE = gui("radialmenu/catalogue")
         val SWITCH_OFF = gui("radialmenu/switch_off")
     }
 }
