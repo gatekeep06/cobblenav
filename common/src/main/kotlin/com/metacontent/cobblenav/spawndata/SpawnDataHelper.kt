@@ -31,6 +31,8 @@ import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
 
 object SpawnDataHelper {
+    val details: HashMap<String, SpawnDetail> = hashMapOf()
+
     fun checkPlayerSpawns(player: ServerPlayer, bucket: String): List<CheckedSpawnData> {
         val config = Cobblemon.config
 
@@ -181,6 +183,11 @@ object SpawnDataHelper {
     fun onInit() {
         CobblenavEvents.POKEMON_ENCOUNTERED.subscribe { (pokemon, player) ->
             player?.catalogueDetailId(pokemon)
+        }
+
+        CobblenavEvents.SPAWN_POOL_LOADED.subscribe { pool ->
+            details.clear()
+            details.putAll(pool.associateBy { it.id })
         }
 
 //        CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe { event ->

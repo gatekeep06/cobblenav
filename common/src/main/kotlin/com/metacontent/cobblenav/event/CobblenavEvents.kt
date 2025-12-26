@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.event
 
 import com.cobblemon.mod.common.api.reactive.EventObservable
+import com.cobblemon.mod.common.api.spawning.detail.SpawnPool
 
 object CobblenavEvents {
     val REGISTER_CUSTOM_COLLECTORS = EventObservable<CustomCollectorRegistrar>()
@@ -8,6 +9,8 @@ object CobblenavEvents {
     val FISH_TRAVEL_STARTED = EventObservable<FishTravelStartedEvent>()
 
     val POKEMON_ENCOUNTERED = EventObservable<PokemonEncounteredEvent>()
+
+    val SPAWN_POOL_LOADED = EventObservable<SpawnPool>()
 
     // CLIENT EVENTS
 
