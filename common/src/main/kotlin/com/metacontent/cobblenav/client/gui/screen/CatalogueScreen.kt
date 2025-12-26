@@ -2,7 +2,9 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
+import com.metacontent.cobblenav.networking.packet.server.RequestCataloguePacket
 import com.metacontent.cobblenav.os.PokenavOS
+import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 
@@ -21,5 +23,11 @@ class CatalogueScreen(
             screenX + (WIDTH - RadialMenuState.MENU_DIAMETER) / 2,
             screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - RadialMenuState.MENU_DIAMETER / 2
         ).also { addUnblockableWidget(it) }
+
+        RequestCataloguePacket().sendToServer()
+    }
+
+    fun receiveCatalogue(spawnDataList: List<SpawnData>) {
+        player?.sendSystemMessage(Component.literal(spawnDataList.joinToString { it.result.getResultName().string }))
     }
 }
