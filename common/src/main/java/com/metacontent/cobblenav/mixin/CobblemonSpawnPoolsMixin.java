@@ -15,7 +15,7 @@ public abstract class CobblemonSpawnPoolsMixin {
     @Shadow
     public static SpawnPool WORLD_SPAWN_POOL;
 
-    @Inject(method = "onServerLoad", at = @At("HEAD"))
+    @Inject(method = "onServerLoad", at = @At("HEAD"), remap = false)
     protected void inject(MinecraftServer server, CallbackInfo ci) {
         CobblenavEvents.INSTANCE.getSPAWN_POOL_LOADED().emit(WORLD_SPAWN_POOL);
     }
