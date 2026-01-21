@@ -3,19 +3,24 @@ package com.metacontent.cobblenav.client.gui.screen.pokefinder
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.bold
+import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.TextFieldWidget
 import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
-import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
+import net.minecraft.world.phys.AABB
 
 class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     companion object {
@@ -35,6 +40,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     }
 
     val player: LocalPlayer? = Minecraft.getInstance().player
+
     init {
         player?.playSound(CobblemonSounds.PC_ON, 0.1f, 2f)
     }
@@ -42,6 +48,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private var screenX = 0
     private var screenY = 0
 
+    private lateinit var speciesSelector: SpeciesSelector
+    private lateinit var clearButton: TextButton
     private lateinit var speciesField: TextFieldWidget
     private lateinit var aspectsField: TextFieldWidget
     private lateinit var labelsField: TextFieldWidget
@@ -49,6 +57,39 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private lateinit var strictLabelCheckBox: CheckBox
     private lateinit var shinyOnlyCheckBox: CheckBox
     private val settings = CobblenavClient.pokefinderSettings
+
+
+    private class SpeciesSelector(minecraft: Minecraft, w: Int, h: Int, top: Int, line: Int) :
+        ObjectSelectionList<SpeciesSelectorEntry>(minecraft, w, h, top, line) {
+        public override fun addEntry(entry: SpeciesSelectorEntry) = super.addEntry(entry)
+    }
+
+    private class SpeciesSelectorEntry(val text: MutableComponent, val action: () -> Boolean) :
+        ObjectSelectionList.Entry<SpeciesSelectorEntry>() {
+        override fun getNarration() = "".text()
+
+        override fun render(
+            context: GuiGraphics,
+            index: Int,
+            rowTop: Int,
+            rowLeft: Int,
+            rowWidth: Int,
+            rowHeight: Int,
+            mouseX: Int,
+            mouseY: Int,
+            isHovered: Boolean,
+            partialTicks: Float,
+        ) = drawScaledText(
+            context = context,
+            text = text,
+            x = rowLeft + rowWidth / 2,
+            y = rowTop,
+            centered = true,
+            shadow = true,
+        )
+
+        override fun mouseClicked(d: Double, e: Double, i: Int) = action()
+    }
 
     override fun init() {
         screenX = (width - WIDTH) / 2
@@ -69,6 +110,17 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
                     it.species = value.splitToSet()
                 }
             }
+        ).also { addWidget(it) }
+        clearButton = TextButton(
+            pX = speciesField.fieldX + SETTING_WIDTH - Y_FIELD_OFFSET,
+            pY = screenY + BORDER,
+            pWidth = speciesField.height,
+            pHeight = speciesField.height,
+            action = {
+                settings?.species = emptySet()
+                speciesField.value = ""
+            },
+            text = "×".text(),
         ).also { addWidget(it) }
         aspectsField = TextFieldWidget(
             fieldX = screenX + BORDER + X_OFFSET,
@@ -135,6 +187,34 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             default = settings?.shinyOnly ?: false,
             afterClick = { button -> settings?.let { it.shinyOnly = (button as CheckBox).checked } }
         ).also { addWidget(it) }
+
+        val radius = /*settings?.radius ?:*/ 200.0
+        val pokemons = minecraft?.level?.getEntitiesOfClass(
+            PokemonEntity::class.java,
+            AABB.ofSize(player?.position(), radius, radius, radius)
+        )?.distinctBy { it.pokemon.getDisplayName() } ?: emptyList()
+
+        minecraft?.let {
+            speciesSelector = SpeciesSelector(
+                it,
+                WIDTH - 2 * BORDER - X_OFFSET - SETTING_WIDTH - X_OFFSET - 2 * BORDER,
+                HEIGHT - 4 * BORDER,
+                screenY + 2 * BORDER,
+                Y_FIELD_OFFSET
+            )
+            speciesSelector.x = screenX + BORDER + X_OFFSET + SETTING_WIDTH + X_OFFSET + BORDER
+            addWidget(speciesSelector)
+        }
+
+        pokemons.forEach {
+            speciesSelector.addEntry(
+                SpeciesSelectorEntry(it.pokemon.getDisplayName()) {
+                    settings?.species += it.pokemon.species.name
+                    speciesField.value = settings?.species?.joinToString(separator = ", ") ?: ""
+                    true
+                }
+            )
+        }
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -156,6 +236,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             shadow = true
         )
         speciesField.render(guiGraphics, mouseX, mouseY, delta)
+        clearButton.render(guiGraphics, mouseX, mouseY, delta)
         drawScaledText(
             context = guiGraphics,
             text = Component.translatable("gui.cobblenav.aspects"),
@@ -194,6 +275,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             centered = true,
             colour = FastColor.ARGB32.color(200, 31, 90, 91)
         )
+
+        speciesSelector.render(guiGraphics, mouseX, mouseY, delta)
     }
 
     override fun isPauseScreen(): Boolean = false
