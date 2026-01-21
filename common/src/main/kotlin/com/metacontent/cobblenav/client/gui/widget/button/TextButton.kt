@@ -23,7 +23,7 @@ class TextButton(
 ) : PokenavButton(pX, pY, pWidth, pHeight, text, disabled, action) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
 
-        var argb = 1f
+        var argb = 0.9f
         if (disabled) {
             argb -= 0.4f
         }
