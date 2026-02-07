@@ -23,13 +23,15 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         const val HEIGHT: Int = 192
         const val LOGO_SIZE: Int = 64
         const val BORDER: Int = 5
-        const val SETTING_WIDTH: Int = 160
+        const val TEXTFIELD_WIDTH: Int = 160
+        const val CHECKBOX_WIDTH: Int = 100
         const val FIELD_HEIGHT: Int = 20
         const val CHECK_BOX_HEIGHT: Int = 10
         const val X_OFFSET: Int = 4
         const val Y_TEXT_OFFSET: Int = 4
         const val Y_FIELD_OFFSET: Int = 14
         const val Y_CHECK_BOX_OFFSET: Int = 10
+        const val MID_OFFSET: Int = WIDTH/2
         val BACKGROUND = gui("pokefinder/background")
         val LOGO = gui("pokefinder/logo")
     }
@@ -45,9 +47,15 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private lateinit var speciesField: TextFieldWidget
     private lateinit var aspectsField: TextFieldWidget
     private lateinit var labelsField: TextFieldWidget
+
     private lateinit var strictAspectCheckBox: CheckBox
     private lateinit var strictLabelCheckBox: CheckBox
     private lateinit var shinyOnlyCheckBox: CheckBox
+
+    private lateinit var highlightShinyCheckBox: CheckBox
+    private lateinit var showFilteredCheckBox: CheckBox
+    private lateinit var uncaughtOnlyCheckBox: CheckBox
+
     private val settings = CobblenavClient.pokefinderSettings
 
     override fun init() {
@@ -57,7 +65,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         speciesField = TextFieldWidget(
             fieldX = screenX + BORDER + X_OFFSET,
             fieldY = screenY + BORDER + Y_FIELD_OFFSET,
-            width = SETTING_WIDTH,
+            width = TEXTFIELD_WIDTH,
             height = FIELD_HEIGHT,
             default = settings?.species?.joinToString(separator = ", ") ?: "",
             fillColor = FastColor.ARGB32.color(255, 20, 60, 61),
@@ -73,7 +81,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         aspectsField = TextFieldWidget(
             fieldX = screenX + BORDER + X_OFFSET,
             fieldY = screenY + BORDER + 2 * Y_FIELD_OFFSET + FIELD_HEIGHT,
-            width = SETTING_WIDTH,
+            width = TEXTFIELD_WIDTH,
             height = FIELD_HEIGHT,
             default = settings?.aspects?.joinToString(separator = ", ") ?: "",
             fillColor = FastColor.ARGB32.color(255, 20, 60, 61),
@@ -89,7 +97,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         labelsField = TextFieldWidget(
             fieldX = screenX + BORDER + X_OFFSET,
             fieldY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 2 * FIELD_HEIGHT,
-            width = SETTING_WIDTH,
+            width = TEXTFIELD_WIDTH,
             height = FIELD_HEIGHT,
             default = settings?.labels?.joinToString(separator = ", ") ?: "",
             fillColor = FastColor.ARGB32.color(255, 20, 60, 61),
@@ -102,38 +110,73 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
                 }
             }
         ).also { addWidget(it) }
+
         strictAspectCheckBox = CheckBox(
             pX = screenX + BORDER + X_OFFSET,
             pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + Y_CHECK_BOX_OFFSET,
-            pWidth = SETTING_WIDTH,
+            pWidth = CHECKBOX_WIDTH,
             pHeight = CHECK_BOX_HEIGHT,
             textOffset = 6,
             text = Component.translatable("gui.cobblenav.strict_aspect_check"),
             shadow = true,
-            default = settings?.strictAspectCheck ?: true,
+            default = settings?.strictAspectCheck ?: false,
             afterClick = { button -> settings?.let { it.strictAspectCheck = (button as CheckBox).checked } }
         ).also { addWidget(it) }
         strictLabelCheckBox = CheckBox(
-            pX = screenX + BORDER + X_OFFSET,
-            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 2 * Y_CHECK_BOX_OFFSET + CHECK_BOX_HEIGHT,
-            pWidth = SETTING_WIDTH,
+            pX = screenX + BORDER + X_OFFSET + MID_OFFSET,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + Y_CHECK_BOX_OFFSET,
+            pWidth = CHECKBOX_WIDTH,
             pHeight = CHECK_BOX_HEIGHT,
             textOffset = 6,
             text = Component.translatable("gui.cobblenav.strict_label_check"),
             shadow = true,
-            default = settings?.strictLabelCheck ?: true,
+            default = settings?.strictLabelCheck ?: false,
             afterClick = { button -> settings?.let { it.strictLabelCheck = (button as CheckBox).checked } }
         ).also { addWidget(it) }
         shinyOnlyCheckBox = CheckBox(
             pX = screenX + BORDER + X_OFFSET,
-            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 3 * Y_CHECK_BOX_OFFSET + 2 * CHECK_BOX_HEIGHT,
-            pWidth = SETTING_WIDTH,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 2 * Y_CHECK_BOX_OFFSET + CHECK_BOX_HEIGHT,
+            pWidth = CHECKBOX_WIDTH,
             pHeight = CHECK_BOX_HEIGHT,
             textOffset = 6,
             text = Component.translatable("gui.cobblenav.shiny_only"),
             shadow = true,
             default = settings?.shinyOnly ?: false,
             afterClick = { button -> settings?.let { it.shinyOnly = (button as CheckBox).checked } }
+        ).also { addWidget(it) }
+
+        highlightShinyCheckBox = CheckBox(
+            pX = screenX + BORDER + X_OFFSET + MID_OFFSET,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 2 * Y_CHECK_BOX_OFFSET + CHECK_BOX_HEIGHT,
+            pWidth = CHECKBOX_WIDTH,
+            pHeight = CHECK_BOX_HEIGHT,
+            textOffset = 6,
+            text = Component.translatable("gui.cobblenav.highlight_shiny"),
+            shadow = true,
+            default = settings?.highlightShiny ?: true,
+            afterClick = { button -> settings?.let { it.highlightShiny = (button as CheckBox).checked } }
+        ).also { addWidget(it) }
+        uncaughtOnlyCheckBox = CheckBox(
+            pX = screenX + BORDER + X_OFFSET,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 3 * Y_CHECK_BOX_OFFSET + 2 * CHECK_BOX_HEIGHT,
+            pWidth = CHECKBOX_WIDTH,
+            pHeight = CHECK_BOX_HEIGHT,
+            textOffset = 6,
+            text = Component.translatable("gui.cobblenav.uncaught_only"),
+            shadow = true,
+            default = settings?.uncaughtOnly ?: true,
+            afterClick = { button -> settings?.let { it.uncaughtOnly = (button as CheckBox).checked } }
+        ).also { addWidget(it) }
+        showFilteredCheckBox = CheckBox(
+            pX = screenX + BORDER + X_OFFSET + MID_OFFSET,
+            pY = screenY + BORDER + 3 * Y_FIELD_OFFSET + 3 * FIELD_HEIGHT + 3 * Y_CHECK_BOX_OFFSET + 2 * CHECK_BOX_HEIGHT,
+            pWidth = CHECKBOX_WIDTH,
+            pHeight = CHECK_BOX_HEIGHT,
+            textOffset = 6,
+            text = Component.translatable("gui.cobblenav.show_filtered"),
+            shadow = true,
+            default = settings?.showFiltered ?: true,
+            afterClick = { button -> settings?.let { it.showFiltered = (button as CheckBox).checked } }
         ).also { addWidget(it) }
     }
 
@@ -177,11 +220,15 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         strictLabelCheckBox.render(guiGraphics, mouseX, mouseY, delta)
         shinyOnlyCheckBox.render(guiGraphics, mouseX, mouseY, delta)
 
+        highlightShinyCheckBox.render(guiGraphics, mouseX, mouseY, delta)
+        uncaughtOnlyCheckBox.render(guiGraphics, mouseX, mouseY, delta)
+        showFilteredCheckBox.render(guiGraphics, mouseX, mouseY, delta)
+
         blitk(
             matrixStack = poseStack,
             texture = LOGO,
-            x = screenX + BORDER + (WIDTH - LOGO_SIZE + SETTING_WIDTH) / 2,
-            y = screenY + (HEIGHT - LOGO_SIZE) / 2 - 20,
+            x = screenX + BORDER + (WIDTH - LOGO_SIZE + TEXTFIELD_WIDTH) / 2,
+            y = screenY + (HEIGHT - LOGO_SIZE) / 2 - 40,
             width = LOGO_SIZE,
             height = LOGO_SIZE,
             alpha = 0.8f
@@ -189,8 +236,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         drawScaledText(
             context = guiGraphics,
             text = Component.translatable("item.cobblenav.pokefinder_item").bold(),
-            x = screenX + BORDER + (WIDTH + SETTING_WIDTH) / 2,
-            y = screenY + HEIGHT / 2 + 16,
+            x = screenX + BORDER + (WIDTH + TEXTFIELD_WIDTH) / 2,
+            y = screenY + HEIGHT / 2 - 4,
             centered = true,
             colour = FastColor.ARGB32.color(200, 31, 90, 91)
         )

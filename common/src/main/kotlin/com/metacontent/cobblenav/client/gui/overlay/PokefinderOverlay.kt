@@ -29,6 +29,9 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         const val COMPASS_HEIGHT = 23
         const val COMPASS_OFFSET = 4
         const val RADAR_SCALE = 0.5
+        const val FILTERED_ALPHA = 0.5
+        val DEFAULT_COLOR = FastColor.ARGB32.color(255, 255, 255, 255)
+        val SHINY_COLOR = FastColor.ARGB32.color(255, 255, 255, 0)
         val BACKGROUND = gui("pokefinder/overlay")
         val COMPASS = gui("pokefinder/compass")
     }
@@ -75,7 +78,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             minecraft.level?.getEntitiesOfClass(
                 PokemonEntity::class.java,
                 AABB.ofSize(player.position(), radius, radius, radius)
-            ) { settings.check(it.pokemon) }
+            ) { settings.showFiltered || settings.check(it.pokemon) }
         } ?: listOf()
 
         entities.forEach {
@@ -83,13 +86,28 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             val angle = Math.toRadians(180.0 - player.rotationVector.y)
             val posX = x + scaledWidth / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
             val posY = y + scaledHeight / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
+            var color = DEFAULT_COLOR
+
+            if ((settings?.highlightShiny ?: false) && (it.pokemon.shiny)) {
+                color = SHINY_COLOR
+            }
+
+            if (!(settings?.check(it.pokemon) ?: true)) {
+                color = FastColor.ARGB32.color(
+                    (FILTERED_ALPHA*255).toInt(),
+                    FastColor.ARGB32.red(color),
+                    FastColor.ARGB32.green(color),
+                    FastColor.ARGB32.blue(color)
+                )
+            }
+
             poseStack.pushAndPop(
                 translate = Vector3d(posX, posY, 0.0)
             ) {
                 guiGraphics.fill(
                     -1, -1,
                     1, 1,
-                    FastColor.ARGB32.color(255, 255, 255, 255)
+                    color
                 )
                 drawScaledText(
                     context = guiGraphics,
@@ -97,7 +115,9 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
                     x = 0,
                     y = 2,
                     centered = true,
-                    scale = 0.4f
+                    scale = 0.4f,
+                    colour = color,
+                    //opacity = (FILTERED_ALPHA*100).toInt()
                 )
             }
         }
