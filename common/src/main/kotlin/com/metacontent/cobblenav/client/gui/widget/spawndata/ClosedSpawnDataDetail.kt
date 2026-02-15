@@ -16,7 +16,9 @@ class ClosedSpawnDataDetail(
     SpawnDataDetailWidget.HEIGHT,
     Component.literal("Closed Spawn Data Details")
 ) {
-    override val blockScreenWidgets = false
+    init {
+        statefulWidget.pokenavScreen.blockWidgets = false
+    }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (statefulWidget.displayer.isDataSelected()) {

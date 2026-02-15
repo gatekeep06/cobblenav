@@ -32,8 +32,6 @@ class OpenedSpawnDataDetail(
         val PREV = gui("button/prev_button_big")
     }
 
-    override val blockScreenWidgets = true
-
     private val tableView = TableView<AbstractWidget>(
         x = statefulWidget.sectionX,
         y = statefulWidget.sectionY,
@@ -74,6 +72,7 @@ class OpenedSpawnDataDetail(
                 checkButtons(index)
             }
         }
+        statefulWidget.pokenavScreen.blockWidgets = true
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {

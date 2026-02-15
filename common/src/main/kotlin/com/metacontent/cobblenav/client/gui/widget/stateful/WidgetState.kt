@@ -11,5 +11,5 @@ abstract class WidgetState<T: StatefulWidget>(
     height: Int,
     component: Component
 ) : SoundlessWidget(x, y, width, height, component) {
-    abstract val blockScreenWidgets: Boolean
+//    abstract val blockScreenWidgets: Boolean
 }

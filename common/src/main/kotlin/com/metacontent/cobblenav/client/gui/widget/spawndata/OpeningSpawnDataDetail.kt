@@ -24,7 +24,9 @@ class OpeningSpawnDataDetail(
         const val ANIMATION_DURATION = 2f
     }
 
-    override val blockScreenWidgets = true
+    init {
+        statefulWidget.pokenavScreen.blockWidgets = true
+    }
 
     private val timer = Timer(ANIMATION_DURATION)
 

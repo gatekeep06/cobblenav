@@ -4,10 +4,11 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 
 abstract class StatefulWidget(
-    val parentScreen: PokenavScreen? = null,
+    val parentScreen: Screen? = null,
     x: Int,
     y: Int,
     width: Int,
@@ -24,7 +25,7 @@ abstract class StatefulWidget(
 
     open fun initState(state: WidgetState<*>): WidgetState<*> {
         addWidget(state)
-        parentScreen?.blockWidgets = state.blockScreenWidgets
+//        parentScreen?.blockWidgets = state.blockScreenWidgets
         return state
     }
 

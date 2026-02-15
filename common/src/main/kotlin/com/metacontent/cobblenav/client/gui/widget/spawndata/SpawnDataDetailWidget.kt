@@ -13,10 +13,10 @@ import org.joml.Vector3d
 
 class SpawnDataDetailWidget(
     val displayer: SpawnDataDisplayer,
-    parentScreen: PokenavScreen,
+    val pokenavScreen: PokenavScreen,
     x: Int,
     y: Int
-) : StatefulWidget(parentScreen, x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Details")) {
+) : StatefulWidget(pokenavScreen, x, y, WIDTH, HEIGHT, Component.literal("Spawn Data Details")) {
     companion object {
         const val WIDTH = PokenavScreen.SCREEN_WIDTH
         const val HEIGHT = PokenavScreen.SCREEN_HEIGHT

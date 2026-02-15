@@ -10,8 +10,6 @@ class CollapsedSection(
     y: Int,
     width: Int
 ) : WidgetState<SectionWidget>(statefulWidget, x, y, width, SectionWidget.HEADER_HEIGHT, Component.empty()) {
-    override val blockScreenWidgets = false
-
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         statefulWidget.renderTitle(guiGraphics, i, j, f)
     }

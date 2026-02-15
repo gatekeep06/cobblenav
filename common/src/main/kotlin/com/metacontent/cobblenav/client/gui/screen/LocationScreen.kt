@@ -203,7 +203,7 @@ class LocationScreen(
 
         spawnDataDetails = SpawnDataDetailWidget(
             displayer = this,
-            parentScreen = this,
+            pokenavScreen = this,
             x = screenX + VERTICAL_BORDER_DEPTH,
             y = screenY + HORIZONTAL_BORDER_DEPTH
         ).also { addUnblockableWidget(it) }

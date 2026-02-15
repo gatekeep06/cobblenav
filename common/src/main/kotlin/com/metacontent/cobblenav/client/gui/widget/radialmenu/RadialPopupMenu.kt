@@ -6,19 +6,24 @@ import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
 import net.minecraft.network.chat.Component
 
 class RadialPopupMenu(
-    parentScreen: PokenavScreen,
+    val pokenavScreen: PokenavScreen,
     pX: Int, pY: Int
 ) : StatefulWidget(
-    parentScreen,
+    pokenavScreen,
     pX,
     pY,
     RadialMenuState.MENU_DIAMETER,
     RadialMenuState.MENU_DIAMETER,
     Component.literal("Radial Popup Menu")
 ) {
-    val os = parentScreen.os
+    val os = pokenavScreen.os
 
-    override var state = initState(ClosedRadialMenu(parentScreen.os, this, pX, pY))
+    override var state = initState(ClosedRadialMenu(pokenavScreen.os, this, pX, pY))
+
+    override fun initState(state: WidgetState<*>): WidgetState<*> {
+        (state as? RadialMenuState)?.let { pokenavScreen.blockWidgets = it.blockScreenWidgets }
+        return super.initState(state)
+    }
 
     override fun changeState(state: WidgetState<*>) {
         super.changeState(state)

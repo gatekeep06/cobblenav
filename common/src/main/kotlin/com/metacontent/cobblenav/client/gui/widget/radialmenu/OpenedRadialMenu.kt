@@ -14,7 +14,7 @@ import kotlin.math.sin
 
 class OpenedRadialMenu(
     os: PokenavOS,
-    statefulWidget: StatefulWidget,
+    statefulWidget: RadialPopupMenu,
     pX: Int, pY: Int
 ) : RadialMenuState(os, statefulWidget, pX, pY, DIAMETER, DIAMETER, Component.literal("Opened Radial Menu")) {
     companion object {
@@ -34,17 +34,17 @@ class OpenedRadialMenu(
     private val buttons = listOf(
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen?.changeScreen(MapScreen(os)) },
+            action = { statefulWidget.pokenavScreen.changeScreen(MapScreen(os)) },
             texture = MAP
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen?.changeScreen(LocationScreen(os)) },
+            action = { statefulWidget.pokenavScreen.changeScreen(LocationScreen(os)) },
             texture = LOCATION
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.parentScreen?.changeScreen(ContactsScreen(os)) },
+            action = { statefulWidget.pokenavScreen.changeScreen(ContactsScreen(os)) },
             texture = CONTACTS
         ),
         IconButton(
@@ -76,7 +76,7 @@ class OpenedRadialMenu(
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         val clicked = super.mouseClicked(pMouseX, pMouseY, pButton)
         if (!clicked) {
-            statefulWidget.changeState(ClosedRadialMenu(os, statefulWidget, x, y))
+            statefulWidget.changeState(ClosedRadialMenu(os, statefulWidget as RadialPopupMenu, x, y))
         }
         return clicked
     }
