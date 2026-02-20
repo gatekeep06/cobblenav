@@ -28,11 +28,7 @@ object CobblenavClient {
     private val settingsManager = ClientSettingsDataManager
     var pokenavSettings: PokenavSettings? = null
     var pokefinderSettings: PokefinderSettings? = null
-    val pokefinderOverlay: PokefinderOverlay by lazy {
-        val overlay = PokefinderOverlay()
-        overlay.initialize()
-        overlay
-    }
+    val pokefinderOverlay: PokefinderOverlay by lazy { PokefinderOverlay() }
     val trackArrowOverlay: TrackArrowOverlay by lazy { TrackArrowOverlay() }
 
     var spawnDataCatalogue = ClientSpawnDataCatalogue()

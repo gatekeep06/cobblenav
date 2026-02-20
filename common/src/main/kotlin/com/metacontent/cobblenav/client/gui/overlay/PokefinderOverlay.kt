@@ -12,39 +12,34 @@ import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
-import org.joml.Vector3d
 import org.joml.Vector3f
 import kotlin.math.cos
+import kotlin.math.floor
+import kotlin.math.round
 import kotlin.math.sin
 
 class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     companion object {
-        const val WIDTH = 144
-        const val HEIGHT = 96
+        const val WIDTH = 216
+        const val HEIGHT = 144
         const val COMPASS_WIDTH = 23
         const val COMPASS_HEIGHT = 23
         const val COMPASS_OFFSET = 4
-        const val RADAR_SCALE = 0.5
+        const val RADAR_SCALE = 0.8
+        const val DOT_SIZE = 4
         val BACKGROUND = gui("pokefinder/overlay")
         val COMPASS = gui("pokefinder/compass")
+        val DOT = gui("pokefinder/dot")
     }
 
+    private val settings = CobblenavClient.pokefinderSettings
     private val minecraft = Minecraft.getInstance()
-    private var initialized = false
     private val offset = CobblenavClient.config.pokefinderOverlayOffset
 
-    fun initialize() {
-        initialized = true
-    }
-
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
-        if (!initialized) return
-
-        val settings = CobblenavClient.pokefinderSettings
-
         val isRightHand = minecraft.player?.mainHandItem?.item is Pokefinder
         val scale =
             minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale / CobblenavClient.config.screenScale
@@ -77,21 +72,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             ) { settings.check(it.pokemon) }
         } ?: listOf()
 
-        entities.forEach {
-            val vec = player.position().vectorTo(it.position()).scale(RADAR_SCALE / scale)
-            val angle = Math.toRadians(180.0 - player.rotationVector.y)
-            val posX = x + scaledWidth / 2 + 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
-            val posY = y + scaledHeight / 2 + 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
-            poseStack.pushAndPop(
-                translate = Vector3d(posX, posY, 0.0)
-            ) {
-                guiGraphics.fill(
-                    -1, -1,
-                    1, 1,
-                    FastColor.ARGB32.color(255, 255, 255, 255)
-                )
-            }
-        }
+        entities.renderPokemonDots(poseStack, x, y, scaledWidth, scaledHeight, player.position(), player.rotationVector.y, scale)
     }
 
     private fun renderCompass(poseStack: PoseStack, rotation: Float, x: Int, y: Int, scale: Double) {
@@ -113,6 +94,32 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
                 y = y + compassOffset,
                 width = compassWidth,
                 height = compassHeight
+            )
+        }
+    }
+
+    private fun Collection<PokemonEntity>.renderPokemonDots(
+        poseStack: PoseStack,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        center: Vec3,
+        rotation: Float,
+        scale: Double
+    ) {
+        this.forEach {
+            val vec = center.vectorTo(it.position()).scale(RADAR_SCALE / scale)
+            val angle = Math.toRadians(180.0 - rotation)
+            val dotX = x + width / 2 + vec.x * cos(angle) - vec.z * sin(angle)
+            val dotY = y + height / 2 + vec.x * sin(angle) + vec.z * cos(angle)
+            blitk(
+                matrixStack = poseStack,
+                texture = DOT,
+                x = floor(dotX),
+                y = floor(dotY),
+                width = DOT_SIZE,
+                height = DOT_SIZE
             )
         }
     }
