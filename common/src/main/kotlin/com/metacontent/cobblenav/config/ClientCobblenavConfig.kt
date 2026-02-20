@@ -7,8 +7,6 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val screenScale = 1f
     val enableBlurEffect = true
     val sendErrorMessagesToChat = true
-    val obscureUnknownPokemon = true
-    val useSwimmingAnimationIfSubmerged = true
     val pokefinderOverlayOffset = 10
     val trackArrowYOffset = 80
     val maxCloudNumber = 8

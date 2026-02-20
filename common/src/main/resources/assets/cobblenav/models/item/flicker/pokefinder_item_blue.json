@@ -1,0 +1,7 @@
+{
+  "parent": "cobblenav:item/cobblenav_template",
+  "textures": {
+    "layer0": "cobblenav:item/pokefinder_item_blue",
+    "layer1": "cobblenav:item/flicker/pokefinder_item_flicker"
+  }
+}

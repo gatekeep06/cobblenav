@@ -68,13 +68,14 @@ class LocationScreen(
     var viewY = 0
     override val color = FastColor.ARGB32.color(255, 63, 126, 101)
     private val spawnDataMap = mutableMapOf<String, List<CheckedSpawnData>>()
-    lateinit var buckets: List<WeightedBucket>
+    private val weightedBuckets = mutableMapOf<String, WeightedBucket>()
+    lateinit var buckets: List<String>
     var bucketIndex = -1
         set(value) {
             field = max(min(value, buckets.size - 1), 0)
             onBucketChange()
         }
-    var currentBucket: WeightedBucket
+    var currentBucket: String
         get() = buckets[bucketIndex]
         set(value) {
             bucketIndex = buckets.indexOf(value)
@@ -177,7 +178,8 @@ class LocationScreen(
             text = Component.translatable("gui.cobblenav.apply_bucket"),
             afterClick = {
                 tableView.applyToAll { child ->
-                    child.child.spawnData.chanceMultiplier = if ((it as CheckBox).checked) currentBucket.chance else 1f
+                    child.child.spawnData.chanceMultiplier =
+                        if ((it as CheckBox).checked) weightedBuckets[currentBucket]?.chance ?: 1f else 1f
                 }
             },
             default = CobblenavClient.pokenavSettings?.preferences?.applyBucketChecked ?: false
@@ -221,7 +223,7 @@ class LocationScreen(
         ).also { addBlockableWidget(it) }
     }
 
-    fun receiveInitData(buckets: List<WeightedBucket>, biome: String) {
+    fun receiveInitData(buckets: List<String>, biome: String) {
         this.buckets = buckets
         this.bucketIndex = CobblenavClient.pokenavSettings?.preferences?.bucketIndex ?: 0
         bucketSelector = BucketSelectorWidget(
@@ -249,8 +251,9 @@ class LocationScreen(
         }
     }
 
-    fun receiveSpawnData(spawnDataList: List<CheckedSpawnData>) {
-        this.spawnDataMap[currentBucket.name] = spawnDataList
+    fun receiveSpawnData(spawnDataList: List<CheckedSpawnData>, weightedBucket: WeightedBucket) {
+        spawnDataMap[currentBucket] = spawnDataList
+        weightedBuckets[currentBucket] = weightedBucket
         createSpawnDataWidgets(spawnDataList)
         loading = false
         refreshButton.disabled = false
@@ -321,7 +324,7 @@ class LocationScreen(
     private fun requestSpawnData() {
         loading = true
         refreshButton.disabled = true
-        RequestSpawnMapPacket(currentBucket.name, fixedAreaPoint).sendToServer()
+        RequestSpawnMapPacket(currentBucket, fixedAreaPoint).sendToServer()
     }
 
     override fun onScreenChange() {
@@ -343,7 +346,7 @@ class LocationScreen(
 
     private fun onBucketChange() {
         tableView.clear()
-        val spawnDataList = spawnDataMap[currentBucket.name]
+        val spawnDataList = spawnDataMap[currentBucket]
         if (spawnDataList == null) {
             requestSpawnData()
             return
@@ -370,7 +373,8 @@ class LocationScreen(
                         x = 0,
                         y = 0,
                         spawnData = it.also { data ->
-                            data.chanceMultiplier = if (checkBox.checked) currentBucket.chance else 1f
+                            data.chanceMultiplier =
+                                if (checkBox.checked) weightedBuckets[currentBucket]?.chance ?: 1f else 1f
                         },
                         displayer = this
                     ),

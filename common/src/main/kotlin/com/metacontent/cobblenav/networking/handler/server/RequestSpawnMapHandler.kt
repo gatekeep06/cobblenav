@@ -14,10 +14,10 @@ object RequestSpawnMapHandler : ServerNetworkPacketHandler<RequestSpawnMapPacket
         player: ServerPlayer
     ) {
         server.execute {
-            val spawnDataList = packet.fixedAreaPoint?.let {
+            val (weightedBucket, spawnDataList) = packet.fixedAreaPoint?.let {
                 SpawnDataHelper.checkFixedAreaSpawns(it, player, packet.bucket)
             } ?: SpawnDataHelper.checkPlayerSpawns(player, packet.bucket)
-            SpawnMapPacket(packet.bucket, spawnDataList).sendToPlayer(player)
+            SpawnMapPacket(weightedBucket, spawnDataList).sendToPlayer(player)
         }
     }
 }

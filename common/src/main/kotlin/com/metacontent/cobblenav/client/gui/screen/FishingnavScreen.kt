@@ -2,8 +2,6 @@ package com.metacontent.cobblenav.client.gui.screen
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.metacontent.cobblenav.client.gui.util.RGB
-import com.metacontent.cobblenav.client.gui.util.dayCycleColor
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.fishing.BucketViewWidget
@@ -18,7 +16,6 @@ import com.metacontent.cobblenav.networking.packet.server.RequestFishingnavScree
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.util.WeightedBucket
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.core.registries.BuiltInRegistries
@@ -30,7 +27,6 @@ class FishingnavScreen(
     os: PokenavOS
 ) : PokenavScreen(os, true, true, Component.literal("Fishing")), SpawnDataDisplayer {
     companion object {
-        const val POKEMON_CHANCE = 0.85f
         const val WEATHER_WIDGET_HEIGHT = 40
         const val BUCKET_VIEW_MIN_HEIGHT = 100
         const val PANEL_WIDTH = 20
@@ -58,7 +54,7 @@ class FishingnavScreen(
     override var displayedData: List<SpawnData>? = null
     override var hoveredData: CheckedSpawnData? = null
     override var selectedData: SpawnData? = null
-    lateinit var buckets: List<WeightedBucket>
+    lateinit var buckets: List<String>
     private lateinit var fishingContextWidget: FishingContextWidget
     private lateinit var scrollableView: ScrollableView
     private lateinit var baseTable: TableView<SoundlessWidget>
@@ -131,7 +127,7 @@ class FishingnavScreen(
     }
 
     fun receiveInitData(
-        buckets: List<WeightedBucket>,
+        buckets: List<String>,
         pokeBall: ResourceLocation,
         lineColor: String,
         baitItem: ItemStack
@@ -211,8 +207,8 @@ class FishingnavScreen(
     }
 
     fun receiveFishingMap(fishingMap: Map<String, List<CheckedSpawnData>>) {
-        fishingMap.forEach { (bucketName, spawnDatas) ->
-            bucketViews.find { it.bucket.name == bucketName }?.let { view ->
+        fishingMap.forEach { (bucket, spawnDatas) ->
+            bucketViews.find { it.bucket == bucket }?.let { view ->
                 view.add(
                     spawnDatas
                         .sortedWith { firstData, secondData ->
@@ -222,7 +218,6 @@ class FishingnavScreen(
                             )
                         }
                         .map {
-                            it.chanceMultiplier = view.bucket.chance * POKEMON_CHANCE
                             ScrollableItemWidget(
                                 child = SpawnDataWidget(
                                     x = 0,

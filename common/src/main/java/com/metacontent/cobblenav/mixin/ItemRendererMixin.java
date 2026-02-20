@@ -2,7 +2,9 @@ package com.metacontent.cobblenav.mixin;
 
 import com.cobblemon.mod.common.block.PokeSnackBlock;
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager;
-import com.metacontent.cobblenav.item.ConditionalModelItem;
+import com.metacontent.cobblenav.item.FlickeringItem;
+import com.metacontent.cobblenav.item.InHandModelItem;
+import com.metacontent.cobblenav.item.OpenableItem;
 import com.metacontent.cobblenav.item.Pokenav;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -14,6 +16,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -38,12 +41,16 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
     private void shake(ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean bl, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, BakedModel bakedModel, CallbackInfo ci) {
-        if (itemStack.getItem() instanceof Pokenav) {
-            if (!itemDisplayContext.firstPerson() && itemDisplayContext != ItemDisplayContext.GUI) return;
-            if (PokenavSignalManager.hasSignal()) {
-                PokenavSignalManager.shake(poseStack);
-            }
+        if (!itemDisplayContext.firstPerson() && itemDisplayContext != ItemDisplayContext.GUI) return;
 
+        if (itemStack.getItem() instanceof FlickeringItem) {
+            PokenavSignalManager.Signal signal = PokenavSignalManager.getSignal(itemStack);
+            if (signal != null) {
+                signal.shake(poseStack);
+            }
+        }
+
+        if (itemStack.getItem() instanceof Pokenav) {
             if (!itemDisplayContext.firstPerson()) return;
             if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult) {
                 ClientLevel level = Minecraft.getInstance().level;
@@ -61,11 +68,21 @@ public abstract class ItemRendererMixin {
 
     @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
     public BakedModel flicker(BakedModel bakedModel, ItemStack stack, ItemDisplayContext renderMode) {
-        if (stack.getItem() instanceof ConditionalModelItem item) {
-            ResourceLocation modelId = item.getModel(stack, renderMode);
-            if (modelId == null) return bakedModel;
-            return itemModelShaper.getModelManager().getModel(ModelResourceLocation.inventory(modelId));
+        Item item = stack.getItem();
+        ResourceLocation modelId = null;
+
+        if (item instanceof OpenableItem openable && openable.isOpened(stack)) {
+            modelId = openable.getOpenedModel(stack, renderMode);
+        } else if (item instanceof FlickeringItem flickering && PokenavSignalManager.hasSignal(stack)) {
+            modelId = flickering.getFlickeringModel(stack, renderMode);
         }
-        return bakedModel;
+
+        if (item instanceof InHandModelItem modelItem && modelId == null) {
+            modelId = modelItem.getModel(stack, renderMode);
+        }
+
+        if (modelId == null) return bakedModel;
+
+        return itemModelShaper.getModelManager().getModel(ModelResourceLocation.inventory(modelId));
     }
 }

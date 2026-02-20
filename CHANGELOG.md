@@ -1,3 +1,7 @@
+# Update 2.3.0
+
+- 
+
 # Update 2.2.5
 
 - Fixes for compatibility with the latest version of Cobblemon.

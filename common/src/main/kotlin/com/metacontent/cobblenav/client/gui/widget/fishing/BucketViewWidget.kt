@@ -24,7 +24,7 @@ class BucketViewWidget(
     horizontalPadding: Float = (width - columns * columnWidth) / (columns - 1f),
     val minHeight: Int,
     val depthProgress: Float,
-    val bucket: WeightedBucket
+    val bucket: String
 ) : TableView<ScrollableItemWidget<SpawnDataWidget>>(
     x = x,
     y = y,
@@ -95,7 +95,7 @@ class BucketViewWidget(
             )
             drawScaledText(
                 context = guiGraphics,
-                text = Component.translatable("bucket.cobblenav.${bucket.name}"),
+                text = Component.translatable("bucket.cobblenav.${bucket}"),
                 x = x + width - BUCKET_WIDTH,
                 y = y - SEPARATOR_HEIGHT - 0.4,
                 shadow = true,

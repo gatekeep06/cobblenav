@@ -49,7 +49,7 @@ class BucketSelectorWidget(
         prevButton.disabled = parent.bucketIndex <= 0
         nextButton.disabled = parent.bucketIndex >= parent.buckets.size - 1
         prevButton.render(guiGraphics, i, j, f)
-        val bucketName = parent.currentBucket.name
+        val bucketName = parent.currentBucket
         val pair = translateOr(
             "$BUCKET_KEY_BASE.$bucketName",
             Component.literal(bucketName)

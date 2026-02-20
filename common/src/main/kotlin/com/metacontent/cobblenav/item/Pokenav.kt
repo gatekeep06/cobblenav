@@ -2,27 +2,27 @@ package com.metacontent.cobblenav.item
 
 import com.cobblemon.mod.common.block.entity.PokeSnackBlockEntity
 import com.cobblemon.mod.common.util.raycast
-import com.metacontent.cobblenav.client.gui.PokenavSignalManager
+import com.metacontent.cobblenav.client.gui.screen.FishingnavScreen
 import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
-import com.metacontent.cobblenav.client.isGui
 import com.metacontent.cobblenav.networking.packet.client.OpenPokenavPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.ItemDisplayContext
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 
-class Pokenav(private val model: PokenavModelType) : ConditionalModelItem(Properties().stacksTo(MAX_STACK)) {
+class Pokenav(
+    private val model: PokenavModelType
+) : Item(Properties().stacksTo(MAX_STACK)), InHandModelItem, FlickeringItem, OpenableItem {
     companion object {
         const val MAX_STACK = 1
         const val BASE_REGISTRY_KEY = "pokenav_item_"
@@ -30,11 +30,12 @@ class Pokenav(private val model: PokenavModelType) : ConditionalModelItem(Proper
         const val BASE_TOOLTIP_TRANSLATION_KEY = "item.cobblenav.pokenav_item."
     }
 
-    val baseModel = cobblenavResource("$BASE_REGISTRY_KEY${model.modelName}")
-    val flickeringModel = cobblenavResource("flicker/$BASE_REGISTRY_KEY${model.modelName}")
-    val inHandModel = cobblenavResource("model/$BASE_REGISTRY_KEY${model.modelName}")
-    val inHandFlickeringModel = cobblenavResource("model/flicker/$BASE_REGISTRY_KEY${model.modelName}")
-    val openedInHandModel = cobblenavResource("model/open/$BASE_REGISTRY_KEY${model.modelName}")
+    override val inventoryModel = cobblenavResource("$BASE_REGISTRY_KEY${model.modelName}")
+    override val flickeringInventoryModel = cobblenavResource("flicker/$BASE_REGISTRY_KEY${model.modelName}")
+    override val openedInventoryModel = cobblenavResource("open/$BASE_REGISTRY_KEY${model.modelName}")
+    override val inHandModel = cobblenavResource("model/$BASE_REGISTRY_KEY${model.modelName}")
+    override val flickeringInHandModel = cobblenavResource("model/flicker/$BASE_REGISTRY_KEY${model.modelName}")
+    override val openedInHandModel = cobblenavResource("model/open/$BASE_REGISTRY_KEY${model.modelName}")
 
     override fun use(
         level: Level,
@@ -70,20 +71,7 @@ class Pokenav(private val model: PokenavModelType) : ConditionalModelItem(Proper
         list.add(Component.translatable(BASE_TOOLTIP_TRANSLATION_KEY + model.modelName).withStyle(ChatFormatting.GRAY))
     }
 
-    override fun getModel(stack: ItemStack, displayContext: ItemDisplayContext): ResourceLocation {
-        if (displayContext.isGui()) {
-            if (PokenavSignalManager.isFlickering()) {
-                return flickeringModel
-            }
-            return baseModel
-        } else {
-            if (Minecraft.getInstance().screen is PokenavScreen && displayContext.firstPerson()) {
-                return openedInHandModel
-            }
-            if (PokenavSignalManager.isFlickering()) {
-                return inHandFlickeringModel
-            }
-            return inHandModel
-        }
+    override fun isOpened(stack: ItemStack) = Minecraft.getInstance().screen.let {
+        it is PokenavScreen && it !is FishingnavScreen
     }
 }

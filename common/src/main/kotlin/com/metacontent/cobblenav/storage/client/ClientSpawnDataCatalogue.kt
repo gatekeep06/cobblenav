@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
+import com.metacontent.cobblenav.client.gui.PokenavSignalManager.SPAWN_CATALOGUED_SIGNAL
 import com.metacontent.cobblenav.storage.AbstractSpawnDataCatalogue
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -14,8 +15,6 @@ class ClientSpawnDataCatalogue(
     spawnDetailIds: MutableSet<String> = mutableSetOf()
 ) : AbstractSpawnDataCatalogue(spawnDetailIds), ClientInstancedPlayerData {
     companion object {
-        val SIGNAL = PokenavSignalManager.Signal(1, 10f, 0f)
-
         fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket = SetClientPlayerDataPacket(
             type = CobblenavDataStoreTypes.SPAWN_DATA,
             playerData = ClientSpawnDataCatalogue(
@@ -31,7 +30,7 @@ class ClientSpawnDataCatalogue(
 
         fun incrementalAfterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
-                PokenavSignalManager.add(SIGNAL.copy())
+                PokenavSignalManager.add(SPAWN_CATALOGUED_SIGNAL.copy())
                 val current = CobblenavClient.spawnDataCatalogue.spawnDetailIds
                 val updated = data.spawnDetailIds
                 CobblenavClient.spawnDataCatalogue.newlyCataloguedAmount += (updated.size - current.size).coerceAtLeast(0)
