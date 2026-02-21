@@ -2,10 +2,8 @@ package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.item.Pokefinder
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
@@ -14,8 +12,6 @@ import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import org.joml.Quaternionf
-import org.joml.Vector3f
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.round
@@ -23,12 +19,13 @@ import kotlin.math.sin
 
 class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     companion object {
-        const val WIDTH = 144
-        const val HEIGHT = 96
+        const val WIDTH = 145
+        const val HEIGHT = 97
         const val COMPASS_WIDTH = 25
         const val COMPASS_HEIGHT = 25
         const val COMPASS_SHEET_WIDTH = 200
         const val COMPASS_OFFSET = 16
+        const val RADIUS = 128.0
         const val RADAR_SCALE = 0.55
         const val DOT_SIZE = 3
         val BACKGROUND = gui("pokefinder/overlay")
@@ -65,11 +62,10 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
         renderCompass(poseStack, 180f - player.rotationVector.y, x, y, scale)
 
-        val radius = /*settings?.radius ?:*/ 200.0
         val entities = settings?.let {
             minecraft.level?.getEntitiesOfClass(
                 PokemonEntity::class.java,
-                AABB.ofSize(player.position(), radius, radius, radius)
+                AABB.ofSize(player.position(), RADIUS, RADIUS, RADIUS)
             ) { settings.check(it.pokemon) }
         } ?: listOf()
 
@@ -105,15 +101,15 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         scale: Double
     ) {
         this.forEach {
-            val vec = center.vectorTo(it.position()).scale(RADAR_SCALE / scale)
+            val vec = center.vectorTo(it.position()).scale(RADAR_SCALE)
             val angle = Math.toRadians(180.0 - rotation)
-            val dotX = x + width / 2 - 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
-            val dotY = y + height / 2 - 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
+            val dotX = x + width / 2 - DOT_SIZE / 2 + vec.x * cos(angle) - vec.z * sin(angle)
+            val dotY = y + height / 2 - DOT_SIZE / 2 + vec.x * sin(angle) + vec.z * cos(angle)
             blitk(
                 matrixStack = poseStack,
                 texture = DOT,
-                x = floor(dotX),
-                y = floor(dotY),
+                x = floor(dotX / scale),
+                y = floor(dotY / scale),
                 width = DOT_SIZE,
                 height = DOT_SIZE
             )
