@@ -23,13 +23,14 @@ import kotlin.math.sin
 
 class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     companion object {
-        const val WIDTH = 216
-        const val HEIGHT = 144
-        const val COMPASS_WIDTH = 23
-        const val COMPASS_HEIGHT = 23
-        const val COMPASS_OFFSET = 4
-        const val RADAR_SCALE = 0.8
-        const val DOT_SIZE = 4
+        const val WIDTH = 144
+        const val HEIGHT = 96
+        const val COMPASS_WIDTH = 25
+        const val COMPASS_HEIGHT = 25
+        const val COMPASS_SHEET_WIDTH = 200
+        const val COMPASS_OFFSET = 16
+        const val RADAR_SCALE = 0.55
+        const val DOT_SIZE = 3
         val BACKGROUND = gui("pokefinder/overlay")
         val COMPASS = gui("pokefinder/compass")
         val DOT = gui("pokefinder/dot")
@@ -80,22 +81,17 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         val compassHeight = (COMPASS_HEIGHT / scale).toInt()
         val compassOffset = (COMPASS_OFFSET / scale).toInt()
 
-        poseStack.pushAndPop {
-            poseStack.rotateAround(
-                Quaternionf().fromEulerXYZDegrees(Vector3f(0f, 0f, rotation)),
-                x + compassOffset + compassWidth / 2f,
-                y + compassOffset + compassHeight / 2f,
-                0f
-            )
-            blitk(
-                matrixStack = poseStack,
-                texture = COMPASS,
-                x = x + compassOffset,
-                y = y + compassOffset,
-                width = compassWidth,
-                height = compassHeight
-            )
-        }
+        val frame = round((rotation % 360) / 45f).toInt()
+        blitk(
+            matrixStack = poseStack,
+            texture = COMPASS,
+            x = x + compassOffset - compassWidth / 2,
+            y = y + compassOffset - compassHeight / 2,
+            width = compassWidth,
+            height = compassHeight,
+            uOffset = COMPASS_HEIGHT * frame,
+            textureWidth = COMPASS_SHEET_WIDTH
+        )
     }
 
     private fun Collection<PokemonEntity>.renderPokemonDots(
@@ -111,8 +107,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         this.forEach {
             val vec = center.vectorTo(it.position()).scale(RADAR_SCALE / scale)
             val angle = Math.toRadians(180.0 - rotation)
-            val dotX = x + width / 2 + vec.x * cos(angle) - vec.z * sin(angle)
-            val dotY = y + height / 2 + vec.x * sin(angle) + vec.z * cos(angle)
+            val dotX = x + width / 2 - 0.5 + vec.x * cos(angle) - vec.z * sin(angle)
+            val dotY = y + height / 2 - 0.5 + vec.x * sin(angle) + vec.z * cos(angle)
             blitk(
                 matrixStack = poseStack,
                 texture = DOT,
