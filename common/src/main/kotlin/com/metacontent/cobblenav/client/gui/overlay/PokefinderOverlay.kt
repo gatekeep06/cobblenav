@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.overlay
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
@@ -10,6 +11,7 @@ import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
@@ -24,10 +26,14 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         const val COMPASS_WIDTH = 25
         const val COMPASS_HEIGHT = 25
         const val COMPASS_SHEET_WIDTH = 200
-        const val COMPASS_OFFSET = 16
+        const val COMPASS_OFFSET = 15
         const val RADIUS = 128.0
         const val RADAR_SCALE = 0.55
         const val DOT_SIZE = 3
+        const val COORDINATES_X = 127
+        const val COORDINATES_Y = 6.3
+        const val COORDINATES_GAP = 6
+        const val TEXT_SCALE = 0.4f
         val BACKGROUND = gui("pokefinder/overlay")
         val COMPASS = gui("pokefinder/compass")
         val DOT = gui("pokefinder/dot")
@@ -35,17 +41,17 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
     private val settings = CobblenavClient.pokefinderSettings
     private val minecraft = Minecraft.getInstance()
+    private val player = minecraft.player
     private val offset = CobblenavClient.config.pokefinderOverlayOffset
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
-        val isRightHand = minecraft.player?.mainHandItem?.item is Pokefinder
-        val scale =
-            minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale / CobblenavClient.config.screenScale
-        val scaledOffset = (offset / scale).toInt()
-        val scaledWidth = (WIDTH / scale).toInt()
-        val scaledHeight = (HEIGHT / scale).toInt()
-        val x = if (isRightHand) minecraft.window.guiScaledWidth - scaledWidth - scaledOffset else scaledOffset
-        val y = minecraft.window.guiScaledHeight - scaledHeight - scaledOffset
+        player ?: return
+
+        val pos = player.position()
+
+        val isRightHand = player.mainHandItem?.item is Pokefinder
+        val x = if (isRightHand) minecraft.window.guiScaledWidth - WIDTH - offset else offset
+        val y = minecraft.window.guiScaledHeight - HEIGHT - offset
 
         val poseStack = guiGraphics.pose()
 
@@ -54,37 +60,56 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             texture = BACKGROUND,
             x = x,
             y = y,
-            width = scaledWidth,
-            height = scaledHeight
+            width = WIDTH,
+            height = HEIGHT
         )
 
-        val player = minecraft.player ?: return
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.literal(pos.x.toInt().toString()),
+            x = x + COORDINATES_X,
+            y = y + COORDINATES_Y,
+            scale = TEXT_SCALE,
+            maxCharacterWidth = (16 / TEXT_SCALE).toInt()
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.literal(pos.y.toInt().toString()),
+            x = x + COORDINATES_X,
+            y = y + COORDINATES_Y + COORDINATES_GAP,
+            scale = TEXT_SCALE,
+            maxCharacterWidth = (16 / TEXT_SCALE).toInt()
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.literal(pos.z.toInt().toString()),
+            x = x + COORDINATES_X,
+            y = y + COORDINATES_Y + COORDINATES_GAP * 2,
+            scale = TEXT_SCALE,
+            maxCharacterWidth = (16 / TEXT_SCALE).toInt()
+        )
 
-        renderCompass(poseStack, 180f - player.rotationVector.y, x, y, scale)
+        renderCompass(poseStack, 180f - player.rotationVector.y, x, y)
 
         val entities = settings?.let {
             minecraft.level?.getEntitiesOfClass(
                 PokemonEntity::class.java,
-                AABB.ofSize(player.position(), RADIUS, RADIUS, RADIUS)
+                AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
             ) { settings.check(it.pokemon) }
         } ?: listOf()
 
-        entities.renderPokemonDots(poseStack, x, y, scaledWidth, scaledHeight, player.position(), player.rotationVector.y, scale)
+        entities.renderPokemonDots(poseStack, x, y, WIDTH, HEIGHT, pos, player.rotationVector.y)
     }
 
-    private fun renderCompass(poseStack: PoseStack, rotation: Float, x: Int, y: Int, scale: Double) {
-        val compassWidth = (COMPASS_WIDTH / scale).toInt()
-        val compassHeight = (COMPASS_HEIGHT / scale).toInt()
-        val compassOffset = (COMPASS_OFFSET / scale).toInt()
-
+    private fun renderCompass(poseStack: PoseStack, rotation: Float, x: Int, y: Int) {
         val frame = round((rotation % 360) / 45f).toInt()
         blitk(
             matrixStack = poseStack,
             texture = COMPASS,
-            x = x + compassOffset - compassWidth / 2,
-            y = y + compassOffset - compassHeight / 2,
-            width = compassWidth,
-            height = compassHeight,
+            x = x + COMPASS_OFFSET - COMPASS_WIDTH / 2,
+            y = y + COMPASS_OFFSET - COMPASS_HEIGHT / 2,
+            width = COMPASS_WIDTH,
+            height = COMPASS_HEIGHT,
             uOffset = COMPASS_HEIGHT * frame,
             textureWidth = COMPASS_SHEET_WIDTH
         )
@@ -97,8 +122,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         width: Int,
         height: Int,
         center: Vec3,
-        rotation: Float,
-        scale: Double
+        rotation: Float
     ) {
         this.forEach {
             val vec = center.vectorTo(it.position()).scale(RADAR_SCALE)
@@ -108,8 +132,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             blitk(
                 matrixStack = poseStack,
                 texture = DOT,
-                x = floor(dotX / scale),
-                y = floor(dotY / scale),
+                x = floor(dotX),
+                y = floor(dotY),
                 width = DOT_SIZE,
                 height = DOT_SIZE
             )
