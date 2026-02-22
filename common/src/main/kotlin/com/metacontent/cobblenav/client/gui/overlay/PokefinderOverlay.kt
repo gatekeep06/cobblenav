@@ -61,7 +61,11 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         val pos = player.position()
 
         val isRightHand = player.mainHandItem?.item is Pokefinder
-        val x = (minecraft.window.guiScaledWidth / scale).toInt() - WIDTH - offset
+        val x = if (isRightHand) {
+            (minecraft.window.guiScaledWidth / scale).toInt() - WIDTH - offset
+        } else {
+            offset
+        }
         val y = (minecraft.window.guiScaledHeight / scale).toInt() - HEIGHT - offset
 
         val poseStack = guiGraphics.pose()
