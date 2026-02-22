@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.gui.overlay
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.item.Pokefinder
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
+import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
@@ -32,8 +34,14 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         const val DOT_SIZE = 3
         const val COORDINATES_X = 127
         const val COORDINATES_Y = 6.3
-        const val COORDINATES_GAP = 6
+        const val COORDINATES_GAP = 6.1
+        const val SCALE_X = 9
+        const val SCALE_Y = 91
+        const val VERSION_X = 4
+        const val VERSION_Y = 84
+        const val SCALE_TEXT = "1 : 2.844"
         const val TEXT_SCALE = 0.4f
+        val TEXT_COLOR = FastColor.ARGB32.color(255, 1, 235, 95)
         val BACKGROUND = gui("pokefinder/overlay")
         val COMPASS = gui("pokefinder/compass")
         val DOT = gui("pokefinder/dot")
@@ -70,7 +78,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             x = x + COORDINATES_X,
             y = y + COORDINATES_Y,
             scale = TEXT_SCALE,
-            maxCharacterWidth = (16 / TEXT_SCALE).toInt()
+            maxCharacterWidth = (16 / TEXT_SCALE).toInt(),
+            colour = TEXT_COLOR
         )
         drawScaledText(
             context = guiGraphics,
@@ -78,7 +87,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             x = x + COORDINATES_X,
             y = y + COORDINATES_Y + COORDINATES_GAP,
             scale = TEXT_SCALE,
-            maxCharacterWidth = (16 / TEXT_SCALE).toInt()
+            maxCharacterWidth = (16 / TEXT_SCALE).toInt(),
+            colour = TEXT_COLOR
         )
         drawScaledText(
             context = guiGraphics,
@@ -86,7 +96,27 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             x = x + COORDINATES_X,
             y = y + COORDINATES_Y + COORDINATES_GAP * 2,
             scale = TEXT_SCALE,
-            maxCharacterWidth = (16 / TEXT_SCALE).toInt()
+            maxCharacterWidth = (16 / TEXT_SCALE).toInt(),
+            colour = TEXT_COLOR
+        )
+
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.literal(SCALE_TEXT),
+            x = x + SCALE_X,
+            y = y + SCALE_Y,
+            scale = TEXT_SCALE,
+            maxCharacterWidth = (23 / TEXT_SCALE).toInt(),
+            colour = TEXT_COLOR
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.literal("v.${Cobblenav.VERSION}"),
+            x = x + VERSION_X,
+            y = y + VERSION_Y,
+            scale = TEXT_SCALE,
+            maxCharacterWidth = (23 / TEXT_SCALE).toInt(),
+            colour = TEXT_COLOR
         )
 
         renderCompass(poseStack, 180f - player.rotationVector.y, x, y)
