@@ -42,10 +42,8 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
         }
 
     fun check(pokemon: Pokemon): Boolean {
-        return if (species.isNotEmpty() && !species.map(String::lowercase).contains(pokemon.species.name.lowercase())) {
-            false
-        }
-        else if (strictAspectCheck && !pokemon.aspects.containsAll(aspects.map(String::lowercase))) {
+        val lowercaseSpecies = species.map(String::lowercase)
+        return if (species.isNotEmpty() && !lowercaseSpecies.contains(pokemon.species.name.lowercase()) && !lowercaseSpecies.contains(pokemon.species.translatedName.string.lowercase())) {        else if (strictAspectCheck && !pokemon.aspects.containsAll(aspects.map(String::lowercase))) {
             false
         }
         else if (!strictAspectCheck && aspects.isNotEmpty() && !aspects.any { pokemon.aspects.contains(it.lowercase()) }) {
