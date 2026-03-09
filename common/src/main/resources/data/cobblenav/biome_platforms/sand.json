@@ -1,0 +1,8 @@
+{
+    "id": "cobblenav:sand",
+    "conditions": {
+        "biomes": [
+            "cobblemon:is_arid"
+        ]
+    }
+}
