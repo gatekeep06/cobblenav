@@ -1,0 +1,8 @@
+{
+    "id": "cobblenav:stone",
+    "conditions": {
+        "biomes": [
+            "cobblemon:is_mountain"
+        ]
+    }
+}
