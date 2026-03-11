@@ -35,7 +35,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         const val RADAR_SCALE = 0.55
         const val DOT_SIZE = 3
         const val COORDINATES_X = 127
-        const val COORDINATES_Y = 6.3
+        const val COORDINATES_Y = 6.4
         const val COORDINATES_GAP = 6.1
         const val SCALE_X = 9
         const val SCALE_Y = 91
