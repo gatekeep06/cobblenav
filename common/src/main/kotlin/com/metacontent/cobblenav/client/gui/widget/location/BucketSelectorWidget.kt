@@ -18,8 +18,8 @@ class BucketSelectorWidget(
     companion object {
         const val WIDTH: Int = 80
         const val HEIGHT: Int = 16
-        const val BUTTON_WIDTH: Int = 10
-        const val BUTTON_HEIGHT: Int = 9
+        const val BUTTON_WIDTH: Int = 12
+        const val BUTTON_HEIGHT: Int = 10
         const val SPACE: Int = 1
         const val BUCKET_KEY_BASE: String = "bucket.cobblenav"
         val NEXT = gui("button/next_button")
@@ -27,7 +27,7 @@ class BucketSelectorWidget(
     }
 
     private val prevButton = IconButton(
-        pX = x,
+        pX = x + 2,
         pY = y + (height - BUTTON_HEIGHT) / 2,
         pWidth = BUTTON_WIDTH,
         pHeight = BUTTON_HEIGHT,
@@ -62,10 +62,10 @@ class BucketSelectorWidget(
         drawScaledText(
             context = guiGraphics,
             text = text,
-            x = x + WIDTH / 2,
-            y = y + 3,
+            x = x + 1.5 + WIDTH / 2,
+            y = y + 4,
             centered = true,
-            maxCharacterWidth = WIDTH - 2 * (BUTTON_WIDTH + SPACE),
+            maxCharacterWidth = WIDTH - 2 * (BUTTON_WIDTH + SPACE) - 2,
             pMouseX = i,
             pMouseY = j
         )

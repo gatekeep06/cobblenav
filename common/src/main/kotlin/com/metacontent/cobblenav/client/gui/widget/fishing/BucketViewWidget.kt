@@ -28,7 +28,7 @@ class BucketViewWidget(
 ) : TableView<ScrollableItemWidget<SpawnDataWidget>>(
     x = x,
     y = y,
-    width = width,
+    width = width + 4,
     columns = columns,
     columnWidth = columnWidth,
     verticalGap = verticalPadding,
