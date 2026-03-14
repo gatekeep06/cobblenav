@@ -53,12 +53,10 @@ class LocationScreen(
         const val CHECK_BOX_HEIGHT = 8
         const val CHECK_BOX_OFFSET = 4
         const val TABLE_MARGIN = 5
-        val VIEW_BACKGROUND_COLOR = FastColor.ARGB32.color(255, 110, 220, 176)
-        val VIEW_OUTLINE_COLOR = FastColor.ARGB32.color(255, 84, 168, 134)
         const val VIEW_WIDTH = 298
         const val VIEW_HEIGHT = 182
 
-        //        val VIEW = cobblenavResource("textures/gui/location/view.png")
+        val VIEW = gui("location/view_bg")
         val SORT_ASCENDING = gui("button/sort_button_ascending")
         val SORT_DESCENDING = gui("button/sort_button_descending")
         val REFRESH = gui("button/refresh_button")
@@ -261,21 +259,14 @@ class LocationScreen(
 
     override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
-        guiGraphics.fillWithOutline(
-            viewX, viewY,
-            viewX + VIEW_WIDTH,
-            viewY + VIEW_HEIGHT,
-            VIEW_BACKGROUND_COLOR,
-            VIEW_OUTLINE_COLOR
+        blitk(
+            matrixStack = poseStack,
+            texture = VIEW,
+            x = viewX,
+            y = viewY - BucketSelectorWidget.HEIGHT,
+            width = VIEW_WIDTH,
+            height = VIEW_HEIGHT + BucketSelectorWidget.HEIGHT
         )
-//        blitk(
-//            matrixStack = poseStack,
-//            texture = VIEW,
-//            x = viewX,
-//            y = viewY,
-//            width = VIEW_WIDTH,
-//            height = VIEW_WIDTH
-//        )
         if (loading) {
             poseStack.pushAndPop(
                 translate = Vector3d(0.0, 0.0, 400.0)
