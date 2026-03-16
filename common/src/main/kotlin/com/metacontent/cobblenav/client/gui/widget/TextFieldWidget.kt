@@ -1,84 +1,58 @@
 package com.metacontent.cobblenav.client.gui.widget
 
-import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.client.gui.util.fillWithOutline
-import com.mojang.blaze3d.platform.InputConstants
+import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
-import net.minecraft.util.FastColor
+import net.minecraft.resources.ResourceLocation
 
 class TextFieldWidget(
-    val fieldX: Int,
-    val fieldY: Int,
+    val x: Int,
+    val y: Int,
     width: Int,
     height: Int,
+    lineWidth: Int = width,
     default: String = "",
-    private val fillColor: Int = FastColor.ARGB32.color(255, 0, 0, 0),
-    private val outlineColor: Int = FastColor.ARGB32.color(255, 255, 255, 255),
-    private val focusedOutlineColor: Int = outlineColor,
-    private val hint: MutableComponent = Component.empty(),
-    private val onFinish: (value: String) -> Unit = {},
-    private val onUpdate: (value: String) -> Unit = {}
-) : EditBox(Minecraft.getInstance().font, fieldX + 4, fieldY + (height - 8) / 2, width, height, hint) {
+    textColor: Int = 0xffffff,
+    private val textureSheet: ResourceLocation,
+    private val onChange: (String) -> Unit
+) : SoundlessWidget(x, y, width, height, Component.empty()) {
+    private val editBox: EditBox
+
+    val value: String
+        get() = editBox.value
+
     init {
-        isBordered = false
-        setMaxLength(256)
-        value = default
+        val font = Minecraft.getInstance().font
+        editBox = EditBox(
+            font,
+            x + (width - lineWidth) / 2,
+            y + (height - font.lineHeight) / 2,
+            width,
+            height,
+            message
+        ).also {
+            it.setMaxLength(Int.MAX_VALUE)
+            it.value = default
+            it.setTextColor(textColor)
+            it.setResponder(onChange)
+            addWidget(it)
+        }
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        guiGraphics.fillWithOutline(
-            x1 = fieldX,
-            y1 = fieldY,
-            x2 = fieldX + width + 4,
-            y2 = fieldY + height,
-            fillColor = fillColor,
-            outlineColor = if (isFocused) focusedOutlineColor else outlineColor
+        blitk(
+            matrixStack = guiGraphics.pose(),
+            texture = textureSheet,
+            x = x,
+            y = y,
+            width = width,
+            height = height,
+            vOffset = if (isFocused) height else 0,
+            textureHeight = height * 2
         )
-        if (value.isEmpty() && !isFocused) {
-            drawScaledText(
-                context = guiGraphics,
-                text = hint,
-                x = x,
-                y = y,
-                colour = FastColor.ARGB32.color(120, 30, 30, 30)
-            )
-        }
-        super.renderWidget(guiGraphics, i, j, f)
-    }
-
-    override fun setFocused(bl: Boolean) {
-        super.setFocused(bl)
-        if (!bl) {
-            finish()
-        }
-    }
-
-    override fun keyPressed(i: Int, j: Int, k: Int): Boolean {
-        // this doesn't really work with regular screens, as pressing ESC closes the screen instantly without passing it to the widgets for processing
-        if (i == InputConstants.KEY_ESCAPE) {
-            finish()
-        }
-        return super.keyPressed(i, j, k)
-    }
-
-    override fun insertText(string: String) {
-        super.insertText(string)
-        update()
-    }
-
-    fun finish() {
-        onFinish(value)
-    }
-
-    fun update() {
-        onUpdate(value)
-    }
-
-    override fun clicked(d: Double, e: Double): Boolean {
-        return this.active && this.visible && (d >= x.toDouble() - 4) && (e >= y.toDouble() - (height - 8) / 2) && (d < (this.x + this.getWidth()).toDouble()) && (e < (this.y + this.getHeight() + (height - 8) / 2).toDouble())
+        editBox.renderWidget(guiGraphics, i, j, f)
     }
 }
