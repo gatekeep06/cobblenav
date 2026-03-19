@@ -34,6 +34,10 @@ open class TableView<I : AbstractWidget>(
         items.addAll(widgets)
     }
 
+    fun remove(widget: I) {
+        items.remove(widget)
+    }
+
     fun clear() {
         items.clear()
     }
