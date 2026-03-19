@@ -84,7 +84,10 @@ class OpenedSpawnDataDetail(
             statefulWidget.changeState(ClosedSpawnDataDetail(statefulWidget, x, y))
         }
 
-        statefulWidget.displayer.selectedData?.dataWidgets?.let { tableView.items = it.toMutableList() }
+        statefulWidget.displayer.selectedData?.dataWidgets?.let {
+            tableView.clear()
+            tableView.add(it)
+        }
 
         val poseStack = guiGraphics.pose()
 
