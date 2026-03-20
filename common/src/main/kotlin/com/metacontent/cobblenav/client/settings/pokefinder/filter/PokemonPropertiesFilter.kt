@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
 
 class PokemonPropertiesFilter(
@@ -40,6 +41,7 @@ class PokemonPropertiesFilter(
 
     override fun update(value: String) {
         properties = PokemonProperties.parse(value)
+        CobblenavClient.pokefinderSettings?.changed = true
     }
 
     override fun asString(): String = properties.originalString
