@@ -17,7 +17,7 @@ class TextFieldWidget(
     lineWidth: Int = width,
     lineHeight: Int = height,
     lineX: Int = x + (width - lineWidth) / 2,
-    lineY: Int = y + 4,
+    lineY: Int = y + (lineHeight - Minecraft.getInstance().font.lineHeight) / 2,
     default: String = "",
     textColor: Int = 0xffffff,
     private val textureSheet: ResourceLocation,
@@ -72,6 +72,11 @@ class TextFieldWidget(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        return editBox.mouseClicked(pMouseX, pMouseY, pButton).also { isFocused = it }
+        return clicked(pMouseX, pMouseY).also {
+            isFocused = it
+            if (it) {
+                editBox.onClick(pMouseX, pMouseY)
+            }
+        }
     }
 }
