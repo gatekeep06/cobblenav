@@ -81,7 +81,6 @@ open class TableView<I : AbstractWidget>(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         items.forEach { it.isFocused = false }
-        if (!clicked(pMouseX, pMouseY)) return false
-        return items.any { it.mouseClicked(pMouseX, pMouseY, pButton) }
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 }

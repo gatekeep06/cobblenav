@@ -75,4 +75,9 @@ class FilterListEntryWidget(
         removeButton.y += i - y
         super.setY(i)
     }
+
+    override fun setFocused(bl: Boolean) {
+        super.setFocused(bl)
+        widget.isFocused = bl
+    }
 }

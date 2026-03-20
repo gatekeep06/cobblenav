@@ -72,6 +72,6 @@ class TextFieldWidget(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        return clicked(pMouseX, pMouseY).also { isFocused = it }
+        return editBox.mouseClicked(pMouseX, pMouseY, pButton).also { isFocused = it }
     }
 }
