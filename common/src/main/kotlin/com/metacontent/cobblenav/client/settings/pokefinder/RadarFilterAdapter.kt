@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.settings.pokefinder
 
 import com.google.gson.*
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import java.lang.reflect.Type
 
 object RadarFilterAdapter : JsonSerializer<RadarFilter>, JsonDeserializer<RadarFilter> {
@@ -18,10 +19,10 @@ object RadarFilterAdapter : JsonSerializer<RadarFilter>, JsonDeserializer<RadarF
         context: JsonDeserializationContext
     ): RadarFilter {
         val jsonObject = json.asJsonObject
-        val type = jsonObject["type"].asString
+        val typeName = jsonObject["type"].asString
 
-        val clazz = RadarFilterRegistry.get(type) ?: error("Unknown filter type: $type")
+        val type = RadarFilterTypeRegistry.get(typeName) ?: error("Unknown filter type: $typeName")
 
-        return context.deserialize(jsonObject, clazz)
+        return context.deserialize(jsonObject, type.filterClass)
     }
 }

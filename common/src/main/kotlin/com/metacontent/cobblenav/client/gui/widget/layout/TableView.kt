@@ -28,18 +28,22 @@ open class TableView<I : AbstractWidget>(
 
     fun add(widget: I) {
         items.add(widget)
+        children.add(widget)
     }
 
     fun add(widgets: List<I>) {
         items.addAll(widgets)
+        children.addAll(widgets)
     }
 
     fun remove(widget: I) {
         items.remove(widget)
+        children.remove(widget)
     }
 
     fun clear() {
         items.clear()
+        children.clear()
     }
 
     fun <T : Comparable<T>> resort(sorting: Sorting, extractor: (I) -> T) {
@@ -76,6 +80,7 @@ open class TableView<I : AbstractWidget>(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        items.forEach { it.isFocused = false }
         if (!clicked(pMouseX, pMouseY)) return false
         return items.any { it.mouseClicked(pMouseX, pMouseY, pButton) }
     }

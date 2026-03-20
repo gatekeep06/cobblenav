@@ -4,7 +4,7 @@ import com.cobblemon.mod.common.util.adapters.IntRangeAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilter
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterAdapter
 import java.io.File
 import java.io.FileReader

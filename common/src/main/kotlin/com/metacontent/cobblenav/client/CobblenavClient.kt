@@ -53,7 +53,7 @@ object CobblenavClient {
         }
 
         PlatformEvents.CLIENT_ENTITY_LOAD.subscribe { (entity, _) ->
-            if (entity !is PokemonEntity || pokefinderSettings?.check(entity.pokemon) != true) return@subscribe
+            if (entity !is PokemonEntity || pokefinderSettings?.test(entity.pokemon) != true) return@subscribe
             PokenavSignalManager.add(POKEMON_APPEARED_SIGNAL.copy())
         }
     }

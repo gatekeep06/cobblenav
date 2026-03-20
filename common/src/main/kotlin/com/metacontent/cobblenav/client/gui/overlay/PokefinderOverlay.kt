@@ -135,7 +135,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
                 minecraft.level?.getEntitiesOfClass(
                     PokemonEntity::class.java,
                     AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
-                ) { settings.check(it.pokemon) }
+                ) { settings.test(it.pokemon) }
             } ?: listOf()
 
             entities.renderPokemonDots(poseStack, x, y, WIDTH, HEIGHT, pos, player.rotationVector.y)

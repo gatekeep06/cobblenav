@@ -1,11 +1,12 @@
-package com.metacontent.cobblenav.client.settings.pokefinder
+package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.metacontent.cobblenav.client.gui.widget.TextFieldWidget
+import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
 
 class PokemonPropertiesFilter(
-    private var properties: PokemonProperties
+    private var properties: PokemonProperties = PokemonProperties()
 ) : EditableTextFilter() {
     companion object {
         const val TYPE = "properties"
@@ -13,23 +14,7 @@ class PokemonPropertiesFilter(
 
     override val type = "properties"
 
-    override val widget by lazy {
-        TextFieldWidget(
-            x = 0,
-            y = 0,
-            width = RadarFilter.WIDGET_WIDTH,
-            height = RadarFilter.WIDGET_HEIGHT,
-            default = properties.originalString,
-            textureSheet = FIELD,
-            onChange = {}
-        )
-    }
-
     override fun test(pokemon: Pokemon): Boolean = properties.test(pokemon)
-
-    override fun onFinishEditing() {
-        properties = PokemonProperties.parse(widget.value)
-    }
 
     private fun PokemonProperties.test(pokemon: Pokemon): Boolean {
         return if (level != null && pokemon.level != level) {
@@ -38,7 +23,7 @@ class PokemonPropertiesFilter(
             false
         } else if (gender != null && pokemon.gender != gender) {
             false
-        } else if (species != null && pokemon.species.name != species) {
+        } else if (species != null && !pokemon.species.name.equals(species, true)) {
             false
         } else if (form != null && !pokemon.form.name.equals(form, true)) {
             false
@@ -52,4 +37,10 @@ class PokemonPropertiesFilter(
             true
         }
     }
+
+    override fun update(value: String) {
+        properties = PokemonProperties.parse(value)
+    }
+
+    override fun asString(): String = properties.originalString
 }
