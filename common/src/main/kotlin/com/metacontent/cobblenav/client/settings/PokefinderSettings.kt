@@ -31,6 +31,6 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
     }
 
     fun test(pokemon: Pokemon): Boolean {
-        return filters.any { it.test(pokemon) }
+        return filters.any { it.test(pokemon) } || filters.isEmpty()
     }
 }
