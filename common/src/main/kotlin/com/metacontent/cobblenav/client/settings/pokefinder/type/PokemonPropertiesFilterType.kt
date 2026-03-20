@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 object PokemonPropertiesFilterType : RadarFilterType<PokemonPropertiesFilter> {
     const val WIDGET_WIDTH = 196
     const val WIDGET_HEIGHT = 26
-    const val LINE_WIDTH = 186
+    const val LINE_WIDTH = 185
     const val LINE_HEIGHT = 26
 
     override val filterClass = PokemonPropertiesFilter::class.java
@@ -27,6 +27,7 @@ object PokemonPropertiesFilterType : RadarFilterType<PokemonPropertiesFilter> {
             height = WIDGET_HEIGHT,
             lineWidth = LINE_WIDTH,
             lineHeight = LINE_HEIGHT,
+            lineX = 5,
             default = filter.asString(),
             textColor = PokefinderScreen.COLOR,
             textureSheet = EditableTextFilter.FIELD,
