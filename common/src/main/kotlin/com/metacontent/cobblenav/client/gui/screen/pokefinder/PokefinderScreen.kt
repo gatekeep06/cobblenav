@@ -7,9 +7,12 @@ import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
+import com.metacontent.cobblenav.client.gui.widget.pokefinder.AddFilterButton
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterTypeRegistry
-import com.metacontent.cobblenav.client.settings.pokefinder.type.createEntry
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
+import com.metacontent.cobblenav.client.settings.pokefinder.type.LabelFilterType.createEntry
+import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -25,7 +28,6 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         const val BORDER_WIDTH = 5
         const val BUTTON_SIZE = 18
         val BACKGROUND = gui("pokefinder/background")
-        val ADD = gui("pokefinder/add")
         val BACK = gui("pokefinder/back")
         val CLEAR = gui("pokefinder/clear")
 
@@ -42,7 +44,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private var screenX = 0
     private var screenY = 0
 
-    private lateinit var filterTable: TableView<AbstractWidget>
+    private lateinit var filterTable: TableView<FilterListEntryWidget>
+    private lateinit var addButtonTable: TableView<IconButton>
     private lateinit var baseTable: TableView<AbstractWidget>
     private lateinit var scrollableView: ScrollableView
     private lateinit var backButton: IconButton
@@ -54,46 +57,43 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         screenX = (width - WIDTH) / 2
         screenY = (height - HEIGHT) / 2
 
-        filterTable = TableView<AbstractWidget>(
-            x = screenX + BORDER_WIDTH + 36,
-            y = screenY + BORDER_WIDTH + 16,
+        filterTable = TableView(
+            x = 0,
+            y = 0,
             width = 238,
             columns = 1,
             verticalGap = 6f,
             horizontalGap = 0f
-        ).also { table ->
-            settings?.getFilters()?.mapNotNull {
-                RadarFilterTypeRegistry.get(it.type)?.createEntry(this, it)
-            }?.let { table.add(it) }
+        )
+        settings?.getFilters()?.mapNotNull {
+            RadarFilterTypeRegistry.get(it.type)?.createEntry(this, it)
+        }?.let { filterTable.add(it) }
+
+        addButtonTable = TableView(
+            x = 0,
+            y = 0,
+            width = 238,
+            columns = 5,
+            verticalGap = 6f
+        )
+        RadarFilterTypeRegistry.types().map { AddFilterButton(this, it) }.let {
+            addButtonTable.add(it)
         }
 
-        baseTable = TableView<AbstractWidget>(
+        baseTable = TableView(
             x = screenX + BORDER_WIDTH + 36,
             y = screenY + BORDER_WIDTH + 16,
             width = 238,
             columns = 1,
             verticalGap = 0f,
             horizontalGap = 0f
-        ).also {
-            it.add(filterTable)
-            it.add(
-                IconButton(
-                    pWidth = 218,
-                    pHeight = 26,
-                    texture = ADD,
-                    action = {
-                        val type = RadarFilterTypeRegistry.get("properties") ?: return@IconButton
-                        val entry = type.createEntry(this)
-                        settings?.addFilter(entry.filter)
-                        filterTable.add(entry)
-                    }
-                )
-            )
-        }
+        )
+        baseTable.add(filterTable)
+        baseTable.add(addButtonTable)
 
         scrollableView = ScrollableView(
-            x = filterTable.x,
-            y = filterTable.y,
+            x = baseTable.x,
+            y = baseTable.y,
             width = 241,
             height = 150,
             child = baseTable
@@ -132,8 +132,16 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         )
     }
 
+    fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
+        settings ?: return
+        val entry = type.createEntry(this)
+        settings.addFilter(entry.filter)
+        filterTable.add(entry)
+    }
+
     fun removeFilterListEntry(entry: FilterListEntryWidget) {
-        settings?.removeFilter(entry.filter)
+        settings ?: return
+        settings.removeFilter(entry.filter)
         filterTable.remove(entry)
     }
 
