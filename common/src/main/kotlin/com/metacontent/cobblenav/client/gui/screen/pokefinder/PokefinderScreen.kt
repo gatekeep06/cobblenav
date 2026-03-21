@@ -2,7 +2,10 @@ package com.metacontent.cobblenav.client.gui.screen.pokefinder
 
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledText
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay.Companion.RADIUS
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
@@ -20,6 +23,8 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 
 class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     companion object {
@@ -130,11 +135,30 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             width = WIDTH,
             height = HEIGHT
         )
+
+        val pos = player?.position()
+        val entityNumber = if (pos != null && settings != null) {
+            minecraft?.level?.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
+            ) { settings.test(it.pokemon) }?.size ?: 0
+        } else {
+            0
+        }
+        drawScaledText(
+            context = guiGraphics,
+            text = Component.literal(entityNumber.toString().padStart(3, '0')),
+            x = screenX + BORDER_WIDTH + 14,
+            y = screenY + 86 + 7,
+            maxCharacterWidth = 17,
+            colour = COLOR,
+            centered = true
+        )
     }
 
     fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
         settings ?: return
-        val entry = type.createEntry(this)
+        val entry = type.createEntry(parent = this)
         settings.addFilter(entry.filter)
         filterTable.add(entry)
     }
