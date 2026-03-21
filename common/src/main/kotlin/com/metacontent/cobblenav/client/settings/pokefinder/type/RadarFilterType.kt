@@ -14,20 +14,20 @@ interface RadarFilterType<T : RadarFilter> {
     fun createFilter(): T
 
     fun createWidget(filter: T): AbstractWidget
-}
 
-fun <T : RadarFilter> RadarFilterType<T>.createEntry(
-    parent: PokefinderScreen,
-    filter: RadarFilter? = null,
-): FilterListEntryWidget {
-    val filter = filter
-        ?.takeIf { this.filterClass.isInstance(it) }
-        ?.let { this.filterClass.cast(filter) } ?: this.createFilter()
-    val widget = this.createWidget(filter)
-    return FilterListEntryWidget(
-        filter = filter,
-        widget = widget,
-        icon = typeIcon,
-        parent = parent
-    )
+    fun <T : RadarFilter> RadarFilterType<T>.createEntry(
+        parent: PokefinderScreen,
+        filter: RadarFilter? = null,
+    ): FilterListEntryWidget {
+        val filter = filter
+            ?.takeIf { this.filterClass.isInstance(it) }
+            ?.let { this.filterClass.cast(filter) } ?: this.createFilter()
+        val widget = this.createWidget(filter)
+        return FilterListEntryWidget(
+            filter = filter,
+            widget = widget,
+            icon = typeIcon,
+            parent = parent
+        )
+    }
 }
