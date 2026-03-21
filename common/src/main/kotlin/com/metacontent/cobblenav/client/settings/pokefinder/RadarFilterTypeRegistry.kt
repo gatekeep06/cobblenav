@@ -18,6 +18,8 @@ object RadarFilterTypeRegistry {
 
     fun get(type: String): RadarFilterType<out RadarFilter>? = types[type]
 
+    fun types(): Iterable<RadarFilterType<out RadarFilter>> = types.values
+
     init {
         register(TranslatedNameFilter.TYPE, TranslatedNameFilterType)
         register(PokemonPropertiesFilter.TYPE, PokemonPropertiesFilterType)
