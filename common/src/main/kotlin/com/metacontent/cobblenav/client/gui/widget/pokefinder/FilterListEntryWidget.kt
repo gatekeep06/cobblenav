@@ -6,6 +6,7 @@ import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
+import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -51,16 +52,16 @@ class FilterListEntryWidget(
             texture = ICON_BACKGROUND,
             x = widget.x + widget.width,
             y = widget.y,
-            width = 22,
-            height = HEIGHT
+            width = RadarFilterType.ICON_WIDTH,
+            height = RadarFilterType.ICON_HEIGHT
         )
         blitk(
             matrixStack = poseStack,
             texture = icon,
             x = widget.x + widget.width,
             y = widget.y,
-            width = 22,
-            height = 26
+            width = RadarFilterType.ICON_WIDTH,
+            height = RadarFilterType.ICON_HEIGHT
         )
     }
 
