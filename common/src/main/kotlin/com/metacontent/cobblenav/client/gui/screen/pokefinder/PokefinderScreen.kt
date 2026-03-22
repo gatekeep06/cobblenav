@@ -22,9 +22,9 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.Vec3
 
 class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     companion object {
@@ -56,13 +56,15 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private var screenY = 0
 
     private lateinit var filterTable: TableView<FilterListEntryWidget>
-    private lateinit var addButtonTable: TableView<IconButton>
+    private lateinit var addButtonTable: TableView<AddFilterButton>
     private lateinit var baseTable: TableView<AbstractWidget>
     private lateinit var scrollableView: ScrollableView
     private lateinit var backButton: IconButton
     private lateinit var clearButton: IconButton
 
     private val settings = CobblenavClient.pokefinderSettings
+
+    private var bottomText: Component? = null
 
     override fun init() {
         screenX = (width - WIDTH) / 2
@@ -160,6 +162,24 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             colour = COLOR,
             centered = true
         )
+
+        addButtonTable.applyToAll {
+            if (it.isHovered) {
+                bottomText = it.type.displayedName
+                return@applyToAll
+            }
+        }
+        bottomText?.let {
+            drawScaledText(
+                context = guiGraphics,
+                text = it as MutableComponent,
+                x = screenX + BORDER_WIDTH + 87,
+                y = screenY + BORDER_WIDTH + 170,
+                maxCharacterWidth = 186,
+                colour = COLOR
+            )
+        }
+        bottomText = null
     }
 
     fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
