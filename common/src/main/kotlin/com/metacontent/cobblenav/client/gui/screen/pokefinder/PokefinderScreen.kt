@@ -32,12 +32,18 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         const val HEIGHT = 192
         const val BORDER_WIDTH = 5
         const val BUTTON_SIZE = 18
+        const val WIDGET_WIDTH = 196
+        const val WIDGET_HEIGHT = 26
+        const val LINE_WIDTH = 185
+        const val LINE_HEIGHT = 26
         val BACKGROUND = gui("pokefinder/background")
         val BACK = gui("pokefinder/back")
         val CLEAR = gui("pokefinder/clear")
+        val FIELD = gui("pokefinder/text")
 
         @JvmStatic
         val COLOR = FastColor.ARGB32.color(255, 1, 235, 95)
+        val BG_COLOR = FastColor.ARGB32.color(255, 37, 52, 47)
     }
 
     val player: LocalPlayer? = Minecraft.getInstance().player

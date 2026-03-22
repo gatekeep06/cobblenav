@@ -1,20 +1,16 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.type
 
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
-import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.FIELD
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.LINE_HEIGHT
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.LINE_WIDTH
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_HEIGHT
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_WIDTH
 import com.metacontent.cobblenav.client.gui.widget.TextFieldWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
 import net.minecraft.client.gui.components.AbstractWidget
 
 abstract class EditableTextFilterType<T : EditableTextFilter> : RadarFilterType<T> {
-    companion object {
-        const val WIDGET_WIDTH = 196
-        const val WIDGET_HEIGHT = 26
-        const val LINE_WIDTH = 185
-        const val LINE_HEIGHT = 26
-        val FIELD = gui("pokefinder/text")
-    }
-
     override fun createWidget(filter: T): AbstractWidget {
         return TextFieldWidget(
             x = 0,

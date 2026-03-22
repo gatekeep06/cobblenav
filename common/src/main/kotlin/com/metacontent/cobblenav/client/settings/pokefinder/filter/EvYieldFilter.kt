@@ -2,9 +2,10 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.metacontent.cobblenav.client.CobblenavClient
 
 class EvYieldFilter(
-    private var evYield: Set<Stats>
+    private var evYield: Set<Stats> = emptySet()
 ) : RadarFilter {
     companion object {
         const val TYPE = "ev"
@@ -18,5 +19,8 @@ class EvYieldFilter(
 
     fun update(stats: Set<Stats>) {
         evYield = stats
+        CobblenavClient.pokefinderSettings?.changed = true
     }
+
+    fun get() = evYield
 }
