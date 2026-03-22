@@ -150,7 +150,7 @@
   "gui.cobblenav.pokefidner.ev_yield.atk": "ATK",
   "gui.cobblenav.pokefidner.ev_yield.def": "DEF",
   "gui.cobblenav.pokefidner.ev_yield.spa": "SPA",
-  "gui.cobblenav.pokefidner.ev_yield.SPD": "SPD",
+  "gui.cobblenav.pokefidner.ev_yield.spd": "SPD",
   "gui.cobblenav.pokefidner.ev_yield.spe": "SPE",
 
   "biome.minecraft.is_nether": "Nether",
