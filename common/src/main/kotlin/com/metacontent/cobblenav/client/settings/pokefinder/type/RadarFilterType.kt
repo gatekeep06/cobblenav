@@ -4,6 +4,7 @@ import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 interface RadarFilterType<T : RadarFilter> {
@@ -15,6 +16,8 @@ interface RadarFilterType<T : RadarFilter> {
     val filterClass: Class<T>
 
     val typeIcon: ResourceLocation
+
+    val displayedName: Component
 
     fun createFilter(): T
 
