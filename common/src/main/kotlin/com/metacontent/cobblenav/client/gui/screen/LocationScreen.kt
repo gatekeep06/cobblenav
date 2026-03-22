@@ -4,7 +4,10 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.gui.util.*
+import com.metacontent.cobblenav.client.gui.util.Sorting
+import com.metacontent.cobblenav.client.gui.util.Timer
+import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.ContextMenuWidget
 import com.metacontent.cobblenav.client.gui.widget.StatusBarWidget
 import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
@@ -49,8 +52,7 @@ class LocationScreen(
         const val BUTTON_SPACE = 5
         const val BUTTON_WIDTH = 15
         const val BUTTON_HEIGHT = 16
-        const val CHECK_BOX_WIDTH = 100
-        const val CHECK_BOX_HEIGHT = 8
+        const val CHECK_BOX_SIZE = 8
         const val CHECK_BOX_OFFSET = 4
         const val TABLE_MARGIN = 5
         const val VIEW_WIDTH = 298
@@ -169,19 +171,19 @@ class LocationScreen(
         ).also { addBlockableWidget(it) }
 
         checkBox = CheckBox(
-            pX = viewX + BUTTON_WIDTH + BUTTON_SPACE/*screenX + BUTTON_WIDTH + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + 2 * BUTTON_SPACE*/,
-            pY = viewY + VIEW_HEIGHT + CHECK_BOX_OFFSET/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET*/,
-            pWidth = CHECK_BOX_WIDTH,
-            pHeight = CHECK_BOX_HEIGHT,
+            x = viewX + BUTTON_WIDTH + BUTTON_SPACE/*screenX + BUTTON_WIDTH + VERTICAL_BORDER_DEPTH + BACK_BUTTON_SIZE + 2 * BUTTON_SPACE*/,
+            y = viewY + VIEW_HEIGHT + CHECK_BOX_OFFSET/*screenY + HEIGHT - HORIZONTAL_BORDER_DEPTH - BUTTON_HEIGHT + CHECK_BOX_OFFSET*/,
+            height = CHECK_BOX_SIZE,
+            width = CHECK_BOX_SIZE,
             text = Component.translatable("gui.cobblenav.apply_bucket"),
-            afterClick = {
-                tableView.applyToAll { child ->
-                    child.child.spawnData.chanceMultiplier =
-                        if ((it as CheckBox).checked) weightedBuckets[currentBucket]?.chance ?: 1f else 1f
-                }
-            },
+            texture = CheckBox.CHECK_BOX,
             default = CobblenavClient.pokenavSettings?.preferences?.applyBucketChecked ?: false
-        ).also { addBlockableWidget(it) }
+        ) {
+            tableView.applyToAll { child ->
+                child.child.spawnData.chanceMultiplier =
+                    if (it.checked()) weightedBuckets[currentBucket]?.chance ?: 1f else 1f
+            }
+        }.also { addBlockableWidget(it) }
 
         supportContextMenu = ContextMenuWidget(
             text = listOf(
@@ -307,7 +309,7 @@ class LocationScreen(
             it.preferences = PokenavPreferences(
                 bucketIndex = bucketIndex,
                 sorting = sorting,
-                applyBucketChecked = checkBox.checked
+                applyBucketChecked = checkBox.checked()
             )
         }
     }
@@ -365,7 +367,7 @@ class LocationScreen(
                         y = 0,
                         spawnData = it.also { data ->
                             data.chanceMultiplier =
-                                if (checkBox.checked) weightedBuckets[currentBucket]?.chance ?: 1f else 1f
+                                if (checkBox.checked()) weightedBuckets[currentBucket]?.chance ?: 1f else 1f
                         },
                         displayer = this
                     ),
