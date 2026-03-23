@@ -14,7 +14,7 @@ import kotlin.math.sin
 
 class OpeningRadialMenu(
     os: PokenavOS,
-    statefulWidget: StatefulWidget,
+    statefulWidget: RadialPopupMenu,
     pX: Int, pY: Int
 ) : RadialMenuState(os, statefulWidget, pX, pY, DIAMETER, DIAMETER, Component.literal("Opening Radial Menu")) {
     companion object {
@@ -67,7 +67,7 @@ class OpeningRadialMenu(
         }
 
         if (timer.isOver()) {
-            statefulWidget.changeState(OpenedRadialMenu(os, statefulWidget, x, y))
+            statefulWidget.changeState(OpenedRadialMenu(os, statefulWidget as RadialPopupMenu, x, y))
         }
     }
 

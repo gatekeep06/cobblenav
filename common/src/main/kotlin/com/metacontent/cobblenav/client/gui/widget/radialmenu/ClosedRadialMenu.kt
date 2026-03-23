@@ -2,14 +2,13 @@ package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
 import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
 class ClosedRadialMenu(
     os: PokenavOS,
-    statefulWidget: StatefulWidget,
+    statefulWidget: RadialPopupMenu,
     pX: Int, pY: Int
 ) : RadialMenuState(os, statefulWidget, pX, pY, MENU_DIAMETER, MENU_DIAMETER, Component.literal("Closed Radial Menu")) {
     companion object {
@@ -46,7 +45,7 @@ class ClosedRadialMenu(
     override val blockScreenWidgets: Boolean = false
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton) && statefulWidget.parentScreen?.blockWidgets == false) {
+        if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton) && !(statefulWidget as RadialPopupMenu).pokenavScreen.blockWidgets) {
             statefulWidget.changeState(OpeningRadialMenu(os, statefulWidget, x, y))
             return true
         }

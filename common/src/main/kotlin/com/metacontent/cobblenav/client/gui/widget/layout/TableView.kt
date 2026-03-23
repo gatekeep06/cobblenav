@@ -16,7 +16,7 @@ open class TableView<I : AbstractWidget>(
     private val verticalGap: Float = 0f,
     private val horizontalGap: Float = (width - columns * columnWidth) / (columns - 1f),
 ) : SoundlessWidget(x, y, width, 0, Component.literal("Table View")) {
-    internal var items = mutableListOf<I>()
+    internal val items = mutableListOf<I>()
     val rows
         get() = ceil(items.size.toFloat() / columns.toFloat()).toInt()
 
@@ -28,14 +28,22 @@ open class TableView<I : AbstractWidget>(
 
     fun add(widget: I) {
         items.add(widget)
+        children.add(widget)
     }
 
     fun add(widgets: List<I>) {
         items.addAll(widgets)
+        children.addAll(widgets)
+    }
+
+    fun remove(widget: I) {
+        items.remove(widget)
+        children.remove(widget)
     }
 
     fun clear() {
         items.clear()
+        children.clear()
     }
 
     fun <T : Comparable<T>> resort(sorting: Sorting, extractor: (I) -> T) {
@@ -72,7 +80,7 @@ open class TableView<I : AbstractWidget>(
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        if (!clicked(pMouseX, pMouseY)) return false
-        return items.any { it.mouseClicked(pMouseX, pMouseY, pButton) }
+        items.forEach { it.isFocused = false }
+        return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 }

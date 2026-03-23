@@ -16,8 +16,6 @@ class CollapsingSection(
         const val ANIMATION_TIME = 0.1f
     }
 
-    override val blockScreenWidgets = false
-
     private val timer = Timer(ANIMATION_TIME * statefulWidget.widgets.sumOf { it.height / 12 })
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {

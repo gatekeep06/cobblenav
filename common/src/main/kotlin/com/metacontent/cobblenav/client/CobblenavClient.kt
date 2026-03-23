@@ -28,11 +28,7 @@ object CobblenavClient {
     private val settingsManager = ClientSettingsDataManager
     var pokenavSettings: PokenavSettings? = null
     var pokefinderSettings: PokefinderSettings? = null
-    val pokefinderOverlay: PokefinderOverlay by lazy {
-        val overlay = PokefinderOverlay()
-        overlay.initialize()
-        overlay
-    }
+    val pokefinderOverlay: PokefinderOverlay by lazy { PokefinderOverlay() }
     val trackArrowOverlay: TrackArrowOverlay by lazy { TrackArrowOverlay() }
 
     var spawnDataCatalogue = ClientSpawnDataCatalogue()
@@ -57,7 +53,7 @@ object CobblenavClient {
         }
 
         PlatformEvents.CLIENT_ENTITY_LOAD.subscribe { (entity, _) ->
-            if (entity !is PokemonEntity) return@subscribe
+            if (entity !is PokemonEntity || pokefinderSettings?.test(entity.pokemon) != true) return@subscribe
             PokenavSignalManager.add(POKEMON_APPEARED_SIGNAL.copy())
         }
     }

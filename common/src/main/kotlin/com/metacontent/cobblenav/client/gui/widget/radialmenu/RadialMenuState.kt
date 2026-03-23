@@ -22,4 +22,6 @@ abstract class RadialMenuState(
         val CONTACTS = gui("radialmenu/contacts")
         val SWITCH_OFF = gui("radialmenu/switch_off")
     }
+
+    abstract val blockScreenWidgets: Boolean
 }

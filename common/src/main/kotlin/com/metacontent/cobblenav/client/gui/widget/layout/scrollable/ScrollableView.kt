@@ -11,7 +11,7 @@ import kotlin.math.min
 class ScrollableView(
     x: Int, y: Int,
     width: Int, height: Int,
-    val scissorSpreading: Int = 0,
+    private val scissorSpreading: Int = 0,
     private val scrollMultiplier: Float = 20f,
     val child: AbstractWidget
 ) : SoundlessWidget(x, y, width, height, Component.literal("Scrollable View")) {
