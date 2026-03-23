@@ -7,6 +7,7 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val screenScale = 1f
     val enableBlurEffect = true
     val sendErrorMessagesToChat = true
+    val pokefinderScreenScale = 1f
     val pokefinderOverlayScale = 1f
     val pokefinderOverlayOffsetX = 10
     val pokefinderOverlayOffsetY = 10

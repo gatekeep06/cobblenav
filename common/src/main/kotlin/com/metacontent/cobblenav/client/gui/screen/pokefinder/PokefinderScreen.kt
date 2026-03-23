@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay.Companion.RADIUS
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -25,6 +26,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
+import org.joml.Vector3f
 
 class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     companion object {
@@ -52,6 +54,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         player?.playSound(CobblemonSounds.PC_ON, 0.1f, 2f)
     }
 
+    val scale = CobblenavClient.config.pokefinderScreenScale
+
     private var screenX = 0
     private var screenY = 0
 
@@ -67,6 +71,9 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     private var bottomText: Component? = null
 
     override fun init() {
+        width = (width / scale).toInt()
+        height = (height / scale).toInt()
+
         screenX = (width - WIDTH) / 2
         screenY = (height - HEIGHT) / 2
 
@@ -133,6 +140,16 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         ).also { addRenderableWidget(it) }
     }
 
+    override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        guiGraphics.pose().pushAndPop(
+            scale = Vector3f(scale, scale, 1f)
+        ) {
+            val scaledMouseX = (i / scale).toInt()
+            val scaledMouseY = (j / scale).toInt()
+            super.render(guiGraphics, scaledMouseX, scaledMouseY, f)
+        }
+    }
+
     override fun renderBackground(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         super.renderBackground(guiGraphics, i, j, f)
         blitk(
@@ -184,7 +201,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
 
     fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
         settings ?: return
-        val entry = type.createEntry(parent = this)
+        val entry = type.createEntry(this)
         settings.addFilter(entry.filter)
         filterTable.add(entry)
     }
@@ -196,4 +213,20 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
     }
 
     override fun isPauseScreen(): Boolean = false
+
+    override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
+        return super.mouseClicked(d / scale, e / scale, i)
+    }
+
+    override fun mouseScrolled(d: Double, e: Double, f: Double, g: Double): Boolean {
+        return super.mouseScrolled(d / scale, e / scale, f / scale, g / scale)
+    }
+
+    override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double): Boolean {
+        return super.mouseDragged(d / scale, e / scale, i, f / scale, g / scale)
+    }
+
+    override fun mouseReleased(d: Double, e: Double, i: Int): Boolean {
+        return super.mouseReleased(d / scale, e / scale, i)
+    }
 }
