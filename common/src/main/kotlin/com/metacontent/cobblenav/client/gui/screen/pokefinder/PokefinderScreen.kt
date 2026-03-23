@@ -174,7 +174,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
                 context = guiGraphics,
                 text = it as MutableComponent,
                 x = screenX + BORDER_WIDTH + 87,
-                y = screenY + BORDER_WIDTH + 170,
+                y = screenY + BORDER_WIDTH + 171,
                 maxCharacterWidth = 186,
                 colour = COLOR
             )

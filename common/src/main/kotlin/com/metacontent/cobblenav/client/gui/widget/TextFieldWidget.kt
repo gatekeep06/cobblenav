@@ -17,7 +17,7 @@ class TextFieldWidget(
     lineWidth: Int = width,
     lineHeight: Int = height,
     lineX: Int = x + (width - lineWidth) / 2,
-    lineY: Int = y + (lineHeight - Minecraft.getInstance().font.lineHeight) / 2,
+    lineY: Int = y + (lineHeight - Minecraft.getInstance().font.lineHeight) / 2 + 1,
     default: String = "",
     textColor: Int = 0xffffff,
     private val textureSheet: ResourceLocation,
