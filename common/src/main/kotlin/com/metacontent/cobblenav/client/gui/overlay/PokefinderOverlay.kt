@@ -53,7 +53,8 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     private val minecraft = Minecraft.getInstance()
     private val player = minecraft.player
     private val scale = CobblenavClient.config.pokefinderOverlayScale
-    private val offset = CobblenavClient.config.pokefinderOverlayOffset
+    private val offsetX = CobblenavClient.config.pokefinderOverlayOffsetX
+    private val offsetY = CobblenavClient.config.pokefinderOverlayOffsetY
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
         player ?: return
@@ -62,11 +63,11 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
         val isRightHand = player.mainHandItem?.item is Pokefinder
         val x = if (isRightHand) {
-            (minecraft.window.guiScaledWidth / scale).toInt() - WIDTH - offset
+            (minecraft.window.guiScaledWidth / scale).toInt() - WIDTH - offsetX
         } else {
-            offset
+            offsetX
         }
-        val y = (minecraft.window.guiScaledHeight / scale).toInt() - HEIGHT - offset
+        val y = (minecraft.window.guiScaledHeight / scale).toInt() - HEIGHT - offsetY
 
         val poseStack = guiGraphics.pose()
 

@@ -8,7 +8,8 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val enableBlurEffect = true
     val sendErrorMessagesToChat = true
     val pokefinderOverlayScale = 1f
-    val pokefinderOverlayOffset = 10
+    val pokefinderOverlayOffsetX = 10
+    val pokefinderOverlayOffsetY = 10
     val trackArrowYOffset = 80
     val maxCloudNumber = 8
     val maxCloudVelocity = 6
