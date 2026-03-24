@@ -14,14 +14,6 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val trackArrowYOffset = 80
     val maxCloudNumber = 8
     val maxCloudVelocity = 6
-    val collectableClientConditions = mutableMapOf(
-        "encounter"         to true,
-        "overall_counts"    to true,
-        "streak_counts"     to true,
-        "fishing_count"     to true
-    )
 
-    override fun applyToLoadedConfig(default: ClientCobblenavConfig) {
-        default.collectableClientConditions.forEach { this.collectableClientConditions.putIfAbsent(it.key, it.value) }
-    }
+    override fun applyToLoadedConfig(default: ClientCobblenavConfig) {}
 }
