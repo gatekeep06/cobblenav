@@ -35,13 +35,7 @@ class CobblenavConfig : Config<CobblenavConfig>() {
         "area_type_block"       to true,
         "grounded_type_block"   to true,
         "seafloor_type_block"   to true,
-        "fishing_block"         to true,
-        "count"                 to true,
-        "streak"                to true,
-        "key_item"              to false,
-        "items"                 to false,
-        "pokemon"               to false,
-        "zygarde_cube_charge"   to false
+        "fishing_block"         to true
     )
 
     override fun applyToLoadedConfig(default: CobblenavConfig) {
