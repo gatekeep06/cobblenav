@@ -14,8 +14,6 @@ object CobblenavEvents {
 
     val POKEMON_APPEARED_ON_CLIENT = EventObservable<PokemonEntity>()
 
-    val REGISTER_CUSTOM_CLIENT_COLLECTORS = EventObservable<CustomClientCollectorRegistrar>()
-
     val CONDITION_SECTION_WIDGETS_CREATED = EventObservable<SpawnDataWidgetsCreatedEvent>()
 
     val ANTICONDITION_SECTION_WIDGETS_CREATED = EventObservable<SpawnDataWidgetsCreatedEvent>()
