@@ -216,7 +216,7 @@ object SpawnDataHelper {
             conditions += condition
             anticonditions += condition
         }
-        val platformId
+        val platformId = BiomePlatforms.firstFitting(fittingPositions)
 
         return SpawnData(
             id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownSpawns) detail.id else "???",

@@ -1,21 +1,32 @@
 package com.metacontent.cobblenav.api.platform
 
+import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.reactive.SimpleObservable
-import com.cobblemon.mod.common.api.spawning.SpawnLoader
+import com.cobblemon.mod.common.api.spawning.MoonPhaseRange
+import com.cobblemon.mod.common.api.spawning.TimeRange
+import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.cobblemon.mod.common.util.adapters.IdentifierAdapter
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePositionType
+import com.cobblemon.mod.common.util.adapters.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.util.cobblenavResource
+import com.mojang.datafixers.util.Either
+import net.minecraft.core.registries.Registries
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.levelgen.structure.Structure
+import net.minecraft.world.level.material.Fluid
 
 object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
-    override val gson: Gson = SpawnLoader.gson
     override val id = cobblenavResource("biome_platforms")
     override val observable = SimpleObservable<BiomePlatforms>()
     override val resourcePath = "biome_platforms"
@@ -39,4 +50,42 @@ object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
         }
         return null
     }
+
+    override val gson: Gson = GsonBuilder()
+        .setPrettyPrinting()
+        .disableHtmlEscaping()
+        .setLenient()
+        .registerTypeAdapter(
+            TypeToken.getParameterized(RegistryLikeCondition::class.java, Biome::class.java).type,
+            BiomeLikeConditionAdapter
+        )
+        .registerTypeAdapter(
+            TypeToken.getParameterized(RegistryLikeCondition::class.java, Block::class.java).type,
+            BlockLikeConditionAdapter
+        )
+        .registerTypeAdapter(
+            TypeToken.getParameterized(RegistryLikeCondition::class.java, Fluid::class.java).type,
+            FluidLikeConditionAdapter
+        )
+        .registerTypeAdapter(
+            TypeToken.getParameterized(
+                Either::class.java,
+                ResourceLocation::class.java,
+                TypeToken.getParameterized(
+                    TagKey::class.java,
+                    Structure::class.java
+                ).type
+            ).type,
+            EitherIdentifierOrTagAdapter(Registries.STRUCTURE)
+        )
+        .registerTypeAdapter(SpawnablePositionType::class.java, RegisteredSpawnablePositionAdapter)
+        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
+        .registerTypeAdapter(SpawningCondition::class.java, CobblenavSpawningConditionAdapter)
+        .registerTypeAdapter(TimeRange::class.java, IntRangesAdapter(TimeRange.timeRanges) { TimeRange(*it) })
+        .registerTypeAdapter(
+            MoonPhaseRange::class.java,
+            IntRangesAdapter(MoonPhaseRange.moonPhaseRanges) { MoonPhaseRange(*it) })
+        .registerTypeAdapter(CompoundTag::class.java, NbtCompoundAdapter)
+        .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
+        .create()
 }
