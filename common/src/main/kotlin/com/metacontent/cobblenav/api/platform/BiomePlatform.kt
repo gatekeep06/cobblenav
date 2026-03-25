@@ -6,11 +6,11 @@ import net.minecraft.resources.ResourceLocation
 
 data class BiomePlatform(
     val id: ResourceLocation,
-    val conditions: List<SpawningCondition<*>>,
-    val anticonditions: List<SpawningCondition<*>>?
+    val condition: SpawningCondition<*>,
+    val anticondition: SpawningCondition<*>?
 ) {
     fun fits(spawnablePosition: SpawnablePosition): Boolean {
-        return conditions.any { it.isSatisfiedBy(spawnablePosition) } &&
-                anticonditions?.none { it.isSatisfiedBy(spawnablePosition) } != false
+        return condition.isSatisfiedBy(spawnablePosition) &&
+                anticondition?.isSatisfiedBy(spawnablePosition) != true
     }
 }
