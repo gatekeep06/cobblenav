@@ -21,7 +21,6 @@ class StructureCollector : GeneralConditionCollector() {
             val structures = neededStructures.map { either ->
                 either.map({ it }, { it.location })
             }.toSet()
-            builder?.structures = structures
             structures.map { Component.translatable(it.toLanguageKey("structure")) }.wrap()
         }
     }

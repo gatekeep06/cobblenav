@@ -18,7 +18,6 @@ class BiomeCollector : GeneralConditionCollector() {
         player: ServerPlayer
     ): ConditionData? {
         val biomes = condition.biomes?.mapNotNull { it.toResourceLocation() }?.toSet() ?: return null
-        builder?.biomes = biomes
         return biomes.map { Component.translatable(it.toLanguageKey("biome")) }.wrap()
     }
 }

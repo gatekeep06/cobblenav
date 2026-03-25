@@ -24,7 +24,6 @@ class FluidSurfaceCollector : ConditionCollector<SurfaceTypeSpawningCondition<*>
         player: ServerPlayer
     ): ConditionData? {
         return condition.fluid?.toResourceLocation()?.let {
-            builder?.fluid = it
             listOf(Component.translatable("tag.fluid.c.${it.path}")).wrap()
         }
     }
