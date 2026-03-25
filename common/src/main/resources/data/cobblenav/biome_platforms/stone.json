@@ -1,8 +1,9 @@
 {
     "id": "cobblenav:stone",
-    "conditions": {
+    "condition": {
+        "type": "grounded",
         "biomes": [
-            "cobblemon:is_mountain"
+            "#cobblemon:is_mountain"
         ]
     }
 }

@@ -1,0 +1,7 @@
+{
+    "id": "cobblenav:water",
+    "condition": {
+        "type": "surface",
+        "fluid": "#minecraft:water"
+    }
+}

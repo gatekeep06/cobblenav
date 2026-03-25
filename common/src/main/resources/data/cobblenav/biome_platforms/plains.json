@@ -1,16 +1,11 @@
 {
     "id": "cobblenav:plains",
-    "conditions": {
+    "condition": {
+        "type": "grounded",
         "biomes": [
-            "cobblemon:is_plains",
-            "cobblemon:is_grassland",
-            "cobblemon:is_temperate"
-        ]
-    },
-    "anticonditions": {
-        "fluids": [
-            "minecraft:lava",
-            "minecraft:water"
+            "#cobblemon:is_plains",
+            "#cobblemon:is_grassland",
+            "#cobblemon:is_temperate"
         ]
     }
 }
