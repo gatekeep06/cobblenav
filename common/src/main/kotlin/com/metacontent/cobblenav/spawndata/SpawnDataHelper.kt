@@ -11,6 +11,7 @@ import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence.Companion.TYPICAL_VARIATION
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
+import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePositionCalculator
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
@@ -20,7 +21,6 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.spawner
 import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
@@ -83,7 +83,8 @@ object SpawnDataHelper {
         val spawnProbabilities = spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
 
         val spawnDataList = spawnProbabilities.mapNotNull { (detail, spawnChance) ->
-            collect(detail, player)?.let { CheckedSpawnData(it, spawnChance) }
+            val fittingPositions = spawnablePositions.filter { detail.isSatisfiedBy(it) }
+            collect(detail, fittingPositions, player)?.let { CheckedSpawnData(it, spawnChance) }
         }
 
         val weightedBucket = calculateWeightedBuckets(
@@ -141,7 +142,7 @@ object SpawnDataHelper {
         return bucketWeights.keys.associate { bucket ->
             bucket.name to spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
                 .mapNotNull { (detail, chance) ->
-                    collect(detail, player)?.let {
+                    collect(detail, emptyList(), player)?.let {
                         CheckedSpawnData(it, chance * pokemonChance * (weightedBuckets[bucket.name] ?: 1f))
                     }
                 }
@@ -177,7 +178,8 @@ object SpawnDataHelper {
         val spawnProbabilities = spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
 
         val spawnDataList = spawnProbabilities.mapNotNull { (detail, spawnChance) ->
-            collect(detail, player)?.let { CheckedSpawnData(it, spawnChance) }
+            val fittingPositions = spawnablePositions.filter { detail.isSatisfiedBy(it) }
+            collect(detail, fittingPositions, player)?.let { CheckedSpawnData(it, spawnChance) }
         }
 
         val weightedBucket = calculateWeightedBuckets(
@@ -190,11 +192,11 @@ object SpawnDataHelper {
 
     fun collect(
         detail: SpawnDetail,
+        fittingPositions: List<SpawnablePosition>,
         player: ServerPlayer
     ): SpawnData? {
         val result = SpawnResultData.fromDetail(detail, player) ?: return null
 
-        val builder = if (result.shouldRenderPlatform()) BiomePlatformContext.Builder() else null
         val conditions = mutableListOf<ConditionData>()
         val blockConditions = mutableSetOf<ResourceLocation>()
         val anticonditions = mutableListOf<ConditionData>()
@@ -202,7 +204,7 @@ object SpawnDataHelper {
         val canShowConditions = !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
         if (canShowConditions) {
             detail.conditions.forEach { condition ->
-                conditions += ConditionCollectors.collectConditions(detail, condition, player, builder)
+                conditions += ConditionCollectors.collectConditions(detail, condition, player)
                 blockConditions += ConditionCollectors.collectBlockConditions(condition)
             }
             detail.anticonditions.forEach { condition ->
@@ -214,7 +216,7 @@ object SpawnDataHelper {
             conditions += condition
             anticonditions += condition
         }
-        val platformId = builder?.build()?.let { BiomePlatforms.firstFitting(it) }
+        val platformId
 
         return SpawnData(
             id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownSpawns) detail.id else "???",

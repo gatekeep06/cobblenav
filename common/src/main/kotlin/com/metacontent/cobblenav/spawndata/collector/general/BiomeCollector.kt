@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.spawndata.ConditionData
 import com.metacontent.cobblenav.util.toResourceLocation
 import net.minecraft.network.chat.Component
@@ -16,8 +15,7 @@ class BiomeCollector : GeneralConditionCollector() {
     override fun collect(
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         val biomes = condition.biomes?.mapNotNull { it.toResourceLocation() }?.toSet() ?: return null
         builder?.biomes = biomes

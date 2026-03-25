@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.SurfaceTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.spawndata.ConditionData
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
@@ -22,8 +21,7 @@ class FluidSurfaceCollector : ConditionCollector<SurfaceTypeSpawningCondition<*>
     override fun collect(
         detail: SpawnDetail,
         condition: SurfaceTypeSpawningCondition<*>,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         return condition.fluid?.toResourceLocation()?.let {
             builder?.fluid = it

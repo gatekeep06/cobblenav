@@ -3,7 +3,6 @@ package com.metacontent.cobblenav.spawndata.collector.special
 import com.cobblemon.mod.common.api.fishing.PokeRods
 import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.spawndata.ConditionData
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
@@ -22,8 +21,7 @@ class RodTypeCollector : ConditionCollector<FishingSpawningCondition>, Configure
     override fun collect(
         detail: SpawnDetail,
         condition: FishingSpawningCondition,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         return condition.rodType?.let { resourceLocation ->
             PokeRods.getPokeRod(resourceLocation)?.pokeBallId?.toLanguageKey("item")?.let {
