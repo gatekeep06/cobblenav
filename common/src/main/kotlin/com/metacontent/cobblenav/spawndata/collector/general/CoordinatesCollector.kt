@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
@@ -15,8 +14,7 @@ class CoordinatesCollector : GeneralConditionCollector() {
     override fun collect(
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         val values = mutableListOf<Component>()
         formatValueRange(condition.minX, condition.maxX)?.let { values.add(Component.translatable("gui.cobblenav.spawn_data.coordinates.x", it)) }

@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
@@ -15,15 +14,13 @@ class StructureCollector : GeneralConditionCollector() {
     override fun collect(
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         return condition.structures?.let { neededStructures ->
             if (neededStructures.isEmpty()) return@let null
             val structures = neededStructures.map { either ->
                 either.map({ it }, { it.location })
             }.toSet()
-            builder?.structures = structures
             structures.map { Component.translatable(it.toLanguageKey("structure")) }.wrap()
         }
     }

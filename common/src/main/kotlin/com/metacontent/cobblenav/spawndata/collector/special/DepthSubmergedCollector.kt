@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.SubmergedTypeSpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.spawndata.ConditionData
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
 import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
@@ -21,8 +20,7 @@ class DepthSubmergedCollector : ConditionCollector<SubmergedTypeSpawningConditio
     override fun collect(
         detail: SpawnDetail,
         condition: SubmergedTypeSpawningCondition<*>,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         return formatValueRange(condition.minDepth, condition.maxDepth)?.let {
             listOf(Component.literal(it)).wrap()

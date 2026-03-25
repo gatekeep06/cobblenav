@@ -3,7 +3,6 @@ package com.metacontent.cobblenav.spawndata.collector
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.CustomCollectorRegistrar
@@ -63,10 +62,9 @@ object ConditionCollectors {
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
         player: ServerPlayer,
-        builder: BiomePlatformContext.Builder? = null
     ): List<ConditionData> {
-        return generalCollectors.mapNotNull { it.collect(detail, condition, player, builder) } +
-                getCollectors(condition).mapNotNull { it.collect(detail, condition, player, builder) }
+        return generalCollectors.mapNotNull { it.collect(detail, condition, player) } +
+                getCollectors(condition).mapNotNull { it.collect(detail, condition, player) }
     }
 
     fun collectBlockConditions(condition: SpawningCondition<*>): Set<ResourceLocation> {

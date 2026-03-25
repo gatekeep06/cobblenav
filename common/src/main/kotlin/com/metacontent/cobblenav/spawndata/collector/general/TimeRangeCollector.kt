@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.api.platform.BiomePlatformContext
 import com.metacontent.cobblenav.client.gui.util.getTimeString
 import com.metacontent.cobblenav.spawndata.ConditionData
 import net.minecraft.network.chat.Component
@@ -16,8 +15,7 @@ class TimeRangeCollector : GeneralConditionCollector() {
     override fun collect(
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
-        player: ServerPlayer,
-        builder: BiomePlatformContext.Builder?
+        player: ServerPlayer
     ): ConditionData? {
         return condition.timeRange?.ranges?.map { ranges ->
             Component.translatable(getTimeString(ranges))
