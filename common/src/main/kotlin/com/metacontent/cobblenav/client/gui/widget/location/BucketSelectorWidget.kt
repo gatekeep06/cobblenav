@@ -1,13 +1,13 @@
 package com.metacontent.cobblenav.client.gui.widget.location
 
 import com.cobblemon.mod.common.api.text.onHover
+import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.translateOr
+import com.metacontent.cobblenav.client.gui.util.tryTranslating
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
-import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
@@ -50,14 +50,13 @@ class BucketSelectorWidget(
         nextButton.disabled = parent.bucketIndex >= parent.buckets.size - 1
         prevButton.render(guiGraphics, i, j, f)
         val bucketName = parent.currentBucket
-        val pair = translateOr(
+        val pair = tryTranslating(
             "$BUCKET_KEY_BASE.$bucketName",
             Component.literal(bucketName)
         )
         val text = pair.second
         if (!pair.first) {
-            text.onHover("$BUCKET_KEY_BASE.$bucketName")
-                .withStyle(ChatFormatting.RED)
+            text.onHover("$BUCKET_KEY_BASE.$bucketName").red()
         }
         drawScaledText(
             context = guiGraphics,

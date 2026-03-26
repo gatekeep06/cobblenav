@@ -1,6 +1,5 @@
 package com.metacontent.cobblenav.client.gui.util
 
-import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PoseType
@@ -105,17 +104,6 @@ fun getTimeString(time: Long): String {
     hours = if (hours == 0) 12 else hours
 
     return String.format("%02d:%02d %s", hours, minutes, period)
-}
-
-fun translateOr(
-    key: String,
-    substitute: MutableComponent = Component.literal(key).red()
-): Pair<Boolean, MutableComponent> {
-    val component = Component.translatable(key)
-    if (component.string == key) {
-        return Pair(false, substitute)
-    }
-    return Pair(true, component)
 }
 
 fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
