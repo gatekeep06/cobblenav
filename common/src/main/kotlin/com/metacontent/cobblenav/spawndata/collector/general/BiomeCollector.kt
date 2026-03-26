@@ -2,9 +2,9 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.spawndata.ConditionData
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.util.toResourceLocation
-import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class BiomeCollector : GeneralConditionCollector() {
@@ -12,12 +12,12 @@ class BiomeCollector : GeneralConditionCollector() {
     override val conditionColor = 0x2E8B57
     override val configName = "biomes"
 
-    override fun collect(
+    override fun collectValues(
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
         player: ServerPlayer
-    ): ConditionData? {
+    ): List<MutableComponent>? {
         val biomes = condition.biomes?.mapNotNull { it.toResourceLocation() }?.toSet() ?: return null
-        return biomes.map { Component.translatable(it.toLanguageKey("biome")) }.wrap()
+        return biomes.map { translate(it, "biome") }
     }
 }

@@ -2,8 +2,8 @@ package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
-import com.metacontent.cobblenav.spawndata.ConditionData
-import net.minecraft.network.chat.Component
+import com.metacontent.cobblenav.client.gui.util.translate
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class SlimeChunkCollector : GeneralConditionCollector() {
@@ -11,13 +11,13 @@ class SlimeChunkCollector : GeneralConditionCollector() {
     override val conditionColor = 0x32CD32
     override val configName = "slime_chunk"
 
-    override fun collect(
+    override fun collectValues(
         detail: SpawnDetail,
         condition: SpawningCondition<*>,
         player: ServerPlayer
-    ): ConditionData? {
+    ): List<MutableComponent>? {
         return condition.isSlimeChunk?.let {
-            listOf(Component.translatable("gui.cobblenav.$it")).wrap()
+            listOf(translate("gui.cobblenav.$it"))
         }
     }
 }
