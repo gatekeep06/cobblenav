@@ -5,7 +5,7 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
 import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.translateOr
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
@@ -50,7 +50,7 @@ class BucketSelectorWidget(
         nextButton.disabled = parent.bucketIndex >= parent.buckets.size - 1
         prevButton.render(guiGraphics, i, j, f)
         val bucketName = parent.currentBucket
-        val pair = translateOr(
+        val pair = translate(
             "$BUCKET_KEY_BASE.$bucketName",
             Component.literal(bucketName)
         )

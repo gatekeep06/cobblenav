@@ -107,7 +107,7 @@ fun getTimeString(time: Long): String {
     return String.format("%02d:%02d %s", hours, minutes, period)
 }
 
-fun translateOr(
+fun translate(
     key: String,
     placeholder: MutableComponent = Component.literal(key).red()
 ): Pair<Boolean, MutableComponent> {

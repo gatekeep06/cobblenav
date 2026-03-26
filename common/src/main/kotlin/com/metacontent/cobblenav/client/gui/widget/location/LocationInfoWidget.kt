@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.translateOr
+import com.metacontent.cobblenav.client.gui.util.translate
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -33,7 +33,7 @@ class LocationInfoWidget(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
-        val checkPair = translateOr(
+        val checkPair = translate(
             biomeResourceLocation.toLanguageKey(BIOME_KEY_BASE),
             Component.translatable("gui.cobblenav.unknown_biome").red()
                 .onHover(Component.literal(biomeResourceLocation.toString()))
