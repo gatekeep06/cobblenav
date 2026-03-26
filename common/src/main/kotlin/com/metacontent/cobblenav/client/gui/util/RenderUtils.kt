@@ -109,11 +109,11 @@ fun getTimeString(time: Long): String {
 
 fun translateOr(
     key: String,
-    substitute: MutableComponent = Component.literal(key).red()
+    placeholder: MutableComponent = Component.literal(key).red()
 ): Pair<Boolean, MutableComponent> {
     val component = Component.translatable(key)
     if (component.string == key) {
-        return Pair(false, substitute)
+        return Pair(false, placeholder)
     }
     return Pair(true, component)
 }
