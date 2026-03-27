@@ -35,7 +35,8 @@ class OpenedRadialMenu(
         IconButton(
             pWidth = 16, pHeight = 16,
             action = { statefulWidget.pokenavScreen.changeScreen(MapScreen(os)) },
-            texture = MAP
+            texture = MAP,
+            disabled = true
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
@@ -45,7 +46,8 @@ class OpenedRadialMenu(
         IconButton(
             pWidth = 16, pHeight = 16,
             action = { statefulWidget.pokenavScreen.changeScreen(ContactsScreen(os)) },
-            texture = CONTACTS
+            texture = CONTACTS,
+            disabled = true
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
