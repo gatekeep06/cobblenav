@@ -68,6 +68,8 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTED.subscribe { (server) ->
+            BiomePlatforms.onServerStarted(server)
+
             val spawnDataNbtFactory = CachedPlayerDataStoreFactory(SpawnDataCatalogueNbtBackend())
             spawnDataNbtFactory.setup(server)
 

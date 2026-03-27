@@ -18,6 +18,7 @@ import com.mojang.datafixers.util.Either
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 import net.minecraft.tags.TagKey
@@ -34,6 +35,7 @@ object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
     override val typeToken: TypeToken<BiomePlatform> = TypeToken.get(BiomePlatform::class.java)
 
     private val platforms = mutableListOf<BiomePlatform>()
+    private var groupedPlatforms = hashMapOf<ResourceLocation, MutableList<BiomePlatform>>()
 
     override fun sync(player: ServerPlayer) {}
 
@@ -45,10 +47,28 @@ object BiomePlatforms : JsonDataRegistry<BiomePlatform> {
     }
 
     fun firstFitting(spawnablePositions: List<SpawnablePosition>): ResourceLocation? {
-        spawnablePositions.forEach { spawnablePosition ->
-            return platforms.firstOrNull { it.fits(spawnablePosition) }?.id
+        spawnablePositions.forEachIndexed { index, spawnablePosition ->
+            val biomeId = spawnablePosition.biomeHolder.unwrapKey().map { it.location() }.orElse(null)
+            groupedPlatforms[biomeId]?.firstOrNull { it.fits(spawnablePosition) }?.id?.let {
+                return it
+            }
         }
         return null
+    }
+
+    fun onServerStarted(server: MinecraftServer) {
+        val biomeRegistry = server.registryAccess().registryOrThrow(Registries.BIOME)
+        groupedPlatforms.clear()
+
+        platforms.forEach { platform ->
+            biomeRegistry.holders().forEach { holder ->
+                val key = holder.unwrapKey().orElse(null) ?: return@forEach
+                if (platform.anticondition?.biomes != null && platform.anticondition.biomes!!.any { it.fits(holder) }) return@forEach
+                if (platform.condition.biomes == null || platform.condition.biomes!!.isEmpty() || platform.condition.biomes!!.any { it.fits(holder) }) {
+                    groupedPlatforms.getOrPut(key.location()) { mutableListOf() }.add(platform)
+                }
+            }
+        }
     }
 
     override val gson: Gson = GsonBuilder()
