@@ -10,6 +10,8 @@ class CobblenavConfig : Config<CobblenavConfig>() {
         fun addCollector(collectorName: String, defaultValue: Boolean = true) {
             collectors[collectorName] = defaultValue
         }
+
+        fun containsCollector(collectorName: String): Boolean = collectors.containsKey(collectorName)
     }
 
     @Transient

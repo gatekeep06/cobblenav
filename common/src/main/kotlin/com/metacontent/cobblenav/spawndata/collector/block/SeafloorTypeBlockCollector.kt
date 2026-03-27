@@ -2,11 +2,9 @@ package com.metacontent.cobblenav.spawndata.collector.block
 
 import com.cobblemon.mod.common.api.spawning.condition.SeafloorTypeSpawningCondition
 import com.metacontent.cobblenav.spawndata.collector.BlockConditionCollector
-import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
 import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.resources.ResourceLocation
 
-@ConfigurableCollector(SeafloorTypeBlockCollector.NAME)
 class SeafloorTypeBlockCollector : BlockConditionCollector<SeafloorTypeSpawningCondition<*>> {
     companion object {
         const val NAME = "seafloor_type_block"

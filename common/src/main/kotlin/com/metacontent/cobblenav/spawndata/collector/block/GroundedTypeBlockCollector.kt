@@ -2,11 +2,9 @@ package com.metacontent.cobblenav.spawndata.collector.block
 
 import com.cobblemon.mod.common.api.spawning.condition.GroundedTypeSpawningCondition
 import com.metacontent.cobblenav.spawndata.collector.BlockConditionCollector
-import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
 import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.resources.ResourceLocation
 
-@ConfigurableCollector(GroundedTypeBlockCollector.NAME)
 class GroundedTypeBlockCollector : BlockConditionCollector<GroundedTypeSpawningCondition<*>> {
     companion object {
         const val NAME = "grounded_type_block"

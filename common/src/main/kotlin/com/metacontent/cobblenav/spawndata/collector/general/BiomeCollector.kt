@@ -3,12 +3,10 @@ package com.metacontent.cobblenav.spawndata.collector.general
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.client.gui.util.translate
-import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
 import com.metacontent.cobblenav.util.toResourceLocation
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-@ConfigurableCollector(BiomeCollector.NAME)
 class BiomeCollector : GeneralConditionCollector() {
     companion object {
         const val NAME = "biomes"
