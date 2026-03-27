@@ -4,12 +4,10 @@ import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
-import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
 import com.metacontent.cobblenav.util.ModDependency
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-@ConfigurableCollector(LureLevelCollector.NAME)
 class LureLevelCollector : ConditionCollector<FishingSpawningCondition>() {
     companion object {
         const val NAME = "lure_level"

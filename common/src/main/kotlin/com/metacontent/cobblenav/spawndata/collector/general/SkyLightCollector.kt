@@ -3,11 +3,9 @@ package com.metacontent.cobblenav.spawndata.collector.general
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.client.gui.util.literal
-import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-@ConfigurableCollector(SkyLightCollector.NAME)
 class SkyLightCollector : GeneralConditionCollector() {
     companion object {
         const val NAME = "sky_light"
