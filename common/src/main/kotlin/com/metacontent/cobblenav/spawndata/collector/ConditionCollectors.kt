@@ -18,11 +18,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
 /**
- * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [SpawnData].
+ * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [com.metacontent.cobblenav.spawndata.SpawnData].
  * Each [ConditionCollector] corresponds to a separate line in the tooltip.
  *
- * [ConfigureableCollector] is an optional interface for collectors. If a collector implements the interface,
- * it can only be registered if the [ConfigureableCollector.configName] value is present in the [CobblenavConfig.collectableConditions] list.
  * Registration of additional collectors should be done using the [CobblenavEvents.REGISTER_CUSTOM_COLLECTORS] event.
  */
 object ConditionCollectors {
@@ -34,18 +32,18 @@ object ConditionCollectors {
     private val blockCollectors = mutableListOf<BlockConditionCollector<*>>()
 
     private fun registerGeneral(collector: GeneralConditionCollector) {
-        if (!collector.allowed(Cobblenav.config.collectableConditions)) return
+        if (!Cobblenav.config.collectorEnabled(collector)) return
         generalCollectors += collector
     }
 
     internal fun register(collector: ConditionCollector<*>) {
-        if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
+        if (collector.isConfigurable() && !Cobblenav.config.collectorEnabled(collector)) return
         if (!collector.isModDependencySatisfied()) return
         collectors += collector
     }
 
     internal fun register(collector: BlockConditionCollector<*>) {
-        if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
+        if (collector.isConfigurable() && !Cobblenav.config.collectorEnabled(collector)) return
         if (!collector.isModDependencySatisfied()) return
         blockCollectors += collector
     }
@@ -118,5 +116,31 @@ object ConditionCollectors {
         })
 
         Cobblenav.LOGGER.info("Registered {} collectors and {} block collectors", collectors.size, blockCollectors.size)
+    }
+
+    fun registerConfigEntries() {
+        CobblenavConfig.addCollector(BiomeCollector.NAME)
+        CobblenavConfig.addCollector(MoonPhaseCollector.NAME)
+        CobblenavConfig.addCollector(UnderOpenSkyCollector.NAME)
+        CobblenavConfig.addCollector(YHeightCollector.NAME)
+        CobblenavConfig.addCollector(CoordinatesCollector.NAME)
+        CobblenavConfig.addCollector(LightCollector.NAME)
+        CobblenavConfig.addCollector(SkyLightCollector.NAME)
+        CobblenavConfig.addCollector(WeatherCollector.NAME)
+        CobblenavConfig.addCollector(TimeRangeCollector.NAME)
+        CobblenavConfig.addCollector(StructureCollector.NAME)
+        CobblenavConfig.addCollector(SlimeChunkCollector.NAME)
+        CobblenavConfig.addCollector(FluidSurfaceCollector.NAME)
+        CobblenavConfig.addCollector(DepthSurfaceCollector.NAME)
+        CobblenavConfig.addCollector(FluidSubmergedCollector.NAME)
+        CobblenavConfig.addCollector(DepthSubmergedCollector.NAME)
+        CobblenavConfig.addCollector(BaitCollector.NAME)
+        CobblenavConfig.addCollector(LureLevelCollector.NAME)
+        CobblenavConfig.addCollector(RodCollector.NAME)
+        CobblenavConfig.addCollector(RodTypeCollector.NAME)
+        CobblenavConfig.addCollector(AreaTypeBlockCollector.NAME)
+        CobblenavConfig.addCollector(GroundedTypeBlockCollector.NAME)
+        CobblenavConfig.addCollector(SeafloorTypeBlockCollector.NAME)
+        CobblenavConfig.addCollector(FishingBlockCollector.NAME)
     }
 }

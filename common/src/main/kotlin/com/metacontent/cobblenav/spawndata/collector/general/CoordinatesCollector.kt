@@ -7,9 +7,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class CoordinatesCollector : GeneralConditionCollector() {
-    override val conditionName = "coordinates"
-    override val conditionColor = 0x00008B
-    override val configName = "coordinates"
+    companion object {
+        const val NAME = "coordinates"
+    }
+
+    override val name = NAME
+    override val color = 0x00008B
 
     override fun collectValues(
         detail: SpawnDetail,

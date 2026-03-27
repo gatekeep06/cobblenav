@@ -7,9 +7,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class WeatherCollector : GeneralConditionCollector() {
-    override val conditionName = "weather"
-    override val conditionColor = 0x4682B4
-    override val configName = "weather"
+    companion object {
+        const val NAME = "weather"
+    }
+
+    override val name = NAME
+    override val color = 0x4682B4
 
     override fun collectValues(
         detail: SpawnDetail,

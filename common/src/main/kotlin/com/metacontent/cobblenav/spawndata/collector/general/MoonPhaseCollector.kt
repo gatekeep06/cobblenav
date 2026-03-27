@@ -8,9 +8,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class MoonPhaseCollector : GeneralConditionCollector() {
-    override val conditionName = "moon_phase"
-    override val conditionColor = 0x708090
-    override val configName = "moon_phase"
+    companion object {
+        const val NAME = "moon_phase"
+    }
+
+    override val name = NAME
+    override val color = 0x708090
 
     override fun collectValues(
         detail: SpawnDetail,

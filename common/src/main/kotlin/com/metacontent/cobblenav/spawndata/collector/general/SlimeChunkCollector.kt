@@ -7,9 +7,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class SlimeChunkCollector : GeneralConditionCollector() {
-    override val conditionName = "slime_chunk"
-    override val conditionColor = 0x32CD32
-    override val configName = "slime_chunk"
+    companion object {
+        const val NAME = "slime_chunk"
+    }
+
+    override val name = NAME
+    override val color = 0x32CD32
 
     override fun collectValues(
         detail: SpawnDetail,

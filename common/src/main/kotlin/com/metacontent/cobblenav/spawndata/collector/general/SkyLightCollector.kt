@@ -7,9 +7,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class SkyLightCollector : GeneralConditionCollector() {
-    override val conditionName = "sky_light"
-    override val conditionColor = 0x87CEEB
-    override val configName = "sky_light"
+    companion object {
+        const val NAME = "sky_light"
+    }
+
+    override val name = NAME
+    override val color = 0x87CEEB
 
     override fun collectValues(
         detail: SpawnDetail,

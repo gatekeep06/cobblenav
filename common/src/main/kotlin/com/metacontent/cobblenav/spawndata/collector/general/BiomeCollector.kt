@@ -8,9 +8,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
 class BiomeCollector : GeneralConditionCollector() {
-    override val conditionName = "biomes"
-    override val conditionColor = 0x2E8B57
-    override val configName = "biomes"
+    companion object {
+        const val NAME = "biomes"
+    }
+
+    override val name = NAME
+    override val color = 0x2E8B57
 
     override fun collectValues(
         detail: SpawnDetail,
