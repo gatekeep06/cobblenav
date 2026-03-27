@@ -1,8 +1,32 @@
 package com.metacontent.cobblenav.config
 
+import com.cobblemon.mod.common.util.removeIf
+import com.metacontent.cobblenav.spawndata.collector.Collector
+import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
+import org.reflections.Reflections
+import org.reflections.scanners.Scanners
+import org.reflections.util.ConfigurationBuilder
+
 class CobblenavConfig : Config<CobblenavConfig>() {
+    companion object {
+        private val collectorPackages = mutableListOf(
+            "com.metacontent.cobblenav.spawndata.collector"
+        )
+
+        fun registerCollectorPackage(packagePath: String) {
+            collectorPackages.add(packagePath)
+        }
+    }
+
     @Transient
     override val fileName = "server-config.json"
+
+    @Transient
+    private val reflections = Reflections(
+        ConfigurationBuilder()
+            .forPackages(*collectorPackages.toTypedArray())
+            .setScanners(Scanners.TypesAnnotated)
+    )
 
     val hideUnknownSpawns = false
     val hideConditionsOfUnknownSpawns = true
@@ -12,33 +36,19 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     val searchAreaWidth = 200.0
     val searchAreaHeight = 200.0
     val pokemonFeatureWeights = FeatureWeights.BASE
-    val collectableConditions = mutableMapOf(
-        "biomes"                to true,
-        "coordinates"           to true,
-        "light"                 to true,
-        "moon_phase"            to true,
-        "sky_light"             to true,
-        "slime_chunk"           to true,
-        "structures"            to true,
-        "time_range"            to true,
-        "under_open_sky"        to true,
-        "weather"               to true,
-        "y_height"              to true,
-        "depth_submerged"       to true,
-        "depth_surface"         to true,
-        "fluid_submerged"       to true,
-        "fluid_surface"         to true,
-        "bait"                  to true,
-        "lure_level"            to true,
-        "rod"                   to true,
-        "rod_type"              to true,
-        "area_type_block"       to true,
-        "grounded_type_block"   to true,
-        "seafloor_type_block"   to true,
-        "fishing_block"         to true
-    )
+    val collectableConditions = mutableMapOf<String, Boolean>()
 
     override fun applyToLoadedConfig(default: CobblenavConfig) {
-        default.collectableConditions.forEach { this.collectableConditions.putIfAbsent(it.key, it.value) }
+        val annotatedClasses = reflections.getTypesAnnotatedWith(ConfigurableCollector::class.java)
+        val defaultConditions = annotatedClasses.mapNotNull { clazz ->
+            clazz.getAnnotation(ConfigurableCollector::class.java)?.let {
+                if (!it.enabled) return@mapNotNull null
+                it.name to it.defaultConfigValue
+            }
+        }.toMap()
+        defaultConditions.forEach { this.collectableConditions.putIfAbsent(it.key, it.value) }
+        this.collectableConditions.removeIf { !defaultConditions.keys.contains(it.key) }
     }
+
+    fun collectorEnabled(collector: Collector<*>): Boolean = collectableConditions.contains(collector.name)
 }

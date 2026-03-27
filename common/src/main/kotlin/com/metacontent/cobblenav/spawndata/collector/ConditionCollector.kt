@@ -12,7 +12,7 @@ abstract class ConditionCollector<T : SpawningCondition<*>> : Collector<T> {
         condition: T,
         player: ServerPlayer
     ): ConditionData? {
-        return collectValues(detail, condition, player)?.let { ConditionData(conditionName, conditionColor, it) }
+        return collectValues(detail, condition, player)?.let { ConditionData(name, color, it) }
     }
 
     fun formatValueRange(min: Number?, max: Number?): String? {

@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 
 interface BlockConditionCollector<T : SpawningCondition<*>> : Collector<T> {
-    override val conditionColor: Int
+    override val color: Int
         get() = 0
 
     fun collect(condition: T): Set<ResourceLocation>

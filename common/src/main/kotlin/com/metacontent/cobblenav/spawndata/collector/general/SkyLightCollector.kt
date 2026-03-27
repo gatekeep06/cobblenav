@@ -3,13 +3,18 @@ package com.metacontent.cobblenav.spawndata.collector.general
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.client.gui.util.literal
+import com.metacontent.cobblenav.spawndata.collector.ConfigurableCollector
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
+@ConfigurableCollector(SkyLightCollector.NAME)
 class SkyLightCollector : GeneralConditionCollector() {
-    override val conditionName = "sky_light"
-    override val conditionColor = 0x87CEEB
-    override val configName = "sky_light"
+    companion object {
+        const val NAME = "sky_light"
+    }
+
+    override val name = NAME
+    override val color = 0x87CEEB
 
     override fun collectValues(
         detail: SpawnDetail,

@@ -12,6 +12,8 @@ configurations {
 }
 
 dependencies {
+    implementation(libs.reflections)
+
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.kotlin)
     modImplementation(libs.fabric.api)

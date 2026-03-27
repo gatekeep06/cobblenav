@@ -3,7 +3,6 @@ package com.metacontent.cobblenav.spawndata.collector
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.CustomCollectorRegistrar
 import com.metacontent.cobblenav.spawndata.ConditionData
@@ -18,11 +17,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 
 /**
- * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [SpawnData].
+ * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [com.metacontent.cobblenav.spawndata.SpawnData].
  * Each [ConditionCollector] corresponds to a separate line in the tooltip.
  *
- * [ConfigureableCollector] is an optional interface for collectors. If a collector implements the interface,
- * it can only be registered if the [ConfigureableCollector.configName] value is present in the [CobblenavConfig.collectableConditions] list.
  * Registration of additional collectors should be done using the [CobblenavEvents.REGISTER_CUSTOM_COLLECTORS] event.
  */
 object ConditionCollectors {
@@ -34,18 +31,18 @@ object ConditionCollectors {
     private val blockCollectors = mutableListOf<BlockConditionCollector<*>>()
 
     private fun registerGeneral(collector: GeneralConditionCollector) {
-        if (!collector.allowed(Cobblenav.config.collectableConditions)) return
+        if (!Cobblenav.config.collectorEnabled(collector)) return
         generalCollectors += collector
     }
 
     internal fun register(collector: ConditionCollector<*>) {
-        if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
+        if (collector.isConfigurable() && !Cobblenav.config.collectorEnabled(collector)) return
         if (!collector.isModDependencySatisfied()) return
         collectors += collector
     }
 
     internal fun register(collector: BlockConditionCollector<*>) {
-        if (collector is ConfigureableCollector && !collector.allowed(Cobblenav.config.collectableConditions)) return
+        if (collector.isConfigurable() && !Cobblenav.config.collectorEnabled(collector)) return
         if (!collector.isModDependencySatisfied()) return
         blockCollectors += collector
     }
