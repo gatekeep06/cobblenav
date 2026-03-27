@@ -30,6 +30,9 @@ class Pokefinder(
         player: Player,
         interactionHand: InteractionHand
     ): InteractionResultHolder<ItemStack> {
+        if (!player.mainHandItem.isEmpty && player.mainHandItem.item !is Pokefinder) {
+            return InteractionResultHolder.pass(player.getItemInHand(interactionHand))
+        }
         if (level.isClientSide()) {
             Minecraft.getInstance().setScreen(PokefinderScreen())
         }
