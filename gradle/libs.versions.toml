@@ -4,8 +4,6 @@ architectury-plugin = "3.4-SNAPSHOT"
 shadow = "8.1.1"
 kotlin = "2.2.0"
 
-reflections = "0.10.2"
-
 # Minecraft and mod versions
 minecraft = "1.21.1"
 fabric-loader = "0.17.2"
@@ -24,8 +22,6 @@ counter-fabric = "1.6.1-fabric-1.5.2"
 [libraries]
 shadow = { module = "com.github.johnrengelman:shadow", version.ref = "shadow" }
 kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-
-reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
 
 # Minecraft libraries
 minecraft = { module = "net.minecraft:minecraft", version.ref = "minecraft" }

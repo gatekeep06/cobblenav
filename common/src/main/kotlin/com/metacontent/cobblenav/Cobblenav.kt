@@ -43,6 +43,7 @@ object Cobblenav {
     val resolver = PokenavSpawnablePositionResolver()
 
     fun init(implementation: Implementation) {
+        ConditionCollectors.registerConfigEntries()
         config = Config.load(CobblenavConfig::class.java)
         this.implementation = implementation
         implementation.registerItems()

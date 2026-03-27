@@ -23,8 +23,6 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.reflections)
-
     neoForge(libs.neoforge)
 
     shadowBundle(projects.common) {

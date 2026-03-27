@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.spawndata.collector
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.event.CustomCollectorRegistrar
 import com.metacontent.cobblenav.spawndata.ConditionData
@@ -115,5 +116,31 @@ object ConditionCollectors {
         })
 
         Cobblenav.LOGGER.info("Registered {} collectors and {} block collectors", collectors.size, blockCollectors.size)
+    }
+
+    fun registerConfigEntries() {
+        CobblenavConfig.addCollector(BiomeCollector.NAME)
+        CobblenavConfig.addCollector(MoonPhaseCollector.NAME)
+        CobblenavConfig.addCollector(UnderOpenSkyCollector.NAME)
+        CobblenavConfig.addCollector(YHeightCollector.NAME)
+        CobblenavConfig.addCollector(CoordinatesCollector.NAME)
+        CobblenavConfig.addCollector(LightCollector.NAME)
+        CobblenavConfig.addCollector(SkyLightCollector.NAME)
+        CobblenavConfig.addCollector(WeatherCollector.NAME)
+        CobblenavConfig.addCollector(TimeRangeCollector.NAME)
+        CobblenavConfig.addCollector(StructureCollector.NAME)
+        CobblenavConfig.addCollector(SlimeChunkCollector.NAME)
+        CobblenavConfig.addCollector(FluidSurfaceCollector.NAME)
+        CobblenavConfig.addCollector(DepthSurfaceCollector.NAME)
+        CobblenavConfig.addCollector(FluidSubmergedCollector.NAME)
+        CobblenavConfig.addCollector(DepthSubmergedCollector.NAME)
+        CobblenavConfig.addCollector(BaitCollector.NAME)
+        CobblenavConfig.addCollector(LureLevelCollector.NAME)
+        CobblenavConfig.addCollector(RodCollector.NAME)
+        CobblenavConfig.addCollector(RodTypeCollector.NAME)
+        CobblenavConfig.addCollector(AreaTypeBlockCollector.NAME)
+        CobblenavConfig.addCollector(GroundedTypeBlockCollector.NAME)
+        CobblenavConfig.addCollector(SeafloorTypeBlockCollector.NAME)
+        CobblenavConfig.addCollector(FishingBlockCollector.NAME)
     }
 }
