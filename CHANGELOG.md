@@ -1,6 +1,6 @@
 # Update 2.3.0
 
-- 
+- Added `#cobblenav:pokefinder` item tag.
 
 # Update 2.2.5
 
