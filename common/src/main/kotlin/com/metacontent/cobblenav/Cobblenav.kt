@@ -3,6 +3,8 @@ package com.metacontent.cobblenav
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
+import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
@@ -19,7 +21,7 @@ import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
-import com.metacontent.cobblenav.properties.BucketPropertyType
+import com.metacontent.cobblenav.properties.BucketSpeciesFeatureProvider
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.PokenavSpawnablePositionResolver
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
@@ -108,7 +110,7 @@ object Cobblenav {
 
     fun registerCustomProperties() {
         registerProperty(SpawnDetailIdPropertyType)
-        registerProperty(BucketPropertyType)
+        GlobalSpeciesFeatures.register("spawn_bucket", BucketSpeciesFeatureProvider)
     }
 
     fun registerProperty(property: CustomPokemonPropertyType<*>) {

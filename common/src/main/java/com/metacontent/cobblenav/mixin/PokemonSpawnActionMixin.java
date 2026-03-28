@@ -1,9 +1,10 @@
 package com.metacontent.cobblenav.mixin;
 
+import com.cobblemon.mod.common.api.pokemon.feature.StringSpeciesFeature;
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnAction;
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import com.metacontent.cobblenav.properties.BucketPropertyType;
+import com.metacontent.cobblenav.properties.BucketSpeciesFeatureProvider;
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +19,7 @@ public abstract class PokemonSpawnActionMixin {
         SpawnDetail detail = getDetail();
         PokemonEntity pokemon = cir.getReturnValue();
         SpawnDetailIdPropertyType.apply(pokemon, detail.getId());
-        BucketPropertyType.apply(pokemon, detail.getBucket().name);
+        new StringSpeciesFeature("spawn_bucket", detail.getBucket().name).apply(pokemon);
     }
 
     @Shadow
