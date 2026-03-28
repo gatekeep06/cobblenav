@@ -8,12 +8,7 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.api.fishingcontext.CloudRepository
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.gui.util.RGB
-import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
-import com.metacontent.cobblenav.client.gui.util.dayCycleColor
-import com.metacontent.cobblenav.client.gui.util.drawPokemon
-import com.metacontent.cobblenav.client.gui.util.gui
-import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.gui.util.*
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -24,7 +19,6 @@ import org.joml.Quaternionf
 import org.joml.Vector2f
 import org.joml.Vector3d
 import org.joml.Vector3f
-import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
@@ -66,7 +60,7 @@ class FishingContextWidget(
     private val clouds = mutableListOf<Cloud>()
     private val xRange = -CLOUD_WIDTH..width
     private val yRange = 0..(height - 10 - CLOUD_HEIGHT)
-    private val displayWingull = Random.Default.nextInt(100) <= WINGULL_CHANCE
+    private val displayWingull = Random.nextInt(100) <= WINGULL_CHANCE
     private val wingull by lazy {
         PokemonProperties.parse("species=wingull").asRenderablePokemon()
     }
@@ -123,34 +117,35 @@ class FishingContextWidget(
         )
 
         level?.let {
-            val normalizedTime = it.dayTime % 24000
-            if (normalizedTime in 23000..24000 || normalizedTime in 0..13702) {
-                // There is a small bug with the sun angle that occurs when using `/time set`. I don't know how to fix it
-                val sunAngle = 1.5 * PI + ((it.dayTime.toDouble() - 23000) % 24000) / 14702 * PI
-                blitk(
-                    matrixStack = poseStack,
-                    texture = SUN,
-                    x = centerX - width / 2 * sin(sunAngle),
-                    y = centerY - height * cos(sunAngle),
-                    width = SUN_WIDTH,
-                    height = SUN_HEIGHT
-                )
+            val adjustedTime = (it.dayTime) % 24000
+            val sunAngle = Math.toRadians(adjustedTime / 24000.0 * 360.0 + 180.0) % 360
+            val moonAngle = Math.toRadians(adjustedTime / 24000.0 * 360.0)
+            blitk(
+                matrixStack = poseStack,
+                texture = SUN,
+                x = centerX + width / 2 * cos(sunAngle),
+                y = centerY + height * sin(sunAngle),
+                width = SUN_WIDTH,
+                height = SUN_HEIGHT
+            )
+            blitk(
+                matrixStack = poseStack,
+                texture = MOON,
+                x = centerX + width / 2 * cos(moonAngle),
+                y = centerY + height * sin(moonAngle),
+                width = SUN_WIDTH,
+                height = SUN_HEIGHT,
+                textureWidth = SUN_WIDTH * 8,
+                uOffset = SUN_WIDTH * it.moonPhase
+            )
+            if (adjustedTime in 23000..24000 || adjustedTime in 0..13702) {
+
                 if (cloudOpacity < MAX_CLOUD_OPACITY) cloudOpacity =
                     (cloudOpacity + 0.02f).coerceIn(0f, MAX_CLOUD_OPACITY)
                 if (starsOpacity > 0) starsOpacity = (starsOpacity - 0.02f).coerceIn(0f, MAX_STARS_OPACITY)
             }
-            if (normalizedTime in 11834..24000 || normalizedTime in 0..167) {
-                val moonAngle = 1.5 * PI + ((it.dayTime.toDouble() - 11667) % 24000) / 12333 * PI
-                blitk(
-                    matrixStack = poseStack,
-                    texture = MOON,
-                    x = centerX - width / 2 * sin(moonAngle),
-                    y = centerY - height * cos(moonAngle),
-                    width = SUN_WIDTH,
-                    height = SUN_HEIGHT,
-                    textureWidth = SUN_WIDTH * 8,
-                    uOffset = SUN_WIDTH * it.moonPhase
-                )
+            if (adjustedTime in 11834..24000 || adjustedTime in 0..167) {
+
                 if (cloudOpacity > 0) cloudOpacity = (cloudOpacity - 0.01f).coerceIn(0f, MAX_CLOUD_OPACITY)
                 if (starsOpacity < MAX_STARS_OPACITY) starsOpacity =
                     (starsOpacity + 0.01f).coerceIn(0f, MAX_STARS_OPACITY)
