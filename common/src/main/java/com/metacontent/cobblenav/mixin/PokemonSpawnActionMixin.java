@@ -19,7 +19,7 @@ public abstract class PokemonSpawnActionMixin {
         SpawnDetail detail = getDetail();
         PokemonEntity pokemon = cir.getReturnValue();
         SpawnDetailIdPropertyType.apply(pokemon, detail.getId());
-        new StringSpeciesFeature("spawn_bucket", detail.getBucket().name).apply(pokemon);
+        BucketSpeciesFeatureProvider.apply(pokemon.getPokemon(), detail.getBucket());
     }
 
     @Shadow

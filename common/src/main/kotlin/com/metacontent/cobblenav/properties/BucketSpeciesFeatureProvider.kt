@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.pokemon.feature.StringSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.SynchronizedSpeciesFeatureProvider
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
+import com.cobblemon.mod.common.api.spawning.SpawnBucket
 import com.cobblemon.mod.common.client.gui.summary.featurerenderers.SummarySpeciesFeatureRenderer
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.readString
@@ -18,6 +19,11 @@ object BucketSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<StringS
     override var keys = listOf("spawn_bucket")
     override var needsKey = true
     override var visible = false
+
+    @JvmStatic
+    fun apply(pokemon: Pokemon, bucket: SpawnBucket) {
+        StringSpeciesFeature(keys.first(), bucket.name).apply(pokemon);
+    }
 
     override fun fromString(value: String?): StringSpeciesFeature? {
         return value?.lowercase()?.let { StringSpeciesFeature(keys.first(), it) }
