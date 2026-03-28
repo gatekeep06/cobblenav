@@ -96,14 +96,19 @@ fun getTimeString(period: IntRange): String =
     String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
 
 fun getTimeString(time: Long): String {
-    val adjustedTime = (time + 6000) % 23999
-    var hours = (adjustedTime / 1000).toInt()
-    val minutes = ((adjustedTime % 1000) * 60 / 1000).toInt()
-    val period = if (hours >= 12) "PM" else "AM"
-    hours %= 12
-    hours = if (hours == 0) 12 else hours
+    val adjusted = (time + 6000) % 24000
 
-    return String.format("%02d:%02d %s", hours, minutes, period)
+    val hours24 = adjusted / 1000
+    val minutes = ((adjusted % 1000) * 60) / 1000
+
+    val period = if (hours24 < 12) "AM" else "PM"
+    val hours12 = when {
+        hours24 == 0L -> 12
+        hours24 > 12L -> hours24 - 12
+        else -> hours24
+    }
+
+    return String.format("%02d:%02d %s", hours12, minutes, period)
 }
 
 fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
