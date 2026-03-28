@@ -37,12 +37,6 @@ cobblemon-fabric = { module = "com.cobblemon:fabric", version.ref = "cobblemon" 
 cobblemon-neoforge = { module = "com.cobblemon:neoforge", version.ref = "cobblemon" }
 kotlinforforge-neoforge = { module = "thedarkcolour:kotlinforforge-neoforge", version.ref = "kotlinforforge" }
 
-cobblemon-mal-fabric = { module = "maven.modrinth:cobblemon-myths-and-legends-sidemod", version.ref = "mal-fabric" }
-cobblemon-mal-neoforge = { module = "maven.modrinth:cobblemon-myths-and-legends-sidemod", version.ref = "mal-neoforge" }
-
-cobblemon-counter-fabric = { module = "maven.modrinth:cobblemon-counter", version.ref = "counter-fabric" }
-cobblemon-counter-neoforge = { module = "maven.modrinth:cobblemon-counter", version.ref = "counter-neoforge" }
-
 [plugins]
 cobblenav-convention-base = { id = "cobblenav.base-convention" }
 cobblenav-convention-common = { id = "cobblenav.common-convention" }

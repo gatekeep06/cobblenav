@@ -30,8 +30,6 @@ dependencies {
     }
 
     modImplementation(libs.cobblemon.neoforge)
-    modCompileOnly(libs.cobblemon.mal.neoforge)
-    modCompileOnly(libs.cobblemon.counter.neoforge)
 
     implementation(libs.kotlinforforge.neoforge) {
         exclude(group = "net.neoforged.fancymodloader", module = "loader")

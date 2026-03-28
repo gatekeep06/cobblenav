@@ -18,9 +18,6 @@ dependencies {
 
     modImplementation(libs.cobblemon.fabric)
 
-    modCompileOnly(libs.cobblemon.mal.fabric)
-    modCompileOnly(libs.cobblemon.counter.fabric)
-
     shadowBundle(projects.common) {
         targetConfiguration = "transformProductionFabric"
         isTransitive = false

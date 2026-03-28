@@ -12,6 +12,4 @@ dependencies {
     // Do NOT use other classes from Fabric Loader.
     modImplementation(libs.fabric.loader)
     modImplementation(libs.cobblemon.common)
-    modCompileOnly(libs.cobblemon.mal.fabric)
-    modCompileOnly(libs.cobblemon.counter.fabric)
 }
