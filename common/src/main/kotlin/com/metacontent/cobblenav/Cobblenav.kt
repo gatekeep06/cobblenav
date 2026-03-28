@@ -4,9 +4,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
-import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
-import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools
@@ -109,11 +107,7 @@ object Cobblenav {
     )
 
     fun registerCustomProperties() {
-        registerProperty(SpawnDetailIdPropertyType)
+        CustomPokemonProperty.properties.add(SpawnDetailIdPropertyType)
         GlobalSpeciesFeatures.register(BucketSpeciesFeatureProvider.NAME, BucketSpeciesFeatureProvider)
-    }
-
-    fun registerProperty(property: CustomPokemonPropertyType<*>) {
-        CustomPokemonProperty.properties.add(property)
     }
 }
