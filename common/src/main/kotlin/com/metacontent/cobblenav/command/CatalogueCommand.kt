@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.command
 
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.storage.SpawnDataCatalogue
+import com.metacontent.cobblenav.util.spawnCatalogue
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.ArgumentBuilder
@@ -10,12 +11,14 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.argument
 import net.minecraft.commands.Commands.literal
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.network.chat.Component
 
 object CatalogueCommand : PokenavCommand() {
     const val CATALOGUE = "catalogue"
     const val PLAYER = "player"
     const val GRANT = "grant"
     const val REVOKE = "revoke"
+    const val LIST = "list"
     const val ID = "id"
     const val SPECIES = "species"
     const val ALL = "all"
@@ -31,10 +34,13 @@ object CatalogueCommand : PokenavCommand() {
             .then(literal(SPECIES).then(argument(SPECIES, StringArgumentType.word()).executes(::revokeByPokemon)))
             .then(literal(ALL).executes(::revokeAll))
 
+        val list = literal(LIST).executes(::list)
+
         return literal(CATALOGUE).then(
             argument(PLAYER, EntityArgument.player())
                 .then(grant)
                 .then(revoke)
+                .then(list)
         )
     }
 
@@ -132,6 +138,17 @@ object CatalogueCommand : PokenavCommand() {
                 }
                 return@executeAndSave shouldSave
             }
+        }
+        return Command.SINGLE_SUCCESS
+    }
+
+    private fun list(context: CommandContext<CommandSourceStack>): Int {
+        val players = EntityArgument.getPlayers(context, PLAYER)
+        players.forEach { player ->
+            player.displayName?.let { context.source.sendSystemMessage(it) }
+            context.source.sendSystemMessage(Component.literal("------"))
+            context.source.sendSystemMessage(Component.literal(player.spawnCatalogue().spawnDetailIds.joinToString()))
+            context.source.sendSystemMessage(Component.literal("------"))
         }
         return Command.SINGLE_SUCCESS
     }
