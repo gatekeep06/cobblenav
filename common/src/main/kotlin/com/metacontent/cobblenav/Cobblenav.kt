@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
+import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
@@ -20,6 +21,7 @@ import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
+import com.metacontent.cobblenav.networking.packet.client.EvYieldSyncPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.properties.BucketSpeciesFeatureProvider
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
@@ -61,9 +63,17 @@ object Cobblenav {
             CloseFishingnavPacket().sendToPlayer(event.player)
         }
 
-        if (config.syncLabelsWithClient) {
-            CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
+
+        CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
+            if (config.syncLabelsWithClient) {
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
+            }
+            if (config.syncEvYieldWithClient) {
+                EvYieldSyncPacket(PokemonSpecies.species.map { species ->
+                    species.resourceIdentifier to species.evYield.mapNotNull { (stat, value) ->
+                        (stat as? Stats)?.let { it to value }
+                    }.toMap()
+                })
             }
         }
 
