@@ -238,6 +238,16 @@ object SpawnDataHelper {
         )
     }
 
+    fun reloadSpawnDetails() {
+        CobblemonSpawnPools.WORLD_SPAWN_POOL.forEach { detail ->
+            if (detail !is PokemonSpawnDetail) return@forEach
+            spawnDetailIds.add(detail.id)
+            detail.pokemon.species?.let {
+                spawnDetailIdBySpecies.getOrPut(it) { mutableListOf() }.add(detail.id)
+            }
+        }
+    }
+
     fun onInit() {
         CobblenavEvents.POKEMON_ENCOUNTERED.subscribe { (pokemon, player) ->
             player?.catalogueDetailId(pokemon)
@@ -252,16 +262,6 @@ object SpawnDataHelper {
         CobblemonEvents.BOBBER_SPAWN_POKEMON_POST.subscribe { (bobber, action, stack, pokemonEntity) ->
             action.spawnablePosition.cause.entity?.let {
                 if (it is ServerPlayer) it.catalogueDetailId(pokemonEntity.pokemon)
-            }
-        }
-
-        CobblemonSpawnPools.WORLD_SPAWN_POOL.observable.subscribe { spawnDetails ->
-            spawnDetails.forEach { detail ->
-                if (detail !is PokemonSpawnDetail) return@forEach
-                spawnDetailIds.add(detail.id)
-                detail.pokemon.species?.let {
-                    spawnDetailIdBySpecies.getOrPut(it) { mutableListOf() }.add(detail.id)
-                }
             }
         }
     }
