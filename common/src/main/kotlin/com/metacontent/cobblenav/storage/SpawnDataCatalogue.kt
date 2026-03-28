@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.storage
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
@@ -10,7 +9,6 @@ import com.metacontent.cobblenav.util.getSpawnDataCatalogue
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
@@ -78,6 +76,15 @@ class SpawnDataCatalogue(
 
     fun remove(ids: Iterable<String>): Boolean {
         return remove(ids.toSet())
+    }
+
+    fun clear(): Boolean {
+        if (spawnDetailIds.isNotEmpty()) {
+            spawnDetailIds.clear()
+            onCatalogueUpdated()
+            return true
+        }
+        return false
     }
 
     private fun onCatalogueUpdated() {
