@@ -53,6 +53,14 @@ class SpawnDataCatalogue(
         }
     }
 
+    fun remove(id: String): Boolean {
+        return spawnDetailIds.remove(id).also {
+            if (it) {
+                onCatalogueUpdated()
+            }
+        }
+    }
+
     private fun onCatalogueUpdated() {
         player?.let {
             SetClientPlayerDataPacket(
