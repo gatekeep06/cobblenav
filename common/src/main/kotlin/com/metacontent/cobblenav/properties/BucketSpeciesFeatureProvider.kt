@@ -16,13 +16,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 
 object BucketSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<StringSpeciesFeature>,
     CustomPokemonPropertyType<StringSpeciesFeature>, AspectProvider {
-    override var keys = listOf("spawn_bucket")
+    const val NAME = "spawn_bucket"
+
+    override var keys = listOf(NAME)
     override var needsKey = true
     override var visible = false
 
     @JvmStatic
     fun apply(pokemon: Pokemon, bucket: SpawnBucket) {
-        StringSpeciesFeature(keys.first(), bucket.name).apply(pokemon);
+        StringSpeciesFeature(keys.first(), bucket.name).apply(pokemon)
     }
 
     override fun fromString(value: String?): StringSpeciesFeature? {
@@ -34,8 +36,7 @@ object BucketSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<StringS
     }
 
     override fun invoke(
-        buffer: RegistryFriendlyByteBuf,
-        name: String
+        buffer: RegistryFriendlyByteBuf, name: String
     ): StringSpeciesFeature? {
         return if (name in keys) {
             StringSpeciesFeature(name, "").also { it.loadFromBuffer(buffer) }
@@ -83,11 +84,9 @@ object BucketSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<StringS
     }
 
     override fun provide(properties: PokemonProperties): Set<String> {
-        return properties.customProperties.filterIsInstance<StringSpeciesFeature>()
-            .find { it.name in keys }
-            ?.let {
-                setOf(it.toAspect())
-            } ?: emptySet()
+        return properties.customProperties.filterIsInstance<StringSpeciesFeature>().find { it.name in keys }?.let {
+            setOf(it.toAspect())
+        } ?: emptySet()
     }
 
     private fun StringSpeciesFeature.toAspect(): String = "bucket-${this.value}"

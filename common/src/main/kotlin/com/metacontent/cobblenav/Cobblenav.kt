@@ -110,7 +110,7 @@ object Cobblenav {
 
     fun registerCustomProperties() {
         registerProperty(SpawnDetailIdPropertyType)
-        GlobalSpeciesFeatures.register("spawn_bucket", BucketSpeciesFeatureProvider)
+        GlobalSpeciesFeatures.register(BucketSpeciesFeatureProvider.NAME, BucketSpeciesFeatureProvider)
     }
 
     fun registerProperty(property: CustomPokemonPropertyType<*>) {
