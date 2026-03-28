@@ -1,5 +1,7 @@
 package com.metacontent.cobblenav.command
 
+import com.cobblemon.mod.common.api.permission.CobblemonPermissions
+import com.cobblemon.mod.common.util.permission
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.storage.SpawnDataCatalogue
 import com.metacontent.cobblenav.util.spawnCatalogue
@@ -36,7 +38,7 @@ object CatalogueCommand : PokenavCommand() {
 
         val list = literal(LIST).executes(::list)
 
-        return literal(CATALOGUE).then(
+        return literal(CATALOGUE).permission(CobblemonPermissions.POKEDEX).then(
             argument(PLAYER, EntityArgument.player())
                 .then(grant)
                 .then(revoke)
