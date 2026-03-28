@@ -47,7 +47,14 @@ class SpawnDataCatalogue(
     fun catalogue(id: String): Boolean {
         return spawnDetailIds.add(id).also {
             if (it) {
-//                player?.sendSystemMessage(Component.translatable("gui.cobblenav.notification.catalogue_updated", id))
+                onCatalogueUpdated()
+            }
+        }
+    }
+
+    fun catalogue(ids: Iterable<String>): Boolean {
+        return spawnDetailIds.addAll(ids).also {
+            if (it) {
                 onCatalogueUpdated()
             }
         }
@@ -59,6 +66,18 @@ class SpawnDataCatalogue(
                 onCatalogueUpdated()
             }
         }
+    }
+
+    fun remove(ids: Set<String>): Boolean {
+        return spawnDetailIds.removeAll(ids).also {
+            if (it) {
+                onCatalogueUpdated()
+            }
+        }
+    }
+
+    fun remove(ids: Iterable<String>): Boolean {
+        return remove(ids.toSet())
     }
 
     private fun onCatalogueUpdated() {
