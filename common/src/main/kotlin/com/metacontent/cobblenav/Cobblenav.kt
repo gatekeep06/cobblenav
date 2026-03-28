@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
@@ -66,17 +67,10 @@ object Cobblenav {
             }
         }
 
-        PlatformEvents.SERVER_STARTING.subscribe {
+        CobblenavDataStoreTypes.info()
+
+        PlatformEvents.SERVER_STARTING.subscribe(Priority.LOWEST) { (server) ->
             ConditionCollectors.init()
-        }
-
-        PlatformEvents.SERVER_STARTED.subscribe { (server) ->
-            SpawnDataHelper.reloadSpawnDetails()
-            CobblemonSpawnPools.WORLD_SPAWN_POOL.observable.subscribe {
-                SpawnDataHelper.reloadSpawnDetails()
-            }
-
-            BiomePlatforms.onServerStarted(server)
 
             val spawnDataNbtFactory = CachedPlayerDataStoreFactory(SpawnDataCatalogueNbtBackend())
             spawnDataNbtFactory.setup(server)
@@ -90,6 +84,15 @@ object Cobblenav {
                 .infiniteIterations()
                 .tracker(ServerTaskTracker)
                 .build()
+        }
+
+        PlatformEvents.SERVER_STARTED.subscribe { (server) ->
+            SpawnDataHelper.reloadSpawnDetails()
+            CobblemonSpawnPools.WORLD_SPAWN_POOL.observable.subscribe {
+                SpawnDataHelper.reloadSpawnDetails()
+            }
+
+            BiomePlatforms.onServerStarted(server)
         }
 
         SpawnResultData.register(PokemonSpawnDetail.TYPE, PokemonSpawnResultData::transform, PokemonSpawnResultData::decodeResultData)
