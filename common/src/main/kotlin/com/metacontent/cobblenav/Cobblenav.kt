@@ -3,6 +3,7 @@ package com.metacontent.cobblenav
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
@@ -30,6 +31,7 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
+import com.metacontent.cobblenav.util.registerDirectly
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -108,6 +110,8 @@ object Cobblenav {
 
     fun registerCustomProperties() {
         CustomPokemonProperty.properties.add(SpawnDetailIdPropertyType)
-        GlobalSpeciesFeatures.register(BucketSpeciesFeatureProvider.NAME, BucketSpeciesFeatureProvider)
+        AspectProvider.register(BucketSpeciesFeatureProvider)
+        CustomPokemonProperty.properties.add(BucketSpeciesFeatureProvider)
+        GlobalSpeciesFeatures.registerDirectly(BucketSpeciesFeatureProvider.NAME, BucketSpeciesFeatureProvider)
     }
 }
