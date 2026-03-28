@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
+import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.storage.player.factory.CachedPlayerDataStoreFactory
@@ -68,6 +69,11 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTED.subscribe { (server) ->
+            SpawnDataHelper.reloadSpawnDetails()
+            CobblemonSpawnPools.WORLD_SPAWN_POOL.observable.subscribe {
+                SpawnDataHelper.reloadSpawnDetails()
+            }
+
             BiomePlatforms.onServerStarted(server)
 
             val spawnDataNbtFactory = CachedPlayerDataStoreFactory(SpawnDataCatalogueNbtBackend())

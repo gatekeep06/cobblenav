@@ -2,8 +2,10 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools
 import com.cobblemon.mod.common.api.spawning.SpawnBucket
 import com.cobblemon.mod.common.api.spawning.SpawnCause
+import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
 import com.cobblemon.mod.common.api.spawning.influence.BucketNormalizingInfluence
@@ -36,6 +38,9 @@ import kotlin.math.ceil
 
 object SpawnDataHelper {
     const val BASE_FISHING_POKEMON_CHANCE = 0.85f
+
+    val spawnDetailIds = mutableSetOf<String>()
+    val spawnDetailIdBySpecies = mutableMapOf<String, MutableList<String>>()
 
     fun calculateWeightedBuckets(
         bucketWeights: MutableMap<SpawnBucket, Float>,
@@ -135,8 +140,8 @@ object SpawnDataHelper {
         } else {
             spawner.influences
         }
-        val weightedBuckets = calculateWeightedBuckets(bucketWeights, influences).associate {
-            (name, chance) -> name to chance
+        val weightedBuckets = calculateWeightedBuckets(bucketWeights, influences).associate { (name, chance) ->
+            name to chance
         }
 
         return bucketWeights.keys.associate { bucket ->
@@ -201,7 +206,8 @@ object SpawnDataHelper {
         val blockConditions = mutableSetOf<ResourceLocation>()
         val anticonditions = mutableListOf<ConditionData>()
         val blockAnticonditions = mutableSetOf<ResourceLocation>()
-        val canShowConditions = !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
+        val canShowConditions =
+            !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
         if (canShowConditions) {
             detail.conditions.forEach { condition ->
                 conditions += ConditionCollectors.collectConditions(detail, condition, player)
@@ -230,6 +236,16 @@ object SpawnDataHelper {
             blockConditions = BlockConditions(blockConditions),
             blockAnticonditions = BlockConditions(blockAnticonditions)
         )
+    }
+
+    fun reloadSpawnDetails() {
+        CobblemonSpawnPools.WORLD_SPAWN_POOL.forEach { detail ->
+            if (detail !is PokemonSpawnDetail) return@forEach
+            spawnDetailIds.add(detail.id)
+            detail.pokemon.species?.let {
+                spawnDetailIdBySpecies.getOrPut(it) { mutableListOf() }.add(detail.id)
+            }
+        }
     }
 
     fun onInit() {
