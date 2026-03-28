@@ -12,6 +12,7 @@
         "ModelBakeryMixin"
     ],
     "mixins": [
+        "GlobalSpeciesFeaturesMixin",
         "PokedexManagerMixin",
         "PokemonSpawnActionMixin",
         "PokeRodFishingBobberEntityMixin",

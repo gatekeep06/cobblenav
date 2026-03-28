@@ -3,8 +3,9 @@ package com.metacontent.cobblenav
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
+import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
-import com.cobblemon.mod.common.api.properties.CustomPokemonPropertyType
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
 import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools
@@ -19,7 +20,7 @@ import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
-import com.metacontent.cobblenav.properties.BucketPropertyType
+import com.metacontent.cobblenav.properties.BucketSpeciesFeatureProvider
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.PokenavSpawnablePositionResolver
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
@@ -30,6 +31,7 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
+import com.metacontent.cobblenav.util.registerDirectly
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -107,11 +109,9 @@ object Cobblenav {
     )
 
     fun registerCustomProperties() {
-        registerProperty(SpawnDetailIdPropertyType)
-        registerProperty(BucketPropertyType)
-    }
-
-    fun registerProperty(property: CustomPokemonPropertyType<*>) {
-        CustomPokemonProperty.properties.add(property)
+        CustomPokemonProperty.properties.add(SpawnDetailIdPropertyType)
+        AspectProvider.register(BucketSpeciesFeatureProvider)
+        CustomPokemonProperty.properties.add(BucketSpeciesFeatureProvider)
+        GlobalSpeciesFeatures.registerDirectly(BucketSpeciesFeatureProvider.NAME, BucketSpeciesFeatureProvider)
     }
 }
