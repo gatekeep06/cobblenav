@@ -48,8 +48,8 @@ object CatalogueCommand : PokenavCommand() {
         val players = EntityArgument.getPlayers(context, PLAYER)
         val id = StringArgumentType.getString(context, ID)
         players.forEach { player ->
-            SpawnDataCatalogue.executeAndSave(player) {
-                SpawnDataHelper.spawnDetailIds.contains(id) && it.catalogue(id)
+            SpawnDataCatalogue.executeAndSave(player) { data ->
+                SpawnDataHelper.spawnDetailIds.contains(id) && data.catalogue(id)
             }
         }
         return Command.SINGLE_SUCCESS
@@ -60,17 +60,8 @@ object CatalogueCommand : PokenavCommand() {
         val species = StringArgumentType.getString(context, SPECIES)
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
-                var shouldSave = false
-                SpawnDataHelper.spawnDetailIdBySpecies[species]?.let { ids ->
-                    ids.forEach { id ->
-                        data.catalogue(id).also {
-                            if (it && !shouldSave) {
-                                shouldSave = true
-                            }
-                        }
-                    }
-                }
-                return@executeAndSave shouldSave
+                val ids = SpawnDataHelper.spawnDetailIdBySpecies[species]
+                return@executeAndSave ids != null && data.catalogue(ids)
             }
         }
         return Command.SINGLE_SUCCESS
@@ -80,15 +71,7 @@ object CatalogueCommand : PokenavCommand() {
         val players = EntityArgument.getPlayers(context, PLAYER)
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
-                var shouldSave = false
-                SpawnDataHelper.spawnDetailIds.forEach { id ->
-                    data.catalogue(id).also {
-                        if (it && !shouldSave) {
-                            shouldSave = true
-                        }
-                    }
-                }
-                return@executeAndSave shouldSave
+                data.catalogue(SpawnDataHelper.spawnDetailIds)
             }
         }
         return Command.SINGLE_SUCCESS
@@ -98,7 +81,9 @@ object CatalogueCommand : PokenavCommand() {
         val players = EntityArgument.getPlayers(context, PLAYER)
         val id = StringArgumentType.getString(context, ID)
         players.forEach { player ->
-            SpawnDataCatalogue.executeAndSave(player) { it.remove(id) }
+            SpawnDataCatalogue.executeAndSave(player) { data ->
+                data.remove(id)
+            }
         }
         return Command.SINGLE_SUCCESS
     }
@@ -108,17 +93,8 @@ object CatalogueCommand : PokenavCommand() {
         val species = StringArgumentType.getString(context, SPECIES)
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
-                var shouldSave = false
-                SpawnDataHelper.spawnDetailIdBySpecies[species]?.let { ids ->
-                    ids.forEach { id ->
-                        data.remove(id).also {
-                            if (it && !shouldSave) {
-                                shouldSave = true
-                            }
-                        }
-                    }
-                }
-                return@executeAndSave shouldSave
+                val ids = SpawnDataHelper.spawnDetailIdBySpecies[species]
+                return@executeAndSave ids != null && data.remove(ids)
             }
         }
         return Command.SINGLE_SUCCESS
@@ -128,15 +104,7 @@ object CatalogueCommand : PokenavCommand() {
         val players = EntityArgument.getPlayers(context, PLAYER)
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
-                var shouldSave = false
-                SpawnDataHelper.spawnDetailIds.forEach { id ->
-                    data.remove(id).also {
-                        if (it && !shouldSave) {
-                            shouldSave = true
-                        }
-                    }
-                }
-                return@executeAndSave shouldSave
+                data.clear()
             }
         }
         return Command.SINGLE_SUCCESS
