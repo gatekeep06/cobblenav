@@ -3,7 +3,7 @@
   "id": "cobblenav",
   "version": "${version}",
   "name": "Cobblenav",
-  "description": "Cobblenav (Cobblemon Pokenav) is a sidemod that adds a pokenav item similar to the one featured in the Pokemon RS games",
+  "description": "The Cobblenav mod is inspired by the item and related mechanics featured in the games Pokémon RSE and Pokémon ORAS",
   "authors": [
     "gatekeep06"
   ],
@@ -27,7 +27,7 @@
   "depends": {
     "fabricloader": ">=0.16.5",
     "minecraft": "~1.21.1",
-    "cobblemon": ">=1.6.0",
+    "cobblemon": ">=1.7.0",
     "java": ">=21",
     "fabric-api": "*"
   }
