@@ -55,7 +55,7 @@ class PokemonHerdSpawnResultData(
                 pokemon to knowledge
             }
 
-            if (isUnknown(allPokemon.values) && Cobblenav.config.hideUnknownSpawns)
+            if (isUnknown(allPokemon.values) && Cobblenav.config.hideUnknownPokemon)
                 return UnknownSpawnResultData(detail.spawnablePositionType.name)
 
             return PokemonHerdSpawnResultData(

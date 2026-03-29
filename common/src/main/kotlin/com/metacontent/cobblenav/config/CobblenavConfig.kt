@@ -17,7 +17,7 @@ class CobblenavConfig : Config<CobblenavConfig>() {
     @Transient
     override val fileName = "server-config.json"
 
-    val hideUnknownSpawns = false
+    val hideUnknownPokemon = false
     val hideConditionsOfUnknownSpawns = true
     val hideNaturalBlockConditions = true
     val percentageForKnownHerd = 0.5f

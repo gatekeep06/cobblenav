@@ -225,7 +225,7 @@ object SpawnDataHelper {
         val platformId = BiomePlatforms.firstFitting(fittingPositions)
 
         return SpawnData(
-            id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownSpawns) detail.id else "???",
+            id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownPokemon) detail.id else "???",
             result = result,
             positionType = detail.spawnablePositionType.name,
             bucket = detail.bucket.name,

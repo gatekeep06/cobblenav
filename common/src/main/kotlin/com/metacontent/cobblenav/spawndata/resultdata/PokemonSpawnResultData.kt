@@ -43,7 +43,7 @@ class PokemonSpawnResultData(
             val knowledge = player.pokedex()
                 .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
                 ?.getFormRecord(renderablePokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
-            if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownSpawns) return UnknownSpawnResultData(
+            if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownPokemon) return UnknownSpawnResultData(
                 positionType
             )
 
