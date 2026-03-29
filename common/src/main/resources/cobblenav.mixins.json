@@ -12,6 +12,7 @@
         "ModelBakeryMixin"
     ],
     "mixins": [
+        "FormDataMixin",
         "GlobalSpeciesFeaturesMixin",
         "PokedexManagerMixin",
         "PokemonSpawnActionMixin",
