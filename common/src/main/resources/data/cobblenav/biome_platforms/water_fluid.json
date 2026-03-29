@@ -1,8 +1,0 @@
-{
-    "id": "cobblenav:water",
-    "conditions": {
-        "fluids": [
-            "minecraft:water"
-        ]
-    }
-}

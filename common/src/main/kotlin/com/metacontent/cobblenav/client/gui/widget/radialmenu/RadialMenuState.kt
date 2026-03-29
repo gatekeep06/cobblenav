@@ -1,15 +1,18 @@
 package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
-import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
+import com.metacontent.cobblenav.client.gui.widget.stateful.WidgetState
+import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.network.chat.Component
 
 abstract class RadialMenuState(
-    protected val handler: RadialMenuHandler,
+    val os: PokenavOS,
+    handler: StatefulWidget,
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
     component: Component
-) : SoundlessWidget(pX, pY, pWidth, pHeight, component) {
+) : WidgetState<StatefulWidget>(handler, pX, pY, pWidth, pHeight, component) {
     companion object {
         const val MENU_DIAMETER: Int = 20
         const val ANIMATION_SHEET_WIDTH: Int = 180

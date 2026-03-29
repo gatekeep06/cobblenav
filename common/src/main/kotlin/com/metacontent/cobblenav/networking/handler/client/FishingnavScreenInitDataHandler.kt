@@ -7,6 +7,11 @@ import net.minecraft.client.Minecraft
 
 object FishingnavScreenInitDataHandler : ClientNetworkPacketHandler<FishingnavScreenInitDataPacket> {
     override fun handle(packet: FishingnavScreenInitDataPacket, client: Minecraft) {
-        (client.screen as? FishingnavScreen)?.receiveInitData(packet.buckets, packet.pokeBall, packet.lineColor, packet.baitItem)
+        (client.screen as? FishingnavScreen)?.receiveInitData(
+            packet.buckets,
+            packet.pokeBall,
+            packet.lineColor,
+            packet.baitItem
+        )
     }
 }

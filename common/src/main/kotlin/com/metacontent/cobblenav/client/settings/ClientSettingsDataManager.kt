@@ -1,18 +1,25 @@
 package com.metacontent.cobblenav.client.settings
 
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.util.adapters.IntRangeAdapter
+import com.cobblemon.mod.common.util.adapters.PokemonPropertiesAdapter
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterAdapter
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
 object ClientSettingsDataManager {
     const val DIRECTORY = "cobblenav/settings/"
-    val GSON = GsonBuilder()
+    val GSON: Gson = GsonBuilder()
         .disableHtmlEscaping()
         .setPrettyPrinting()
         .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
+        .registerTypeAdapter(PokemonProperties::class.java, PokemonPropertiesAdapter(false))
+        .registerTypeAdapter(RadarFilter::class.java, RadarFilterAdapter)
         .create()
 
     private fun String.toPath() = "$DIRECTORY$this.json"

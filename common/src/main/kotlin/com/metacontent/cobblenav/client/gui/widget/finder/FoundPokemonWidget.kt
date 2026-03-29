@@ -1,14 +1,11 @@
 package com.metacontent.cobblenav.client.gui.widget.finder
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.cobblemon.mod.common.api.spawning.condition.SubmergedSpawningCondition
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
-import com.metacontent.cobblenav.client.gui.util.drawPokemon
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.spawndata.SpawnData
@@ -41,13 +38,10 @@ class FoundPokemonWidget(
         val NOTIFICATION = gui("finder/shiny_notification")
     }
 
-    private val pose =
-        if (spawnData.spawningContext == SubmergedSpawningCondition.NAME && CobblenavClient.config.useSwimmingAnimationIfSubmerged)
-            PoseType.SWIM else PoseType.WALK
+    private val pose = PoseType.WALK
     private val state = FloatingState()
     private val openingTimer = Timer(OPENING)
     private val loopTimer = Timer(LOOP, true)
-    private val obscured = !spawnData.encountered && CobblenavClient.config.obscureUnknownPokemon
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -111,19 +105,19 @@ class FoundPokemonWidget(
             )
         }
 
-        drawPokemon(
-            poseStack = poseStack,
-            pokemon = spawnData.renderable,
-            x = x.toFloat(),
-            y = y.toFloat() - POKEMON_OFFSET, //- if (spawnData.pose == PoseType.SWIM) 10 else 0,
-            z = 100f,
-            delta = delta,
-            state = state,
-            poseType = pose,
-            scale = SCALE,
-            rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
-            obscured = obscured
-        )
+//        drawPokemon(
+//            poseStack = poseStack,
+//            pokemon = spawnData.renderable,
+//            x = x.toFloat(),
+//            y = y.toFloat() - POKEMON_OFFSET, //- if (spawnData.pose == PoseType.SWIM) 10 else 0,
+//            z = 100f,
+//            delta = delta,
+//            state = state,
+//            poseType = pose,
+//            scale = SCALE,
+//            rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(25F, 35F, 0F)),
+//            obscured = obscured
+//        )
 
         if (pokemon.aspects.contains(SHINY_ASPECT)) {
             blitk(

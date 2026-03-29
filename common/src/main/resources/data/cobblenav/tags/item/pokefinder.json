@@ -1,0 +1,12 @@
+{
+    "replace": false,
+    "values": [
+        "cobblenav:pokefinder_item_black",
+        "cobblenav:pokefinder_item_blue",
+        "cobblenav:pokefinder_item_green",
+        "cobblenav:pokefinder_item_pink",
+        "cobblenav:pokefinder_item_red",
+        "cobblenav:pokefinder_item_white",
+        "cobblenav:pokefinder_item_yellow"
+    ]
+}

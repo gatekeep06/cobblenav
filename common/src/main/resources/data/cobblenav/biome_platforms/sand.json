@@ -1,0 +1,9 @@
+{
+    "id": "cobblenav:sand",
+    "condition": {
+        "type": "grounded",
+        "biomes": [
+            "#cobblemon:is_arid"
+        ]
+    }
+}

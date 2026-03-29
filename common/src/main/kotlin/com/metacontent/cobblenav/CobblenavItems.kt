@@ -1,14 +1,12 @@
 package com.metacontent.cobblenav
 
-import com.metacontent.cobblenav.item.Fishingnav
-import com.metacontent.cobblenav.item.Pokefinder
-import com.metacontent.cobblenav.item.Pokenav
-import com.metacontent.cobblenav.item.PokenavModelType
+import com.metacontent.cobblenav.item.*
 import com.metacontent.cobblenav.registry.RegistryProvider
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters
 import net.minecraft.world.item.CreativeModeTab.Output
 import net.minecraft.world.item.Item
@@ -16,6 +14,10 @@ import net.minecraft.world.item.Item
 object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<Item>>, Item>() {
     override val registry: Registry<Item> = BuiltInRegistries.ITEM
     override val resourceKey: ResourceKey<Registry<Item>> = Registries.ITEM
+
+    private val inHandModelItems = mutableListOf<InHandModelItem>()
+    private val flickeringItems = mutableListOf<FlickeringItem>()
+    private val openableItems = mutableListOf<OpenableItem>()
 
     // Pokenavs
     val POKENAV = pokenavItem(PokenavModelType.BASE)
@@ -49,14 +51,26 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
     val WHITE_POKEFINDER = pokefinderItem("white")
     val YELLOW_POKEFINDER = pokefinderItem("yellow")
 
-    val FISHINGNAV = add("fishingnav_item", Fishingnav())
+    val FISHINGNAV = add(Fishingnav.REGISTRY_KEY, Fishingnav()).also {
+        inHandModelItems.add(it)
+        flickeringItems.add(it)
+        openableItems.add(it)
+    }
 
     private fun pokenavItem(model: PokenavModelType): Item {
-        return add(Pokenav.BASE_REGISTRY_KEY + model.modelName, Pokenav(model))
+        return add(Pokenav.BASE_REGISTRY_KEY + model.modelName, Pokenav(model)).also {
+            inHandModelItems.add(it)
+            flickeringItems.add(it)
+            openableItems.add(it)
+        }
     }
 
     private fun pokefinderItem(color: String): Item {
-        return add(Pokefinder.BASE_REGISTRY_KEY + color, Pokefinder())
+        return add(Pokefinder.BASE_REGISTRY_KEY + color, Pokefinder(color)).also {
+            inHandModelItems.add(it)
+            flickeringItems.add(it)
+            openableItems.add(it)
+        }
     }
 
     fun addToGroup(displayContext: ItemDisplayParameters, entries: Output) {
@@ -91,5 +105,19 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
         entries.accept(YELLOW_POKEFINDER)
 
         entries.accept(FISHINGNAV)
+    }
+
+    fun loadSpecialModels(consumer: (ResourceLocation) -> Unit) {
+        inHandModelItems.forEach {
+            consumer(it.inHandModel)
+        }
+        flickeringItems.forEach {
+            consumer(it.flickeringInventoryModel)
+            consumer(it.flickeringInHandModel)
+        }
+        openableItems.forEach {
+            consumer(it.openedInventoryModel)
+            consumer(it.openedInHandModel)
+        }
     }
 }

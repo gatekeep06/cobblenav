@@ -1,3 +1,52 @@
+# Update 2.3.0
+
+- Tooltips with data about conditions affecting spawns on the Location screen have been replaced with a new feature - Details Tab.
+  - Click on any spawn entry on the Location screen or FishingNav screen to open the tab.
+  - You can switch between other entries on the screen without closing the tab using the arrow buttons.
+  - The tab sections display data about the spawn result, rarity, conditions, and anti-conditions. For convenience, sections can be collapsed.
+  - `CONDITION_SECTION_WIDGETS_CREATED`, `ANTICONDITION_SECTION_WIDGETS_CREATED`, and `SPAWN_DATA_WIDGETS_CREATED` events have been added. You can use them to add yourn own widgets to the tab.
+- The spawn data collection system has been heavily reworked, with increased scalability.
+  - A spawn cataloging system has been added. 
+    - Now, when a Pokémon spawns near you, PokéNav will record its spawn in the catalog. 
+    - Currently, having an entry in the catalog unlocks data about spawn conditions and anti-conditions. 
+    - In future updates, the system will also be used to implement a Catalog screen with all spawns known to you.
+    - A command for modifying players' catalogs has also been added - `/pokenav catalogue <player> <grant/revoke/list> ...`
+  - When using PokéNav on a PokéSnack block, the data for the PokéSnack spawner will be displayed, taking its effects into account.
+  - Added collection of spawn data for herds.
+  - By default, Pokémon are now not hidden. You can enable hiding using the `hideUnknownPokemon` parameter in the server config. In that case, if the player doesn't know the Pokémon, it will be replaced with a question mark, and all spawn result data will be hidden.
+  - The purpose of the collectors has been expanded, and the functionality has been reworked accordingly. Now, collectors gather all spawn-related data.
+  - Changes to bucket weights are now also taken into account.
+- PokéFinder has been reworked.
+  - The UI has been completely redesigned.
+  - The configuration method has been changed. You can now add as many filters as you want. The radar will display Pokémon that satisfy at least one filter.
+    - Added "Translated Name" filter.
+    - Added "Pokémon Properties" filter.
+    - Added "Pokémon Labels" filter.
+    - Added "EV Yield" filter.
+    - Added "Uncaught Pokémon" filter.
+  - The counter on the left reflects the number of Pokémon in the area that match your filters.
+- Buckets are now saved in the Pokémon's data as an aspect upon spawning. This allows you to use PokéFinder and the "Pokémon Properties" filter to locate Pokémon of a specific rarity. For example, by specifying `spawn_bucket=ultra-rare`, the radar will display Pokémon that spawned from an ultra-rare bucket.
+- The biome platform system has been updated. By using the spawn conditions built into Cobblemon, greater flexibility has been achieved in determining suitable platforms.
+- Implemented support for items with multiple models, similar to the spyglass and Poké Balls. Models for most items from the mod are now separated into inventory model, hand model, active state model, and active signal model.
+- Some items will now signal certain events.
+- New server config parameters:
+  - `hideConditionsOfUnknownSpawns` determines whether conditions and anti-conditions for spawns not recorded in the catalog will be collected and shown.
+  - `percentageForKnownHerd` determines the percentage of Pokémon known to the player required for the spawn result of a herd to be considered known to the player.
+  - `syncEvYieldWithClient`, similarly to `syncLabelsWithClient`, determines whether Pokémon EV yield data will be synced with the client, which is necessary for the corresponding PokéFinder filter to work.
+- New client config parameters:
+  - `pokefinderScreenScale` determines scale of the PokéFinder screen.
+  - `pokefinderOverlayScale` determines scale of the Radar overlay.
+  - `pokefinderOverlayOffsetX` determines the overlay's offset along the x-axis from the edge of the screen.
+  - `pokefinderOverlayOffsetY`determines the overlay's offset along the y-axis from the edge of the screen.
+- Minor UI changes and fixes.
+- Added `#cobblenav:pokefinder` item tag.
+- Added a couple of new biome platforms.
+- PokéFinder no longer opens the screen while in the off-hand if you have an item in your main hand.
+- Client collectors have been removed.
+- Myths and Legends and Cobblemon Counter integrations have been temporarily removed.
+- Finder screen has been temporarily disabled.
+- The transition to the Kotlin DSL has been completed. Thanks to Mikita Kurganovich for this.
+
 # Update 2.2.5
 
 - Fixes for compatibility with the latest version of Cobblemon.

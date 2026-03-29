@@ -1,0 +1,42 @@
+[versions]
+architectury-loom = "1.11-SNAPSHOT"
+architectury-plugin = "3.4-SNAPSHOT"
+shadow = "8.1.1"
+kotlin = "2.2.0"
+
+# Minecraft and mod versions
+minecraft = "1.21.1"
+fabric-loader = "0.17.2"
+fabric-api = "0.116.6+1.21.1"
+neoforge = "21.1.51"
+kotlinforforge = "5.10.0"
+fabric-kotlin = "1.13.6+kotlin.2.2.20"
+cobblemon = "1.7.3+1.21.1"
+
+# Integration versions
+mal-neoforge = "occT2ebf"
+mal-fabric = "1.8.0"
+counter-neoforge = "1.6.1-neoforge-1.5.2"
+counter-fabric = "1.6.1-fabric-1.5.2"
+
+[libraries]
+shadow = { module = "com.github.johnrengelman:shadow", version.ref = "shadow" }
+kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Minecraft libraries
+minecraft = { module = "net.minecraft:minecraft", version.ref = "minecraft" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
+fabric-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin" }
+loom = { group = "dev.architectury", name = "architectury-loom", version.ref = "architectury-loom" }
+architectury = { group = "architectury-plugin", name = "architectury-plugin.gradle.plugin", version.ref = "architectury-plugin" }
+
+cobblemon-common = { module = "com.cobblemon:mod", version.ref = "cobblemon" }
+cobblemon-fabric = { module = "com.cobblemon:fabric", version.ref = "cobblemon" }
+cobblemon-neoforge = { module = "com.cobblemon:neoforge", version.ref = "cobblemon" }
+kotlinforforge-neoforge = { module = "thedarkcolour:kotlinforforge-neoforge", version.ref = "kotlinforforge" }
+
+[plugins]
+cobblenav-convention-base = { id = "cobblenav.base-convention" }
+cobblenav-convention-common = { id = "cobblenav.common-convention" }

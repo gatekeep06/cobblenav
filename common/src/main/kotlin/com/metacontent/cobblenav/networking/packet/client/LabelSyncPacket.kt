@@ -2,13 +2,17 @@ package com.metacontent.cobblenav.networking.packet.client
 
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.net.messages.client.data.DataRegistrySyncPacket
-import com.cobblemon.mod.common.util.*
+import com.cobblemon.mod.common.util.readIdentifier
+import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.writeIdentifier
+import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 
-class LabelSyncPacket(speciesToLabels: Collection<Pair<ResourceLocation, HashSet<String>>>) : DataRegistrySyncPacket<Pair<ResourceLocation, HashSet<String>>, LabelSyncPacket>(speciesToLabels) {
+class LabelSyncPacket(speciesToLabels: Collection<Pair<ResourceLocation, HashSet<String>>>) :
+    DataRegistrySyncPacket<Pair<ResourceLocation, HashSet<String>>, LabelSyncPacket>(speciesToLabels) {
     companion object {
         val ID = cobblenavResource("label_sync")
         fun decode(buffer: RegistryFriendlyByteBuf) = LabelSyncPacket(emptyList()).apply {
@@ -23,16 +27,15 @@ class LabelSyncPacket(speciesToLabels: Collection<Pair<ResourceLocation, HashSet
     override fun decodeEntry(buffer: RegistryFriendlyByteBuf): Pair<ResourceLocation, HashSet<String>>? {
         return try {
             buffer.readIdentifier() to buffer.readList { it.readString() }.toHashSet()
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Cobblenav.LOGGER.error(e.message, e)
             null
         }
     }
 
     override fun synchronizeDecoded(entries: Collection<Pair<ResourceLocation, HashSet<String>>>) {
-        entries.forEach { pair ->
-            PokemonSpecies.getByIdentifier(pair.first)?.labels?.addAll(pair.second)
+        entries.forEach { (id, labels) ->
+            PokemonSpecies.getByIdentifier(id)?.labels?.addAll(labels)
         }
     }
 
@@ -40,8 +43,7 @@ class LabelSyncPacket(speciesToLabels: Collection<Pair<ResourceLocation, HashSet
         try {
             buffer.writeIdentifier(entry.first)
             buffer.writeCollection(entry.second) { byteBuf, s -> byteBuf.writeString(s) }
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Cobblenav.LOGGER.error(e.message, e)
         }
     }

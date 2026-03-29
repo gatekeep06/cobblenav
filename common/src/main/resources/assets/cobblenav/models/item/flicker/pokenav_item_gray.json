@@ -1,0 +1,7 @@
+{
+  "parent": "cobblenav:item/cobblenav_template",
+  "textures": {
+    "layer0": "cobblenav:item/pokenav_item_gray",
+    "layer1": "cobblenav:item/flicker/pokenav_item"
+  }
+}

@@ -1,29 +1,31 @@
 package com.metacontent.cobblenav.spawndata.collector.special
 
 import com.cobblemon.mod.common.api.spawning.condition.FishingSpawningCondition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
-import com.metacontent.cobblenav.api.platform.SpawnDataContext
+import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollector
-import com.metacontent.cobblenav.spawndata.collector.ConfigureableCollector
 import com.metacontent.cobblenav.util.ModDependency
-import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 
-class LureLevelCollector : ConditionCollector<FishingSpawningCondition>, ConfigureableCollector {
-    override val configName = "lure_level"
+class LureLevelCollector : ConditionCollector<FishingSpawningCondition>() {
+    companion object {
+        const val NAME = "lure_level"
+    }
+
+    override val name = NAME
+    override val color = 0x8A2BE2
     override val conditionClass = FishingSpawningCondition::class.java
     override var neededInstalledMods: List<ModDependency> = emptyList()
     override var neededUninstalledMods: List<ModDependency> = emptyList()
 
-    override fun collect(
+    override fun collectValues(
+        detail: SpawnDetail,
         condition: FishingSpawningCondition,
-        spawnablePositions: List<SpawnablePosition>,
-        player: ServerPlayer,
-        builder: SpawnDataContext.Builder
-    ): MutableComponent? {
+        player: ServerPlayer
+    ): List<MutableComponent>? {
         return formatValueRange(condition.minLureLevel, condition.maxLureLevel)?.let {
-            Component.translatable("gui.cobblenav.spawn_data.lure_level", it)
+            listOf(literal(it))
         }
     }
 }

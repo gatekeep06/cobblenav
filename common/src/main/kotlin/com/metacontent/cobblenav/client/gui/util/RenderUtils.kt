@@ -1,12 +1,13 @@
 package com.metacontent.cobblenav.client.gui.util
 
-import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.drawProfilePokemon
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.util.CustomizableBlurEffectProcessor
 import com.metacontent.cobblenav.util.cobblenavResource
 import com.mojang.blaze3d.vertex.PoseStack
@@ -76,7 +77,11 @@ fun GuiGraphics.cobblenavScissor(
     y1: Int,
     x2: Int,
     y2: Int,
-    scale: Float = CobblenavClient.config.screenScale
+    scale: Float = when (Minecraft.getInstance().screen) {
+        is PokenavScreen -> CobblenavClient.config.screenScale
+        is PokefinderScreen -> CobblenavClient.config.pokefinderScreenScale
+        else -> 1f
+    }
 ) = this.enableScissor(
     (x1 * scale).toInt(),
     (y1 * scale).toInt(),
@@ -91,30 +96,24 @@ fun getTimeString(period: IntRange): String =
     String.format("%s - %s", getTimeString(period.first.toLong()), getTimeString(period.last.toLong()))
 
 fun getTimeString(time: Long): String {
-    val adjustedTime = (time + 6000) % 23999
-    var hours = (adjustedTime / 1000).toInt()
-    val minutes = ((adjustedTime % 1000) * 60 / 1000).toInt()
-    val period = if (hours >= 12) "PM" else "AM"
-    hours %= 12
-    hours = if (hours == 0) 12 else hours
+    val adjusted = (time + 6000) % 24000
 
-    return String.format("%02d:%02d %s", hours, minutes, period)
-}
+    val hours24 = adjusted / 1000
+    val minutes = ((adjusted % 1000) * 60) / 1000
 
-fun translateOr(
-    key: String,
-    substitute: MutableComponent = Component.literal(key).red()
-): Pair<Boolean, MutableComponent> {
-    val component = Component.translatable(key)
-    if (component.string == key) {
-        return Pair(false, substitute)
+    val period = if (hours24 < 12) "AM" else "PM"
+    val hours12 = when {
+        hours24 == 0L -> 12
+        hours24 > 12L -> hours24 - 12
+        else -> hours24
     }
-    return Pair(true, component)
+
+    return String.format("%02d:%02d %s", hours12, minutes, period)
 }
 
 fun splitText(text: MutableComponent, targetWidth: Int): List<MutableComponent> {
     return Minecraft.getInstance().font.splitter.splitLines(text, targetWidth, Style.EMPTY)
-        .map { Component.literal(it.string) }
+        .map { Component.literal(it.string).withStyle(text.style) }
 }
 
 fun interpolate(start: RGB, end: RGB, progress: Float): RGB {

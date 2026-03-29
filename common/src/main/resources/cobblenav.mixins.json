@@ -4,11 +4,18 @@
     "compatibilityLevel": "JAVA_21",
     "minVersion": "0.8",
     "client": [
+        "EditBoxMixin",
         "GameRendererMixin",
         "GrowingPlantBlockMixin",
-        "GuiMixin"
+        "GuiMixin",
+        "ItemRendererMixin",
+        "ModelBakeryMixin"
     ],
     "mixins": [
+        "FormDataMixin",
+        "GlobalSpeciesFeaturesMixin",
+        "PokedexManagerMixin",
+        "PokemonSpawnActionMixin",
         "PokeRodFishingBobberEntityMixin",
         "PokeRodItemMixin"
     ],

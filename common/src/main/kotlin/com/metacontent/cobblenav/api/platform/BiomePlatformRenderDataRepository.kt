@@ -22,8 +22,11 @@ object BiomePlatformRenderDataRepository : JsonDataRegistry<BiomePlatformRenderD
         hoveredPokemonOffset = Vector2i(0, -2)
     )
     val FISHING = BiomePlatformRenderData(
-        id = cobblenavResource("fishing")
+        id = cobblenavResource("fishing"),
+        platform = gui("biome_platforms/bubbles"),
+        hoveredPokemonOffset = Vector2i(0, -2)
     )
+    val EMPTY = BiomePlatformRenderData(id = cobblenavResource("empty"))
 
     override val gson: Gson = GsonBuilder()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
