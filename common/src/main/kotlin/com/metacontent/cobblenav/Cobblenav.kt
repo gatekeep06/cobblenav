@@ -20,6 +20,8 @@ import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
+import com.metacontent.cobblenav.networking.packet.client.EvYieldDataEntry
+import com.metacontent.cobblenav.networking.packet.client.EvYieldSyncPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.properties.BucketSpeciesFeatureProvider
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
@@ -61,9 +63,12 @@ object Cobblenav {
             CloseFishingnavPacket().sendToPlayer(event.player)
         }
 
-        if (config.syncLabelsWithClient) {
-            CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
+        CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
+            if (config.syncLabelsWithClient) {
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
+            }
+            if (config.syncEvYieldWithClient) {
+                EvYieldSyncPacket(PokemonSpecies.species.map(EvYieldDataEntry::fromSpecies)).sendToPlayer(player)
             }
         }
 
