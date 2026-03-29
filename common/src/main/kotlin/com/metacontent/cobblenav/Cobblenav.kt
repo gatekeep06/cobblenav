@@ -21,6 +21,7 @@ import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.config.Config
 import com.metacontent.cobblenav.event.CobblenavEvents
 import com.metacontent.cobblenav.networking.packet.client.CloseFishingnavPacket
+import com.metacontent.cobblenav.networking.packet.client.EvYieldDataEntry
 import com.metacontent.cobblenav.networking.packet.client.EvYieldSyncPacket
 import com.metacontent.cobblenav.networking.packet.client.LabelSyncPacket
 import com.metacontent.cobblenav.properties.BucketSpeciesFeatureProvider
@@ -34,6 +35,7 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
+import com.metacontent.cobblenav.util.getEvYield
 import com.metacontent.cobblenav.util.registerDirectly
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
@@ -63,17 +65,24 @@ object Cobblenav {
             CloseFishingnavPacket().sendToPlayer(event.player)
         }
 
-
         CobblemonEvents.DATA_SYNCHRONIZED.subscribe { player ->
             if (config.syncLabelsWithClient) {
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
             }
             if (config.syncEvYieldWithClient) {
                 EvYieldSyncPacket(PokemonSpecies.species.map { species ->
-                    species.resourceIdentifier to species.evYield.mapNotNull { (stat, value) ->
-                        (stat as? Stats)?.let { it to value }
-                    }.toMap()
-                })
+                    EvYieldDataEntry(
+                        speciesId = species.resourceIdentifier,
+                        speciesEvYield = species.evYield.mapNotNull { (stat, value) ->
+                            (stat as? Stats)?.let { it to value }
+                        }.toMap(),
+                        formToEvYield = species.forms.associate { formData ->
+                            formData.name to formData.getEvYield()?.mapNotNull { (stat, value) ->
+                                (stat as? Stats)?.let { it to value }
+                            }?.toMap()
+                        }
+                    )
+                }).sendToPlayer(player)
             }
         }
 
