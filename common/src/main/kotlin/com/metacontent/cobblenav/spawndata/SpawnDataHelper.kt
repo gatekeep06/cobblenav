@@ -240,8 +240,8 @@ object SpawnDataHelper {
 
     fun reloadSpawnDetails() {
         CobblemonSpawnPools.WORLD_SPAWN_POOL.forEach { detail ->
-            if (detail !is PokemonSpawnDetail) return@forEach
             spawnDetailIds.add(detail.id)
+            if (detail !is PokemonSpawnDetail) return@forEach
             detail.pokemon.species?.let {
                 spawnDetailIdBySpecies.getOrPut(it) { mutableListOf() }.add(detail.id)
             }

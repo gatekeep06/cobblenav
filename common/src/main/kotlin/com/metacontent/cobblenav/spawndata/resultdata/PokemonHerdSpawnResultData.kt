@@ -9,6 +9,11 @@ import com.cobblemon.mod.common.util.randomNoCopy
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.client.gui.util.RGB
+import com.metacontent.cobblenav.client.gui.util.translate
+import com.metacontent.cobblenav.client.gui.widget.TextWidget
+import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
@@ -34,10 +39,10 @@ class PokemonHerdSpawnResultData(
             val heardables = detail.herdablePokemon.toMutableList()
             if (heardables.isEmpty()) return null
 
-            val leader = heardables.filter { it.isLeader == true }.randomOrNull() ?: heardables.random()
-            heardables.remove(leader)
+            val leaders = heardables.filter { it.isLeader == true }.ifEmpty { heardables }
+            val leader = leaders.random()
 
-            val herd = heardables.randomNoCopy(2)
+            val herd = heardables.filter { it.isLeader != true }.ifEmpty { heardables }.randomNoCopy(2)
             val leftPokemon = herd.getOrNull(0)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
             val rightPokemon = herd.getOrNull(1)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
 
@@ -79,7 +84,33 @@ class PokemonHerdSpawnResultData(
 
     override val type = PokemonHerdSpawnDetail.TYPE
 
-    override val dataWidgets: List<AbstractWidget>? = null
+    override val dataWidgets: List<AbstractWidget>? by lazy {
+        val widgets = mutableListOf<AbstractWidget>(
+            TextWidget(
+                x = 0,
+                y = 0,
+                width = SpawnDataDetailWidget.SECTION_WIDTH - 2,
+                text = translate("gui.cobblenav.spawn_data.pokemon_herd").also { component ->
+                    allPokemon.keys.forEachIndexed { index, pokemon ->
+                        component.append(pokemon.species.translatedName)
+                        if (index < allPokemon.size - 1) {
+                            component.append(", ")
+                        }
+                    }
+                }
+            )
+        )
+        listOf(
+            SectionWidget(
+                x = 0,
+                y = 0,
+                width = SpawnDataDetailWidget.SECTION_WIDTH,
+                title = Component.translatable("gui.cobblenav.spawn_data.title.result"),
+                widgets = widgets,
+                color = RGB(144, 213, 255)
+            )
+        )
+    }
 
     private val leaderRenderer: PokemonSpawnResultRenderer by lazy {
         when (positionType) {
