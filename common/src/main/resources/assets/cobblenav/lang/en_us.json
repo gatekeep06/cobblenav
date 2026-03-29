@@ -69,6 +69,7 @@
   "gui.cobblenav.spawn_data.title.conditions": "Conditions",
   "gui.cobblenav.spawn_data.title.anticonditions": "Anti-Conditions",
   "gui.cobblenav.spawn_data.pokemon": "Pokemon: ",
+  "gui.cobblenav.spawn_data.pokemon_herd": "Pokemon: ",
   "gui.cobblenav.spawn_data.level": "Level: %s",
   "gui.cobblenav.spawn_data.bucket": "Bucket: ",
   "gui.cobblenav.spawn_data.unknown_pokemon": "???",
