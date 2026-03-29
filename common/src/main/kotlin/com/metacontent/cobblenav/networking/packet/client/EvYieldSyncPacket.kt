@@ -4,12 +4,14 @@ import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.net.messages.client.data.DataRegistrySyncPacket
+import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeIdentifier
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.util.cobblenavResource
+import com.metacontent.cobblenav.util.getEvYield
 import com.metacontent.cobblenav.util.setEvYield
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
@@ -78,6 +80,18 @@ data class EvYieldDataEntry(
                     }
                 }
             )
+        )
+
+        fun fromSpecies(species: Species): EvYieldDataEntry = EvYieldDataEntry(
+            speciesId = species.resourceIdentifier,
+            speciesEvYield = species.evYield.mapNotNull { (stat, value) ->
+                (stat as? Stats)?.let { it to value }
+            }.toMap(),
+            formToEvYield = species.forms.associate { formData ->
+                formData.name to formData.getEvYield()?.mapNotNull { (stat, value) ->
+                    (stat as? Stats)?.let { it to value }
+                }?.toMap()
+            }
         )
     }
 

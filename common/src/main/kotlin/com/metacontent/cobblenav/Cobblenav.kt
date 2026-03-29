@@ -6,7 +6,6 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.pokemon.feature.GlobalSpeciesFeatures
-import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.api.scheduling.ScheduledTask
 import com.cobblemon.mod.common.api.scheduling.ServerTaskTracker
@@ -35,7 +34,6 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
-import com.metacontent.cobblenav.util.getEvYield
 import com.metacontent.cobblenav.util.registerDirectly
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
@@ -70,19 +68,7 @@ object Cobblenav {
                 LabelSyncPacket(PokemonSpecies.species.map { it.resourceIdentifier to it.labels }).sendToPlayer(player)
             }
             if (config.syncEvYieldWithClient) {
-                EvYieldSyncPacket(PokemonSpecies.species.map { species ->
-                    EvYieldDataEntry(
-                        speciesId = species.resourceIdentifier,
-                        speciesEvYield = species.evYield.mapNotNull { (stat, value) ->
-                            (stat as? Stats)?.let { it to value }
-                        }.toMap(),
-                        formToEvYield = species.forms.associate { formData ->
-                            formData.name to formData.getEvYield()?.mapNotNull { (stat, value) ->
-                                (stat as? Stats)?.let { it to value }
-                            }?.toMap()
-                        }
-                    )
-                }).sendToPlayer(player)
+                EvYieldSyncPacket(PokemonSpecies.species.map(EvYieldDataEntry::fromSpecies)).sendToPlayer(player)
             }
         }
 
