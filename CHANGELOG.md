@@ -25,7 +25,7 @@
     - Added "EV Yield" filter.
     - Added "Uncaught Pokémon" filter.
   - The counter on the left reflects the number of Pokémon in the area that match your filters.
-- Buckets are now saved in the Pokémon's data as an aspect upon spawning. This allows you to use PokéFinder and the "Pokémon Properties" filter to locate Pokémon of a specific rarity. For example, by specifying spawn_bucket=ultra-rare, the radar will display Pokémon that spawned from an ultra-rare bucket.
+- Buckets are now saved in the Pokémon's data as an aspect upon spawning. This allows you to use PokéFinder and the "Pokémon Properties" filter to locate Pokémon of a specific rarity. For example, by specifying `spawn_bucket=ultra-rare`, the radar will display Pokémon that spawned from an ultra-rare bucket.
 - The biome platform system has been updated. By using the spawn conditions built into Cobblemon, greater flexibility has been achieved in determining suitable platforms.
 - Implemented support for items with multiple models, similar to the spyglass and Poké Balls. Models for most items from the mod are now separated into inventory model, hand model, active state model, and active signal model.
 - Some items will now signal certain events.
