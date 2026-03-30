@@ -1,3 +1,7 @@
+# Update 2.3.1
+
+- 
+
 # Update 2.3.0
 
 - Tooltips with data about conditions affecting spawns on the Location screen have been replaced with a new feature - Details Tab.
