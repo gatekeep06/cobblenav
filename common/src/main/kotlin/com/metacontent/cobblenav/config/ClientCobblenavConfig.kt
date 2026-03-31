@@ -14,6 +14,7 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val trackArrowYOffset = 80
     val maxCloudNumber = 8
     val maxCloudVelocity = 6
+    val enableItemShaking = true
 
     override fun applyToLoadedConfig(default: ClientCobblenavConfig) {}
 }

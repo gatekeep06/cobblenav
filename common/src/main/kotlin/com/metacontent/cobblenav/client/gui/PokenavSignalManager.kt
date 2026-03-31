@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui
 
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.cobblemon.mod.common.util.removeIf
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.item.Pokefinder
 import com.metacontent.cobblenav.item.Pokenav
@@ -64,6 +65,7 @@ object PokenavSignalManager {
         )
 
         fun shake(poseStack: PoseStack) {
+            if (!CobblenavClient.config.enableItemShaking) return
             poseStack.scale(SIGNAL_ITEM_SCALE, SIGNAL_ITEM_SCALE, SIGNAL_ITEM_SCALE)
             poseStack.rotateAround(getRotation(), 0f, -0.25f, 0f)
         }
