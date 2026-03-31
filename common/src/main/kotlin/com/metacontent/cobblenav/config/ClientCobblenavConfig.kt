@@ -11,6 +11,7 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val pokefinderOverlayScale = 1f
     val pokefinderOverlayOffsetX = 10
     val pokefinderOverlayOffsetY = 10
+    val enableDisplayOfNamesOnRadar = false
     val trackArrowYOffset = 80
     val maxCloudNumber = 8
     val maxCloudVelocity = 6
