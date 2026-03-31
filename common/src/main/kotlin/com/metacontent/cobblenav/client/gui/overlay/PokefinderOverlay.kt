@@ -52,13 +52,12 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
     private val settings = CobblenavClient.pokefinderSettings
     private val minecraft = Minecraft.getInstance()
-    private val player = minecraft.player
     private val scale = CobblenavClient.config.pokefinderOverlayScale
     private val offsetX = CobblenavClient.config.pokefinderOverlayOffsetX
     private val offsetY = CobblenavClient.config.pokefinderOverlayOffsetY
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
-        player ?: return
+        val player = minecraft.player ?: return
 
         val pos = player.position()
 
