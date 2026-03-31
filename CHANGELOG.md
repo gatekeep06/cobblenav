@@ -3,6 +3,7 @@
 - New client config parameters:
   - `enableItemShaking` determines whether items from the mod will shake when there's a signal.
   - `enableDisplayOfNamesOnRadar` determines whether names of Pokémon will be displayed on the PokéFinder overlay.
+- Hopefully the PokéFinder overlay freezing issue has been fixed.
 
 # Update 2.3.0
 
