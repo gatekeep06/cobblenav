@@ -30,6 +30,8 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
         filters.clear()
     }
 
+    fun size(): Int = filters.size
+
     fun test(pokemon: Pokemon): Boolean {
         return filters.any { it.test(pokemon) } || filters.isEmpty()
     }
