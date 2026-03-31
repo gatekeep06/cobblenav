@@ -19,7 +19,7 @@ abstract class EditableTextFilterType<T : EditableTextFilter> : RadarFilterType<
             height = WIDGET_HEIGHT,
             lineWidth = LINE_WIDTH,
             lineHeight = LINE_HEIGHT,
-            lineX = 5,
+            lineX = 12,
             default = filter.asString(),
             textColor = PokefinderScreen.COLOR,
             textureSheet = FIELD,

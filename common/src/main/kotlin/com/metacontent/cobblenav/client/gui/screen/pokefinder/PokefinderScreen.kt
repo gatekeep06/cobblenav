@@ -36,7 +36,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         const val BUTTON_SIZE = 18
         const val WIDGET_WIDTH = 196
         const val WIDGET_HEIGHT = 26
-        const val LINE_WIDTH = 185
+        const val LINE_WIDTH = 178
         const val LINE_HEIGHT = 26
         val BACKGROUND = gui("pokefinder/background")
         val BACK = gui("pokefinder/back")
