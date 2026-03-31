@@ -21,7 +21,7 @@ class FilterListEntryWidget(
     companion object {
         const val WIDTH = 238
         const val HEIGHT = 26
-        const val REMOVE_SIZE = 16
+        const val REMOVE_SIZE = 10
         val ICON_BACKGROUND = gui("pokefinder/icon_background")
         val REMOVE = gui("pokefinder/remove")
     }
@@ -36,7 +36,7 @@ class FilterListEntryWidget(
     ).also { addWidget(it) }
 
     init {
-        widget.x += REMOVE_SIZE + 4
+        widget.x += REMOVE_SIZE + 2
         addWidget(widget)
     }
 
