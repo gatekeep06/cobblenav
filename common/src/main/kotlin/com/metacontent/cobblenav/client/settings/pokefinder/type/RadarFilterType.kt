@@ -25,6 +25,7 @@ interface RadarFilterType<T : RadarFilter> {
 
     fun <T : RadarFilter> RadarFilterType<T>.createEntry(
         parent: PokefinderScreen,
+        index: Int,
         filter: RadarFilter? = null,
     ): FilterListEntryWidget {
         val filter = filter
@@ -32,6 +33,7 @@ interface RadarFilterType<T : RadarFilter> {
             ?.let { this.filterClass.cast(filter) } ?: this.createFilter()
         val widget = this.createWidget(filter)
         return FilterListEntryWidget(
+            index = index,
             filter = filter,
             widget = widget,
             icon = typeIcon,

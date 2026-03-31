@@ -85,8 +85,8 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             verticalGap = 6f,
             horizontalGap = 0f
         )
-        settings?.getFilters()?.mapNotNull {
-            RadarFilterTypeRegistry.get(it.type)?.createEntry(this, it)
+        settings?.getFilters()?.mapIndexedNotNull { index, filter ->
+            RadarFilterTypeRegistry.get(filter.type)?.createEntry(this, index, filter)
         }?.let { filterTable.add(it) }
 
         addButtonTable = TableView(
@@ -201,7 +201,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
 
     fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
         settings ?: return
-        val entry = type.createEntry(this)
+        val entry = type.createEntry(this, settings.size())
         settings.addFilter(entry.filter)
         filterTable.add(entry)
     }
