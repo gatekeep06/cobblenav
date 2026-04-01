@@ -68,7 +68,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
 
     private val settings = CobblenavClient.pokefinderSettings
 
-    private var bottomText: Component? = null
+    var bottomText: Component? = null
 
     override fun init() {
         width = (width / scale).toInt()
@@ -180,12 +180,6 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             centered = true
         )
 
-        addButtonTable.applyToAll {
-            if (it.isHovered) {
-                bottomText = it.type.displayedName
-                return@applyToAll
-            }
-        }
         bottomText?.let {
             drawScaledText(
                 context = guiGraphics,

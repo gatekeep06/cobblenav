@@ -34,5 +34,9 @@ class AddFilterButton(
             width = FilterListEntryWidget.ICON_WIDTH,
             height = FilterListEntryWidget.HEIGHT
         )
+
+        if (isHovered) {
+            parent.bottomText = type.displayedName
+        }
     }
 }

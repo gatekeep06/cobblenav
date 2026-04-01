@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import net.minecraft.client.gui.GuiGraphics
@@ -18,7 +19,7 @@ class FilterListEntryWidget(
     val filter: RadarFilter,
     val widget: AbstractWidget,
     val icon: ResourceLocation,
-    parent: PokefinderScreen
+    val parent: PokefinderScreen
 ) : SoundlessWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
     companion object {
         const val WIDTH = 238
@@ -101,6 +102,12 @@ class FilterListEntryWidget(
             width = ICON_WIDTH,
             height = widget.height
         )
+
+        if (removeButton.isHovered) {
+            parent.bottomText = translate("gui.cobblenav.pokefidner.remove")
+        } else if (removeButton.isHovered) {
+            parent.bottomText = translate("gui.cobblenav.pokefidner.change")
+        }
     }
 
     override fun setX(i: Int) {

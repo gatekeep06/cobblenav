@@ -159,6 +159,8 @@
   "gui.cobblenav.pokefidner.ev_yield.spa": "SPA",
   "gui.cobblenav.pokefidner.ev_yield.spd": "SPD",
   "gui.cobblenav.pokefidner.ev_yield.spe": "SPE",
+  "gui.cobblenav.pokefidner.remove": "Remove the filter",
+  "gui.cobblenav.pokefidner.change": "Change the dot type",
 
   "biome.minecraft.is_nether": "Nether",
   "biome.minecraft.is_end": "End",
