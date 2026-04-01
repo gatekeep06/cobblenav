@@ -1,3 +1,11 @@
+# Update 2.3.2
+
+- New client config parameters:
+  - `enableItemShaking` determines whether items from the mod will shake when there's a signal.
+  - `enableDisplayOfNamesOnRadar` determines whether names of Pokémon will be displayed on the PokéFinder overlay.
+  - `enableMultipleModelItems` determines whether items from the mod can change their models (disable for compatibility with the current version of Cobblemon 3D Pokenavs).
+- Hopefully the PokéFinder overlay freezing issue has been fixed.
+
 # Update 2.3.0
 
 - Tooltips with data about conditions affecting spawns on the Location screen have been replaced with a new feature - Details Tab.

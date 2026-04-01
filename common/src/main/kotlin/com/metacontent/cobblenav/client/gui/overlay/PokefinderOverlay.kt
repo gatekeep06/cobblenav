@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import com.metacontent.cobblenav.item.Pokefinder
@@ -51,13 +52,12 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
     private val settings = CobblenavClient.pokefinderSettings
     private val minecraft = Minecraft.getInstance()
-    private val player = minecraft.player
     private val scale = CobblenavClient.config.pokefinderOverlayScale
     private val offsetX = CobblenavClient.config.pokefinderOverlayOffsetX
     private val offsetY = CobblenavClient.config.pokefinderOverlayOffsetY
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
-        player ?: return
+        val player = minecraft.player ?: return
 
         val pos = player.position()
 
@@ -139,7 +139,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
                 ) { settings.test(it.pokemon) }
             } ?: listOf()
 
-            entities.renderPokemonDots(poseStack, x, y, WIDTH, HEIGHT, pos, player.rotationVector.y)
+            entities.renderPokemonDots(guiGraphics, x, y, WIDTH, HEIGHT, pos, player.rotationVector.y)
         }
     }
 
@@ -158,7 +158,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     }
 
     private fun Collection<PokemonEntity>.renderPokemonDots(
-        poseStack: PoseStack,
+        guiGraphics: GuiGraphics,
         x: Int,
         y: Int,
         width: Int,
@@ -172,13 +172,25 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             val dotX = x + width / 2 - DOT_SIZE / 2 + vec.x * cos(angle) - vec.z * sin(angle)
             val dotY = y + height / 2 - DOT_SIZE / 2 + vec.x * sin(angle) + vec.z * cos(angle)
             blitk(
-                matrixStack = poseStack,
+                matrixStack = guiGraphics.pose(),
                 texture = DOT,
                 x = floor(dotX),
                 y = floor(dotY),
                 width = DOT_SIZE,
                 height = DOT_SIZE
             )
+
+            if (CobblenavClient.config.enableDisplayOfNamesOnRadar) {
+                drawScaledText(
+                    context = guiGraphics,
+                    text = it.pokemon.getDisplayName(),
+                    x = floor(dotX) + DOT_SIZE / 2,
+                    y = floor(dotY) + DOT_SIZE,
+                    centered = true,
+                    colour = PokefinderScreen.BG_COLOR,
+                    scale = TEXT_SCALE
+                )
+            }
         }
     }
 }
