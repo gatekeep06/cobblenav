@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.mixin;
 
 import com.cobblemon.mod.common.block.PokeSnackBlock;
+import com.metacontent.cobblenav.client.CobblenavClient;
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager;
 import com.metacontent.cobblenav.item.FlickeringItem;
 import com.metacontent.cobblenav.item.InHandModelItem;
@@ -68,6 +69,8 @@ public abstract class ItemRendererMixin {
 
     @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
     public BakedModel flicker(BakedModel bakedModel, ItemStack stack, ItemDisplayContext renderMode) {
+        if (!CobblenavClient.INSTANCE.getConfig().getEnableMultipleModelItems()) return bakedModel;
+
         Item item = stack.getItem();
         ResourceLocation modelId = null;
 

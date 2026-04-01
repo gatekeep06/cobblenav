@@ -16,6 +16,7 @@ class ClientCobblenavConfig : Config<ClientCobblenavConfig>() {
     val maxCloudNumber = 8
     val maxCloudVelocity = 6
     val enableItemShaking = true
+    val enableMultipleModelItems = true
 
     override fun applyToLoadedConfig(default: ClientCobblenavConfig) {}
 }
