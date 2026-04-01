@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 class FilterListEntryWidget(
-    val index: Int,
+    var index: Int,
     val filter: RadarFilter,
     val widget: AbstractWidget,
     val icon: ResourceLocation,
@@ -104,9 +104,9 @@ class FilterListEntryWidget(
         )
 
         if (removeButton.isHovered) {
-            parent.bottomText = translate("gui.cobblenav.pokefidner.remove")
-        } else if (removeButton.isHovered) {
-            parent.bottomText = translate("gui.cobblenav.pokefidner.change")
+            parent.bottomText = translate("gui.cobblenav.pokefinder.remove")
+        } else if (changeButton.isHovered) {
+            parent.bottomText = translate("gui.cobblenav.pokefinder.change")
         }
     }
 

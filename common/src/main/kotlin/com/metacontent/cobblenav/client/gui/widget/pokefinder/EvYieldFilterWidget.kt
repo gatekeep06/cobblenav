@@ -53,7 +53,7 @@ class EvYieldFilterWidget(
             val color = if (checkBox.checked()) PokefinderScreen.BG_COLOR else PokefinderScreen.COLOR
             drawScaledText(
                 context = guiGraphics,
-                text = Component.translatable("gui.cobblenav.pokefidner.ev_yield.${stat.showdownId}"),
+                text = Component.translatable("gui.cobblenav.pokefinder.ev_yield.${stat.showdownId}"),
                 x = checkBox.x + checkBox.width / 2,
                 y = checkBox.y + (checkBox.height - 9) / 2,
                 maxCharacterWidth = checkBox.width - 4,
