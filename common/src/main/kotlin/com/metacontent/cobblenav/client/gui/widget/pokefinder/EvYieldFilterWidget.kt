@@ -20,9 +20,7 @@ class EvYieldFilterWidget(
     companion object {
         const val CHECK_BOX_WIDTH = 31
         const val CHECK_BOX_HEIGHT = 26
-        const val LEFT_WIDTH = 4
         val CHECK_BOX = gui("pokefinder/checkbox")
-        val LEFT = gui("pokefinder/ev_yield_left")
 
         val STATS: EnumSet<Stats> = EnumSet.of(HP, ATTACK, DEFENCE, SPECIAL_ATTACK, SPECIAL_DEFENCE, SPEED)
     }
