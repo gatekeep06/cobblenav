@@ -1,4 +1,4 @@
-# Update 2.3.1
+# Update 2.3.2
 
 - New client config parameters:
   - `enableItemShaking` determines whether items from the mod will shake when there's a signal.
