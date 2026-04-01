@@ -58,6 +58,10 @@ open class TableView<I : AbstractWidget>(
         items.forEach(consumer)
     }
 
+    fun applyToAllIndexed(consumer: (Int, I) -> Unit) {
+        items.forEachIndexed(consumer)
+    }
+
     fun isEmpty() = items.isEmpty()
 
     open fun calculateItems() {

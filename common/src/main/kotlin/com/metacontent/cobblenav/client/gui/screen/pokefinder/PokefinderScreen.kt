@@ -204,6 +204,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         settings ?: return
         settings.removeFilter(entry.filter)
         filterTable.remove(entry)
+        filterTable.applyToAllIndexed { index, widget -> widget.index = index }
     }
 
     override fun isPauseScreen(): Boolean = false
