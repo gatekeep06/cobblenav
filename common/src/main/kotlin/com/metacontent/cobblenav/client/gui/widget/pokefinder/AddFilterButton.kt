@@ -31,8 +31,8 @@ class AddFilterButton(
             texture = type.typeIcon,
             x = x + ICON_X,
             y = y,
-            width = RadarFilterType.ICON_WIDTH,
-            height = RadarFilterType.ICON_HEIGHT
+            width = FilterListEntryWidget.ICON_WIDTH,
+            height = FilterListEntryWidget.HEIGHT
         )
     }
 }

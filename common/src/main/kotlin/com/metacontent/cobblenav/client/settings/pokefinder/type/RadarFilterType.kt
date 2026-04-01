@@ -8,11 +8,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 interface RadarFilterType<T : RadarFilter> {
-    companion object {
-        const val ICON_WIDTH = 22
-        const val ICON_HEIGHT = 26
-    }
-
     val filterClass: Class<T>
 
     val typeIcon: ResourceLocation

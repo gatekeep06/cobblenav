@@ -10,6 +10,7 @@ import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.C
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.LINE_WIDTH
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_HEIGHT
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_WIDTH
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
@@ -30,7 +31,7 @@ class UncaughtFilterWidget : SoundlessWidget(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT, 
             context = guiGraphics,
             text = Component.translatable("gui.cobblenav.pokefinder.uncaught", uncaught),
             x = x + 5,
-            y = y + 8,
+            y = y + (height - Minecraft.getInstance().font.lineHeight) / 2 + 1,
             maxCharacterWidth = LINE_WIDTH,
             colour = COLOR
         )

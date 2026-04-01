@@ -3,6 +3,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
+import net.minecraft.resources.ResourceLocation
 
 class TranslatedNameFilter(
     private var names: List<String> = emptyList()
@@ -12,6 +13,8 @@ class TranslatedNameFilter(
     }
 
     override val type = TYPE
+
+    override var dot: ResourceLocation? = null
 
     override fun test(pokemon: Pokemon): Boolean = names.any {
         it.equals(pokemon.getDisplayName().string, true)

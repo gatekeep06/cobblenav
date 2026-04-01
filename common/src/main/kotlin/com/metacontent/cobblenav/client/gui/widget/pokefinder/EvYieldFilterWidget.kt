@@ -1,11 +1,9 @@
 package com.metacontent.cobblenav.client.gui.widget.pokefinder
 
-import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.pokemon.stats.Stats.*
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_HEIGHT
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_WIDTH
@@ -14,14 +12,13 @@ import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.EvYieldFilter
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 class EvYieldFilterWidget(
     val filter: EvYieldFilter
 ) : SoundlessWidget(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT, Component.empty()) {
     companion object {
-        const val CHECK_BOX_WIDTH = 32
+        const val CHECK_BOX_WIDTH = 31
         const val CHECK_BOX_HEIGHT = 26
         const val LEFT_WIDTH = 4
         val CHECK_BOX = gui("pokefinder/checkbox")
@@ -34,7 +31,7 @@ class EvYieldFilterWidget(
 
     val checkBoxes = STATS.mapIndexed { index, stat ->
         stat to CheckBox(
-            x = LEFT_WIDTH + CHECK_BOX_WIDTH * index,
+            x = CHECK_BOX_WIDTH * index,
             y = 0,
             width = CHECK_BOX_WIDTH,
             height = CHECK_BOX_HEIGHT,
@@ -52,15 +49,6 @@ class EvYieldFilterWidget(
     }.toMap()
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        blitk(
-            matrixStack = guiGraphics.pose(),
-            texture = LEFT,
-            x = x,
-            y = y,
-            width = LEFT_WIDTH,
-            height = CHECK_BOX_HEIGHT
-        )
-
         checkBoxes.forEach { (stat, checkBox) ->
             checkBox.render(guiGraphics, i, j, f)
 
