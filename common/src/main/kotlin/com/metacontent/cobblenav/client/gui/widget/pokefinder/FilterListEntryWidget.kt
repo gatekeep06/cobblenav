@@ -2,8 +2,10 @@ package com.metacontent.cobblenav.client.gui.widget.pokefinder
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import net.minecraft.client.gui.GuiGraphics
@@ -25,6 +27,9 @@ class FilterListEntryWidget(
         const val BUTTON_OFFSET = 2
         const val ICON_WIDTH = 22
         const val INFO_WIDTH = 17
+        const val INDEX_X = 9
+        const val INDEX_Y = 5
+        const val INDEX_WIDTH = 13
         val ICON_BACKGROUND = gui("pokefinder/icon_background")
         val INFO = gui("pokefinder/filter_info")
         val REMOVE = gui("pokefinder/remove")
@@ -66,6 +71,16 @@ class FilterListEntryWidget(
             y = widget.y,
             width = INFO_WIDTH,
             height = widget.height
+        )
+
+        drawScaledText(
+            context = guiGraphics,
+            text = literal(index + 1),
+            x = widget.x - INFO_WIDTH + INDEX_X,
+            y = widget.y + INDEX_Y,
+            centered = true,
+            colour = PokefinderScreen.COLOR,
+            maxCharacterWidth = INDEX_WIDTH
         )
 
         widget.render(guiGraphics, i, j, f)
