@@ -161,6 +161,8 @@
   "gui.cobblenav.pokefinder.ev_yield.spe": "SPE",
   "gui.cobblenav.pokefinder.remove": "Remove filter",
   "gui.cobblenav.pokefinder.change": "Change dot type",
+  "gui.cobblenav.pokefinder.clear": "Clear filter list",
+  "gui.cobblenav.pokefinder.back": "Exit",
 
   "biome.minecraft.is_nether": "Nether",
   "biome.minecraft.is_end": "End",

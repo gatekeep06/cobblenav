@@ -7,7 +7,9 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay.Companion.RADIUS
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -28,7 +30,7 @@ import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
 import org.joml.Vector3f
 
-class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
+class PokefinderScreen : Screen(literal("Pokefinder")) {
     companion object {
         const val WIDTH = 288
         const val HEIGHT = 192
@@ -172,13 +174,19 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         }
         drawScaledText(
             context = guiGraphics,
-            text = Component.literal(entityNumber.toString().padStart(3, '0')),
+            text = literal(entityNumber.toString().padStart(3, '0')),
             x = screenX + BORDER_WIDTH + 14,
             y = screenY + 86 + 7,
             maxCharacterWidth = 17,
             colour = COLOR,
             centered = true
         )
+
+        if (clearButton.isHovered) {
+            bottomText = translate("gui.cobblenav.pokefinder.clear")
+        } else if (backButton.isHovered) {
+            bottomText = translate("gui.cobblenav.pokefinder.back")
+        }
 
         bottomText?.let {
             drawScaledText(
