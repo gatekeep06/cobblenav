@@ -31,4 +31,4 @@ fun tryTranslating(
     return true to component
 }
 
-fun literal(value: String): MutableComponent = Component.literal(value)
+fun literal(value: Any): MutableComponent = Component.literal(value.toString())
