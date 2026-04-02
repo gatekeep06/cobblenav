@@ -32,8 +32,8 @@ class FilterListEntryWidget(
         const val INFO_WIDTH = 17
         const val INDEX_X = 9
         const val INDEX_Y = 5
-        const val DOT_X = 8
-        const val DOT_Y = 19
+        const val DOT_X = 7
+        const val DOT_Y = 18
         const val INDEX_WIDTH = 13
         val ICON_BACKGROUND = gui("pokefinder/icon_background")
         val INFO = gui("pokefinder/filter_info")
