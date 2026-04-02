@@ -6,5 +6,5 @@ class BasicDotType(
     override val id: ResourceLocation,
     val texture: ResourceLocation
 ) : RadarDotType {
-    override fun getTexture(): ResourceLocation = texture
+    override fun texture(): ResourceLocation = texture
 }

@@ -8,7 +8,7 @@ class AnimatedDotType(
     val frames: List<ResourceLocation>,
     val frameDurationTicks: Int
 ) : RadarDotType {
-    override fun getTexture(): ResourceLocation? {
+    override fun texture(): ResourceLocation? {
         val frameIndex = Minecraft.getInstance().level?.dayTime?.rem(frameDurationTicks)?.rem(frames.size) ?: 0
         return frames.getOrNull(frameIndex.toInt())
     }
