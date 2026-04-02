@@ -3,6 +3,8 @@ package com.metacontent.cobblenav.client.gui.widget.pokefinder
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.metacontent.cobblenav.api.pokefinder.RadarDotTypeRepository
+import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
@@ -30,6 +32,8 @@ class FilterListEntryWidget(
         const val INFO_WIDTH = 17
         const val INDEX_X = 9
         const val INDEX_Y = 5
+        const val DOT_X = 8
+        const val DOT_Y = 19
         const val INDEX_WIDTH = 13
         val ICON_BACKGROUND = gui("pokefinder/icon_background")
         val INFO = gui("pokefinder/filter_info")
@@ -50,7 +54,7 @@ class FilterListEntryWidget(
         pY = removeButton.y + BUTTON_SIZE + BUTTON_OFFSET,
         pWidth = BUTTON_SIZE,
         pHeight = BUTTON_SIZE,
-        action = {},
+        action = { filter.dotType = RadarDotTypeRepository.next(filter.dotType?.id) },
         texture = CHANGE
     ).also { addWidget(it) }
 
@@ -73,7 +77,6 @@ class FilterListEntryWidget(
             width = INFO_WIDTH,
             height = widget.height
         )
-
         drawScaledText(
             context = guiGraphics,
             text = literal(index + 1),
@@ -82,6 +85,14 @@ class FilterListEntryWidget(
             centered = true,
             colour = PokefinderScreen.COLOR,
             maxCharacterWidth = INDEX_WIDTH
+        )
+        blitk(
+            matrixStack = poseStack,
+            texture = filter.dotType?.texture(),
+            x = widget.x - INFO_WIDTH + DOT_X,
+            y = widget.y + DOT_Y,
+            width = PokefinderOverlay.DOT_SIZE,
+            height = PokefinderOverlay.DOT_SIZE
         )
 
         widget.render(guiGraphics, i, j, f)

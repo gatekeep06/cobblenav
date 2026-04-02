@@ -52,8 +52,9 @@ object RadarDotTypeRepository : JsonDataRegistry<RadarDotType> {
 
     fun get(id: ResourceLocation?): RadarDotType = id?.let { dots[it] } ?: DEFAULT
 
-    fun next(id: ResourceLocation): RadarDotType {
+    fun next(id: ResourceLocation?): RadarDotType {
         val index = ids.indexOf(id).let { if (it < ids.size) it else 0 }
+        if (index < 0) return DEFAULT
         val key = ids[index]
         return get(key)
     }
