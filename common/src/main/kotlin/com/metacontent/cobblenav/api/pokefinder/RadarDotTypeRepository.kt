@@ -22,6 +22,7 @@ object RadarDotTypeRepository : JsonDataRegistry<RadarDotType> {
 
     override val gson: Gson = GsonBuilder()
         .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
+        .registerTypeAdapter(RadarDotType::class.java, RadarDotAdapter)
         .setPrettyPrinting()
         .disableHtmlEscaping()
         .create()
