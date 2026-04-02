@@ -33,12 +33,16 @@ object RadarDotTypeRepository : JsonDataRegistry<RadarDotType> {
     override val typeToken: TypeToken<RadarDotType> = TypeToken.get(RadarDotType::class.java)
 
     private val dots = hashMapOf<ResourceLocation, RadarDotType>()
+    private val ids = mutableListOf<ResourceLocation>()
 
     override fun sync(player: ServerPlayer) {}
 
     override fun reload(data: Map<ResourceLocation, RadarDotType>) {
         dots.clear()
+        ids.clear()
+        dots[DEFAULT.id] = DEFAULT
         dots.putAll(data.values.associateBy { it.id })
+        ids.addAll(data.keys)
         observable.emit(this)
         Cobblenav.LOGGER.info("Loaded {} radar dot types", dots.size)
         CobblenavClient.pokefinderSettings?.getFilters()?.forEach {
@@ -47,4 +51,10 @@ object RadarDotTypeRepository : JsonDataRegistry<RadarDotType> {
     }
 
     fun get(id: ResourceLocation?): RadarDotType = id?.let { dots[it] } ?: DEFAULT
+
+    fun next(id: ResourceLocation): RadarDotType {
+        val index = ids.indexOf(id).let { if (it < ids.size) it else 0 }
+        val key = ids[index]
+        return get(key)
+    }
 }
