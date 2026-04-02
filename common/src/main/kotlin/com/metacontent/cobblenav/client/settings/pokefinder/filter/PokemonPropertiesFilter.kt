@@ -2,10 +2,8 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.pokefinder.RadarDotType
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
-import net.minecraft.resources.ResourceLocation
 
 class PokemonPropertiesFilter(
     private var properties: PokemonProperties = PokemonProperties()
@@ -16,7 +14,7 @@ class PokemonPropertiesFilter(
 
     override val type = TYPE
 
-    override var dot: ResourceLocation? = null
+    override var dotType: RadarDotType? = null
 
     override fun test(pokemon: Pokemon): Boolean = properties.test(pokemon)
 

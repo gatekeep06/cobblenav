@@ -35,4 +35,8 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
     fun test(pokemon: Pokemon): Boolean {
         return filters.any { it.test(pokemon) } || filters.isEmpty()
     }
+
+    fun firstPassedFilter(pokemon: Pokemon): RadarFilter? {
+        return filters.firstOrNull { it.test(pokemon) }
+    }
 }

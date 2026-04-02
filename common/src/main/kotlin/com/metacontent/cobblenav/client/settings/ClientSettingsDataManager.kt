@@ -6,7 +6,9 @@ import com.cobblemon.mod.common.util.adapters.PokemonPropertiesAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.metacontent.cobblenav.Cobblenav
+import com.metacontent.cobblenav.api.pokefinder.RadarDotType
 import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterAdapter
+import com.metacontent.cobblenav.client.settings.pokefinder.SimpleDotTypeAdapter
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import java.io.File
 import java.io.FileReader
@@ -20,6 +22,7 @@ object ClientSettingsDataManager {
         .registerTypeAdapter(IntRange::class.java, IntRangeAdapter)
         .registerTypeAdapter(PokemonProperties::class.java, PokemonPropertiesAdapter(false))
         .registerTypeAdapter(RadarFilter::class.java, RadarFilterAdapter)
+        .registerTypeAdapter(RadarDotType::class.java, SimpleDotTypeAdapter)
         .create()
 
     private fun String.toPath() = "$DIRECTORY$this.json"

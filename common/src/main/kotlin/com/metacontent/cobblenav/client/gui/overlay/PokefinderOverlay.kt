@@ -8,6 +8,7 @@ import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import com.metacontent.cobblenav.item.Pokefinder
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.DeltaTracker
@@ -47,7 +48,6 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         val TEXT_COLOR = FastColor.ARGB32.color(255, 1, 235, 95)
         val BACKGROUND = gui("pokefinder/overlay")
         val COMPASS = gui("pokefinder/compass")
-        val DOT = gui("pokefinder/dot")
     }
 
     private val settings = CobblenavClient.pokefinderSettings
@@ -132,12 +132,14 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
             renderCompass(poseStack, 180f - player.rotationVector.y, x, y)
 
-            val entities = settings?.let {
-                minecraft.level?.getEntitiesOfClass(
-                    PokemonEntity::class.java,
-                    AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
-                ) { settings.test(it.pokemon) }
-            } ?: listOf()
+            if (settings == null) return@pushAndPop
+
+            val entities = minecraft.level?.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
+            )?.mapNotNull { entity ->
+                settings.firstPassedFilter(entity.pokemon)?.let { entity to it }
+            }?.toMap() ?: emptyMap()
 
             entities.renderPokemonDots(guiGraphics, x, y, WIDTH, HEIGHT, pos, player.rotationVector.y)
         }
@@ -157,7 +159,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         )
     }
 
-    private fun Collection<PokemonEntity>.renderPokemonDots(
+    private fun Map<PokemonEntity, RadarFilter>.renderPokemonDots(
         guiGraphics: GuiGraphics,
         x: Int,
         y: Int,
@@ -166,14 +168,14 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
         center: Vec3,
         rotation: Float
     ) {
-        this.forEach {
-            val vec = center.vectorTo(it.position()).scale(RADAR_SCALE)
+        this.forEach { (entity, filter) ->
+            val vec = center.vectorTo(entity.position()).scale(RADAR_SCALE)
             val angle = Math.toRadians(180.0 - rotation)
             val dotX = x + width / 2 - DOT_SIZE / 2 + vec.x * cos(angle) - vec.z * sin(angle)
             val dotY = y + height / 2 - DOT_SIZE / 2 + vec.x * sin(angle) + vec.z * cos(angle)
             blitk(
                 matrixStack = guiGraphics.pose(),
-                texture = DOT,
+                texture = filter.dotType?.texture(),
                 x = floor(dotX),
                 y = floor(dotY),
                 width = DOT_SIZE,
@@ -183,7 +185,7 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
             if (CobblenavClient.config.enableDisplayOfNamesOnRadar) {
                 drawScaledText(
                     context = guiGraphics,
-                    text = it.pokemon.getDisplayName(),
+                    text = entity.pokemon.getDisplayName(),
                     x = floor(dotX) + DOT_SIZE / 2,
                     y = floor(dotY) + DOT_SIZE,
                     centered = true,

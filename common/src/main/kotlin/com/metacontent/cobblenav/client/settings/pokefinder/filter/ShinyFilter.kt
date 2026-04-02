@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.resources.ResourceLocation
+import com.metacontent.cobblenav.api.pokefinder.RadarDotType
 
 class ShinyFilter : RadarFilter {
     companion object {
@@ -10,7 +10,7 @@ class ShinyFilter : RadarFilter {
 
     override val type = TYPE
 
-    override var dot: ResourceLocation? = null
+    override var dotType: RadarDotType? = null
 
     override fun test(pokemon: Pokemon): Boolean = pokemon.shiny
 }

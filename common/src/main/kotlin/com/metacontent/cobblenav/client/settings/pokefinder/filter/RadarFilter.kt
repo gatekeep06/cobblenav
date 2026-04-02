@@ -1,12 +1,12 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.resources.ResourceLocation
+import com.metacontent.cobblenav.api.pokefinder.RadarDotType
 
 interface RadarFilter {
     val type: String
 
-    var dot: ResourceLocation?
+    var dotType: RadarDotType?
 
     fun test(pokemon: Pokemon): Boolean
 }
