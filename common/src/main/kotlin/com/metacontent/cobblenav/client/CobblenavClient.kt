@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.metacontent.cobblenav.api.fishingcontext.CloudRepository
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
+import com.metacontent.cobblenav.api.pokefinder.RadarDotTypeRepository
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager.POKEMON_APPEARED_SIGNAL
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay
@@ -73,5 +74,6 @@ object CobblenavClient {
         BiomePlatformRenderDataRepository.reload(resourceManager)
         DimensionPlateRepository.reload(resourceManager)
         CloudRepository.reload(resourceManager)
+        RadarDotTypeRepository.reload(resourceManager)
     }
 }
