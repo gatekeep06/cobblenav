@@ -55,7 +55,7 @@ open class SpawnDataWidget(
         DimensionPlateRepository.EMPTY
     }
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
-    var nearbyEntityId = -1
+    var nearbyEntityIds = emptyList<Int>()
 
     private val trackButton = IconButton(
         pX = x + width - TRACK_SIZE,
@@ -91,7 +91,7 @@ open class SpawnDataWidget(
             )
         }
 
-        if (isNearby() && spawnData.data.result.shouldRenderPlatform()) {
+        if (nearby() && spawnData.data.result.shouldRenderPlatform()) {
             trackButton.render(guiGraphics, i, j, delta)
         }
 
@@ -188,7 +188,7 @@ open class SpawnDataWidget(
         }
     }
 
-    fun isNearby(): Boolean = nearbyEntityId != -1
+    fun nearby(): Boolean = nearbyEntityIds.isNotEmpty()
 
     override fun setX(i: Int) {
         trackButton.x += i - x
