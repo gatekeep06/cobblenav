@@ -143,6 +143,8 @@ class PokemonHerdSpawnResultData(
 
     override fun getResultPokemon(): PokemonProperties? = null
 
+    override fun getResultId(): String? = null
+
     override fun canBeTracked() = false
 
     override fun containsResult(objects: Collection<*>) = false

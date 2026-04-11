@@ -155,6 +155,8 @@ class PokemonSpawnResultData(
 
     override fun getResultPokemon(): PokemonProperties = originalProperties
 
+    override fun getResultId(): String = pokemon.form.showdownId()
+
     override fun canBeTracked() = true
 
     override fun containsResult(objects: Collection<*>) = objects.contains(pokemon.form.showdownId())

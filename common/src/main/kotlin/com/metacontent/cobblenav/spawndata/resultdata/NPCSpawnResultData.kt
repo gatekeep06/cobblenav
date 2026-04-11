@@ -33,6 +33,8 @@ class NPCSpawnResultData(
 
     override fun getResultPokemon(): PokemonProperties? = null
 
+    override fun getResultId(): String = npc.id.toString()
+
     override fun canBeTracked() = true
 
     override fun containsResult(objects: Collection<*>) = false

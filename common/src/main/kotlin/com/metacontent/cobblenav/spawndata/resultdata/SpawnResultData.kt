@@ -56,6 +56,8 @@ interface SpawnResultData : Encodable {
 
     fun getResultPokemon(): PokemonProperties?
 
+    fun getResultId(): String?
+
     fun canBeTracked(): Boolean
 
     fun containsResult(objects: Collection<*>): Boolean
