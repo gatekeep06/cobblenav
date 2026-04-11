@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
 import com.cobblemon.mod.common.api.net.Encodable
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
@@ -52,6 +53,10 @@ interface SpawnResultData : Encodable {
     }
 
     fun encodeResultData(buffer: RegistryFriendlyByteBuf)
+
+    fun getResultPokemon(): PokemonProperties?
+
+    fun getResultId(): String?
 
     fun canBeTracked(): Boolean
 

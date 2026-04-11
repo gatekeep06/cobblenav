@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.readString
@@ -50,6 +51,10 @@ class UnknownSpawnResultData(
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(positionType)
     }
+
+    override fun getResultPokemon(): PokemonProperties? = null
+
+    override fun getResultId(): String? = null
 
     override fun canBeTracked() = false
 

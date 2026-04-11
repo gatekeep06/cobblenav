@@ -57,6 +57,8 @@ object CobblenavItems : RegistryProvider<Registry<Item>, ResourceKey<Registry<It
         openableItems.add(it)
     }
 
+    internal val TRACK_ARROW = add("track_arrow", Item(Item.Properties()))
+
     private fun pokenavItem(model: PokenavModelType): Item {
         return add(Pokenav.BASE_REGISTRY_KEY + model.modelName, Pokenav(model)).also {
             inHandModelItems.add(it)

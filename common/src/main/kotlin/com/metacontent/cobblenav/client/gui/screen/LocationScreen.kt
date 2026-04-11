@@ -33,6 +33,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.AABB
 import org.joml.Vector3d
 import kotlin.math.max
@@ -387,14 +388,14 @@ class LocationScreen(
                 PokemonEntity::class.java,
                 AABB.ofSize(
                     player.position(),
-                    200.0,
-                    200.0,
-                    200.0
+                    128.0,
+                    128.0,
+                    128.0
                 )
-            ).map { it.pokemon.form.showdownId() }.toHashSet()
-        } ?: hashSetOf()
+            ).groupBy { it.pokemon.form.showdownId() }.mapValues { it.value.map(Entity::getId) }
+        } ?: emptyMap()
         tableView.applyToAll { item ->
-            item.child.isNearby = item.child.spawnData.data.result.containsResult(nearbyPokemon)
+            item.child.nearbyEntityIds = nearbyPokemon[item.child.spawnData.data.result.getResultId()] ?: emptyList()
         }
     }
 

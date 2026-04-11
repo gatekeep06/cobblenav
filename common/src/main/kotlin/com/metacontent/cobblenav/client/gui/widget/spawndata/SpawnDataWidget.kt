@@ -7,9 +7,12 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
+import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataDisplayer
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -33,9 +36,9 @@ open class SpawnDataWidget(
         const val HEIGHT = 45
         const val MODEL_HEIGHT = 35
         const val POKE_BALL_OFFSET = 6
-        const val MARK_SIZE = 6
+        const val TRACK_SIZE = 12
         val FORMAT = DecimalFormat("#.##")
-        val NEARBY_MARK = gui("location/nearby_mark")
+        val TRACK = gui("location/track")
         val BROKEN_MODEL = gui("location/broken_model")
     }
 
@@ -53,13 +56,29 @@ open class SpawnDataWidget(
         DimensionPlateRepository.EMPTY
     }
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
-    var isNearby = false
+    var nearbyEntityIds = emptyList<Int>()
+
+    private val trackButton = IconButton(
+        pX = x + width - TRACK_SIZE + 1,
+        pY = y + 1,
+        pWidth = TRACK_SIZE,
+        pHeight = TRACK_SIZE,
+        texture = TRACK,
+        action = {
+            val player = Minecraft.getInstance().player ?: return@IconButton
+            val entities = nearbyEntityIds.mapNotNull { player.clientLevel?.getEntity(it) }
+            CobblenavClient.trackArrowOverlay.entityId = entities.minByOrNull {
+                it.distanceTo(player)
+            }?.id ?: -1
+            (Minecraft.getInstance().screen as? PokenavScreen)?.onClose()
+        }
+    )
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
         val hovered = ishHovered(i, j) && isFocused && !displayer.isBlockingTooltip()
 
-        if (hovered) {
+        if (hovered && !trackButton.isHovered) {
             displayer.hoveredData = spawnData
         }
 
@@ -80,15 +99,8 @@ open class SpawnDataWidget(
             )
         }
 
-        if (isNearby && spawnData.data.result.shouldRenderPlatform()) {
-            blitk(
-                matrixStack = poseStack,
-                texture = NEARBY_MARK,
-                x = x + WIDTH - MARK_SIZE - 3,
-                y = y + 3,
-                width = MARK_SIZE,
-                height = MARK_SIZE
-            )
+        if (nearby() && spawnData.data.result.shouldRenderPlatform()) {
+            trackButton.render(guiGraphics, i, j, delta)
         }
 
         if (!isModelBroken) {
@@ -147,6 +159,9 @@ open class SpawnDataWidget(
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
         if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
+            trackButton.mouseClicked(pMouseX, pMouseY, pButton).takeIf { it }?.let {
+                return true
+            }
             displayer.selectedData = spawnData.data
             return true
         }
@@ -179,5 +194,17 @@ open class SpawnDataWidget(
                 0
             )
         }
+    }
+
+    fun nearby(): Boolean = nearbyEntityIds.isNotEmpty()
+
+    override fun setX(i: Int) {
+        trackButton.x += i - x
+        super.setX(i)
+    }
+
+    override fun setY(i: Int) {
+        trackButton.y += i - y
+        super.setY(i)
     }
 }
