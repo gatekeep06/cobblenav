@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.screen.PokenavScreen
 import com.metacontent.cobblenav.client.gui.screen.SpawnDataDisplayer
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
@@ -69,7 +70,7 @@ open class SpawnDataWidget(
             CobblenavClient.trackArrowOverlay.entityId = entities.minByOrNull {
                 it.distanceTo(player)
             }?.id ?: -1
-            
+            (Minecraft.getInstance().screen as? PokenavScreen)?.onClose()
         }
     )
 
