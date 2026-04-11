@@ -63,7 +63,14 @@ open class SpawnDataWidget(
         pWidth = TRACK_SIZE,
         pHeight = TRACK_SIZE,
         texture = TRACK,
-        action = { CobblenavClient.trackArrowOverlay.entityId = nearbyEntityId }
+        action = {
+            val player = Minecraft.getInstance().player ?: return@IconButton
+            val entities = nearbyEntityIds.mapNotNull { player.clientLevel?.getEntity(it) }
+            CobblenavClient.trackArrowOverlay.entityId = entities.minByOrNull {
+                it.distanceTo(player)
+            }?.id ?: -1
+            
+        }
     )
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
