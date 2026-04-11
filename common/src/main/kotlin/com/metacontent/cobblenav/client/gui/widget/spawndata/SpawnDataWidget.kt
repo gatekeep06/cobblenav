@@ -59,8 +59,8 @@ open class SpawnDataWidget(
     var nearbyEntityIds = emptyList<Int>()
 
     private val trackButton = IconButton(
-        pX = x + width - TRACK_SIZE,
-        pY = y,
+        pX = x + width - TRACK_SIZE + 1,
+        pY = y + 1,
         pWidth = TRACK_SIZE,
         pHeight = TRACK_SIZE,
         texture = TRACK,
