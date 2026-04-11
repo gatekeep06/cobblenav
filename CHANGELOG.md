@@ -1,3 +1,8 @@
+# Update 2.4.0
+
+- Instead of the Finder screen, tracking start buttons have been added to the Location screen. The buttons appear above Pokémon that are near the player, replacing the marks from previous versions. When pressed, the screen will close and tracking of the nearest selected Pokémon will begin.
+- The tracking arrow has been changed from a regular Poké Ball to a custom model.
+
 # Update 2.3.2
 
 - New client config parameters:
