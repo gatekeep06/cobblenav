@@ -153,6 +153,8 @@ class PokemonSpawnResultData(
         buffer.writeString(positionType)
     }
 
+    override fun getResultPokemon(): PokemonProperties = originalProperties
+
     override fun canBeTracked() = true
 
     override fun containsResult(objects: Collection<*>) = objects.contains(pokemon.form.showdownId())

@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
@@ -139,6 +140,8 @@ class PokemonHerdSpawnResultData(
         )
         buffer.writeString(positionType)
     }
+
+    override fun getResultPokemon(): PokemonProperties? = null
 
     override fun canBeTracked() = false
 
