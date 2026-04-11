@@ -53,7 +53,7 @@ open class SpawnDataWidget(
         DimensionPlateRepository.EMPTY
     }
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
-    var isNearby = false
+    var nearbyEntityId = -1
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, delta: Float) {
         val poseStack = guiGraphics.pose()
@@ -80,7 +80,7 @@ open class SpawnDataWidget(
             )
         }
 
-        if (isNearby && spawnData.data.result.shouldRenderPlatform()) {
+        if (isNearby() && spawnData.data.result.shouldRenderPlatform()) {
             blitk(
                 matrixStack = poseStack,
                 texture = NEARBY_MARK,
@@ -180,4 +180,6 @@ open class SpawnDataWidget(
             )
         }
     }
+
+    fun isNearby(): Boolean = nearbyEntityId != -1
 }

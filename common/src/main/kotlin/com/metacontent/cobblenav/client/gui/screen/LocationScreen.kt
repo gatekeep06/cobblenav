@@ -387,14 +387,14 @@ class LocationScreen(
                 PokemonEntity::class.java,
                 AABB.ofSize(
                     player.position(),
-                    200.0,
-                    200.0,
-                    200.0
+                    128.0,
+                    128.0,
+                    128.0
                 )
-            ).map { it.pokemon.form.showdownId() }.toHashSet()
-        } ?: hashSetOf()
+            ).associate { it.pokemon.form.showdownId() to it.id }
+        } ?: emptyMap()
         tableView.applyToAll { item ->
-            item.child.isNearby = item.child.spawnData.data.result.containsResult(nearbyPokemon)
+            item.child.nearbyEntityId = nearbyPokemon[item.child.spawnData.data.result.getResultId()] ?: -1
         }
     }
 
