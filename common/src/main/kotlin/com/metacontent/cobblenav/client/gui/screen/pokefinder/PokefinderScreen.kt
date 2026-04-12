@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.metacontent.cobblenav.api.generalresources.ColorRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay.Companion.RADIUS
 import com.metacontent.cobblenav.client.gui.util.gui
@@ -42,13 +43,14 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         val BACK = gui("pokefinder/back")
         val CLEAR = gui("pokefinder/clear")
         val FIELD = gui("pokefinder/text")
-
-        @JvmStatic
-        val COLOR = FastColor.ARGB32.color(255, 1, 235, 95)
-        val BG_COLOR = FastColor.ARGB32.color(255, 37, 52, 47)
     }
 
     val player: LocalPlayer? = Minecraft.getInstance().player
+
+    val color
+        get() = ColorRepository.get("pokefinder_text")
+    val bgColor
+        get() = ColorRepository.get("pokefinder_background")
 
     init {
         player?.playSound(CobblemonSounds.PC_ON, 0.1f, 2f)
@@ -176,7 +178,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
             x = screenX + BORDER_WIDTH + 14,
             y = screenY + 86 + 7,
             maxCharacterWidth = 17,
-            colour = COLOR,
+            colour = color,
             centered = true
         )
 
@@ -193,7 +195,7 @@ class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
                 x = screenX + BORDER_WIDTH + 87,
                 y = screenY + BORDER_WIDTH + 171,
                 maxCharacterWidth = 186,
-                colour = COLOR
+                colour = color
             )
         }
         bottomText = null
