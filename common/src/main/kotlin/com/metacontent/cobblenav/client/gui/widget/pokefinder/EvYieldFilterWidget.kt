@@ -5,8 +5,7 @@ import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.pokemon.stats.Stats.*
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.Cobblenav
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
+import com.metacontent.cobblenav.api.generalresources.ColorRepository
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_HEIGHT
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_WIDTH
 import com.metacontent.cobblenav.client.gui.util.gui
@@ -14,7 +13,6 @@ import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.EvYieldFilter
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 class EvYieldFilterWidget(
@@ -64,7 +62,7 @@ class EvYieldFilterWidget(
         checkBoxes.forEach { (stat, checkBox) ->
             checkBox.render(guiGraphics, i, j, f)
 
-            val color = if (checkBox.checked()) PokefinderScreen.BG_COLOR else PokefinderScreen.COLOR
+            val color = ColorRepository.get(if (checkBox.checked()) "pokefinder_background" else "pokefinder_text")
             drawScaledText(
                 context = guiGraphics,
                 text = Component.translatable("gui.cobblenav.pokefidner.ev_yield.${stat.showdownId}"),

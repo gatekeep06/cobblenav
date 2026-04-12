@@ -5,7 +5,7 @@ import com.cobblemon.mod.common.api.pokedex.CaughtPercent
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.COLOR
+import com.metacontent.cobblenav.api.generalresources.ColorRepository
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.FIELD
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.LINE_WIDTH
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_HEIGHT
@@ -32,7 +32,7 @@ class UncaughtFilterWidget : SoundlessWidget(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT, 
             x = x + 5,
             y = y + 8,
             maxCharacterWidth = LINE_WIDTH,
-            colour = COLOR
+            colour = ColorRepository.get("pokefinder_text")
         )
     }
 }
