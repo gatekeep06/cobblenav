@@ -2,6 +2,7 @@
 
 - Instead of the Finder screen, tracking start buttons have been added to the Location screen. The buttons appear above Pokémon that are near the player, replacing the marks from previous versions. When pressed, the screen will close and tracking of the nearest selected Pokémon will begin.
 - The tracking arrow has been changed from a regular Poké Ball to a custom model.
+- Added the ability to change some UI colors using resource packs. For now, only the text color in PokéFinder, but more customizable colors will be implemented in the future.
 
 # Update 2.3.2
 
