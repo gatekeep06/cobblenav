@@ -1,4 +1,4 @@
-package com.metacontent.cobblenav.api.fishingcontext
+package com.metacontent.cobblenav.api.generalresources
 
 import com.cobblemon.mod.common.api.data.JsonDataRegistry
 import com.cobblemon.mod.common.api.reactive.SimpleObservable

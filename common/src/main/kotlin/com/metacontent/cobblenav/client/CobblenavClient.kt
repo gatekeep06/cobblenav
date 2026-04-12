@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.client
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.platform.events.PlatformEvents
-import com.metacontent.cobblenav.api.fishingcontext.CloudRepository
+import com.metacontent.cobblenav.api.generalresources.CloudRepository
 import com.metacontent.cobblenav.api.platform.BiomePlatformRenderDataRepository
 import com.metacontent.cobblenav.api.platform.DimensionPlateRepository
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
