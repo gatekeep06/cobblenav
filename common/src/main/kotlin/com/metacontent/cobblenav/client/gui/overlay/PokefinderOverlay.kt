@@ -53,13 +53,13 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
     val bgColor
         get() = ColorRepository.get("pokefinder_background")
 
-    private val settings = CobblenavClient.pokefinderSettings
     private val minecraft = Minecraft.getInstance()
     private val scale = CobblenavClient.config.pokefinderOverlayScale
     private val offsetX = CobblenavClient.config.pokefinderOverlayOffsetX
     private val offsetY = CobblenavClient.config.pokefinderOverlayOffsetY
 
     override fun render(guiGraphics: GuiGraphics, deltaTracker: DeltaTracker) {
+        val settings = CobblenavClient.pokefinderSettings ?: return
         val player = minecraft.player ?: return
 
         val pos = player.position()
@@ -135,12 +135,10 @@ class PokefinderOverlay : Gui(Minecraft.getInstance()) {
 
             renderCompass(poseStack, 180f - player.rotationVector.y, x, y)
 
-            val entities = settings?.let {
-                minecraft.level?.getEntitiesOfClass(
-                    PokemonEntity::class.java,
-                    AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
-                ) { settings.test(it.pokemon) }
-            } ?: listOf()
+            val entities = minecraft.level?.getEntitiesOfClass(
+                PokemonEntity::class.java,
+                AABB.ofSize(pos, RADIUS, RADIUS, RADIUS)
+            ) { settings.test(it.pokemon) } ?: listOf()
 
             entities.renderPokemonDots(guiGraphics, x, y, WIDTH, HEIGHT, pos, player.rotationVector.y)
         }

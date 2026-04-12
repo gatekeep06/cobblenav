@@ -25,7 +25,6 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.util.FastColor
 import net.minecraft.world.phys.AABB
 import org.joml.Vector3f
 
