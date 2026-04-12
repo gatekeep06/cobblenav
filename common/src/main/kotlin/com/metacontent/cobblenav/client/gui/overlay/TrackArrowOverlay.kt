@@ -45,7 +45,7 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
             minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
         val scaledOffset = (offset / scale).toInt()
         val x = minecraft.window.guiScaledWidth / 2
-        val y = minecraft.window.guiScaledHeight - scaledOffset
+        val y = minecraft.window.guiScaledHeight - scaledOffset - 30
 
         val distanceVec = player.position().vectorTo(entity.position())
         val yaw = atan2(distanceVec.z, distanceVec.x).toFloat()
@@ -77,7 +77,7 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
             context = guiGraphics,
             text = Component.translatable("gui.cobblenav.finder.distance", distanceVec.length().toInt()),
             x = x,
-            y = y + 20,
+            y = y + 30,
             centered = true,
             opacity = 0.6f
         )
