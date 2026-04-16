@@ -147,6 +147,8 @@
 
   "gui.cobblenav.pokemon_rendering_exception": "An exception occurred when trying to render %s. The cause could be a conflict between several resource packs that add %s or an outdated version of one. Make sure your resource packs do not contain any pokémon assets that are in another resource pack or in the main mod. If this does not work, report an exception.",
 
+  "gui.cobblenav.pokefinder.mode.simple": "Simple Mode",
+  "gui.cobblenav.pokefinder.mode.advanced": "Advanced Mode",
   "gui.cobblenav.pokefinder.filter.name": "Translated Pokémon Names",
   "gui.cobblenav.pokefinder.filter.properties": "Pokémon Properties",
   "gui.cobblenav.pokefinder.filter.label": "Pokémon Labels",
