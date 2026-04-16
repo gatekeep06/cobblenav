@@ -6,6 +6,7 @@ import com.metacontent.cobblenav.api.generalresources.ColorRepository
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
+import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -29,6 +30,8 @@ abstract class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         val FIELD = gui("pokefinder/text")
     }
 
+    private lateinit var backButton: IconButton
+
     val player: LocalPlayer? = Minecraft.getInstance().player
 
     val color
@@ -51,6 +54,15 @@ abstract class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
 
         screenX = (width - WIDTH) / 2
         screenY = (height - HEIGHT) / 2
+
+        backButton = IconButton(
+            pX = screenX + BORDER_WIDTH + 1,
+            pY = screenY + HEIGHT - BORDER_WIDTH - 1 - BUTTON_SIZE,
+            pWidth = BUTTON_SIZE,
+            pHeight = BUTTON_SIZE,
+            action = { onClose() },
+            texture = BACK
+        ).also { addRenderableWidget(it) }
 
         initScreen()
     }

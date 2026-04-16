@@ -24,7 +24,6 @@ class AdvancedPokefinderScreen : PokefinderScreen() {
     private lateinit var addButtonTable: TableView<AddFilterButton>
     private lateinit var baseTable: TableView<AbstractWidget>
     private lateinit var scrollableView: ScrollableView
-    private lateinit var backButton: IconButton
     private lateinit var clearButton: IconButton
 
     private val settings = CobblenavClient.pokefinderSettings
@@ -74,14 +73,6 @@ class AdvancedPokefinderScreen : PokefinderScreen() {
             child = baseTable
         ).also { addRenderableWidget(it) }
 
-        backButton = IconButton(
-            pX = screenX + BORDER_WIDTH + 1,
-            pY = screenY + HEIGHT - BORDER_WIDTH - 1 - BUTTON_SIZE,
-            pWidth = BUTTON_SIZE,
-            pHeight = BUTTON_SIZE,
-            action = { onClose() },
-            texture = BACK
-        ).also { addRenderableWidget(it) }
         clearButton = IconButton(
             pX = screenX + BORDER_WIDTH + 1,
             pY = screenY + BORDER_WIDTH + 1,
