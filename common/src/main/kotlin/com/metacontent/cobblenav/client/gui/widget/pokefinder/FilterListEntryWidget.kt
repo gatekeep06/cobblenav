@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.client.gui.widget.pokefinder
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
@@ -16,7 +16,7 @@ class FilterListEntryWidget(
     val filter: RadarFilter,
     val widget: AbstractWidget,
     val icon: ResourceLocation,
-    parent: PokefinderSettingScreen
+    parent: AdvancedPokefinderScreen
 ) : SoundlessWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
     companion object {
         const val WIDTH = 238

@@ -6,10 +6,10 @@ import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.api.generalresources.ColorRepository
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen.Companion.FIELD
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen.Companion.LINE_WIDTH
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen.Companion.WIDGET_HEIGHT
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen.Companion.WIDGET_WIDTH
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen.Companion.FIELD
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen.Companion.LINE_WIDTH
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen.Companion.WIDGET_HEIGHT
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen.Companion.WIDGET_WIDTH
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
