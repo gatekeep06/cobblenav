@@ -11,7 +11,11 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
     @Transient
     override val name = NAME
 
-    private var mode: Mode? = null
+    var mode: Mode? = null
+        set(value) {
+            changed = true
+            field = value
+        }
 
     private val filters = mutableListOf<RadarFilter>()
 
