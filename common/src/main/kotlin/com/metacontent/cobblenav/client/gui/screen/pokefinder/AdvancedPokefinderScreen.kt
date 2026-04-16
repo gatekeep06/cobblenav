@@ -1,9 +1,11 @@
 package com.metacontent.cobblenav.client.gui.screen.pokefinder
 
+import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay.Companion.RADIUS
+import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -20,6 +22,10 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.phys.AABB
 
 class AdvancedPokefinderScreen : PokefinderScreen() {
+    companion object {
+        val DETAILS = gui("pokefinder/details")
+    }
+
     private lateinit var filterTable: TableView<FilterListEntryWidget>
     private lateinit var addButtonTable: TableView<AddFilterButton>
     private lateinit var baseTable: TableView<AbstractWidget>
@@ -88,6 +94,15 @@ class AdvancedPokefinderScreen : PokefinderScreen() {
 
     override fun renderBackground(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         super.renderBackground(guiGraphics, i, j, f)
+
+        blitk(
+            matrixStack = guiGraphics.pose(),
+            texture = DETAILS,
+            x = screenX,
+            y = screenY,
+            width = WIDTH,
+            height = HEIGHT
+        )
 
         val pos = player?.position()
         val entityNumber = if (pos != null && settings != null) {
