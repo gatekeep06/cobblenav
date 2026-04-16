@@ -11,6 +11,8 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
     @Transient
     override val name = NAME
 
+    private var mode: Mode? = null
+
     private val filters = mutableListOf<RadarFilter>()
 
     fun getFilters(): List<RadarFilter> = filters.toList()
@@ -32,5 +34,10 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
 
     fun test(pokemon: Pokemon): Boolean {
         return filters.any { it.test(pokemon) } || filters.isEmpty()
+    }
+
+    enum class Mode {
+        SIMPLE,
+        ADVANCED
     }
 }
