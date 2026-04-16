@@ -6,8 +6,8 @@ import com.cobblemon.mod.common.api.pokemon.stats.Stats.*
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.api.generalresources.ColorRepository
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_HEIGHT
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.WIDGET_WIDTH
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen.Companion.WIDGET_HEIGHT
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen.Companion.WIDGET_WIDTH
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.CheckBox
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.EvYieldFilter

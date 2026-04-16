@@ -28,7 +28,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.phys.AABB
 import org.joml.Vector3f
 
-class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
+class PokefinderSettingScreen : Screen(Component.literal("Pokefinder")) {
     companion object {
         const val WIDTH = 288
         const val HEIGHT = 192

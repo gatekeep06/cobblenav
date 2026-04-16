@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.type
 
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import net.minecraft.client.gui.components.AbstractWidget
@@ -24,7 +24,7 @@ interface RadarFilterType<T : RadarFilter> {
     fun createWidget(filter: T): AbstractWidget
 
     fun <T : RadarFilter> RadarFilterType<T>.createEntry(
-        parent: PokefinderScreen,
+        parent: PokefinderSettingScreen,
         filter: RadarFilter? = null,
     ): FilterListEntryWidget {
         val filter = filter
