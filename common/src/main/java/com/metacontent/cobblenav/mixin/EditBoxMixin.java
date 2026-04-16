@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.mixin;
 
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen;
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -18,7 +18,7 @@ public abstract class EditBoxMixin {
     )
     private void drawPokefinderCaret(GuiGraphics instance, RenderType renderType, int i, int j, int k, int l, int m) {
         Screen screen = Minecraft.getInstance().screen;
-        boolean isPokefinder = screen instanceof AdvancedPokefinderScreen;
-        instance.fill(renderType, i, j, k, l, isPokefinder ? ((AdvancedPokefinderScreen) screen).getColor() : m);
+        boolean isPokefinder = screen instanceof PokefinderScreen;
+        instance.fill(renderType, i, j, k, l, isPokefinder ? ((PokefinderScreen) screen).getColor() : m);
     }
 }
