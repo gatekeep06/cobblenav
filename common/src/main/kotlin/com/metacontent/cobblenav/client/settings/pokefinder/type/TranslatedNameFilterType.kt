@@ -9,7 +9,7 @@ object TranslatedNameFilterType : EditableTextFilterType<TranslatedNameFilter>()
 
     override val typeIcon = gui("pokefinder/name")
 
-    override val displayedName = Component.translatable("gui.cobblenav.pokefinder.filter.name")
+    override val displayedName: Component = Component.translatable("gui.cobblenav.pokefinder.filter.name")
 
     override fun createFilter(): TranslatedNameFilter = TranslatedNameFilter()
 }

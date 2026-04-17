@@ -11,7 +11,7 @@ object EvYieldFilterType : RadarFilterType<EvYieldFilter> {
 
     override val typeIcon = gui("pokefinder/ev_yield")
 
-    override val displayedName = Component.translatable("gui.cobblenav.pokefinder.filter.ev_yield")
+    override val displayedName: Component = Component.translatable("gui.cobblenav.pokefinder.filter.ev_yield")
 
     override fun createFilter(): EvYieldFilter = EvYieldFilter()
 
