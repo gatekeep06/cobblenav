@@ -20,5 +20,6 @@ object RadarFilterTypeRegistry {
         register(LabelFilter.TYPE, LabelFilterType)
         register(EvYieldFilter.TYPE, EvYieldFilterType)
         register(UncaughtFilter.TYPE, UncaughtFilterType)
+        register(AspectFilter.TYPE, AspectFilterType)
     }
 }
