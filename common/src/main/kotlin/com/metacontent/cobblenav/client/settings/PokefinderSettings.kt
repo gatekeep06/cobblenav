@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.settings
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.*
 
 class PokefinderSettings : Settings<PokefinderSettings>() {
     companion object {
@@ -16,6 +16,14 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
             changed = true
             field = value
         }
+
+    val simpleNameFilter = TranslatedNameFilter()
+
+    val simpleAspectFilter = AspectFilter()
+
+    val simpleLabelFilter = LabelFilter()
+
+    val simpleShinyFilter = ShinyFilter()
 
     private val filters = mutableListOf<RadarFilter>()
 
@@ -37,7 +45,15 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
     }
 
     fun test(pokemon: Pokemon): Boolean {
-        return filters.any { it.test(pokemon) } || filters.isEmpty()
+        return when (mode) {
+            Mode.SIMPLE -> simpleNameFilter.test(pokemon)
+                    && simpleAspectFilter.test(pokemon)
+                    && simpleLabelFilter.test(pokemon)
+                    && simpleShinyFilter.test(pokemon)
+
+            Mode.ADVANCED -> filters.any { it.test(pokemon) } || filters.isEmpty()
+            else -> true
+        }
     }
 
     enum class Mode {
