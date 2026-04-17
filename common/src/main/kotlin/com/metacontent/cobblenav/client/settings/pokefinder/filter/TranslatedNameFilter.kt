@@ -13,7 +13,7 @@ class TranslatedNameFilter(
 
     override val type = TYPE
 
-    override fun test(pokemon: Pokemon): Boolean = names.any {
+    override fun test(pokemon: Pokemon): Boolean = names.isEmpty() || names.any {
         it.equals(pokemon.getDisplayName().string, true)
     }
 
