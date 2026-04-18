@@ -22,7 +22,11 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
 
     private val advancedFilters = mutableListOf<RadarFilter>()
 
-    fun getFilters(): List<RadarFilter> = advancedFilters.toList()
+    fun getFilters(): List<RadarFilter> = when (mode) {
+        Mode.SIMPLE -> simpleFilters.values.toList()
+        Mode.ADVANCED -> advancedFilters.toList()
+        else -> emptyList()
+    }
 
     fun addFilter(filter: RadarFilter) {
         changed = true

@@ -1,6 +1,11 @@
 package com.metacontent.cobblenav.item
 
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderSettingScreen
+import com.metacontent.cobblenav.client.CobblenavClient
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.ModeSelectionPokefinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.SimplePokefinderScreen
+import com.metacontent.cobblenav.client.settings.PokefinderSettings
 import com.metacontent.cobblenav.util.cobblenavResource
 import net.minecraft.client.Minecraft
 import net.minecraft.world.InteractionHand
@@ -34,7 +39,12 @@ class Pokefinder(
             return InteractionResultHolder.pass(player.getItemInHand(interactionHand))
         }
         if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(PokefinderSettingScreen())
+            val screen = when (CobblenavClient.pokefinderSettings?.mode) {
+                PokefinderSettings.Mode.SIMPLE -> SimplePokefinderScreen()
+                PokefinderSettings.Mode.ADVANCED -> AdvancedPokefinderScreen()
+                else -> ModeSelectionPokefinderScreen()
+            }
+            Minecraft.getInstance().setScreen(screen)
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(interactionHand), false)
     }
@@ -43,5 +53,5 @@ class Pokefinder(
         return TRANSLATION_KEY
     }
 
-    override fun isOpened(stack: ItemStack) = Minecraft.getInstance().screen is PokefinderSettingScreen
+    override fun isOpened(stack: ItemStack) = Minecraft.getInstance().screen is PokefinderScreen
 }

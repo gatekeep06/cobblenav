@@ -38,7 +38,7 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
             y = screenY + BORDER_WIDTH + 16,
             width = 238,
             columns = 1,
-            verticalGap = 0f,
+            verticalGap = 6f,
             horizontalGap = 0f
         )
         populateBaseTable(baseTable::add)
@@ -112,8 +112,7 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
     abstract fun checkBottomText(): Component?
 
     abstract fun <T : RadarFilter> createEntry(
-        parent: AdvancedPokefinderScreen,
         type: RadarFilterType<T>,
-        filter: RadarFilter? = null,
+        filter: T,
     ): FilterEntryWidget
 }

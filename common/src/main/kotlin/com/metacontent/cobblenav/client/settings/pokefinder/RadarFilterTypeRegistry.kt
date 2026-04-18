@@ -20,6 +20,8 @@ object RadarFilterTypeRegistry {
         }
     }
 
+    fun <T : RadarFilter> get(filter: T): RadarFilterType<T>? = types[filter.type] as? RadarFilterType<T>
+
     fun get(type: String): RadarFilterType<out RadarFilter>? = types[type]
 
     fun simpleTypes(): Iterable<RadarFilterType<out RadarFilter>> = simpleTypes.toList()
@@ -29,9 +31,9 @@ object RadarFilterTypeRegistry {
     init {
         register(TranslatedNameFilter.TYPE, TranslatedNameFilterType, Mode.BOTH)
         register(AspectFilter.TYPE, AspectFilterType, Mode.SIMPLE)
-        register(ShinyFilter.TYPE, ShinyFilterType, Mode.SIMPLE)
         register(PokemonPropertiesFilter.TYPE, PokemonPropertiesFilterType, Mode.ADVANCED)
         register(LabelFilter.TYPE, LabelFilterType, Mode.BOTH)
+//        register(ShinyFilter.TYPE, ShinyFilterType, Mode.SIMPLE)
         register(EvYieldFilter.TYPE, EvYieldFilterType, Mode.ADVANCED)
         register(UncaughtFilter.TYPE, UncaughtFilterType, Mode.ADVANCED)
     }

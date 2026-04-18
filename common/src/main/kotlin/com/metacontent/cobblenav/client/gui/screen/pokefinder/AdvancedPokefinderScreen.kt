@@ -24,7 +24,7 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
             horizontalGap = 0f
         )
         settings?.getFilters()?.mapNotNull {
-            RadarFilterTypeRegistry.get(it.type)?.let { type -> createEntry(this, type, it) }
+            RadarFilterTypeRegistry.get(it)?.let { type -> createEntry(type, it) }
         }?.let { filterTable.add(it) }
 
         addButtonTable = TableView(
@@ -58,9 +58,10 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
         return text
     }
 
-    fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
+    fun <T : RadarFilter> createFilterOfType(type: RadarFilterType<T>) {
         settings ?: return
-        val entry = createEntry(this, type)
+        val filter = type.createFilter()
+        val entry = createEntry(type, filter)
         settings.addFilter(entry.filter)
         filterTable.add(entry)
     }
@@ -72,19 +73,15 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
     }
 
     override fun <T : RadarFilter> createEntry(
-        parent: AdvancedPokefinderScreen,
         type: RadarFilterType<T>,
-        filter: RadarFilter?
+        filter: T
     ): FilterEntryWidget {
-        val filter = filter
-            ?.takeIf { type.filterClass.isInstance(it) }
-            ?.let { type.filterClass.cast(filter) } ?: type.createFilter()
         val widget = type.createWidget(filter)
         return AdvancedFilterEntryWidget(
             filter = filter,
             widget = widget,
             icon = type.typeIcon,
-            parent = parent
+            parent = this
         )
     }
 }
