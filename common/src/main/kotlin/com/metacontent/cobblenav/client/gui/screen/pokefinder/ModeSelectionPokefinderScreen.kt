@@ -28,6 +28,7 @@ class ModeSelectionPokefinderScreen : PokefinderScreen() {
             pHeight = WIDGET_HEIGHT,
             texture = MODE,
             text = translate("gui.cobblenav.pokefinder.mode.simple"),
+            color = color,
             action = {
                 CobblenavClient.pokefinderSettings?.mode = PokefinderSettings.Mode.SIMPLE
                 Minecraft.getInstance().setScreen(SimplePokefinderScreen())
@@ -40,6 +41,7 @@ class ModeSelectionPokefinderScreen : PokefinderScreen() {
             pHeight = WIDGET_HEIGHT,
             texture = MODE,
             text = translate("gui.cobblenav.pokefinder.mode.advanced"),
+            color = color,
             action = {
                 CobblenavClient.pokefinderSettings?.mode = PokefinderSettings.Mode.ADVANCED
                 Minecraft.getInstance().setScreen(AdvancedPokefinderScreen())

@@ -59,6 +59,7 @@ class TextButton(
             y = y + (height - Minecraft.getInstance().font.lineHeight) / 2,
             centered = true,
             opacity = min(1f, argb),
+            colour = color,
             maxCharacterWidth = width,
             shadow = shadow
         )
