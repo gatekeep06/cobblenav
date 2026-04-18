@@ -1,8 +1,8 @@
 package com.metacontent.cobblenav.client.gui.overlay
 
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
+import com.metacontent.cobblenav.CobblenavItems
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
 import net.minecraft.client.DeltaTracker
@@ -22,7 +22,7 @@ import kotlin.math.sqrt
 class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
     private val minecraft = Minecraft.getInstance()
     private val offset = CobblenavClient.config.trackArrowYOffset
-    private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
+    private val stack by lazy { ItemStack(CobblenavItems.TRACK_ARROW) }
     var tracking = false
     var entityId = -1
         set(value) {
@@ -45,7 +45,7 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
             minecraft.window.guiScaledWidth.toDouble() / minecraft.window.screenWidth.toDouble() * minecraft.window.guiScale
         val scaledOffset = (offset / scale).toInt()
         val x = minecraft.window.guiScaledWidth / 2
-        val y = minecraft.window.guiScaledHeight - scaledOffset
+        val y = minecraft.window.guiScaledHeight - scaledOffset - 30
 
         val distanceVec = player.position().vectorTo(entity.position())
         val yaw = atan2(distanceVec.z, distanceVec.x).toFloat()
@@ -59,7 +59,7 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
                 .fromEulerXYZDegrees(Vector3f(player.xRot, -player.yRot, 0f))
                 .rotateY(0.5f * PI.toFloat() + yaw)
                 .rotateX(-pitch),
-            scale = Vector3f(50f, 50f, -50f)
+            scale = Vector3f(30f, 30f, -30f)
         ) {
             minecraft.itemRenderer.renderStatic(
                 stack,
@@ -77,8 +77,9 @@ class TrackArrowOverlay : Gui(Minecraft.getInstance()) {
             context = guiGraphics,
             text = Component.translatable("gui.cobblenav.finder.distance", distanceVec.length().toInt()),
             x = x,
-            y = y + 20,
-            centered = true
+            y = y + 30,
+            centered = true,
+            opacity = 0.6f
         )
     }
 }

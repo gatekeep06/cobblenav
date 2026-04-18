@@ -12,7 +12,9 @@ class LabelFilter(
 
     override val type = TYPE
 
-    override fun test(pokemon: Pokemon): Boolean = pokemon.form.labels.containsAll(labels)
+    override fun test(pokemon: Pokemon): Boolean = labels.isEmpty() || labels.all { label ->
+        pokemon.form.labels.any { it.equals(label, true) }
+    }
 
     override fun update(value: String) {
         labels = value.split(",").map(String::trim)

@@ -1,6 +1,6 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.type
 
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
+import com.metacontent.cobblenav.api.generalresources.ColorRepository
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.FIELD
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.LINE_HEIGHT
 import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen.Companion.LINE_WIDTH
@@ -21,7 +21,7 @@ abstract class EditableTextFilterType<T : EditableTextFilter> : RadarFilterType<
             lineHeight = LINE_HEIGHT,
             lineX = 5,
             default = filter.asString(),
-            textColor = PokefinderScreen.COLOR,
+            textColor = ColorRepository.get("pokefinder_text"),
             textureSheet = FIELD,
             onChange = filter::update
         )

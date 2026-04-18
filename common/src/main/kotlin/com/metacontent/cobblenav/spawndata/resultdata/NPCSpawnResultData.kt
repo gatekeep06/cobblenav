@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
 import com.cobblemon.mod.common.api.npc.NPCClass
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.NPCSpawnDetail
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
@@ -29,6 +30,10 @@ class NPCSpawnResultData(
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         npc.encode(buffer)
     }
+
+    override fun getResultPokemon(): PokemonProperties? = null
+
+    override fun getResultId(): String = npc.id.toString()
 
     override fun canBeTracked() = true
 
