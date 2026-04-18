@@ -1,7 +1,5 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.type
 
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen
-import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -22,20 +20,4 @@ interface RadarFilterType<T : RadarFilter> {
     fun createFilter(): T
 
     fun createWidget(filter: T): AbstractWidget
-
-    fun <T : RadarFilter> RadarFilterType<T>.createEntry(
-        parent: AdvancedPokefinderScreen,
-        filter: RadarFilter? = null,
-    ): FilterListEntryWidget {
-        val filter = filter
-            ?.takeIf { this.filterClass.isInstance(it) }
-            ?.let { this.filterClass.cast(filter) } ?: this.createFilter()
-        val widget = this.createWidget(filter)
-        return FilterListEntryWidget(
-            filter = filter,
-            widget = widget,
-            icon = typeIcon,
-            parent = parent
-        )
-    }
 }

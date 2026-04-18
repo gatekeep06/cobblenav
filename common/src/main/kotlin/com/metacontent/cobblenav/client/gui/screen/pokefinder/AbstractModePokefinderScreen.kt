@@ -9,6 +9,9 @@ import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
+import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
+import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -107,4 +110,10 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
     abstract fun clearFilters()
 
     abstract fun checkBottomText(): Component?
+
+    abstract fun <T : RadarFilter> createEntry(
+        parent: AdvancedPokefinderScreen,
+        type: RadarFilterType<T>,
+        filter: RadarFilter? = null,
+    ): FilterListEntryWidget
 }

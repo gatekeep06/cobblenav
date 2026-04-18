@@ -5,7 +5,6 @@ import com.metacontent.cobblenav.client.gui.widget.pokefinder.AddFilterButton
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterTypeRegistry
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
-import com.metacontent.cobblenav.client.settings.pokefinder.type.LabelFilterType.createEntry
 import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -24,7 +23,7 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
             horizontalGap = 0f
         )
         settings?.getFilters()?.mapNotNull {
-            RadarFilterTypeRegistry.get(it.type)?.createEntry(this, it)
+            RadarFilterTypeRegistry.get(it.type)?.let { type -> createEntry(this, type, it) }
         }?.let { filterTable.add(it) }
 
         addButtonTable = TableView(
@@ -60,7 +59,7 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
 
     fun createFilterOfType(type: RadarFilterType<out RadarFilter>) {
         settings ?: return
-        val entry = type.createEntry(this)
+        val entry = createEntry(this, type)
         settings.addFilter(entry.filter)
         filterTable.add(entry)
     }
@@ -69,5 +68,22 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
         settings ?: return
         settings.removeFilter(entry.filter)
         filterTable.remove(entry)
+    }
+
+    override fun <T : RadarFilter> createEntry(
+        parent: AdvancedPokefinderScreen,
+        type: RadarFilterType<T>,
+        filter: RadarFilter?
+    ): FilterListEntryWidget {
+        val filter = filter
+            ?.takeIf { type.filterClass.isInstance(it) }
+            ?.let { type.filterClass.cast(filter) } ?: type.createFilter()
+        val widget = type.createWidget(filter)
+        return FilterListEntryWidget(
+            filter = filter,
+            widget = widget,
+            icon = type.typeIcon,
+            parent = parent
+        )
     }
 }
