@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen.pokefinder
 
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.AddFilterButton
+import com.metacontent.cobblenav.client.gui.widget.pokefinder.AdvancedFilterEntryWidget
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterTypeRegistry
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
@@ -79,7 +80,7 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
             ?.takeIf { type.filterClass.isInstance(it) }
             ?.let { type.filterClass.cast(filter) } ?: type.createFilter()
         val widget = type.createWidget(filter)
-        return FilterEntryWidget(
+        return AdvancedFilterEntryWidget(
             filter = filter,
             widget = widget,
             icon = type.typeIcon,
