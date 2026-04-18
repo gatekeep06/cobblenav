@@ -38,7 +38,7 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
             y = screenY + BORDER_WIDTH + 16,
             width = 238,
             columns = 1,
-            verticalGap = 6f,
+            verticalGap = 0f,
             horizontalGap = 0f
         )
         populateBaseTable(baseTable::add)
