@@ -3,7 +3,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 import com.cobblemon.mod.common.pokemon.Pokemon
 
 class ShinyFilter(
-    val enabled: Boolean = false
+    private var enabled: Boolean = false
 ) : RadarFilter {
     companion object {
         const val TYPE = "shiny"
@@ -12,4 +12,15 @@ class ShinyFilter(
     override val type = TYPE
 
     override fun test(pokemon: Pokemon): Boolean = !enabled || pokemon.shiny
+
+    fun get(): Boolean = enabled
+
+    fun toggle(): Boolean {
+        enabled = !enabled
+        return enabled
+    }
+
+    override fun clear() {
+        enabled = false
+    }
 }

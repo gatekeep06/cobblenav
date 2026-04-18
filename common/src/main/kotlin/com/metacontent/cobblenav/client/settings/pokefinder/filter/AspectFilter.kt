@@ -20,4 +20,8 @@ class AspectFilter(
     }
 
     override fun asString(): String = aspects.joinToString()
+
+    override fun clear() {
+        aspects = emptySet()
+    }
 }

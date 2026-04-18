@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
 
 class TranslatedNameFilter(
     private var names: List<String> = emptyList()
@@ -23,4 +22,8 @@ class TranslatedNameFilter(
     }
 
     override fun asString(): String = names.joinToString()
+
+    override fun clear() {
+        names = emptyList()
+    }
 }

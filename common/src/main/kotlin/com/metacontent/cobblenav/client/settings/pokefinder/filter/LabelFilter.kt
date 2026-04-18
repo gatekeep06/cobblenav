@@ -22,4 +22,8 @@ class LabelFilter(
     }
 
     override fun asString(): String = labels.joinToString()
+
+    override fun clear() {
+        labels = emptyList()
+    }
 }

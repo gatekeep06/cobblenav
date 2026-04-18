@@ -2,9 +2,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.settings.pokefinder.filter.EditableTextFilter
 
 class PokemonPropertiesFilter(
     private var properties: PokemonProperties = PokemonProperties()
@@ -45,4 +43,8 @@ class PokemonPropertiesFilter(
     }
 
     override fun asString(): String = properties.originalString
+
+    override fun clear() {
+        properties = PokemonProperties()
+    }
 }

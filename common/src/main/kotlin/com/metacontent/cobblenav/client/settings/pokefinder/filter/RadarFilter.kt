@@ -6,4 +6,6 @@ interface RadarFilter {
     val type: String
 
     fun test(pokemon: Pokemon): Boolean
+
+    fun clear()
 }
