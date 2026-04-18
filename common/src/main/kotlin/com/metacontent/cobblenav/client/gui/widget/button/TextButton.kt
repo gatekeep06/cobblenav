@@ -56,7 +56,7 @@ class TextButton(
             context = guiGraphics,
             text = text,
             x = x + width / 2,
-            y = y + (height - Minecraft.getInstance().font.lineHeight) / 2,
+            y = y + (height - Minecraft.getInstance().font.lineHeight) / 2 + 1,
             centered = true,
             opacity = min(1f, argb),
             colour = color,
