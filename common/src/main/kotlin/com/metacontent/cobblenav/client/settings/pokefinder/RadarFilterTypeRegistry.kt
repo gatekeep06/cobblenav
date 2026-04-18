@@ -4,15 +4,15 @@ import com.metacontent.cobblenav.client.settings.pokefinder.filter.*
 import com.metacontent.cobblenav.client.settings.pokefinder.type.*
 
 object RadarFilterTypeRegistry {
-    private val advancedFilters = mutableMapOf<String, RadarFilterType<out RadarFilter>>()
+    private val advancedTypes = mutableMapOf<String, RadarFilterType<out RadarFilter>>()
 
     fun register(type: String, filterType: RadarFilterType<out RadarFilter>) {
-        advancedFilters[type] = filterType
+        advancedTypes[type] = filterType
     }
 
-    fun get(type: String): RadarFilterType<out RadarFilter>? = advancedFilters[type]
+    fun get(type: String): RadarFilterType<out RadarFilter>? = advancedTypes[type]
 
-    fun types(): Iterable<RadarFilterType<out RadarFilter>> = advancedFilters.values
+    fun advancedTypes(): Iterable<RadarFilterType<out RadarFilter>> = advancedTypes.values
 
     init {
         register(TranslatedNameFilter.TYPE, TranslatedNameFilterType)

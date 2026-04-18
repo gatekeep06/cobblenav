@@ -56,7 +56,7 @@ class AdvancedPokefinderScreen : PokefinderScreen() {
             columns = 5,
             verticalGap = 6f
         )
-        RadarFilterTypeRegistry.types().map { AddFilterButton(this, it) }.let {
+        RadarFilterTypeRegistry.advancedTypes().map { AddFilterButton(this, it) }.let {
             addButtonTable.add(it)
         }
 
