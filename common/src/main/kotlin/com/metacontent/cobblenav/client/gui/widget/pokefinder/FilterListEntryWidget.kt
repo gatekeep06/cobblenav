@@ -12,7 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class FilterListEntryWidget(
+open class FilterListEntryWidget(
     val filter: RadarFilter,
     val widget: AbstractWidget,
     val icon: ResourceLocation,
