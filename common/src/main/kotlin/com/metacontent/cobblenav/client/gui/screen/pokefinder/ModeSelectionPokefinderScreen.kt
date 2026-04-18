@@ -13,8 +13,8 @@ class ModeSelectionPokefinderScreen : PokefinderScreen() {
     companion object {
         val DETAILS = gui("pokefinder/mode_details")
         val MODE = gui("pokefinder/mode")
-        private val MODE_X = 46
-        private val MODE_Y = 67
+        private const val MODE_X = 46
+        private const val MODE_Y = 50
     }
 
     private lateinit var simpleModeButton: TextButton
