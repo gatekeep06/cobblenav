@@ -1,9 +1,11 @@
-# Update 2.4.0
+# Update 2.3.3
 
 - Instead of the Finder screen, tracking start buttons have been added to the Location screen. The buttons appear above Pokémon that are near the player, replacing the marks from previous versions. When pressed, the screen will close and tracking of the nearest selected Pokémon will begin.
 - The tracking arrow has been changed from a regular Poké Ball to a custom model.
 - You can now change some UI colors using resource packs. So far, only the text color in PokéFinder is customizable, but more changeable colors will be added in the future.
 - Fixed a bug where the PokéFinder overlay ignored changes to the filter list.
+- The "Pokémon Labels" filter is now case-insensitive.
+- The "Translated Name" filter now shows all Pokémon if no names are entered.
 
 # Update 2.3.2
 
