@@ -9,7 +9,7 @@ import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
-import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
+import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
 import net.minecraft.client.gui.GuiGraphics
@@ -115,5 +115,5 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
         parent: AdvancedPokefinderScreen,
         type: RadarFilterType<T>,
         filter: RadarFilter? = null,
-    ): FilterListEntryWidget
+    ): FilterEntryWidget
 }

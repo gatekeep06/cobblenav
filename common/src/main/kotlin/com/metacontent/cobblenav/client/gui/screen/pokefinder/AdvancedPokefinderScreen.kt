@@ -2,7 +2,7 @@ package com.metacontent.cobblenav.client.gui.screen.pokefinder
 
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.AddFilterButton
-import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterListEntryWidget
+import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterTypeRegistry
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
 
 class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
-    private lateinit var filterTable: TableView<FilterListEntryWidget>
+    private lateinit var filterTable: TableView<FilterEntryWidget>
     private lateinit var addButtonTable: TableView<AddFilterButton>
 
     override fun populateBaseTable(consumer: (AbstractWidget) -> Unit) {
@@ -64,7 +64,7 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
         filterTable.add(entry)
     }
 
-    fun removeFilterListEntry(entry: FilterListEntryWidget) {
+    fun removeFilterListEntry(entry: FilterEntryWidget) {
         settings ?: return
         settings.removeFilter(entry.filter)
         filterTable.remove(entry)
@@ -74,12 +74,12 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
         parent: AdvancedPokefinderScreen,
         type: RadarFilterType<T>,
         filter: RadarFilter?
-    ): FilterListEntryWidget {
+    ): FilterEntryWidget {
         val filter = filter
             ?.takeIf { type.filterClass.isInstance(it) }
             ?.let { type.filterClass.cast(filter) } ?: type.createFilter()
         val widget = type.createWidget(filter)
-        return FilterListEntryWidget(
+        return FilterEntryWidget(
             filter = filter,
             widget = widget,
             icon = type.typeIcon,
