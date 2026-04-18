@@ -4,21 +4,36 @@ import com.metacontent.cobblenav.client.settings.pokefinder.filter.*
 import com.metacontent.cobblenav.client.settings.pokefinder.type.*
 
 object RadarFilterTypeRegistry {
-    private val advancedTypes = mutableMapOf<String, RadarFilterType<out RadarFilter>>()
+    private val types = mutableMapOf<String, RadarFilterType<out RadarFilter>>()
+    private val simpleTypes = mutableListOf<RadarFilterType<out RadarFilter>>()
+    private val advancedTypes = mutableListOf<RadarFilterType<out RadarFilter>>()
 
-    fun register(type: String, filterType: RadarFilterType<out RadarFilter>) {
-        advancedTypes[type] = filterType
+    fun register(type: String, filterType: RadarFilterType<out RadarFilter>, mode: Mode) {
+        types[type] = filterType
+        when (mode) {
+            Mode.SIMPLE -> simpleTypes.add(filterType)
+            Mode.ADVANCED -> advancedTypes.add(filterType)
+            Mode.BOTH -> {
+                simpleTypes.add(filterType)
+                advancedTypes.add(filterType)
+            }
+        }
     }
 
-    fun get(type: String): RadarFilterType<out RadarFilter>? = advancedTypes[type]
+    fun get(type: String): RadarFilterType<out RadarFilter>? = types[type]
 
-    fun advancedTypes(): Iterable<RadarFilterType<out RadarFilter>> = advancedTypes.values
+    fun simpleTypes(): Iterable<RadarFilterType<out RadarFilter>> = simpleTypes.toList()
+
+    fun advancedTypes(): Iterable<RadarFilterType<out RadarFilter>> = advancedTypes.toList()
 
     init {
-        register(TranslatedNameFilter.TYPE, TranslatedNameFilterType)
-        register(PokemonPropertiesFilter.TYPE, PokemonPropertiesFilterType)
-        register(LabelFilter.TYPE, LabelFilterType)
-        register(EvYieldFilter.TYPE, EvYieldFilterType)
-        register(UncaughtFilter.TYPE, UncaughtFilterType)
+        register(AspectFilter.TYPE, AspectFilterType, Mode.SIMPLE)
+        register(TranslatedNameFilter.TYPE, TranslatedNameFilterType, Mode.BOTH)
+        register(PokemonPropertiesFilter.TYPE, PokemonPropertiesFilterType, Mode.ADVANCED)
+        register(LabelFilter.TYPE, LabelFilterType, Mode.BOTH)
+        register(EvYieldFilter.TYPE, EvYieldFilterType, Mode.ADVANCED)
+        register(UncaughtFilter.TYPE, UncaughtFilterType, Mode.ADVANCED)
     }
+
+    enum class Mode { SIMPLE, ADVANCED, BOTH }
 }
