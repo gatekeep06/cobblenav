@@ -25,23 +25,23 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
 
     val simpleShinyFilter = ShinyFilter()
 
-    private val filters = mutableListOf<RadarFilter>()
+    private val advancedFilters = mutableListOf<RadarFilter>()
 
-    fun getFilters(): List<RadarFilter> = filters.toList()
+    fun getFilters(): List<RadarFilter> = advancedFilters.toList()
 
     fun addFilter(filter: RadarFilter) {
         changed = true
-        filters.add(filter)
+        advancedFilters.add(filter)
     }
 
     fun removeFilter(filter: RadarFilter) {
         changed = true
-        filters.remove(filter)
+        advancedFilters.remove(filter)
     }
 
     fun clearFilters() {
         changed = true
-        filters.clear()
+        advancedFilters.clear()
     }
 
     fun test(pokemon: Pokemon): Boolean {
@@ -51,7 +51,7 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
                     && simpleLabelFilter.test(pokemon)
                     && simpleShinyFilter.test(pokemon)
 
-            Mode.ADVANCED -> filters.any { it.test(pokemon) } || filters.isEmpty()
+            Mode.ADVANCED -> advancedFilters.any { it.test(pokemon) } || advancedFilters.isEmpty()
             else -> true
         }
     }
