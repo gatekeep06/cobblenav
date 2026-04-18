@@ -27,8 +27,9 @@ object RadarFilterTypeRegistry {
     fun advancedTypes(): Iterable<RadarFilterType<out RadarFilter>> = advancedTypes.toList()
 
     init {
-        register(AspectFilter.TYPE, AspectFilterType, Mode.SIMPLE)
         register(TranslatedNameFilter.TYPE, TranslatedNameFilterType, Mode.BOTH)
+        register(AspectFilter.TYPE, AspectFilterType, Mode.SIMPLE)
+        register(ShinyFilter.TYPE, ShinyFilterType, Mode.SIMPLE)
         register(PokemonPropertiesFilter.TYPE, PokemonPropertiesFilterType, Mode.ADVANCED)
         register(LabelFilter.TYPE, LabelFilterType, Mode.BOTH)
         register(EvYieldFilter.TYPE, EvYieldFilterType, Mode.ADVANCED)
