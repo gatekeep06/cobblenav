@@ -41,6 +41,7 @@ object CobblenavClient {
                 settingsManager.load(PokenavSettings.NAME, PokenavSettings::class.java) as PokenavSettings
             pokefinderSettings =
                 settingsManager.load(PokefinderSettings.NAME, PokefinderSettings::class.java) as PokefinderSettings
+            pokefinderSettings?.initSimpleFilters()
         }
         PlatformEvents.CLIENT_PLAYER_LOGOUT.subscribe {
             if (pokenavSettings?.changed == true) {

@@ -1,7 +1,8 @@
 package com.metacontent.cobblenav.client.settings
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.metacontent.cobblenav.client.settings.pokefinder.filter.*
+import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterTypeRegistry
+import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 
 class PokefinderSettings : Settings<PokefinderSettings>() {
     companion object {
@@ -17,13 +18,7 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
             field = value
         }
 
-    val simpleNameFilter = TranslatedNameFilter()
-
-    val simpleAspectFilter = AspectFilter()
-
-    val simpleLabelFilter = LabelFilter()
-
-    val simpleShinyFilter = ShinyFilter()
+    private val simpleFilters = mutableMapOf<String, RadarFilter>()
 
     private val advancedFilters = mutableListOf<RadarFilter>()
 
@@ -44,13 +39,15 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
         advancedFilters.clear()
     }
 
+    fun initSimpleFilters() {
+        RadarFilterTypeRegistry.simpleTypes().map { it.createFilter() }.forEach {
+            simpleFilters.putIfAbsent(it.type, it)
+        }
+    }
+
     fun test(pokemon: Pokemon): Boolean {
         return when (mode) {
-            Mode.SIMPLE -> simpleNameFilter.test(pokemon)
-                    && simpleAspectFilter.test(pokemon)
-                    && simpleLabelFilter.test(pokemon)
-                    && simpleShinyFilter.test(pokemon)
-
+            Mode.SIMPLE -> simpleFilters.values.all { it.test(pokemon) }
             Mode.ADVANCED -> advancedFilters.any { it.test(pokemon) } || advancedFilters.isEmpty()
             else -> true
         }
