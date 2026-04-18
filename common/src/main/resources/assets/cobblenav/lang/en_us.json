@@ -147,8 +147,12 @@
 
   "gui.cobblenav.pokemon_rendering_exception": "An exception occurred when trying to render %s. The cause could be a conflict between several resource packs that add %s or an outdated version of one. Make sure your resource packs do not contain any pokémon assets that are in another resource pack or in the main mod. If this does not work, report an exception.",
 
+  "gui.cobblenav.pokefinder.select_mode.1": "Select the PokéFinder operating mode.",
+  "gui.cobblenav.pokefinder.select_mode.2": "You can change your selection at any time.",
   "gui.cobblenav.pokefinder.mode.simple": "Simple Mode",
+  "gui.cobblenav.pokefinder.mode.simple.desc": "You will be provided with 4 filters to configure as you wish: by translated Pokémon names, by aspects, by labels, and a shiny-only toggle. Keep in mind that all filters in this mode work in tandem, meaning that if you enter \"Zigzagoon\" in names and \"legendary\" in labels, the radar will only display legendary Zigzagoons.",
   "gui.cobblenav.pokefinder.mode.advanced": "Advanced Mode",
+  "gui.cobblenav.pokefinder.mode.advanced.desc": "You will have the ability to add as many filters as you want of 5 types: by translated names, by Pokémon Properties, by labels, by EV yield, and by Pokédex registration status. Each filter in this mode operates independently of the others, meaning the radar will display all Pokémon that pass at least one filter. Not suitable for casual players.",
   "gui.cobblenav.pokefinder.filter.name": "Translated Pokémon Names",
   "gui.cobblenav.pokefinder.filter.properties": "Pokémon Properties",
   "gui.cobblenav.pokefinder.filter.label": "Pokémon Labels",

@@ -1,8 +1,10 @@
 package com.metacontent.cobblenav.client.gui.screen.pokefinder
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.splitText
 import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.metacontent.cobblenav.client.settings.PokefinderSettings
@@ -16,6 +18,9 @@ class ModeSelectionPokefinderScreen : PokefinderScreen() {
         private const val MODE_X = 46
         private const val MODE_Y = 50
     }
+
+    private val simpleModeDescription = splitText(translate("gui.cobblenav.pokefinder.mode.simple.desc"), ((WIDGET_WIDTH + 40) / 0.6f).toInt())
+    private val advancedModeDescription = splitText(translate("gui.cobblenav.pokefinder.mode.advanced.desc"), ((WIDGET_WIDTH + 40) / 0.6f).toInt())
 
     private lateinit var simpleModeButton: TextButton
     private lateinit var advancedModeButton: TextButton
@@ -60,5 +65,46 @@ class ModeSelectionPokefinderScreen : PokefinderScreen() {
             width = WIDTH,
             height = HEIGHT
         )
+
+        drawScaledText(
+            context = guiGraphics,
+            text = translate("gui.cobblenav.pokefinder.select_mode.1"),
+            x = screenX + MODE_X + WIDGET_WIDTH / 2,
+            y =  screenY + MODE_Y - 10 - 12,
+            scale = 0.6f,
+            maxCharacterWidth = ((WIDGET_WIDTH + 40) / 0.6f).toInt(),
+            colour = color,
+            centered = true
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = translate("gui.cobblenav.pokefinder.select_mode.2"),
+            x = screenX + MODE_X + WIDGET_WIDTH / 2,
+            y =  screenY + MODE_Y - 10 - 4,
+            scale = 0.6f,
+            maxCharacterWidth = ((WIDGET_WIDTH + 40) / 0.6f).toInt(),
+            colour = color,
+            centered = true
+        )
+
+        val desc = if (simpleModeButton.isHovered) {
+            simpleModeDescription
+        } else if (advancedModeButton.isHovered) {
+            advancedModeDescription
+        } else {
+            null
+        }
+        desc?.forEachIndexed { index, component ->
+            drawScaledText(
+                context = guiGraphics,
+                text = component,
+                x = screenX + MODE_X + WIDGET_WIDTH / 2,
+                y = screenY + MODE_Y + 2 * WIDGET_HEIGHT + 3 * 6 + index * 8,
+                scale = 0.6f,
+                maxCharacterWidth = ((WIDGET_WIDTH + 40) / 0.6f).toInt(),
+                colour = color,
+                centered = true
+            )
+        }
     }
 }
