@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.client.CobblenavClient
+import net.minecraft.util.StringUtil.isBlank
 
 class TranslatedNameFilter(
     private var names: List<String> = emptyList()
@@ -17,7 +18,7 @@ class TranslatedNameFilter(
     }
 
     override fun update(value: String) {
-        names = value.split(",").mapNotNull { it.trim().takeIf(String::isEmpty) }
+        names = value.split(",").mapNotNull { it.trim().takeUnless(::isBlank) }
         CobblenavClient.pokefinderSettings?.changed = true
     }
 

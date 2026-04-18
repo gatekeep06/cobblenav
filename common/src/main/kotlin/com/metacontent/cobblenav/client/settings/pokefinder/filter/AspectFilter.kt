@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.client.CobblenavClient
+import net.minecraft.util.StringUtil.isBlank
 
 class AspectFilter(
     private var aspects: Set<String> = emptySet()
@@ -15,7 +16,7 @@ class AspectFilter(
     override fun test(pokemon: Pokemon): Boolean = pokemon.aspects.containsAll(aspects)
 
     override fun update(value: String) {
-        aspects = value.split(",").mapNotNull { it.trim().takeIf(String::isEmpty) }.toSet()
+        aspects = value.split(",").mapNotNull { it.trim().takeUnless(::isBlank) }.toSet()
         CobblenavClient.pokefinderSettings?.changed = true
     }
 
