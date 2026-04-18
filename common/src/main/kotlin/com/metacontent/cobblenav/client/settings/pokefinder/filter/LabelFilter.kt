@@ -17,7 +17,7 @@ class LabelFilter(
     }
 
     override fun update(value: String) {
-        labels = value.split(",").map(String::trim)
+        labels = value.split(",").mapNotNull { it.trim().takeIf(String::isEmpty) }
         CobblenavClient.pokefinderSettings?.changed = true
     }
 

@@ -15,7 +15,7 @@ class AspectFilter(
     override fun test(pokemon: Pokemon): Boolean = pokemon.aspects.containsAll(aspects)
 
     override fun update(value: String) {
-        aspects = value.split(",").map(String::trim).toSet()
+        aspects = value.split(",").mapNotNull { it.trim().takeIf(String::isEmpty) }.toSet()
         CobblenavClient.pokefinderSettings?.changed = true
     }
 

@@ -17,7 +17,7 @@ class TranslatedNameFilter(
     }
 
     override fun update(value: String) {
-        names = value.split(",").map(String::trim)
+        names = value.split(",").mapNotNull { it.trim().takeIf(String::isEmpty) }
         CobblenavClient.pokefinderSettings?.changed = true
     }
 
