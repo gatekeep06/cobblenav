@@ -15,6 +15,7 @@ class TextButton(
     action: (PokenavButton) -> Unit,
     var texture: ResourceLocation? = null,
     private val text: MutableComponent,
+    private val color: Int = 0x00FFFFFF,
     private val textureWidth: Int = pWidth,
     private val textureHeight: Int = pHeight,
     private val uOffset: Int = 0,
