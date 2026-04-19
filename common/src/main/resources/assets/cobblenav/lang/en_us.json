@@ -158,6 +158,8 @@
   "gui.cobblenav.pokefinder.filter.label": "Pokémon Labels",
   "gui.cobblenav.pokefinder.filter.ev_yield": "EV Yield",
   "gui.cobblenav.pokefinder.filter.uncaught": "Uncaught Pokémon",
+  "gui.cobblenav.pokefinder.filter.aspect": "Pokémon Aspects",
+  "gui.cobblenav.pokefinder.filter.shiny": "Shiny Pokémon",
   "gui.cobblenav.pokefinder.uncaught": "Uncaught: %s%%",
   "gui.cobblenav.pokefidner.ev_yield.hp": "HP",
   "gui.cobblenav.pokefidner.ev_yield.atk": "ATK",
