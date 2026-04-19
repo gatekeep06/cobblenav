@@ -6,14 +6,16 @@ import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 class AdvancedFilterEntryWidget(
     filter: RadarFilter,
     widget: AbstractWidget,
     icon: ResourceLocation,
+    displayName: Component,
     parent: AdvancedPokefinderScreen
-) : FilterEntryWidget(filter, widget, icon) {
+) : FilterEntryWidget(filter, widget, icon, displayName) {
     companion object {
         val REMOVE = gui("pokefinder/remove")
     }

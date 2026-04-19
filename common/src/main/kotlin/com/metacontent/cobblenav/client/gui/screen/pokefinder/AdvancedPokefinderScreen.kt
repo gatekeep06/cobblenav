@@ -55,6 +55,14 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
                 return@applyToAll
             }
         }
+        if (text == null) {
+            filterTable.applyToAll {
+                if (it.isHovered) {
+                    text = it.message
+                    return@applyToAll
+                }
+            }
+        }
         return text
     }
 
@@ -81,6 +89,7 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
             filter = filter,
             widget = widget,
             icon = type.typeIcon,
+            displayName = type.displayedName,
             parent = this
         )
     }

@@ -13,8 +13,9 @@ import net.minecraft.resources.ResourceLocation
 open class FilterEntryWidget(
     val filter: RadarFilter,
     val widget: AbstractWidget,
-    val icon: ResourceLocation
-) : SoundlessWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
+    val icon: ResourceLocation,
+    displayName: Component
+) : SoundlessWidget(0, 0, WIDTH, HEIGHT, displayName) {
     companion object {
         const val WIDTH = 238
         const val HEIGHT = 26

@@ -38,7 +38,14 @@ class SimplePokefinderScreen : AbstractModePokefinderScreen() {
     }
 
     override fun checkBottomText(): Component? {
-        return Component.empty()
+        var text: Component? = null
+        filterTable.applyToAll {
+            if (it.isHovered) {
+                text = it.message
+                return@applyToAll
+            }
+        }
+        return text
     }
 
     override fun <T : RadarFilter> createEntry(
@@ -49,7 +56,8 @@ class SimplePokefinderScreen : AbstractModePokefinderScreen() {
         return FilterEntryWidget(
             filter = filter,
             widget = widget,
-            icon = type.typeIcon
+            icon = type.typeIcon,
+            displayName = type.displayedName
         )
     }
 }
