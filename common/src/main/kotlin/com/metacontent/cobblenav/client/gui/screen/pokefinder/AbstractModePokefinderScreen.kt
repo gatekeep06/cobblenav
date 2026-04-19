@@ -12,6 +12,7 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableV
 import com.metacontent.cobblenav.client.gui.widget.pokefinder.FilterEntryWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -20,7 +21,11 @@ import net.minecraft.world.phys.AABB
 
 abstract class AbstractModePokefinderScreen : PokefinderScreen() {
     companion object {
+        const val CHANGE_MODE_SIZE = 10
+        const val CHANGE_MODE_X = 270
+        const val CHANGE_MODE_Y = 8
         val DETAILS = gui("pokefinder/details")
+        val CHANGE_MODE = gui("pokefinder/change_mode")
     }
 
     protected val settings = CobblenavClient.pokefinderSettings
@@ -29,6 +34,7 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
     private lateinit var baseTable: TableView<AbstractWidget>
     private lateinit var scrollableView: ScrollableView
     private lateinit var clearButton: IconButton
+    private lateinit var changeModeButton: IconButton
 
     override fun initScreen() {
         super.initScreen()
@@ -58,6 +64,18 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
             pHeight = BUTTON_SIZE,
             action = { clearFilters() },
             texture = CLEAR
+        ).also { addRenderableWidget(it) }
+
+        changeModeButton = IconButton(
+            pX = screenX + CHANGE_MODE_X,
+            pY = screenY + CHANGE_MODE_Y,
+            pWidth = CHANGE_MODE_SIZE,
+            pHeight = CHANGE_MODE_SIZE,
+            texture = CHANGE_MODE,
+            action = {
+                settings?.mode = null
+                Minecraft.getInstance().setScreen(ModeSelectionPokefinderScreen())
+            }
         ).also { addRenderableWidget(it) }
     }
 
