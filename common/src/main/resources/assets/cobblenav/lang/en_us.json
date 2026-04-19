@@ -133,6 +133,8 @@
 
   "gui.cobblenav.true": "Yes",
   "gui.cobblenav.false": "No",
+  "gui.cobblenav.enabled": "Enabled",
+  "gui.cobblenav.disabled": "Disabled",
   "weather.cobblenav.rain": "Raining",
   "weather.cobblenav.thunder": "Thundering",
   "weather.cobblenav.clear": "Clear",

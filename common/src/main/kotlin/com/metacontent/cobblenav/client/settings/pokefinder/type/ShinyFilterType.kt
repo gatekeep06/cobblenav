@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.type
 
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.widget.pokefinder.ShinyFilterWidget
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.ShinyFilter
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.chat.Component
@@ -15,6 +16,6 @@ object ShinyFilterType : RadarFilterType<ShinyFilter> {
     override fun createFilter(): ShinyFilter = ShinyFilter()
 
     override fun createWidget(filter: ShinyFilter): AbstractWidget {
-        TODO("Not yet implemented")
+        return ShinyFilterWidget(filter.get(), filter::toggle)
     }
 }
