@@ -61,8 +61,8 @@ object ConditionCollectors {
         condition: SpawningCondition<*>,
         player: ServerPlayer,
     ): List<ConditionData> {
-        return generalCollectors.mapNotNull { it.collect(detail, condition, player) } +
-                getCollectors(condition).mapNotNull { it.collect(detail, condition, player) }
+        return generalCollectors.mapNotNull { it.collect(condition) } +
+                getCollectors(condition).mapNotNull { it.collect(condition) }
     }
 
     fun collectBlockConditions(condition: SpawningCondition<*>): Set<ResourceLocation> {

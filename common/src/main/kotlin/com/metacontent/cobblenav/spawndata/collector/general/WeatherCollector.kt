@@ -1,10 +1,8 @@
 package com.metacontent.cobblenav.spawndata.collector.general
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.client.gui.util.translate
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.server.level.ServerPlayer
 
 class WeatherCollector : GeneralConditionCollector() {
     companion object {
@@ -15,9 +13,7 @@ class WeatherCollector : GeneralConditionCollector() {
     override val color = 0x4682B4
 
     override fun collectValues(
-        detail: SpawnDetail,
-        condition: SpawningCondition<*>,
-        player: ServerPlayer
+        condition: SpawningCondition<*>
     ): List<MutableComponent>? {
         val values = mutableListOf<MutableComponent>()
         if (condition.isThundering == true) values.add(translate("weather.cobblenav.thunder"))
