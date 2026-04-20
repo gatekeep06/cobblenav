@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.metacontent.cobblenav.client.CobblenavClient
 
 class ShinyFilter(
     private var enabled: Boolean = false
@@ -17,6 +18,7 @@ class ShinyFilter(
 
     fun toggle(): Boolean {
         enabled = !enabled
+        CobblenavClient.pokefinderSettings?.changed = true
         return enabled
     }
 
