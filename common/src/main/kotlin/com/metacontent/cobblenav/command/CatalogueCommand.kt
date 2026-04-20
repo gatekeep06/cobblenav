@@ -62,7 +62,7 @@ object CatalogueCommand : PokenavCommand() {
         val species = StringArgumentType.getString(context, SPECIES)
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
-                val ids = SpawnDataHelper.spawnDetailIdBySpecies[species]
+                val ids = SpawnDataHelper.getSpawnDetailIds(species)
                 return@executeAndSave ids != null && data.catalogue(ids)
             }
         }
@@ -95,7 +95,7 @@ object CatalogueCommand : PokenavCommand() {
         val species = StringArgumentType.getString(context, SPECIES)
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
-                val ids = SpawnDataHelper.spawnDetailIdBySpecies[species]
+                val ids = SpawnDataHelper.getSpawnDetailIds(species)
                 return@executeAndSave ids != null && data.remove(ids)
             }
         }

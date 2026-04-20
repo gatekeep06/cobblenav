@@ -2,18 +2,17 @@ package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
-import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools
 import com.cobblemon.mod.common.api.spawning.SpawnBucket
 import com.cobblemon.mod.common.api.spawning.SpawnCause
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.cobblemon.mod.common.api.spawning.detail.SpawnPool
 import com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause
 import com.cobblemon.mod.common.api.spawning.influence.BucketNormalizingInfluence
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence
 import com.cobblemon.mod.common.api.spawning.influence.PlayerLevelRangeInfluence.Companion.TYPICAL_VARIATION
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
-import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import com.cobblemon.mod.common.api.spawning.position.calculators.SpawnablePositionCalculator
 import com.cobblemon.mod.common.api.spawning.spawner.SpawningZoneInput
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
@@ -39,8 +38,12 @@ import kotlin.math.ceil
 object SpawnDataHelper {
     const val BASE_FISHING_POKEMON_CHANCE = 0.85f
 
-    val spawnDetailIds = mutableSetOf<String>()
-    val spawnDetailIdBySpecies = mutableMapOf<String, MutableList<String>>()
+    private lateinit var spawnDetails: Map<String, List<Pair<SpawnDetail, CompositeConditionData>>>
+    val spawnDetailIds
+        get() = spawnDetails.keys
+    private lateinit var spawnDetailIdBySpecies: Map<String, List<String>>
+
+    fun getSpawnDetailIds(species: String): List<String>? = spawnDetailIdBySpecies[species]
 
     fun calculateWeightedBuckets(
         bucketWeights: MutableMap<SpawnBucket, Float>,
@@ -89,7 +92,8 @@ object SpawnDataHelper {
 
         val spawnDataList = spawnProbabilities.mapNotNull { (detail, spawnChance) ->
             val fittingPositions = spawnablePositions.filter { detail.isSatisfiedBy(it) }
-            collect(detail, fittingPositions, player)?.let { CheckedSpawnData(it, spawnChance) }
+            val platformId = BiomePlatforms.firstFitting(fittingPositions)
+            getSpawnData(detail, player)?.let { CheckedSpawnData(it, platformId, spawnChance) }
         }
 
         val weightedBucket = calculateWeightedBuckets(
@@ -147,8 +151,8 @@ object SpawnDataHelper {
         return bucketWeights.keys.associate { bucket ->
             bucket.name to spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
                 .mapNotNull { (detail, chance) ->
-                    collect(detail, emptyList(), player)?.let {
-                        CheckedSpawnData(it, chance * pokemonChance * (weightedBuckets[bucket.name] ?: 1f))
+                    getSpawnData(detail, player)?.let {
+                        CheckedSpawnData(it, null, chance * pokemonChance * (weightedBuckets[bucket.name] ?: 1f))
                     }
                 }
         }
@@ -184,7 +188,8 @@ object SpawnDataHelper {
 
         val spawnDataList = spawnProbabilities.mapNotNull { (detail, spawnChance) ->
             val fittingPositions = spawnablePositions.filter { detail.isSatisfiedBy(it) }
-            collect(detail, fittingPositions, player)?.let { CheckedSpawnData(it, spawnChance) }
+            val platformId = BiomePlatforms.firstFitting(fittingPositions)
+            getSpawnData(detail, player)?.let { CheckedSpawnData(it, platformId, spawnChance) }
         }
 
         val weightedBucket = calculateWeightedBuckets(
@@ -195,34 +200,25 @@ object SpawnDataHelper {
         return weightedBucket to spawnDataList
     }
 
-    fun collect(
+    fun getSpawnData(
         detail: SpawnDetail,
-        fittingPositions: List<SpawnablePosition>,
         player: ServerPlayer
     ): SpawnData? {
         val result = SpawnResultData.fromDetail(detail, player) ?: return null
 
-        val conditions = mutableListOf<ConditionData>()
-        val blockConditions = mutableSetOf<ResourceLocation>()
-        val anticonditions = mutableListOf<ConditionData>()
-        val blockAnticonditions = mutableSetOf<ResourceLocation>()
         val canShowConditions =
             !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
-        if (canShowConditions) {
-            detail.conditions.forEach { condition ->
-                conditions += ConditionCollectors.collectConditions(detail, condition, player)
-                blockConditions += ConditionCollectors.collectBlockConditions(condition)
-            }
-            detail.anticonditions.forEach { condition ->
-                anticonditions += ConditionCollectors.collectConditions(detail, condition, player)
-                blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
-            }
+        val compositeConditions = if (canShowConditions) {
+            collectConditions(detail)
         } else {
             val condition = ConditionData("unknown", 0xffffff, emptyList())
-            conditions += condition
-            anticonditions += condition
+            CompositeConditionData(
+                conditions = listOf(condition),
+                anticonditions = listOf(condition),
+                blockConditions = BlockConditions(mutableSetOf()),
+                blockAnticonditions = BlockConditions(mutableSetOf())
+            )
         }
-        val platformId = BiomePlatforms.firstFitting(fittingPositions)
 
         return SpawnData(
             id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownPokemon) detail.id else "???",
@@ -230,7 +226,24 @@ object SpawnDataHelper {
             positionType = detail.spawnablePositionType.name,
             bucket = detail.bucket.name,
             weight = detail.weight,
-            platformId = platformId,
+            compositeConditions = compositeConditions
+        )
+    }
+
+    fun collectConditions(detail: SpawnDetail): CompositeConditionData {
+        val conditions = mutableListOf<ConditionData>()
+        val blockConditions = mutableSetOf<ResourceLocation>()
+        val anticonditions = mutableListOf<ConditionData>()
+        val blockAnticonditions = mutableSetOf<ResourceLocation>()
+        detail.conditions.forEach { condition ->
+            conditions += ConditionCollectors.collectConditions(condition)
+            blockConditions += ConditionCollectors.collectBlockConditions(condition)
+        }
+        detail.anticonditions.forEach { condition ->
+            anticonditions += ConditionCollectors.collectConditions(condition)
+            blockAnticonditions += ConditionCollectors.collectBlockConditions(condition)
+        }
+        return CompositeConditionData(
             conditions = conditions,
             anticonditions = anticonditions,
             blockConditions = BlockConditions(blockConditions),
@@ -238,14 +251,12 @@ object SpawnDataHelper {
         )
     }
 
-    fun reloadSpawnDetails() {
-        CobblemonSpawnPools.WORLD_SPAWN_POOL.forEach { detail ->
-            spawnDetailIds.add(detail.id)
-            if (detail !is PokemonSpawnDetail) return@forEach
-            detail.pokemon.species?.let {
-                spawnDetailIdBySpecies.getOrPut(it) { mutableListOf() }.add(detail.id)
-            }
-        }
+    fun reloadSpawnDetails(spawnPool: SpawnPool) {
+        spawnDetails = spawnPool.groupBy(SpawnDetail::id)
+            .mapValues { entry -> entry.value.map { it to collectConditions(it) } }
+        spawnDetailIdBySpecies = spawnPool.filterIsInstance<PokemonSpawnDetail>()
+            .groupBy { it.pokemon.species ?: "none" }
+            .mapValues { it.value.map(SpawnDetail::id) }
     }
 
     fun onInit() {

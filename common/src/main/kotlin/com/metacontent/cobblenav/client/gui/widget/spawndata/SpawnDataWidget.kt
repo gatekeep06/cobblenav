@@ -44,7 +44,7 @@ open class SpawnDataWidget(
 
     private var isModelBroken = false
     protected open val platform = if (spawnData.data.result.shouldRenderPlatform()) {
-        BiomePlatformRenderDataRepository.get(spawnData.data.platformId)
+        BiomePlatformRenderDataRepository.get(spawnData.platformId)
     } else if (spawnData.data.positionType == "fishing") {
         BiomePlatformRenderDataRepository.FISHING
     } else {

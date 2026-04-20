@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.spawndata.collector
 
 import com.cobblemon.mod.common.api.spawning.condition.SpawningCondition
-import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.config.CobblenavConfig
 import com.metacontent.cobblenav.event.CobblenavEvents
@@ -15,7 +14,6 @@ import com.metacontent.cobblenav.spawndata.collector.block.SeafloorTypeBlockColl
 import com.metacontent.cobblenav.spawndata.collector.general.*
 import com.metacontent.cobblenav.spawndata.collector.special.*
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.level.ServerPlayer
 
 /**
  * Registry of all [ConditionCollector]s and [BlockConditionCollector]s for [com.metacontent.cobblenav.spawndata.SpawnData].
@@ -56,11 +54,7 @@ object ConditionCollectors {
         return blockCollectors.filter { it.supports(condition) }.filterIsInstance<BlockConditionCollector<T>>()
     }
 
-    fun collectConditions(
-        detail: SpawnDetail,
-        condition: SpawningCondition<*>,
-        player: ServerPlayer,
-    ): List<ConditionData> {
+    fun collectConditions(condition: SpawningCondition<*>): List<ConditionData> {
         return generalCollectors.mapNotNull { it.collect(condition) } +
                 getCollectors(condition).mapNotNull { it.collect(condition) }
     }

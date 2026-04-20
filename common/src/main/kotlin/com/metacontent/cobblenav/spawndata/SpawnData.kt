@@ -1,9 +1,7 @@
 package com.metacontent.cobblenav.spawndata
 
 import com.cobblemon.mod.common.api.net.Encodable
-import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.readString
-import com.cobblemon.mod.common.util.writeIdentifier
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
@@ -16,7 +14,6 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 
 data class SpawnData(
     val id: String,
@@ -24,10 +21,7 @@ data class SpawnData(
     val positionType: String,
     val bucket: String,
     val weight: Float,
-    val conditions: List<ConditionData>,
-    val anticonditions: List<ConditionData>,
-    val blockConditions: BlockConditions,
-    val blockAnticonditions: BlockConditions
+    val compositeConditions: CompositeConditionData
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnData = SpawnData(
@@ -36,18 +30,15 @@ data class SpawnData(
             positionType = buffer.readString(),
             bucket = buffer.readString(),
             weight = buffer.readFloat(),
-            conditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
-            anticonditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
-            blockConditions = BlockConditions.decode(buffer),
-            blockAnticonditions = BlockConditions.decode(buffer)
+            compositeConditions = CompositeConditionData.decode(buffer)
         )
     }
 
     val dataWidgets: List<AbstractWidget> by lazy {
-        val conditionWidgets: MutableList<AbstractWidget> = conditions.map {
+        val conditionWidgets: MutableList<AbstractWidget> = compositeConditions.conditions.map {
             TextWidget(x = 0, y = 0, width = SpawnDataDetailWidget.SECTION_WIDTH - 8, text = it.toLine())
         }.toMutableList()
-        blockConditions.takeIf { it.isNotEmpty() }?.let {
+        compositeConditions.blockConditions.takeIf { it.isNotEmpty() }?.let {
             conditionWidgets.add(
                 BlockConditionWidget(
                     blockConditions = it,
@@ -63,10 +54,10 @@ data class SpawnData(
             SpawnDataWidgetsCreatedEvent(this, conditionWidgets)
         )
 
-        val anticonditionWidgets: MutableList<AbstractWidget> = anticonditions.map {
+        val anticonditionWidgets: MutableList<AbstractWidget> = compositeConditions.anticonditions.map {
             TextWidget(x = 0, y = 0, width = SpawnDataDetailWidget.SECTION_WIDTH - 8, text = it.toLine())
         }.toMutableList()
-        blockAnticonditions.takeIf { it.isNotEmpty() }?.let {
+        compositeConditions.blockAnticonditions.takeIf { it.isNotEmpty() }?.let {
             anticonditionWidgets.add(
                 BlockConditionWidget(
                     blockConditions = it,
@@ -148,17 +139,6 @@ data class SpawnData(
         buffer.writeString(positionType)
         buffer.writeString(bucket)
         buffer.writeFloat(weight)
-        buffer.writeCollection(conditions) { buf, data ->
-            ConditionData.BUFF_CODEC.encode(
-                buf as RegistryFriendlyByteBuf, data
-            )
-        }
-        buffer.writeCollection(anticonditions) { buf, data ->
-            ConditionData.BUFF_CODEC.encode(
-                buf as RegistryFriendlyByteBuf, data
-            )
-        }
-        blockConditions.encode(buffer)
-        blockAnticonditions.encode(buffer)
+        compositeConditions.encode(buffer)
     }
 }
