@@ -2,9 +2,8 @@ package com.metacontent.cobblenav.client.gui.widget.radialmenu
 
 import com.metacontent.cobblenav.client.gui.screen.ContactsScreen
 import com.metacontent.cobblenav.client.gui.screen.LocationScreen
-import com.metacontent.cobblenav.client.gui.screen.MapScreen
+import com.metacontent.cobblenav.client.gui.screen.CatalogueScreen
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
-import com.metacontent.cobblenav.client.gui.widget.stateful.StatefulWidget
 import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -34,8 +33,8 @@ class OpenedRadialMenu(
     private val buttons = listOf(
         IconButton(
             pWidth = 16, pHeight = 16,
-            action = { statefulWidget.pokenavScreen.changeScreen(MapScreen(os)) },
-            texture = MAP,
+            action = { statefulWidget.pokenavScreen.changeScreen(CatalogueScreen(os)) },
+            texture = CATALOGUE,
             disabled = true
         ),
         IconButton(

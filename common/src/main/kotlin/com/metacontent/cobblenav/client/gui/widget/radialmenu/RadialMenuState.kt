@@ -17,7 +17,7 @@ abstract class RadialMenuState(
         const val MENU_DIAMETER: Int = 20
         const val ANIMATION_SHEET_WIDTH: Int = 180
         val RADIAL_MENU = gui("radialmenu/radial_menu")
-        val MAP = gui("radialmenu/map")
+        val CATALOGUE = gui("radialmenu/catalogue")
         val LOCATION = gui("radialmenu/location")
         val CONTACTS = gui("radialmenu/contacts")
         val SWITCH_OFF = gui("radialmenu/switch_off")

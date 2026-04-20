@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import java.awt.Color
 
-class MapScreen(
+class CatalogueScreen(
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean = false
