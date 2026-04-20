@@ -34,8 +34,7 @@ class OpenedRadialMenu(
         IconButton(
             pWidth = 16, pHeight = 16,
             action = { statefulWidget.pokenavScreen.changeScreen(CatalogueScreen(os)) },
-            texture = CATALOGUE,
-            disabled = true
+            texture = CATALOGUE
         ),
         IconButton(
             pWidth = 16, pHeight = 16,
