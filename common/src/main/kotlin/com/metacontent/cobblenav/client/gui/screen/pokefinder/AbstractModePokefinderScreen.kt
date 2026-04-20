@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.overlay.PokefinderOverlay.Companion.RADIUS
 import com.metacontent.cobblenav.client.gui.util.gui
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -127,7 +128,15 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
 
     abstract fun clearFilters()
 
-    abstract fun checkBottomText(): Component?
+    protected open fun checkBottomText(): Component? {
+        return if (clearButton.isHovered) {
+            translate("gui.cobblenav.pokefinder.clear")
+        } else if (changeModeButton.isHovered) {
+            translate("gui.cobblenav.pokefinder.change_mode")
+        } else {
+            null
+        }
+    }
 
     abstract fun <T : RadarFilter> createEntry(
         type: RadarFilterType<T>,

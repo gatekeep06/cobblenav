@@ -63,6 +63,9 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
                 }
             }
         }
+        if (text == null) {
+            text = super.checkBottomText()
+        }
         return text
     }
 

@@ -45,6 +45,9 @@ class SimplePokefinderScreen : AbstractModePokefinderScreen() {
                 return@applyToAll
             }
         }
+        if (text == null) {
+            text = super.checkBottomText()
+        }
         return text
     }
 
