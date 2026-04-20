@@ -133,6 +133,8 @@ abstract class AbstractModePokefinderScreen : PokefinderScreen() {
             translate("gui.cobblenav.pokefinder.clear")
         } else if (changeModeButton.isHovered) {
             translate("gui.cobblenav.pokefinder.change_mode")
+        } else if (backButton.isHovered) {
+            translate("gui.cobblenav.pokefinder.back")
         } else {
             null
         }

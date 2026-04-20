@@ -155,6 +155,7 @@
   "gui.cobblenav.pokefinder.mode.simple.desc": "You will be provided with 4 filters to configure as you wish: by translated Pokémon names, by aspects, by labels, and a shiny-only toggle. Keep in mind that all filters in this mode work in tandem, meaning that if you enter \"Zigzagoon\" in names and \"legendary\" in labels, the radar will only display legendary Zigzagoons.",
   "gui.cobblenav.pokefinder.mode.advanced": "Advanced Mode",
   "gui.cobblenav.pokefinder.mode.advanced.desc": "You will have the ability to add as many filters as you want of 5 types: by translated names, by Pokémon Properties, by labels, by EV yield, and by Pokédex registration status. Each filter in this mode operates independently of the others, meaning the radar will display all Pokémon that pass at least one filter. Not suitable for casual players.",
+  "gui.cobblenav.pokefinder.back": "Close screen",
   "gui.cobblenav.pokefinder.clear": "Clear filters",
   "gui.cobblenav.pokefinder.change_mode": "Change mode",
   "gui.cobblenav.pokefinder.filter.name": "Translated Pokémon Names",

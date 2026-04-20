@@ -30,7 +30,7 @@ abstract class PokefinderScreen : Screen(Component.literal("Pokefinder")) {
         val FIELD = gui("pokefinder/text")
     }
 
-    private lateinit var backButton: IconButton
+    protected lateinit var backButton: IconButton
 
     val player: LocalPlayer? = Minecraft.getInstance().player
 
