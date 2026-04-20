@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.FastColor
 import kotlin.math.min
 
-class CheckBox(
+open class CheckBox(
     x: Int,
     y: Int,
     width: Int,

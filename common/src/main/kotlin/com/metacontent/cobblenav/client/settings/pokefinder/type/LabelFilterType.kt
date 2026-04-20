@@ -9,7 +9,7 @@ object LabelFilterType : EditableTextFilterType<LabelFilter>() {
 
     override val typeIcon = gui("pokefinder/label")
 
-    override val displayedName = Component.translatable("gui.cobblenav.pokefinder.filter.label")
+    override val displayedName: Component = Component.translatable("gui.cobblenav.pokefinder.filter.label")
 
     override fun createFilter(): LabelFilter = LabelFilter()
 }

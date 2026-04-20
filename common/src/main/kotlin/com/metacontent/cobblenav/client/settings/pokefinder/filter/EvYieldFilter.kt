@@ -23,4 +23,8 @@ class EvYieldFilter(
     }
 
     fun get() = evYield
+
+    override fun clear() {
+        evYield = emptySet()
+    }
 }

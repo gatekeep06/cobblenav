@@ -4,27 +4,25 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.client.CobblenavClient
 import net.minecraft.util.StringUtil.isBlank
 
-class TranslatedNameFilter(
-    private var names: List<String> = emptyList()
+class AspectFilter(
+    private var aspects: Set<String> = emptySet()
 ) : EditableTextFilter() {
     companion object {
-        const val TYPE = "name"
+        const val TYPE = "aspect"
     }
 
     override val type = TYPE
 
-    override fun test(pokemon: Pokemon): Boolean = names.isEmpty() || names.any {
-        it.equals(pokemon.getDisplayName().string, true)
-    }
+    override fun test(pokemon: Pokemon): Boolean = pokemon.aspects.containsAll(aspects)
 
     override fun update(value: String) {
-        names = value.split(",").mapNotNull { it.trim().takeUnless(::isBlank) }
+        aspects = value.split(",").mapNotNull { it.trim().takeUnless(::isBlank) }.toSet()
         CobblenavClient.pokefinderSettings?.changed = true
     }
 
-    override fun asString(): String = names.joinToString()
+    override fun asString(): String = aspects.joinToString()
 
     override fun clear() {
-        names = emptyList()
+        aspects = emptySet()
     }
 }

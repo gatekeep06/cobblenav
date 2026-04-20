@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.settings
 
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.metacontent.cobblenav.client.settings.pokefinder.RadarFilterTypeRegistry
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
 
 class PokefinderSettings : Settings<PokefinderSettings>() {
@@ -11,26 +12,57 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
     @Transient
     override val name = NAME
 
-    private val filters = mutableListOf<RadarFilter>()
+    var mode: Mode? = null
+        set(value) {
+            changed = true
+            field = value
+        }
 
-    fun getFilters(): List<RadarFilter> = filters.toList()
+    private val simpleFilters = mutableMapOf<String, RadarFilter>()
 
-    fun addFilter(filter: RadarFilter) {
-        changed = true
-        filters.add(filter)
+    private val advancedFilters = mutableListOf<RadarFilter>()
+
+    fun getFilters(): List<RadarFilter> = when (mode) {
+        Mode.SIMPLE -> simpleFilters.values.toList()
+        Mode.ADVANCED -> advancedFilters.toList()
+        else -> emptyList()
     }
 
-    fun removeFilter(filter: RadarFilter) {
+    fun addAdvancedFilter(filter: RadarFilter) {
         changed = true
-        filters.remove(filter)
+        advancedFilters.add(filter)
+    }
+
+    fun removeAdvancedFilter(filter: RadarFilter) {
+        changed = true
+        advancedFilters.remove(filter)
     }
 
     fun clearFilters() {
         changed = true
-        filters.clear()
+        when (mode) {
+            Mode.SIMPLE -> simpleFilters.values.forEach { it.clear() }
+            Mode.ADVANCED -> advancedFilters.clear()
+            else -> {}
+        }
+    }
+
+    fun initSimpleFilters() {
+        RadarFilterTypeRegistry.simpleTypes().map { it.createFilter() }.forEach {
+            simpleFilters.putIfAbsent(it.type, it)
+        }
     }
 
     fun test(pokemon: Pokemon): Boolean {
-        return filters.any { it.test(pokemon) } || filters.isEmpty()
+        return when (mode) {
+            Mode.SIMPLE -> simpleFilters.values.all { it.test(pokemon) }
+            Mode.ADVANCED -> advancedFilters.any { it.test(pokemon) } || advancedFilters.isEmpty()
+            else -> true
+        }
+    }
+
+    enum class Mode {
+        SIMPLE,
+        ADVANCED
     }
 }

@@ -1,7 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.pokefinder
 
 import com.cobblemon.mod.common.api.gui.blitk
-import com.metacontent.cobblenav.client.gui.screen.pokefinder.PokefinderScreen
+import com.metacontent.cobblenav.client.gui.screen.pokefinder.AdvancedPokefinderScreen
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
 import com.metacontent.cobblenav.client.settings.pokefinder.filter.RadarFilter
@@ -9,7 +9,7 @@ import com.metacontent.cobblenav.client.settings.pokefinder.type.RadarFilterType
 import net.minecraft.client.gui.GuiGraphics
 
 class AddFilterButton(
-    val parent: PokefinderScreen,
+    val parent: AdvancedPokefinderScreen,
     val type: RadarFilterType<out RadarFilter>
 ) : IconButton(
     pWidth = ADD_WIDTH,

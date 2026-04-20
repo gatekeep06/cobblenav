@@ -9,7 +9,7 @@ object PokemonPropertiesFilterType : EditableTextFilterType<PokemonPropertiesFil
 
     override val typeIcon = gui("pokefinder/pokemon_properties")
 
-    override val displayedName = Component.translatable("gui.cobblenav.pokefinder.filter.properties")
+    override val displayedName: Component = Component.translatable("gui.cobblenav.pokefinder.filter.properties")
 
     override fun createFilter(): PokemonPropertiesFilter = PokemonPropertiesFilter()
 }

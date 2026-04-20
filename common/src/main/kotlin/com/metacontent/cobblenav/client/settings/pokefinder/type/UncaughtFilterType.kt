@@ -11,7 +11,7 @@ object UncaughtFilterType : RadarFilterType<UncaughtFilter> {
 
     override val typeIcon = gui("pokefinder/uncaught")
 
-    override val displayedName = Component.translatable("gui.cobblenav.pokefinder.filter.uncaught")
+    override val displayedName: Component = Component.translatable("gui.cobblenav.pokefinder.filter.uncaught")
 
     override fun createFilter(): UncaughtFilter = UncaughtFilter()
 

@@ -2,6 +2,7 @@ package com.metacontent.cobblenav.client.settings.pokefinder.filter
 
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.metacontent.cobblenav.client.CobblenavClient
+import net.minecraft.util.StringUtil.isBlank
 
 class LabelFilter(
     private var labels: List<String> = emptyList()
@@ -17,9 +18,13 @@ class LabelFilter(
     }
 
     override fun update(value: String) {
-        labels = value.split(",").map(String::trim)
+        labels = value.split(",").mapNotNull { it.trim().takeUnless(::isBlank) }
         CobblenavClient.pokefinderSettings?.changed = true
     }
 
     override fun asString(): String = labels.joinToString()
+
+    override fun clear() {
+        labels = emptyList()
+    }
 }

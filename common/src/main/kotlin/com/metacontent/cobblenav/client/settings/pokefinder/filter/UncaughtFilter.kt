@@ -16,4 +16,6 @@ class UncaughtFilter : RadarFilter {
         val knowledge = speciesRecord?.getFormRecord(pokemon.form.name)?.knowledge ?: return true
         return knowledge != PokedexEntryProgress.CAUGHT
     }
+
+    override fun clear() {}
 }

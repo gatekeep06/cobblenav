@@ -15,6 +15,7 @@ class TextButton(
     action: (PokenavButton) -> Unit,
     var texture: ResourceLocation? = null,
     private val text: MutableComponent,
+    private val color: Int = 0x00FFFFFF,
     private val textureWidth: Int = pWidth,
     private val textureHeight: Int = pHeight,
     private val uOffset: Int = 0,
@@ -55,9 +56,10 @@ class TextButton(
             context = guiGraphics,
             text = text,
             x = x + width / 2,
-            y = y + (height - Minecraft.getInstance().font.lineHeight) / 2,
+            y = y + (height - Minecraft.getInstance().font.lineHeight) / 2 + 1,
             centered = true,
             opacity = min(1f, argb),
+            colour = color,
             maxCharacterWidth = width,
             shadow = shadow
         )
