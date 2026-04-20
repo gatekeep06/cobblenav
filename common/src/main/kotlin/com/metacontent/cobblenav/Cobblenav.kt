@@ -75,8 +75,6 @@ object Cobblenav {
         CobblenavDataStoreTypes.info()
 
         PlatformEvents.SERVER_STARTING.subscribe(Priority.LOWEST) { (server) ->
-            CobblemonSpawnPools.WORLD_SPAWN_POOL.observable.subscribe(SpawnDataHelper::reloadSpawnDetails)
-
             ConditionCollectors.init()
 
             val spawnDataNbtFactory = CachedPlayerDataStoreFactory(SpawnDataCatalogueNbtBackend())
@@ -94,6 +92,8 @@ object Cobblenav {
         }
 
         PlatformEvents.SERVER_STARTED.subscribe { (server) ->
+            SpawnDataHelper.reloadSpawnDetails(CobblemonSpawnPools.WORLD_SPAWN_POOL)
+            CobblemonSpawnPools.WORLD_SPAWN_POOL.observable.subscribe(SpawnDataHelper::reloadSpawnDetails)
             BiomePlatforms.onServerStarted(server)
         }
 
