@@ -6,14 +6,17 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 
 data class CheckedSpawnData(
     val data: SpawnData,
+    val platformId: ResourceLocation?,
     val chance: Float,
 ) : Encodable {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf) = CheckedSpawnData(
             data = SpawnData.decode(buffer),
+            platformId = buffer.readNullable { it.readResourceLocation() },
             chance = buffer.readFloat()
         )
     }
@@ -57,6 +60,7 @@ data class CheckedSpawnData(
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         data.encode(buffer)
+        buffer.writeNullable(platformId) { buf, id -> buf.writeResourceLocation(id) }
         buffer.writeFloat(chance)
     }
 }

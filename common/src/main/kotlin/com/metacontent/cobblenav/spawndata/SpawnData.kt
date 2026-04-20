@@ -24,7 +24,6 @@ data class SpawnData(
     val positionType: String,
     val bucket: String,
     val weight: Float,
-    val platformId: ResourceLocation?,
     val conditions: List<ConditionData>,
     val anticonditions: List<ConditionData>,
     val blockConditions: BlockConditions,
@@ -37,7 +36,6 @@ data class SpawnData(
             positionType = buffer.readString(),
             bucket = buffer.readString(),
             weight = buffer.readFloat(),
-            platformId = buffer.readNullable { it.readIdentifier() },
             conditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
             anticonditions = buffer.readList { ConditionData.BUFF_CODEC.decode(it as RegistryFriendlyByteBuf) },
             blockConditions = BlockConditions.decode(buffer),
@@ -150,7 +148,6 @@ data class SpawnData(
         buffer.writeString(positionType)
         buffer.writeString(bucket)
         buffer.writeFloat(weight)
-        buffer.writeNullable(platformId) { buf, id -> buf.writeIdentifier(id) }
         buffer.writeCollection(conditions) { buf, data ->
             ConditionData.BUFF_CODEC.encode(
                 buf as RegistryFriendlyByteBuf, data
