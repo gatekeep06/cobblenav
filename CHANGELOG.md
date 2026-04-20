@@ -1,3 +1,8 @@
+# Update 2.4.0
+
+- An alternative simplified PokéFinder mode has been added. The first time you open the settings screen, you will be given a choice between two modes. Simple Mode is equivalent to the old PokéFinder settings interface, while Advanced Mode is the new one. The choice can be changed at any time.
+- When hovering over added filters and other buttons on the PokéFinder settings screen, their names now also appear at the bottom of the screen, similar to hovering over the filter addition buttons.
+
 # Update 2.3.3
 
 - Instead of the Finder screen, tracking start buttons have been added to the Location screen. The buttons appear above Pokémon that are near the player, replacing the marks from previous versions. When pressed, the screen will close and tracking of the nearest selected Pokémon will begin.
