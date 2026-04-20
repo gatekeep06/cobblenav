@@ -209,7 +209,10 @@ object SpawnDataHelper {
         val canShowConditions =
             !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
         val compositeConditions = if (canShowConditions) {
-            collectConditions(detail)
+            spawnDetails[detail.id]?.first { it.first == detail }?.second ?: run {
+                Cobblenav.LOGGER.error("Something is off. I can feel it")
+                return null
+            }
         } else {
             val condition = ConditionData("unknown", 0xffffff, emptyList())
             CompositeConditionData(
