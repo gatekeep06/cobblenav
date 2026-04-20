@@ -25,7 +25,7 @@ class SimplePokefinderScreen : AbstractModePokefinderScreen() {
     }
 
     override fun clearFilters() {
-        filterTable.applyToAll { it.filter.clear() }
+        settings?.clearFilters()
         filterTable.clear()
         populateFilterTable()
     }

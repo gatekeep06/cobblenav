@@ -73,13 +73,13 @@ class AdvancedPokefinderScreen : AbstractModePokefinderScreen() {
         settings ?: return
         val filter = type.createFilter()
         val entry = createEntry(type, filter)
-        settings.addFilter(entry.filter)
+        settings.addAdvancedFilter(entry.filter)
         filterTable.add(entry)
     }
 
     fun removeFilterListEntry(entry: FilterEntryWidget) {
         settings ?: return
-        settings.removeFilter(entry.filter)
+        settings.removeAdvancedFilter(entry.filter)
         filterTable.remove(entry)
     }
 

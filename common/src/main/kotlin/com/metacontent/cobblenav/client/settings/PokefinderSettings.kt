@@ -28,19 +28,23 @@ class PokefinderSettings : Settings<PokefinderSettings>() {
         else -> emptyList()
     }
 
-    fun addFilter(filter: RadarFilter) {
+    fun addAdvancedFilter(filter: RadarFilter) {
         changed = true
         advancedFilters.add(filter)
     }
 
-    fun removeFilter(filter: RadarFilter) {
+    fun removeAdvancedFilter(filter: RadarFilter) {
         changed = true
         advancedFilters.remove(filter)
     }
 
     fun clearFilters() {
         changed = true
-        advancedFilters.clear()
+        when (mode) {
+            Mode.SIMPLE -> simpleFilters.values.forEach { it.clear() }
+            Mode.ADVANCED -> advancedFilters.clear()
+            else -> {}
+        }
     }
 
     fun initSimpleFilters() {
