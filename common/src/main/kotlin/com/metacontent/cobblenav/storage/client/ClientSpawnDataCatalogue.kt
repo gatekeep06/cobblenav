@@ -50,5 +50,9 @@ class ClientSpawnDataCatalogue(
         buf.writeCollection(spawnDetailIds) { b, s -> b.writeString(s) }
     }
 
-    fun shouldRequestData(): Boolean = cachedSpawnData.keys.containsAll(spawnDetailIds)
+    fun missingCachedData(): List<String> = if (cachedSpawnData.isEmpty()) {
+        spawnDetailIds.toList()
+    } else {
+        spawnDetailIds.filter { !cachedSpawnData.contains(it) }
+    }
 }

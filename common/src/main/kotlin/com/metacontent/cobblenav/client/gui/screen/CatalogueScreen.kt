@@ -1,6 +1,8 @@
 package com.metacontent.cobblenav.client.gui.screen
 
+import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
+import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -22,6 +24,17 @@ class CatalogueScreen(
             texture = BACK_BUTTON,
             action = { changeScreen(MainScreen(os)) }
         ).let { addBlockableWidget(it) }
+
+        val ids = CobblenavClient.spawnDataCatalogue.missingCachedData()
+        if (ids.isEmpty()) {
+            populateCatalogue()
+        } else {
+            RequestCatalogueDataPacket(ids).sendToServer()
+        }
+    }
+
+    fun populateCatalogue() {
+
     }
 
     override fun renderOnBackLayer(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
