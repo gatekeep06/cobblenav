@@ -37,6 +37,7 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(FindPokemonPacket.ID, FindPokemonPacket::decode, FindPokemonHandler))
         list.add(PacketRegisterInfo(RequestFishingMapPacket.ID, RequestFishingMapPacket::decode, RequestFishingMapHandler))
         list.add(PacketRegisterInfo(RequestFishingnavScreenInitDataPacket.ID, RequestFishingnavScreenInitDataPacket::decode, RequestFishingnavScreenInitDataHandler))
+        list.add(PacketRegisterInfo(RequestCatalogueDataPacket.ID, RequestCatalogueDataPacket::decode, RequestCatalogueDataHandler))
 
         return list
     }
