@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.networking.handler.server
 
 import com.cobblemon.mod.common.api.net.ServerNetworkPacketHandler
+import com.metacontent.cobblenav.networking.packet.client.CatalogueDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.util.spawnCatalogue
@@ -20,7 +21,7 @@ object RequestCatalogueDataHandler : ServerNetworkPacketHandler<RequestCatalogue
 
             val spawnData = ids.flatMap { SpawnDataHelper.getSpawnData(it, player) }
 
-            //TODO: s2c packet
+            CatalogueDataPacket(spawnData).sendToPlayer(player)
         }
     }
 }
