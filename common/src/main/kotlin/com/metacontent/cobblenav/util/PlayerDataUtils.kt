@@ -13,4 +13,4 @@ fun PlayerInstancedDataStoreManager.getSpawnDataCatalogue(playerId: UUID): Spawn
 fun PlayerInstancedDataStoreManager.getSpawnDataCatalogue(player: ServerPlayer): SpawnDataCatalogue =
     getSpawnDataCatalogue(player.uuid)
 
-fun ServerPlayer.spawnCatalogue() = Cobblemon.playerDataManager.getSpawnDataCatalogue(this)
+fun ServerPlayer.spawnCatalogue(): SpawnDataCatalogue = Cobblemon.playerDataManager.getSpawnDataCatalogue(this)
