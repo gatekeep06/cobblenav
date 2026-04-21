@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager.SPAWN_CATALOGUED_SIGNAL
+import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.storage.AbstractSpawnDataCatalogue
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -24,6 +25,7 @@ class ClientSpawnDataCatalogue(
 
         fun afterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
+                //TODO: handle deleting
                 CobblenavClient.spawnDataCatalogue = it
             }
         }
@@ -39,10 +41,14 @@ class ClientSpawnDataCatalogue(
         }
     }
 
+    val cachedSpawnData = mutableMapOf<String, List<SpawnData>>()
+
     var newlyCataloguedAmount = 0
         internal set
 
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeCollection(spawnDetailIds) { b, s -> b.writeString(s) }
     }
+
+    fun shouldRequestData(): Boolean = cachedSpawnData.keys.containsAll(spawnDetailIds)
 }
