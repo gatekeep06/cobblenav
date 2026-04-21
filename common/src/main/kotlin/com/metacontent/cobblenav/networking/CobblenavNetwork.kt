@@ -23,6 +23,7 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(FishingMapPacket.ID, FishingMapPacket::decode, FishingMapHandler))
         list.add(PacketRegisterInfo(FishingnavScreenInitDataPacket.ID, FishingnavScreenInitDataPacket::decode, FishingnavScreenInitDataHandler))
         list.add(PacketRegisterInfo(CatalogueDataPacket.ID, CatalogueDataPacket::decode, CatalogueDataHandler))
+        list.add(PacketRegisterInfo(ReloadSpawnPoolPacket.ID, ReloadSpawnPoolPacket::decode, ReloadSpawnPoolHandler))
 
         list.add(PacketRegisterInfo(LabelSyncPacket.ID, LabelSyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(EvYieldSyncPacket.ID, EvYieldSyncPacket::decode, DataRegistrySyncPacketHandler()))

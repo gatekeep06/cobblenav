@@ -24,6 +24,7 @@ import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
 import com.metacontent.cobblenav.api.platform.BiomePlatforms
 import com.metacontent.cobblenav.event.CobblenavEvents
+import com.metacontent.cobblenav.networking.packet.client.ReloadSpawnPoolPacket
 import com.metacontent.cobblenav.properties.SpawnDetailIdPropertyType
 import com.metacontent.cobblenav.spawndata.collector.ConditionCollectors
 import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
@@ -32,6 +33,7 @@ import com.metacontent.cobblenav.util.WeightedBucket
 import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
 
@@ -293,6 +295,7 @@ object SpawnDataHelper {
         spawnDetailIdBySpecies = spawnPool.filterIsInstance<PokemonSpawnDetail>()
             .groupBy { it.pokemon.species ?: "none" }
             .mapValues { it.value.map(SpawnDetail::id) }
+        ReloadSpawnPoolPacket().sendToAllPlayers()
     }
 
     fun onInit() {
