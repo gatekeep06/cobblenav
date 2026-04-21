@@ -117,7 +117,7 @@ object CatalogueCommand : PokenavCommand() {
         players.forEach { player ->
             player.displayName?.let { context.source.sendSystemMessage(it) }
             context.source.sendSystemMessage(Component.literal("------"))
-            context.source.sendSystemMessage(Component.literal(player.spawnCatalogue().spawnDetailIds.joinToString()))
+            context.source.sendSystemMessage(Component.literal(player.spawnCatalogue().getIds().joinToString()))
             context.source.sendSystemMessage(Component.literal("------"))
         }
         return Command.SINGLE_SUCCESS
