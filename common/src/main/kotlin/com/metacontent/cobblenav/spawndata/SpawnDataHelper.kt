@@ -233,6 +233,39 @@ object SpawnDataHelper {
         )
     }
 
+    fun getSpawnData(
+        detailId: String,
+        player: ServerPlayer
+    ): List<SpawnData> {
+        val details = spawnDetails[detailId] ?: return emptyList()
+        return details.mapNotNull { (detail, conditions) ->
+            val result = SpawnResultData.fromDetail(detail, player) ?: return@mapNotNull null
+
+            val canShowConditions =
+                !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
+            val finalConditions = if (canShowConditions) {
+                conditions
+            } else {
+                val condition = ConditionData("unknown", 0xffffff, emptyList())
+                CompositeConditionData(
+                    conditions = listOf(condition),
+                    anticonditions = listOf(condition),
+                    blockConditions = BlockConditions(mutableSetOf()),
+                    blockAnticonditions = BlockConditions(mutableSetOf())
+                )
+            }
+
+            SpawnData(
+                id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownPokemon) detail.id else "???",
+                result = result,
+                positionType = detail.spawnablePositionType.name,
+                bucket = detail.bucket.name,
+                weight = detail.weight,
+                compositeConditions = finalConditions
+            )
+        }
+    }
+
     fun collectConditions(detail: SpawnDetail): CompositeConditionData {
         val conditions = mutableListOf<ConditionData>()
         val blockConditions = mutableSetOf<ResourceLocation>()
