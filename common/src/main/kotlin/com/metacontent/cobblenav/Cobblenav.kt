@@ -34,6 +34,7 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import com.metacontent.cobblenav.spawndata.resultdata.UnknownSpawnResultData
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import com.metacontent.cobblenav.storage.adapter.SpawnDataCatalogueNbtBackend
+import com.metacontent.cobblenav.util.CobblenavResourcePack
 import com.metacontent.cobblenav.util.registerDirectly
 import net.minecraft.world.entity.npc.VillagerTrades
 import org.slf4j.Logger
@@ -47,6 +48,10 @@ object Cobblenav {
     lateinit var config: CobblenavConfig
     lateinit var implementation: Implementation
     val resolver = PokenavSpawnablePositionResolver()
+
+    val builtInPacks = listOf<CobblenavResourcePack>(
+        CobblenavResourcePack(id = "retrofindergray", name = "RetroFinder - Gray", enabledByDefault = false)
+    )
 
     fun init(implementation: Implementation) {
         ConditionCollectors.registerConfigEntries()

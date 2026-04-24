@@ -9,6 +9,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.SemanticVersion
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
@@ -30,6 +32,17 @@ class CobblenavFabric : ModInitializer, Implementation {
         TradeOfferHelper.registerWanderingTraderOffers(2) { factories ->
             factories.addAll(Cobblenav.resolveWandererTrades())
         }
+
+        val mod = FabricLoader.getInstance().getModContainer(Cobblenav.ID).get()
+        Cobblenav.builtInPacks
+            .forEach {
+                val activationType = if (it.enabledByDefault) {
+                    ResourcePackActivationType.DEFAULT_ENABLED
+                } else {
+                    ResourcePackActivationType.NORMAL
+                }
+                ResourceManagerHelper.registerBuiltinResourcePack(it.location, mod, it.displayName, activationType)
+            }
     }
 
     override fun registerItems() {
