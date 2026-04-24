@@ -1,6 +1,5 @@
 package com.metacontent.cobblenav.neoforge
 
-import com.cobblemon.mod.common.ResourcePackActivationBehaviour
 import com.metacontent.cobblenav.*
 import com.metacontent.cobblenav.neoforge.client.CobblenavNeoForgeClient
 import com.metacontent.cobblenav.util.ModDependency
