@@ -20,6 +20,7 @@ import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.block.entity.PokeSnackBlockEntity
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.nextBetween
 import com.cobblemon.mod.common.util.spawner
 import com.cobblemon.mod.common.util.toBlockPos
 import com.metacontent.cobblenav.Cobblenav
@@ -34,7 +35,12 @@ import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.Mth.PI
+import net.minecraft.world.phys.Vec3
 import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.random.Random
 
 object SpawnDataHelper {
     const val BASE_FISHING_POKEMON_CHANCE = 0.85f
@@ -67,24 +73,51 @@ object SpawnDataHelper {
             return WeightedBucket(bucketName, 0f) to emptyList()
         }
 
+        val playerPos = player.blockPosition()
+//        val maxRadius = config.maximumSpawningZoneDistanceFromPlayer
+//        val minRadius = config.minimumSpawningZoneDistanceFromPlayer
+//        val minDistSq = minRadius * minRadius
+//        val maxDistSq = maxRadius * maxRadius
+//        val range = ceil(maxRadius).toInt()
+//        val minPos = BlockPos(playerPos.x - range, playerPos.y, playerPos.z - range)
+//        val maxPos = BlockPos(playerPos.x + range, playerPos.y, playerPos.z + range)
+//        val centers = BlockPos.betweenClosed(minPos, maxPos).mapNotNull { pos ->
+//            val distSq = playerPos.distSqr(pos)
+//            if (distSq in minDistSq..maxDistSq) return@mapNotNull pos.immutable()
+//            return@mapNotNull null
+//        }
+        val rand = Random.Default
+        val centers = mutableListOf<Vec3>()
+        repeat(500) {
+            val r = rand.nextBetween(Cobblemon.config.minimumSpawningZoneDistanceFromPlayer, Cobblemon.config.maximumSpawningZoneDistanceFromPlayer)
+            val theta = rand.nextDouble() * 2 * PI
+            val x = playerPos.x + r * cos(theta)
+            val z = playerPos.z + r * sin(theta)
+            centers.add(Vec3(x, playerPos.y.toDouble(), z))
+        }
+
         val cause = SpawnCause(spawner, player)
-        val zone = Cobblemon.spawningZoneGenerator.generate(
-            spawner = spawner,
-            input = SpawningZoneInput(
-                cause, player.serverLevel(),
-                ceil(player.x - config.spawningZoneDiameter / 2f).toInt(),
-                ceil(player.y - config.spawningZoneHeight / 2f).toInt(),
-                ceil(player.z - config.spawningZoneDiameter / 2f).toInt(),
-                config.spawningZoneDiameter,
-                config.spawningZoneHeight,
-                config.spawningZoneDiameter
+        val zones = centers.map { center ->
+            Cobblemon.spawningZoneGenerator.generate(
+                spawner = spawner,
+                input = SpawningZoneInput(
+                    cause, player.serverLevel(),
+                    ceil(center.x - config.spawningZoneDiameter / 2f).toInt(),
+                    ceil(center.y - config.spawningZoneHeight / 2f).toInt(),
+                    ceil(center.z - config.spawningZoneDiameter / 2f).toInt(),
+                    config.spawningZoneDiameter,
+                    config.spawningZoneHeight,
+                    config.spawningZoneDiameter
+                )
             )
-        )
-        val spawnablePositions = Cobblenav.resolver.resolve(
-            spawner = spawner,
-            spawnablePositionCalculators = SpawnablePositionCalculator.prioritizedAreaCalculators,
-            zone = zone
-        )
+        }
+        val spawnablePositions = zones.flatMap { zone ->
+            Cobblenav.resolver.resolve(
+                spawner = spawner,
+                spawnablePositionCalculators = SpawnablePositionCalculator.prioritizedAreaCalculators,
+                zone = zone
+            )
+        }
         val spawnProbabilities = spawner.selector.getProbabilities(spawner, bucket, spawnablePositions)
 
         val spawnDataList = spawnProbabilities.mapNotNull { (detail, spawnChance) ->
@@ -94,7 +127,7 @@ object SpawnDataHelper {
 
         val weightedBucket = calculateWeightedBuckets(
             bucketWeights,
-            spawner.influences + zone.unconditionalInfluences
+            spawner.influences //+ zone.unconditionalInfluences
         ).first { it.name == bucketName }
 
         return weightedBucket to spawnDataList
