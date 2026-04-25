@@ -49,8 +49,9 @@ object Cobblenav {
     lateinit var implementation: Implementation
     val resolver = PokenavSpawnablePositionResolver()
 
-    val builtInPacks = listOf<CobblenavResourcePack>(
-        CobblenavResourcePack(id = "retrofindergray", name = "RetroFinder - Gray", enabledByDefault = false)
+    val builtInPacks = listOf(
+        CobblenavResourcePack(id = "retrofindergray", name = "RetroFinder - Gray", enabledByDefault = false),
+        CobblenavResourcePack(id = "retrofindergreen", name = "RetroFinder - Green", enabledByDefault = false)
     )
 
     fun init(implementation: Implementation) {

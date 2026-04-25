@@ -7,6 +7,6 @@ data class CobblenavResourcePack(
     val name: String,
     val enabledByDefault: Boolean
 ) {
-    val location = cobblenavResource(id)
+    val resourceLocation = cobblenavResource(id)
     val displayName = literal(name)
 }

@@ -41,7 +41,7 @@ class CobblenavFabric : ModInitializer, Implementation {
                 } else {
                     ResourcePackActivationType.NORMAL
                 }
-                ResourceManagerHelper.registerBuiltinResourcePack(it.location, mod, it.displayName, activationType)
+                ResourceManagerHelper.registerBuiltinResourcePack(it.resourceLocation, mod, it.displayName, activationType)
             }
     }
 
