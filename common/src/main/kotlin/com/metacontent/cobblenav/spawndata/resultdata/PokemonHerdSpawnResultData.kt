@@ -52,7 +52,7 @@ class PokemonHerdSpawnResultData(
                 val pokemon = it.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
                 val knowledge = pokedex
                     .getSpeciesRecord(pokemon.species.resourceIdentifier)
-                    ?.getFormRecord(pokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
+                    ?.getFormRecord(pokemon.form.name)?.knowledge ?: PokedexEntryProgress.UNREGISTERED
                 pokemon to knowledge
             }
 
@@ -80,7 +80,7 @@ class PokemonHerdSpawnResultData(
         )
 
         fun isUnknown(knowledge: Collection<PokedexEntryProgress>) =
-            knowledge.filter { it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
+            knowledge.filter { it != PokedexEntryProgress.UNREGISTERED }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
     }
 
     override val type = PokemonHerdSpawnDetail.TYPE
@@ -158,7 +158,7 @@ class PokemonHerdSpawnResultData(
 
     override fun shouldRenderPlatform() = leaderRenderer.shouldRenderPlatform()
 
-    override fun shouldRenderPokeBall() = leaderRenderer.shouldRenderPlatform() && allPokemon.values.all { it == PokedexEntryProgress.CAUGHT }
+    override fun shouldRenderPokeBall() = leaderRenderer.shouldRenderPlatform() && allPokemon.values.all { it == PokedexEntryProgress.OWNED }
 
     override fun getRotation() = leaderRenderer.rotation
 

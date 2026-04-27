@@ -42,8 +42,8 @@ class PokemonSpawnResultData(
 
             val knowledge = player.pokedex()
                 .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
-                ?.getFormRecord(renderablePokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
-            if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownPokemon) return UnknownSpawnResultData(
+                ?.getFormRecord(renderablePokemon.form.name)?.knowledge ?: PokedexEntryProgress.UNREGISTERED
+            if (knowledge == PokedexEntryProgress.UNREGISTERED && Cobblenav.config.hideUnknownPokemon) return UnknownSpawnResultData(
                 positionType
             )
 
@@ -167,9 +167,9 @@ class PokemonSpawnResultData(
 
     override fun shouldRenderPlatform() = renderer.shouldRenderPlatform()
 
-    override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && knowledge == PokedexEntryProgress.CAUGHT
+    override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && knowledge == PokedexEntryProgress.OWNED
 
     override fun getRotation() = renderer.rotation
 
-    override fun isUnknown() = knowledge == PokedexEntryProgress.NONE
+    override fun isUnknown() = knowledge == PokedexEntryProgress.UNREGISTERED
 }
