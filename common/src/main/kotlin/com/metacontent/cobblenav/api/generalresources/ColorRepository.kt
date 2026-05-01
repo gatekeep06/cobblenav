@@ -37,8 +37,8 @@ object ColorRepository : JsonDataRegistry<ColorRepository.Colors> {
     }
 
     fun registerDefaultColors() {
-        default("pokefinder_text", 1, 235, 95)
-        default("pokefinder_background", 37, 52, 47)
+        default("pokefinder_text", 197, 250, 249)
+        default("pokefinder_background", 105, 231, 241)
     }
 
     private fun default(key: String, value: Int) {
