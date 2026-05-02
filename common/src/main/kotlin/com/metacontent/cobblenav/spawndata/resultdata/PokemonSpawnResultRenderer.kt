@@ -51,14 +51,18 @@ abstract class PokemonSpawnResultRenderer {
     }
 
     open fun renderPortrait(pokemon: RenderablePokemon, poseStack: PoseStack, x: Float, y: Float, z: Float) {
+        poseStack.pushPose()
+        poseStack.translate(x, y, z)
         drawPosablePortrait(
             identifier = pokemon.species.resourceIdentifier,
             matrixStack = poseStack,
             doQuirks = false,
             partialTicks = 0f,
             contextScale = pokemon.form.baseScale,
+            scale = 6f,
             state = state.also { it.currentAspects = pokemon.aspects }
         )
+        poseStack.popPose()
     }
 
     abstract fun shouldRenderPlatform(): Boolean
