@@ -48,6 +48,10 @@ class UnknownSpawnResultData(
         )
     }
 
+    override fun drawPortrait(poseStack: PoseStack, x: Float, y: Float, z: Float) {
+        TODO("Not yet implemented")
+    }
+
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(positionType)
     }
@@ -71,4 +75,6 @@ class UnknownSpawnResultData(
     override fun getRotation() = Vector3f(13F, 35F, 0F)
 
     override fun isUnknown() = true
+
+    override fun getResultKnowledge(): SpawnResultData.Knowledge = SpawnResultData.Knowledge.NONE
 }

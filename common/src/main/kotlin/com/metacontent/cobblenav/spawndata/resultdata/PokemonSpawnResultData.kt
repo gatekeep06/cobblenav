@@ -128,6 +128,10 @@ class PokemonSpawnResultData(
         renderer.render(pokemon, poseStack, x, y, z, delta)
     }
 
+    override fun drawPortrait(poseStack: PoseStack, x: Float, y: Float, z: Float) {
+        renderer.renderPortrait(pokemon, poseStack, x, y, z)
+    }
+
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         pokemon.saveToBuffer(buffer)
         buffer.writeString(originalProperties.asString())
@@ -172,4 +176,10 @@ class PokemonSpawnResultData(
     override fun getRotation() = renderer.rotation
 
     override fun isUnknown() = knowledge == PokedexEntryProgress.NONE
+
+    override fun getResultKnowledge(): SpawnResultData.Knowledge = when (knowledge) {
+        PokedexEntryProgress.NONE -> SpawnResultData.Knowledge.NONE
+        PokedexEntryProgress.ENCOUNTERED -> SpawnResultData.Knowledge.PARTLY
+        PokedexEntryProgress.CAUGHT -> SpawnResultData.Knowledge.FULL
+    }
 }

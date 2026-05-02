@@ -47,6 +47,13 @@ interface SpawnResultData : Encodable {
         delta: Float = 0f
     )
 
+    fun drawPortrait(
+        poseStack: PoseStack,
+        x: Float = 0f,
+        y: Float = 0f,
+        z: Float = 0f
+    )
+
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(type)
         encodeResultData(buffer)
@@ -73,4 +80,8 @@ interface SpawnResultData : Encodable {
     fun getRotation(): Vector3f
 
     fun isUnknown(): Boolean
+
+    fun getResultKnowledge(): Knowledge
+
+    enum class Knowledge { NONE, PARTLY, FULL }
 }

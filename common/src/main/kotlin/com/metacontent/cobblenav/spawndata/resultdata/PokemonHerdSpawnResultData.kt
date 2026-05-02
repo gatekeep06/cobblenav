@@ -37,6 +37,7 @@ class PokemonHerdSpawnResultData(
                 return null
             }
 
+            //TODO: better leader choosing
             val heardables = detail.herdablePokemon.toMutableList()
             if (heardables.isEmpty()) return null
 
@@ -129,6 +130,10 @@ class PokemonHerdSpawnResultData(
         rightPokemon?.let { herdRenderer.render(it, poseStack, x + 10, y + 3, z - 100, delta) }
     }
 
+    override fun drawPortrait(poseStack: PoseStack, x: Float, y: Float, z: Float) {
+        leaderRenderer.renderPortrait(leaderPokemon, poseStack, x, y, z)
+    }
+
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         leaderPokemon.saveToBuffer(buffer)
         buffer.writeNullable(leftPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
@@ -163,4 +168,15 @@ class PokemonHerdSpawnResultData(
     override fun getRotation() = leaderRenderer.rotation
 
     override fun isUnknown() = isUnknown(allPokemon.values)
+
+    override fun getResultKnowledge(): SpawnResultData.Knowledge {
+        val amount = allPokemon.count { it.value == PokedexEntryProgress.CAUGHT }
+        return if (amount == allPokemon.size) {
+            SpawnResultData.Knowledge.FULL
+        } else if (amount != 0 || allPokemon.any { it.value == PokedexEntryProgress.ENCOUNTERED }) {
+            SpawnResultData.Knowledge.PARTLY
+        } else {
+            SpawnResultData.Knowledge.NONE
+        }
+    }
 }

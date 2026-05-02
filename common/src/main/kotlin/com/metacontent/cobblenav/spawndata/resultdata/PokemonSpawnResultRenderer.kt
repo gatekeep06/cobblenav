@@ -1,5 +1,6 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
+import com.cobblemon.mod.common.api.gui.drawPosablePortrait
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.entity.PoseType
@@ -47,6 +48,17 @@ abstract class PokemonSpawnResultRenderer {
             }
             throw e
         }
+    }
+
+    open fun renderPortrait(pokemon: RenderablePokemon, poseStack: PoseStack, x: Float, y: Float, z: Float) {
+        drawPosablePortrait(
+            identifier = pokemon.species.resourceIdentifier,
+            matrixStack = poseStack,
+            doQuirks = false,
+            partialTicks = 0f,
+            contextScale = pokemon.form.baseScale,
+            state = state.also { it.currentAspects = pokemon.aspects }
+        )
     }
 
     abstract fun shouldRenderPlatform(): Boolean

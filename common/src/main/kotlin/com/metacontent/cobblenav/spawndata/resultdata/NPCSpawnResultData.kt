@@ -27,6 +27,10 @@ class NPCSpawnResultData(
         TODO("Not yet implemented")
     }
 
+    override fun drawPortrait(poseStack: PoseStack, x: Float, y: Float, z: Float) {
+        TODO("Not yet implemented")
+    }
+
     override fun encodeResultData(buffer: RegistryFriendlyByteBuf) {
         npc.encode(buffer)
     }
@@ -56,6 +60,10 @@ class NPCSpawnResultData(
     }
 
     override fun isUnknown(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getResultKnowledge(): SpawnResultData.Knowledge {
         TODO("Not yet implemented")
     }
 }
