@@ -6,6 +6,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
+import kotlin.math.max
 
 class ScrollThumbWidget(
     x: Int, y: Int,
@@ -17,7 +18,7 @@ class ScrollThumbWidget(
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (parent.child.height < parent.height) return
-        height = parent.height * parent.height / parent.child.height
+        height = max(parent.height * parent.height / parent.child.height, 10)
         guiGraphics.fill(
             x, y,
             x + width,
