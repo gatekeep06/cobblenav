@@ -1,11 +1,13 @@
 package com.metacontent.cobblenav.client.gui.widget.spawndata
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.client.gui.GuiGraphics
 
@@ -20,6 +22,9 @@ class CatalogueEntryWidget(
         const val PORTRAIT_WIDTH = 20
         const val PORTRAIT_HEIGHT = 20
         const val ID_WIDTH = 40
+        const val INFO_X = 37
+        const val INFO_Y = 31
+        const val INFO_WIDTH = 13
 
         val BACKGROUND = gui("catalogue/entry_bg")
         val ENTRY = gui("catalogue/entry")
@@ -47,8 +52,8 @@ class CatalogueEntryWidget(
 
         spawnData.result.drawPortrait(
             poseStack = poseStack,
-            x = (x + PORTRAIT_X + 10).toFloat(),
-            y = (y + PORTRAIT_Y - 15).toFloat(),
+            x = (x + PORTRAIT_X + 8).toFloat(),
+            y = (y + PORTRAIT_Y - 12).toFloat(),
             z = 500f
         )
 
@@ -72,6 +77,33 @@ class CatalogueEntryWidget(
             y = y + 4,
             scale = 0.5f,
             maxCharacterWidth = (ID_WIDTH / 0.5f).toInt()
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = translate("bucket.cobblenav.${spawnData.bucket}", literal(spawnData.bucket).red()),
+            x = x + INFO_X - 0.5,
+            y = y + INFO_Y,
+            scale = 0.4f,
+//            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
+            centered = true
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = literal("${spawnData.weight}"),
+            x = x + INFO_X + INFO_WIDTH + 4.5,
+            y = y + INFO_Y,
+            scale = 0.4f,
+//            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
+            centered = true
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = translate(spawnData.result.getResultKnowledge().translateKey),
+            x = x + INFO_X + INFO_WIDTH * 2 + 10,
+            y = y + INFO_Y,
+            scale = 0.4f,
+//            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
+            centered = true
         )
 
         poseStack.popPose()

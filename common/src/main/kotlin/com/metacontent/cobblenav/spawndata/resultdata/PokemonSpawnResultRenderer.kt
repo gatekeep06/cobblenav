@@ -59,7 +59,7 @@ abstract class PokemonSpawnResultRenderer {
             doQuirks = false,
             partialTicks = 0f,
             contextScale = pokemon.form.baseScale,
-            scale = 6f,
+            scale = 10f,
             state = state.also { it.currentAspects = pokemon.aspects }
         )
         poseStack.popPose()
@@ -89,7 +89,6 @@ class BasicHerdSpawnResultRenderer : BasicSpawnResultRenderer() {
 }
 
 open class FishingSpawnResultRenderer : PokemonSpawnResultRenderer() {
-
     override val rotation = Vector3f(0f, 270f, 0f)
     override val scale = 15f
     override val pose = PoseType.SWIM

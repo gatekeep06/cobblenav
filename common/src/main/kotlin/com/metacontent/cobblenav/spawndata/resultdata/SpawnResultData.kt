@@ -27,7 +27,8 @@ interface SpawnResultData : Encodable {
             decoders[type] = decoder
         }
 
-        fun fromDetail(detail: SpawnDetail, player: ServerPlayer): SpawnResultData? = transformers[detail.type]?.invoke(detail, player)
+        fun fromDetail(detail: SpawnDetail, player: ServerPlayer): SpawnResultData? =
+            transformers[detail.type]?.invoke(detail, player)
 
         fun decode(buffer: RegistryFriendlyByteBuf): SpawnResultData {
             val type = buffer.readString()
@@ -83,5 +84,9 @@ interface SpawnResultData : Encodable {
 
     fun getResultKnowledge(): Knowledge
 
-    enum class Knowledge { NONE, PARTLY, FULL }
+    enum class Knowledge(val translateKey: String) {
+        NONE("gui.cobblenav.spawn_data.knowledge.none"),
+        PARTLY("gui.cobblenav.spawn_data.knowledge.partly"),
+        FULL("gui.cobblenav.spawn_data.knowledge.full")
+    }
 }
