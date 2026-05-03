@@ -9,6 +9,7 @@ import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.spawndata.SpawnData
+import com.metacontent.cobblenav.spawndata.resultdata.displayName
 import net.minecraft.client.gui.GuiGraphics
 
 class CatalogueEntryWidget(
@@ -106,6 +107,21 @@ class CatalogueEntryWidget(
             scale = 0.4f,
 //            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
             centered = true
+        )
+
+        drawScaledText(
+            context = guiGraphics,
+            text = spawnData.result.displayName().append(" | ").append(spawnData.getPositionTypeName()),
+            x = x + PORTRAIT_X,
+            y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 14,
+            scale = 0.4f
+        )
+        drawScaledText(
+            context = guiGraphics,
+            text = spawnData.result.getResultName(),
+            x = x + PORTRAIT_X,
+            y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 6,
+            scale = 0.75f
         )
 
         poseStack.popPose()

@@ -4,6 +4,8 @@ import com.cobblemon.mod.common.api.net.Encodable
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.gui.util.RGB
+import com.metacontent.cobblenav.client.gui.util.literal
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.BlockConditionWidget
@@ -14,6 +16,7 @@ import com.metacontent.cobblenav.spawndata.resultdata.SpawnResultData
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 data class SpawnData(
     val id: String,
@@ -141,4 +144,9 @@ data class SpawnData(
         buffer.writeFloat(weight)
         compositeConditions.encode(buffer)
     }
+
+    fun getPositionTypeName(): MutableComponent = translate(
+        "gui.cobblenav.spawn_data.position_type.${positionType}",
+        literal(positionType)
+    )
 }

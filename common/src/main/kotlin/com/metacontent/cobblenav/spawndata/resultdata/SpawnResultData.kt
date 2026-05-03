@@ -5,9 +5,12 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
+import com.metacontent.cobblenav.client.gui.util.literal
+import com.metacontent.cobblenav.client.gui.util.translate
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 import org.joml.Vector3f
@@ -90,3 +93,5 @@ interface SpawnResultData : Encodable {
         FULL("gui.cobblenav.spawn_data.knowledge.full")
     }
 }
+
+fun SpawnResultData.displayName(): MutableComponent = translate("gui.cobblenav.spawn_data.result.$type", literal(type))

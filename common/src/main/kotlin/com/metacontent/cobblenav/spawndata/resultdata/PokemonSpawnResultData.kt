@@ -169,7 +169,7 @@ class PokemonSpawnResultData(
 
     override fun getColor() = pokemon.form.primaryType.hue
 
-    override fun getResultName(): MutableComponent = pokemon.species.translatedName
+    override fun getResultName(): MutableComponent = pokemon.species.translatedName.append(" (${pokemon.form.name})")
 
     override fun shouldRenderPlatform() = renderer.shouldRenderPlatform()
 
