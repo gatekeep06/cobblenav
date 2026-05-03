@@ -1,10 +1,14 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.Environment
 import com.cobblemon.mod.common.api.drop.ItemDropEntry
+import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.*
 import com.metacontent.cobblenav.Cobblenav
@@ -13,6 +17,7 @@ import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
+import com.metacontent.cobblenav.util.getKnowledge
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -27,7 +32,6 @@ class PokemonSpawnResultData(
     val level: IntRange?,
     val drops: Map<ResourceLocation, Float>?,
     val heldItems: Map<ResourceLocation, Float>?,
-    val knowledge: PokedexEntryProgress,
     val positionType: String
 ) : SpawnResultData {
     companion object {
@@ -40,9 +44,7 @@ class PokemonSpawnResultData(
             val renderablePokemon = detail.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
             val positionType = detail.spawnablePositionType.name
 
-            val knowledge = player.pokedex()
-                .getSpeciesRecord(renderablePokemon.species.resourceIdentifier)
-                ?.getFormRecord(renderablePokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
+            val knowledge = player.pokedex().getKnowledge(renderablePokemon)
             if (knowledge == PokedexEntryProgress.NONE && Cobblenav.config.hideUnknownPokemon) return UnknownSpawnResultData(
                 positionType
             )
@@ -57,7 +59,6 @@ class PokemonSpawnResultData(
                 heldItems = detail.heldItems?.associate {
                     ResourceLocation.parse(it.item) to it.percentage.toFloat()
                 },
-                knowledge = knowledge,
                 positionType = positionType
             )
         }
@@ -78,9 +79,16 @@ class PokemonSpawnResultData(
                     { it.readFloat() }
                 )
             },
-            knowledge = buffer.readEnum(PokedexEntryProgress::class.java),
             positionType = buffer.readString()
         )
+    }
+
+    private val pokemonKnowledge: PokedexEntryProgress? by lazy {
+        val pokedex = when (Cobblemon.implementation.environment()) {
+            Environment.CLIENT -> CobblemonClient.clientPokedexData
+            Environment.SERVER -> null
+        }
+        pokedex?.getKnowledge(pokemon)
     }
 
     override val type = PokemonSpawnDetail.TYPE
@@ -153,7 +161,6 @@ class PokemonSpawnResultData(
                 { b, f -> b.writeFloat(f) }
             )
         }
-        buffer.writeEnum(knowledge)
         buffer.writeString(positionType)
     }
 
@@ -171,15 +178,16 @@ class PokemonSpawnResultData(
 
     override fun shouldRenderPlatform() = renderer.shouldRenderPlatform()
 
-    override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && knowledge == PokedexEntryProgress.CAUGHT
+    override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && pokemonKnowledge == PokedexEntryProgress.CAUGHT
 
     override fun getRotation() = renderer.rotation
 
-    override fun isUnknown() = knowledge == PokedexEntryProgress.NONE
+    override fun isUnknown() = pokemonKnowledge == PokedexEntryProgress.NONE
 
-    override fun getResultKnowledge(): SpawnResultData.Knowledge = when (knowledge) {
+    override fun getResultKnowledge(): SpawnResultData.Knowledge = when (pokemonKnowledge) {
         PokedexEntryProgress.NONE -> SpawnResultData.Knowledge.NONE
         PokedexEntryProgress.ENCOUNTERED -> SpawnResultData.Knowledge.PARTLY
         PokedexEntryProgress.CAUGHT -> SpawnResultData.Knowledge.FULL
+        else -> SpawnResultData.Knowledge.NONE
     }
 }

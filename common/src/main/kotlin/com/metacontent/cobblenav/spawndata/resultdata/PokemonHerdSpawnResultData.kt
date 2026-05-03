@@ -1,9 +1,12 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
+import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.Environment
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
+import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.pokedex
 import com.cobblemon.mod.common.util.randomNoCopy
@@ -16,6 +19,7 @@ import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.util.createAndGetAsRenderable
+import com.metacontent.cobblenav.util.getKnowledge
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -27,7 +31,7 @@ class PokemonHerdSpawnResultData(
     val leftPokemon: RenderablePokemon?,
     val leaderPokemon: RenderablePokemon,
     val rightPokemon: RenderablePokemon?,
-    val allPokemon: Map<RenderablePokemon, PokedexEntryProgress>,
+    val allPokemon: List<RenderablePokemon>,
     val positionType: String
 ) : SpawnResultData {
     companion object {
@@ -48,16 +52,11 @@ class PokemonHerdSpawnResultData(
             val leftPokemon = herd.getOrNull(0)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
             val rightPokemon = herd.getOrNull(1)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
 
-            val pokedex = player.pokedex()
-            val allPokemon = detail.herdablePokemon.associate {
-                val pokemon = it.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
-                val knowledge = pokedex
-                    .getSpeciesRecord(pokemon.species.resourceIdentifier)
-                    ?.getFormRecord(pokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
-                pokemon to knowledge
+            val allPokemon = detail.herdablePokemon.map {
+                it.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
             }
 
-            if (isUnknown(allPokemon.values) && Cobblenav.config.hideUnknownPokemon)
+            if (isUnknown(allPokemon.map { player.pokedex().getKnowledge(it) }) && Cobblenav.config.hideUnknownPokemon)
                 return UnknownSpawnResultData(detail.spawnablePositionType.name)
 
             return PokemonHerdSpawnResultData(
@@ -73,15 +72,20 @@ class PokemonHerdSpawnResultData(
             leaderPokemon = RenderablePokemon.loadFromBuffer(buffer),
             leftPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
             rightPokemon = buffer.readNullable { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
-            allPokemon = buffer.readMap(
-                { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
-                { it.readEnum(PokedexEntryProgress::class.java) }
-            ),
+            allPokemon = buffer.readList { RenderablePokemon.loadFromBuffer(it as RegistryFriendlyByteBuf) },
             positionType = buffer.readString()
         )
 
         fun isUnknown(knowledge: Collection<PokedexEntryProgress>) =
             knowledge.filter { it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
+    }
+
+    private val pokemonKnowledge: Map<RenderablePokemon, PokedexEntryProgress?> by lazy {
+        val pokedex = when (Cobblemon.implementation.environment()) {
+            Environment.CLIENT -> CobblemonClient.clientPokedexData
+            Environment.SERVER -> null
+        }
+        allPokemon.associateWith { pokedex?.getKnowledge(it) }
     }
 
     override val type = PokemonHerdSpawnDetail.TYPE
@@ -93,7 +97,7 @@ class PokemonHerdSpawnResultData(
                 y = 0,
                 width = SpawnDataDetailWidget.SECTION_WIDTH - 2,
                 text = translate("gui.cobblenav.spawn_data.pokemon_herd").also { component ->
-                    allPokemon.keys.forEachIndexed { index, pokemon ->
+                    pokemonKnowledge.keys.forEachIndexed { index, pokemon ->
                         component.append(pokemon.species.translatedName)
                         if (index < allPokemon.size - 1) {
                             component.append(", ")
@@ -138,11 +142,7 @@ class PokemonHerdSpawnResultData(
         leaderPokemon.saveToBuffer(buffer)
         buffer.writeNullable(leftPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
         buffer.writeNullable(rightPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
-        buffer.writeMap(
-            allPokemon,
-            { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) },
-            { buf, knowledge -> buf.writeEnum(knowledge) }
-        )
+        buffer.writeCollection(allPokemon) { buf, pkm -> pkm.saveToBuffer(buf as RegistryFriendlyByteBuf) }
         buffer.writeString(positionType)
     }
 
@@ -163,17 +163,18 @@ class PokemonHerdSpawnResultData(
 
     override fun shouldRenderPlatform() = leaderRenderer.shouldRenderPlatform()
 
-    override fun shouldRenderPokeBall() = leaderRenderer.shouldRenderPlatform() && allPokemon.values.all { it == PokedexEntryProgress.CAUGHT }
+    override fun shouldRenderPokeBall() =
+        leaderRenderer.shouldRenderPlatform() && pokemonKnowledge.values.all { it == PokedexEntryProgress.CAUGHT }
 
     override fun getRotation() = leaderRenderer.rotation
 
-    override fun isUnknown() = isUnknown(allPokemon.values)
+    override fun isUnknown() = isUnknown(pokemonKnowledge.values)
 
     override fun getResultKnowledge(): SpawnResultData.Knowledge {
-        val amount = allPokemon.count { it.value == PokedexEntryProgress.CAUGHT }
+        val amount = pokemonKnowledge.count { it.value == PokedexEntryProgress.CAUGHT }
         return if (amount == allPokemon.size) {
             SpawnResultData.Knowledge.FULL
-        } else if (amount != 0 || allPokemon.any { it.value == PokedexEntryProgress.ENCOUNTERED }) {
+        } else if (amount != 0 || pokemonKnowledge.any { it.value == PokedexEntryProgress.ENCOUNTERED }) {
             SpawnResultData.Knowledge.PARTLY
         } else {
             SpawnResultData.Knowledge.NONE
