@@ -76,8 +76,8 @@ class PokemonHerdSpawnResultData(
             positionType = buffer.readString()
         )
 
-        fun isUnknown(knowledge: Collection<PokedexEntryProgress>) =
-            knowledge.filter { it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
+        fun isUnknown(knowledge: Collection<PokedexEntryProgress?>) =
+            knowledge.filter { it != null && it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
     }
 
     private val pokemonKnowledge: Map<RenderablePokemon, PokedexEntryProgress?> by lazy {
