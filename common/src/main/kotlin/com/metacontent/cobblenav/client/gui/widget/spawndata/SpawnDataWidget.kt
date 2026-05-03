@@ -56,6 +56,7 @@ open class SpawnDataWidget(
         DimensionPlateRepository.EMPTY
     }
     private val stack by lazy { ItemStack(CobblemonItems.POKE_BALL) }
+    private val shouldRenderPokeBall = spawnData.data.result.shouldRenderPokeBall()
     var nearbyEntityIds = emptyList<Int>()
 
     private val trackButton = IconButton(
@@ -91,7 +92,7 @@ open class SpawnDataWidget(
             hovered = hovered
         )
 
-        if (spawnData.data.result.shouldRenderPokeBall()) {
+        if (shouldRenderPokeBall) {
             renderPokeBall(
                 guiGraphics = guiGraphics,
                 x = x.toDouble() + POKE_BALL_OFFSET + platform.getPokemonXOffset(hovered),

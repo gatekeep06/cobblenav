@@ -30,6 +30,8 @@ class CatalogueEntryWidget(
         val ENTRY = gui("catalogue/entry")
     }
 
+    private val knowledge = spawnData.result.getResultKnowledge()
+
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
         poseStack.pushPose()
@@ -98,7 +100,7 @@ class CatalogueEntryWidget(
         )
         drawScaledText(
             context = guiGraphics,
-            text = translate(spawnData.result.getResultKnowledge().translateKey),
+            text = translate(knowledge.translateKey),
             x = x + INFO_X + INFO_WIDTH * 2 + 10,
             y = y + INFO_Y,
             scale = 0.4f,

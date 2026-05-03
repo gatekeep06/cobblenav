@@ -76,17 +76,12 @@ class PokemonHerdSpawnResultData(
             positionType = buffer.readString()
         )
 
-        fun isUnknown(knowledge: Collection<PokedexEntryProgress?>) =
-            knowledge.filter { it != null && it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
+        fun isUnknown(knowledge: Collection<PokedexEntryProgress>) =
+            knowledge.filter { it != PokedexEntryProgress.NONE }.size.toDouble() / knowledge.size < Cobblenav.config.percentageForKnownHerd
     }
 
-    private val pokemonKnowledge: Map<RenderablePokemon, PokedexEntryProgress?> by lazy {
-        val pokedex = when (Cobblemon.implementation.environment()) {
-            Environment.CLIENT -> CobblemonClient.clientPokedexData
-            Environment.SERVER -> null
-        }
-        allPokemon.associateWith { pokedex?.getKnowledge(it) }
-    }
+    private val pokemonKnowledge: Map<RenderablePokemon, PokedexEntryProgress>
+        get() = allPokemon.associateWith { CobblemonClient.clientPokedexData.getKnowledge(it) }
 
     override val type = PokemonHerdSpawnDetail.TYPE
 

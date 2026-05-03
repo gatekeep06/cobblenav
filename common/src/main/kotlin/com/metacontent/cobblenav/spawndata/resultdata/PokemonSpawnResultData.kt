@@ -83,13 +83,8 @@ class PokemonSpawnResultData(
         )
     }
 
-    private val pokemonKnowledge: PokedexEntryProgress? by lazy {
-        val pokedex = when (Cobblemon.implementation.environment()) {
-            Environment.CLIENT -> CobblemonClient.clientPokedexData
-            Environment.SERVER -> null
-        }
-        pokedex?.getKnowledge(pokemon)
-    }
+    private val pokemonKnowledge: PokedexEntryProgress
+        get() = CobblemonClient.clientPokedexData.getKnowledge(pokemon)
 
     override val type = PokemonSpawnDetail.TYPE
 
@@ -188,6 +183,5 @@ class PokemonSpawnResultData(
         PokedexEntryProgress.NONE -> SpawnResultData.Knowledge.NONE
         PokedexEntryProgress.ENCOUNTERED -> SpawnResultData.Knowledge.PARTLY
         PokedexEntryProgress.CAUGHT -> SpawnResultData.Knowledge.FULL
-        else -> SpawnResultData.Knowledge.NONE
     }
 }

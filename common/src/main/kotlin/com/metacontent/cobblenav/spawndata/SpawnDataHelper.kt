@@ -33,7 +33,6 @@ import com.metacontent.cobblenav.util.WeightedBucket
 import com.metacontent.cobblenav.util.spawnCatalogue
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import kotlin.math.ceil
 
@@ -208,9 +207,9 @@ object SpawnDataHelper {
     ): SpawnData? {
         val result = SpawnResultData.fromDetail(detail, player) ?: return null
 
-        val canShowConditions =
+        val isKnownSpawn =
             !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
-        val compositeConditions = if (canShowConditions) {
+        val compositeConditions = if (isKnownSpawn) {
             spawnDetails[detail.id]?.first { it.first == detail }?.second ?: run {
                 Cobblenav.LOGGER.error("Something is off. I can feel it")
                 return null
@@ -226,7 +225,7 @@ object SpawnDataHelper {
         }
 
         return SpawnData(
-            id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownPokemon) detail.id else "???",
+            id = if (!isKnownSpawn) detail.id else "???",
             result = result,
             positionType = detail.spawnablePositionType.name,
             bucket = detail.bucket.name,
@@ -243,9 +242,9 @@ object SpawnDataHelper {
         return details.mapNotNull { (detail, conditions) ->
             val result = SpawnResultData.fromDetail(detail, player) ?: return@mapNotNull null
 
-            val canShowConditions =
+            val isKnownSpawn =
                 !Cobblenav.config.hideConditionsOfUnknownSpawns || player.spawnCatalogue().contains(detail)
-            val finalConditions = if (canShowConditions) {
+            val finalConditions = if (isKnownSpawn) {
                 conditions
             } else {
                 val condition = ConditionData("unknown", 0xffffff, emptyList())
@@ -258,7 +257,7 @@ object SpawnDataHelper {
             }
 
             SpawnData(
-                id = if (!result.isUnknown() || !Cobblenav.config.hideUnknownPokemon) detail.id else "???",
+                id = if (isKnownSpawn) detail.id else "???",
                 result = result,
                 positionType = detail.spawnablePositionType.name,
                 bucket = detail.bucket.name,
