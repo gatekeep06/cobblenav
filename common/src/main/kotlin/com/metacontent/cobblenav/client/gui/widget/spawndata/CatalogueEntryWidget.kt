@@ -111,17 +111,17 @@ class CatalogueEntryWidget(
 
         drawScaledText(
             context = guiGraphics,
-            text = spawnData.result.displayName().append(" | ").append(spawnData.getPositionTypeName()),
-            x = x + PORTRAIT_X,
-            y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 14,
-            scale = 0.4f
+            text = spawnData.result.getResultName(),
+            x = x + PORTRAIT_X + 3,
+            y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 6,
+            scale = 0.75f
         )
         drawScaledText(
             context = guiGraphics,
-            text = spawnData.result.getResultName(),
-            x = x + PORTRAIT_X,
-            y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 6,
-            scale = 0.75f
+            text = spawnData.result.displayName().append(" | ").append(spawnData.getPositionTypeName()),
+            x = x + PORTRAIT_X + 3,
+            y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 14,
+            scale = 0.4f
         )
 
         poseStack.popPose()
