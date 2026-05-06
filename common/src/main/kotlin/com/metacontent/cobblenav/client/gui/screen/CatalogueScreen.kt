@@ -11,6 +11,8 @@ import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.CatalogueEntryWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
+import com.metacontent.cobblenav.spawndata.CheckedSpawnData
+import com.metacontent.cobblenav.spawndata.SpawnData
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
@@ -19,7 +21,7 @@ class CatalogueScreen(
     os: PokenavOS,
     makeOpeningSound: Boolean = false,
     animateOpening: Boolean = false
-) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Map")) {
+) : PokenavScreen(os, makeOpeningSound, animateOpening, Component.literal("Map")), SpawnDataDisplayer {
     companion object {
         const val VIEW_WIDTH = 298
         const val VIEW_HEIGHT = 182
@@ -33,6 +35,12 @@ class CatalogueScreen(
     var viewX = 0
     var viewY = 0
     override val color = FastColor.ARGB32.color(255, 58, 150, 182)
+
+    private var spawnData: List<SpawnData>? = null
+    override val displayedData: List<SpawnData>?
+        get() = spawnData
+    override var hoveredData: CheckedSpawnData? = null
+    override var selectedData: SpawnData? = null
 
     private lateinit var scrollableView: ScrollableView
     private lateinit var entryTableView: TableView<ScrollableItemWidget<CatalogueEntryWidget>>
@@ -76,14 +84,13 @@ class CatalogueScreen(
     }
 
     fun populateCatalogue() {
-        val entries = CobblenavClient.spawnDataCatalogue.cachedSpawnData.flatMap { (_, value) ->
-            value.map { data ->
-                ScrollableItemWidget(
-                    child = CatalogueEntryWidget(data),
-                    topEdge = scrollableView.y,
-                    bottomEdge = scrollableView.y + scrollableView.height
-                )
-            }
+        spawnData = CobblenavClient.spawnDataCatalogue.cachedSpawnData.flatMap { it.value }
+        val entries = spawnData!!.map { data ->
+            ScrollableItemWidget(
+                child = CatalogueEntryWidget(data, this),
+                topEdge = scrollableView.y,
+                bottomEdge = scrollableView.y + scrollableView.height
+            )
         }
         entryTableView.add(entries)
     }
@@ -99,4 +106,6 @@ class CatalogueScreen(
             height = VIEW_HEIGHT + BucketSelectorWidget.HEIGHT
         )
     }
+
+    override fun isBlockingTooltip(): Boolean = blockWidgets
 }

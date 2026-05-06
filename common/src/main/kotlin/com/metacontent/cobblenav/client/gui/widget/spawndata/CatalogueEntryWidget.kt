@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
+import com.metacontent.cobblenav.client.gui.screen.SpawnDataDisplayer
 import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
@@ -13,7 +14,8 @@ import com.metacontent.cobblenav.spawndata.resultdata.getTypeName
 import net.minecraft.client.gui.GuiGraphics
 
 class CatalogueEntryWidget(
-    val spawnData: SpawnData
+    val spawnData: SpawnData,
+    private val displayer: SpawnDataDisplayer
 ) : SoundlessWidget(0, 0, WIDTH, HEIGHT, spawnData.result.getResultName()) {
     companion object {
         const val WIDTH = 87
