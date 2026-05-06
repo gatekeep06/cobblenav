@@ -22,7 +22,7 @@ class CatalogueEntryWidget(
         const val PORTRAIT_Y = 15
         const val PORTRAIT_WIDTH = 20
         const val PORTRAIT_HEIGHT = 20
-        const val ID_WIDTH = 40
+        const val ID_WIDTH = 38
         const val INFO_X = 37
         const val INFO_Y = 31
         const val INFO_WIDTH = 13
@@ -81,13 +81,14 @@ class CatalogueEntryWidget(
             scale = 0.5f,
             maxCharacterWidth = (ID_WIDTH / 0.5f).toInt()
         )
+
         drawScaledText(
             context = guiGraphics,
             text = translate("bucket.cobblenav.${spawnData.bucket}", literal(spawnData.bucket).red()),
             x = x + INFO_X - 0.5,
             y = y + INFO_Y,
             scale = 0.4f,
-//            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
+            maxCharacterWidth = ((INFO_WIDTH + 6) / 0.4f).toInt(),
             centered = true
         )
         drawScaledText(
@@ -96,7 +97,7 @@ class CatalogueEntryWidget(
             x = x + INFO_X + INFO_WIDTH + 4.5,
             y = y + INFO_Y,
             scale = 0.4f,
-//            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
+            maxCharacterWidth = ((INFO_WIDTH + 6) / 0.4f).toInt(),
             centered = true
         )
         drawScaledText(
@@ -105,7 +106,7 @@ class CatalogueEntryWidget(
             x = x + INFO_X + INFO_WIDTH * 2 + 10,
             y = y + INFO_Y,
             scale = 0.4f,
-//            maxCharacterWidth = ((INFO_WIDTH + 4) / 0.5f).toInt(),
+            maxCharacterWidth = ((INFO_WIDTH + 6) / 0.4f).toInt(),
             centered = true
         )
 
@@ -114,14 +115,16 @@ class CatalogueEntryWidget(
             text = spawnData.result.getResultName(),
             x = x + PORTRAIT_X + 3,
             y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 6,
-            scale = 0.75f
+            scale = 0.75f,
+            maxCharacterWidth = ((width - 2 * (PORTRAIT_X + 3)) / 0.75f).toInt()
         )
         drawScaledText(
             context = guiGraphics,
             text = spawnData.result.getTypeName().append(" | ").append(spawnData.getPositionTypeName()),
             x = x + PORTRAIT_X + 3,
             y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 14,
-            scale = 0.4f
+            scale = 0.4f,
+            maxCharacterWidth = ((width - 2 * (PORTRAIT_X + 3)) / 0.4f).toInt()
         )
 
         poseStack.popPose()
