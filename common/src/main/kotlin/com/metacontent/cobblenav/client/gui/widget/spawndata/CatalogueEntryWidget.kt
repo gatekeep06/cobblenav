@@ -131,4 +131,15 @@ class CatalogueEntryWidget(
 
         poseStack.popPose()
     }
+
+    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+        if (super.mouseClicked(pMouseX, pMouseY, pButton)) return true
+
+        return if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
+            displayer.selectedData = spawnData
+            true
+        } else {
+            false
+        }
+    }
 }
