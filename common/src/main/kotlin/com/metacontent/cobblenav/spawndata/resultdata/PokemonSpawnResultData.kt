@@ -1,9 +1,6 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
-import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.Environment
 import com.cobblemon.mod.common.api.drop.ItemDropEntry
-import com.cobblemon.mod.common.api.pokedex.AbstractPokedexManager
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonSpawnDetail

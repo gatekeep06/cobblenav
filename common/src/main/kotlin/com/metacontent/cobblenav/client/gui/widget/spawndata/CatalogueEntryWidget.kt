@@ -9,7 +9,7 @@ import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.spawndata.SpawnData
-import com.metacontent.cobblenav.spawndata.resultdata.displayName
+import com.metacontent.cobblenav.spawndata.resultdata.getTypeName
 import net.minecraft.client.gui.GuiGraphics
 
 class CatalogueEntryWidget(
@@ -118,7 +118,7 @@ class CatalogueEntryWidget(
         )
         drawScaledText(
             context = guiGraphics,
-            text = spawnData.result.displayName().append(" | ").append(spawnData.getPositionTypeName()),
+            text = spawnData.result.getTypeName().append(" | ").append(spawnData.getPositionTypeName()),
             x = x + PORTRAIT_X + 3,
             y = y + PORTRAIT_Y + PORTRAIT_HEIGHT + 14,
             scale = 0.4f

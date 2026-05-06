@@ -10,7 +10,6 @@ import com.metacontent.cobblenav.client.gui.util.translate
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.server.level.ServerPlayer
 import org.joml.Vector3f
@@ -94,4 +93,4 @@ interface SpawnResultData : Encodable {
     }
 }
 
-fun SpawnResultData.displayName(): MutableComponent = translate("gui.cobblenav.spawn_data.result.$type", literal(type))
+fun SpawnResultData.getTypeName(): MutableComponent = translate("gui.cobblenav.spawn_data.result.$type", literal(type))
