@@ -10,8 +10,6 @@ interface SpawnDataDisplayer {
 
     fun isBlockingTooltip(): Boolean
 
-    fun selectedCanBeTracked(): Boolean
-
     fun isDataSelected(): Boolean = selectedData != null
 
     fun switchData(step: Int): Int {

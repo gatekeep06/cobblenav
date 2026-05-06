@@ -276,6 +276,4 @@ class FishingnavScreen(
     }
 
     override fun isBlockingTooltip() = blockWidgets
-
-    override fun selectedCanBeTracked() = false
 }
