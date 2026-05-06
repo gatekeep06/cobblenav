@@ -9,6 +9,7 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableI
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.CatalogueEntryWidget
+import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.CheckedSpawnData
@@ -44,6 +45,7 @@ class CatalogueScreen(
 
     private lateinit var scrollableView: ScrollableView
     private lateinit var entryTableView: TableView<ScrollableItemWidget<CatalogueEntryWidget>>
+    private lateinit var spawnDataDetails: SpawnDataDetailWidget
 
     override fun initScreen() {
         viewX = screenX + VERTICAL_BORDER_DEPTH + 5
@@ -81,6 +83,13 @@ class CatalogueScreen(
         } else {
             RequestCatalogueDataPacket(ids).sendToServer()
         }
+
+        spawnDataDetails = SpawnDataDetailWidget(
+            displayer = this,
+            pokenavScreen = this,
+            x = screenX + VERTICAL_BORDER_DEPTH,
+            y = screenY + HORIZONTAL_BORDER_DEPTH
+        ).also { addUnblockableWidget(it) }
     }
 
     fun populateCatalogue() {
