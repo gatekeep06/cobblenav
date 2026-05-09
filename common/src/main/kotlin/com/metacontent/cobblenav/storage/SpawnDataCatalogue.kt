@@ -46,49 +46,59 @@ class SpawnDataCatalogue(
     fun catalogue(id: String): Boolean {
         return spawnDetailIds.add(id).also {
             if (it) {
-                onAdded(setOf(id))
+                onCatalogueUpdated()
             }
         }
     }
 
     fun catalogue(ids: Iterable<String>): Boolean {
-        val added = ids.filter { spawnDetailIds.add(it) }.toSet()
-        if (added.isNotEmpty()) {
-            onAdded(added)
-            return true
+        return spawnDetailIds.addAll(ids).also {
+            if (it) {
+                onCatalogueUpdated()
+            }
         }
-        return false
     }
 
     fun remove(id: String): Boolean {
-        return spawnDetailIds.remove(id)
+        return spawnDetailIds.remove(id).also {
+            if (it) {
+                onCatalogueUpdated()
+            }
+        }
     }
 
     fun remove(ids: Set<String>): Boolean {
-        return spawnDetailIds.removeAll(ids)
+        return spawnDetailIds.removeAll(ids).also {
+            if (it) {
+                onCatalogueUpdated()
+            }
+        }
+    }
+
+    fun remove(ids: Iterable<String>): Boolean {
+        return remove(ids.toSet())
     }
 
     fun clear(): Boolean {
         if (spawnDetailIds.isNotEmpty()) {
             spawnDetailIds.clear()
+            onCatalogueUpdated()
             return true
         }
         return false
     }
 
-    private fun onAdded(entries: Set<String>) {
+    private fun onCatalogueUpdated() {
         player?.let {
             SetClientPlayerDataPacket(
                 type = CobblenavDataStoreTypes.SPAWN_DATA,
-                playerData = collectClientData(entries),
+                playerData = toClientData(),
                 isIncremental = true
             ).sendToPlayer(it)
         }
     }
 
-    override fun toClientData(): ClientSpawnDataCatalogue = collectClientData(spawnDetailIds)
-
-    private fun collectClientData(spawnDetailIds: Set<String>): ClientSpawnDataCatalogue {
+    override fun toClientData(): ClientSpawnDataCatalogue {
         val data = player?.let { player ->
             spawnDetailIds.associateWith { SpawnDataHelper.getSpawnData(it, player) }.toMutableMap()
         } ?: mutableMapOf()
