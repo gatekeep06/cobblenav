@@ -22,6 +22,7 @@ class ClientSpawnDataCatalogue(
 
         fun afterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
+                //TODO: handle deleting
                 CobblenavClient.spawnDataCatalogue = it
             }
         }
@@ -29,9 +30,10 @@ class ClientSpawnDataCatalogue(
         fun incrementalAfterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
                 PokenavSignalManager.add(SPAWN_CATALOGUED_SIGNAL.copy())
-                val current = CobblenavClient.spawnDataCatalogue
-                current.spawnData.putAll(data.spawnData)
-                CobblenavClient.spawnDataCatalogue.newlyCatalogued.addAll(data.spawnDetailIds)
+                val current = CobblenavClient.spawnDataCatalogue.spawnDetailIds
+                val updated = data.spawnDetailIds
+                CobblenavClient.spawnDataCatalogue.newlyCataloguedAmount += (updated.size - current.size).coerceAtLeast(0)
+                current.addAll(updated)
             }
         }
     }
@@ -39,7 +41,8 @@ class ClientSpawnDataCatalogue(
     override val spawnDetailIds: MutableSet<String>
         get() = spawnData.keys
 
-    private val newlyCatalogued = mutableSetOf<String>()
+    var newlyCataloguedAmount = 0
+        internal set
 
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeCollection(spawnDetailIds) { b, s -> b.writeString(s) }
