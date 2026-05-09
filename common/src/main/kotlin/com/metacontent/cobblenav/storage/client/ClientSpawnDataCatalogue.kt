@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.storage.client
 
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
-import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
@@ -13,14 +12,12 @@ import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
 import net.minecraft.network.RegistryFriendlyByteBuf
 
 class ClientSpawnDataCatalogue(
-    spawnDetailIds: MutableSet<String> = mutableSetOf()
-) : AbstractSpawnDataCatalogue(spawnDetailIds), ClientInstancedPlayerData {
+    val spawnData: MutableMap<String, List<SpawnData>> = mutableMapOf()
+) : AbstractSpawnDataCatalogue(), ClientInstancedPlayerData {
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket = SetClientPlayerDataPacket(
             type = CobblenavDataStoreTypes.SPAWN_DATA,
-            playerData = ClientSpawnDataCatalogue(
-                spawnDetailIds = buffer.readList { it.readString() }.toMutableSet()
-            )
+            playerData = ClientSpawnDataCatalogue()
         )
 
         fun afterDecode(data: ClientInstancedPlayerData) {
@@ -41,7 +38,8 @@ class ClientSpawnDataCatalogue(
         }
     }
 
-    val cachedSpawnData = mutableMapOf<String, List<SpawnData>>()
+    override val spawnDetailIds: MutableSet<String>
+        get() = spawnData.keys
 
     var newlyCataloguedAmount = 0
         internal set
@@ -50,9 +48,9 @@ class ClientSpawnDataCatalogue(
         buf.writeCollection(spawnDetailIds) { b, s -> b.writeString(s) }
     }
 
-    fun missingCachedData(): List<String> = if (cachedSpawnData.isEmpty()) {
+    fun missingCachedData(): List<String> = if (spawnData.isEmpty()) {
         spawnDetailIds.toList()
     } else {
-        spawnDetailIds.filter { !cachedSpawnData.contains(it) }
+        spawnDetailIds.filter { !spawnData.contains(it) }
     }
 }

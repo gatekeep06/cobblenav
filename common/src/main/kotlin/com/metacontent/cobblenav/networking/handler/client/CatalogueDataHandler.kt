@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft
 object CatalogueDataHandler : ClientNetworkPacketHandler<CatalogueDataPacket> {
     override fun handle(packet: CatalogueDataPacket, client: Minecraft) {
         val grouped = packet.catalogueData.groupBy(SpawnData::id)
-        CobblenavClient.spawnDataCatalogue.cachedSpawnData.putAll(grouped)
+        CobblenavClient.spawnDataCatalogue.spawnData.putAll(grouped)
         (client.screen as? CatalogueScreen)?.populateCatalogue()
     }
 }

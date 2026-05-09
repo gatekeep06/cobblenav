@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
+import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.storage.client.ClientSpawnDataCatalogue
 import com.metacontent.cobblenav.util.getSpawnDataCatalogue
 import com.mojang.serialization.Codec
@@ -14,8 +15,8 @@ import java.util.*
 
 class SpawnDataCatalogue(
     override val uuid: UUID,
-    spawnDetailIds: MutableSet<String>
-) : AbstractSpawnDataCatalogue(spawnDetailIds), InstancedPlayerData {
+    override val spawnDetailIds: MutableSet<String>
+) : AbstractSpawnDataCatalogue(), InstancedPlayerData {
     companion object {
         val CODEC: Codec<SpawnDataCatalogue> = RecordCodecBuilder.create<SpawnDataCatalogue> { instance ->
             instance.group(
@@ -97,5 +98,10 @@ class SpawnDataCatalogue(
         }
     }
 
-    override fun toClientData() = ClientSpawnDataCatalogue(spawnDetailIds)
+    override fun toClientData(): ClientSpawnDataCatalogue {
+        val data = player?.let { player ->
+            spawnDetailIds.associateWith { SpawnDataHelper.getSpawnData(it, player) }.toMutableMap()
+        } ?: mutableMapOf()
+        return ClientSpawnDataCatalogue(data)
+    }
 }
