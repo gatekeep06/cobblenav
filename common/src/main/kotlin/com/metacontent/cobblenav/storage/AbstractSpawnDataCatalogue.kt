@@ -2,9 +2,9 @@ package com.metacontent.cobblenav.storage
 
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail
 
-abstract class AbstractSpawnDataCatalogue() {
-    protected abstract val spawnDetailIds: MutableSet<String>
-
+abstract class AbstractSpawnDataCatalogue(
+    protected val spawnDetailIds: MutableSet<String>
+) {
     fun contains(detailId: String) = spawnDetailIds.contains(detailId)
 
     fun contains(detail: SpawnDetail) = contains(detail.id)

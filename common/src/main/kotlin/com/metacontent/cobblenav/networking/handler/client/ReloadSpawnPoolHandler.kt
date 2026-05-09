@@ -7,6 +7,6 @@ import net.minecraft.client.Minecraft
 
 object ReloadSpawnPoolHandler : ClientNetworkPacketHandler<ReloadSpawnPoolPacket> {
     override fun handle(packet: ReloadSpawnPoolPacket, client: Minecraft) {
-        CobblenavClient.spawnDataCatalogue.spawnData.clear()
+        CobblenavClient.spawnDataCatalogue.cachedSpawnData.clear()
     }
 }
