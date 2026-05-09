@@ -96,7 +96,7 @@ object CatalogueCommand : PokenavCommand() {
         players.forEach { player ->
             SpawnDataCatalogue.executeAndSave(player) { data ->
                 val ids = SpawnDataHelper.getSpawnDetailIds(species)
-                return@executeAndSave ids != null && data.remove(ids.toSet())
+                return@executeAndSave ids != null && data.remove(ids)
             }
         }
         return Command.SINGLE_SUCCESS
