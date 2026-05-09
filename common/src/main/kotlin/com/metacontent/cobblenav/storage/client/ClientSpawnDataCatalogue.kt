@@ -2,7 +2,6 @@ package com.metacontent.cobblenav.storage.client
 
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
-import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
@@ -16,16 +15,10 @@ class ClientSpawnDataCatalogue(
     val spawnData: MutableMap<String, List<SpawnData>> = mutableMapOf()
 ) : AbstractSpawnDataCatalogue(), ClientInstancedPlayerData {
     companion object {
-        fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket {
-            val map = buffer.readMap(
-                { it.readString() },
-                { it.readList { buf -> SpawnData.decode(buf as RegistryFriendlyByteBuf) } }
-            ).toMutableMap()
-            return SetClientPlayerDataPacket(
-                type = CobblenavDataStoreTypes.SPAWN_DATA,
-                playerData = ClientSpawnDataCatalogue(map)
-            )
-        }
+        fun decode(buffer: RegistryFriendlyByteBuf): SetClientPlayerDataPacket = SetClientPlayerDataPacket(
+            type = CobblenavDataStoreTypes.SPAWN_DATA,
+            playerData = ClientSpawnDataCatalogue()
+        )
 
         fun afterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
@@ -49,11 +42,7 @@ class ClientSpawnDataCatalogue(
     private val newlyCatalogued = mutableSetOf<String>()
 
     override fun encode(buf: RegistryFriendlyByteBuf) {
-        buf.writeMap(
-            spawnData,
-            { b, key -> b.writeString(key) },
-            { b, value -> b.writeCollection(value) { buffer, data -> data.encode(buffer as RegistryFriendlyByteBuf) } }
-        )
+        buf.writeCollection(spawnDetailIds) { b, s -> b.writeString(s) }
     }
 
     fun missingCachedData(): List<String> = if (spawnData.isEmpty()) {
