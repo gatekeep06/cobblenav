@@ -1,7 +1,5 @@
 package com.metacontent.cobblenav.spawndata.resultdata
 
-import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.Environment
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.spawning.detail.PokemonHerdSpawnDetail
@@ -18,7 +16,6 @@ import com.metacontent.cobblenav.client.gui.util.translate
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
-import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.metacontent.cobblenav.util.getKnowledge
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
@@ -49,11 +46,11 @@ class PokemonHerdSpawnResultData(
             val leader = leaders.random()
 
             val herd = heardables.filter { it.isLeader != true }.ifEmpty { heardables }.randomNoCopy(2)
-            val leftPokemon = herd.getOrNull(0)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
-            val rightPokemon = herd.getOrNull(1)?.pokemon?.createAndGetAsRenderable(player.serverLevel(), player.onPos)
+            val leftPokemon = herd.getOrNull(0)?.pokemon?.asRenderablePokemon()
+            val rightPokemon = herd.getOrNull(1)?.pokemon?.asRenderablePokemon()
 
             val allPokemon = detail.herdablePokemon.map {
-                it.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
+                it.pokemon.asRenderablePokemon()
             }
 
             if (isUnknown(allPokemon.map { player.pokedex().getKnowledge(it) }) && Cobblenav.config.hideUnknownPokemon)
@@ -61,7 +58,7 @@ class PokemonHerdSpawnResultData(
 
             return PokemonHerdSpawnResultData(
                 leftPokemon = leftPokemon,
-                leaderPokemon = leader.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos),
+                leaderPokemon = leader.pokemon.asRenderablePokemon(),
                 rightPokemon = rightPokemon,
                 allPokemon = allPokemon,
                 positionType = detail.spawnablePositionType.name
