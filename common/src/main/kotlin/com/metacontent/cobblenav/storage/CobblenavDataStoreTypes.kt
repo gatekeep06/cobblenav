@@ -11,8 +11,7 @@ object CobblenavDataStoreTypes {
         PlayerInstancedDataStoreType(
             id = cobblenavResource("spawn_data_catalogue"),
             decoder = ClientSpawnDataCatalogue::decode,
-            afterDecodeAction = ClientSpawnDataCatalogue::afterDecode,
-            incrementalAfterDecodeAction = ClientSpawnDataCatalogue::incrementalAfterDecode
+            afterDecodeAction = ClientSpawnDataCatalogue::afterDecode
         )
     )
 
