@@ -82,7 +82,7 @@ class SpawnDataCatalogue(
                 type = CobblenavDataStoreTypes.SPAWN_DATA,
                 playerData = collectClientData(entries),
                 isIncremental = true
-            )
+            ).sendToPlayer(it)
         }
     }
 
