@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager
 import com.metacontent.cobblenav.client.gui.PokenavSignalManager.SPAWN_CATALOGUED_SIGNAL
+import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.storage.AbstractSpawnDataCatalogue
 import com.metacontent.cobblenav.storage.CobblenavDataStoreTypes
@@ -25,8 +26,8 @@ class ClientSpawnDataCatalogue(
 
         fun afterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
-                //TODO: handle deleting
                 CobblenavClient.spawnDataCatalogue = it
+                RequestCatalogueDataPacket(CobblenavClient.spawnDataCatalogue.missingCachedData()).sendToServer()
             }
         }
 
@@ -34,9 +35,13 @@ class ClientSpawnDataCatalogue(
             (data as? ClientSpawnDataCatalogue)?.let {
                 PokenavSignalManager.add(SPAWN_CATALOGUED_SIGNAL.copy())
                 val current = CobblenavClient.spawnDataCatalogue.spawnDetailIds
-                val updated = data.spawnDetailIds
+                val updated = it.spawnDetailIds
+                CobblenavClient.spawnDataCatalogue = it
                 CobblenavClient.spawnDataCatalogue.newlyCataloguedAmount += (updated.size - current.size).coerceAtLeast(0)
-                current.addAll(updated)
+
+                if (CobblenavClient.spawnDataCatalogue.missingCachedData().size > 100) {
+                    RequestCatalogueDataPacket(CobblenavClient.spawnDataCatalogue.missingCachedData()).sendToServer()
+                }
             }
         }
     }
