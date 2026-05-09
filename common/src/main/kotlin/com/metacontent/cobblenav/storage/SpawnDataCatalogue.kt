@@ -44,57 +44,59 @@ class SpawnDataCatalogue(
 
     fun catalogue(id: String): Boolean {
         return spawnDetailIds.add(id).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
+            if (it) onAdded(listOf(id))
         }
     }
 
     fun catalogue(ids: Iterable<String>): Boolean {
-        return spawnDetailIds.addAll(ids).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
-        }
-    }
-
-    fun remove(id: String): Boolean {
-        return spawnDetailIds.remove(id).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
-        }
-    }
-
-    fun remove(ids: Set<String>): Boolean {
-        return spawnDetailIds.removeAll(ids).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
-        }
-    }
-
-    fun remove(ids: Iterable<String>): Boolean {
-        return remove(ids.toSet())
-    }
-
-    fun clear(): Boolean {
-        if (spawnDetailIds.isNotEmpty()) {
-            spawnDetailIds.clear()
-            onCatalogueUpdated()
+        val addedIds = ids.filter { spawnDetailIds.add(it) }
+        if (addedIds.isNotEmpty()) {
+            onAdded(addedIds)
             return true
         }
         return false
     }
 
-    private fun onCatalogueUpdated() {
-        player?.let {
-            SetClientPlayerDataPacket(
-                type = CobblenavDataStoreTypes.SPAWN_DATA,
-                playerData = toClientData(),
-                isIncremental = true
-            ).sendToPlayer(it)
+    fun remove(id: String): Boolean {
+        return spawnDetailIds.remove(id).also {
+            if (it) onRemoved(listOf(id))
         }
+    }
+
+    fun remove(ids: Iterable<String>): Boolean {
+        val removedIds = mutableListOf<String>()
+        spawnDetailIds.removeAll { id ->
+            ids.contains(id).also {
+                if (it) removedIds.add(id)
+            }
+        }
+        if (removedIds.isNotEmpty()) {
+            onRemoved(removedIds)
+            return true
+        }
+        return false
+    }
+
+    fun clear(): Boolean {
+        if (spawnDetailIds.isNotEmpty()) {
+            spawnDetailIds.clear()
+            player?.let {
+                SetClientPlayerDataPacket(
+                    type = CobblenavDataStoreTypes.SPAWN_DATA,
+                    playerData = toClientData()
+                ).sendToPlayer(it)
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun onAdded(ids: Iterable<String>) {
+
+    }
+
+    private fun onRemoved(ids: Iterable<String>) {
+
     }
 
     override fun toClientData() = ClientSpawnDataCatalogue(spawnDetailIds)
