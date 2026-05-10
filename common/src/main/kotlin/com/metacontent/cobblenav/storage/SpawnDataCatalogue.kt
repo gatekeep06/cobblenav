@@ -4,6 +4,9 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
+import com.metacontent.cobblenav.networking.packet.client.AddCatalogueEntriesPacket
+import com.metacontent.cobblenav.networking.packet.client.RemoveCatalogueEntriesPacket
+import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.storage.client.ClientSpawnDataCatalogue
 import com.metacontent.cobblenav.util.getSpawnDataCatalogue
 import com.mojang.serialization.Codec
@@ -40,7 +43,8 @@ class SpawnDataCatalogue(
         }
     }
 
-    private val player: ServerPlayer? by lazy { uuid.getPlayer() }
+    private val player: ServerPlayer?
+        get() = uuid.getPlayer()
 
     fun catalogue(id: String): Boolean {
         return spawnDetailIds.add(id).also {
@@ -92,11 +96,19 @@ class SpawnDataCatalogue(
     }
 
     private fun onAdded(ids: Iterable<String>) {
-
+        player?.let {
+            AddCatalogueEntriesPacket(
+                added = ids.associateWith { id ->
+                    SpawnDataHelper.getSpawnData(id, it)
+                }
+            ).sendToPlayer(it)
+        }
     }
 
     private fun onRemoved(ids: Iterable<String>) {
-
+        player?.let {
+            RemoveCatalogueEntriesPacket(removed = ids.toSet())
+        }
     }
 
     override fun toClientData() = ClientSpawnDataCatalogue(spawnDetailIds)
