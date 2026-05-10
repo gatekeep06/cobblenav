@@ -1,7 +1,6 @@
 package com.metacontent.cobblenav.networking.handler.client
 
 import com.cobblemon.mod.common.api.net.ClientNetworkPacketHandler
-import com.cobblemon.mod.common.util.removeIf
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.networking.packet.client.AddCatalogueEntriesPacket
 import com.metacontent.cobblenav.networking.packet.client.CatalogueUpdatePacket
@@ -19,14 +18,12 @@ interface CatalogueUpdateHandler<T : CatalogueUpdatePacket<T>> : ClientNetworkPa
 
 object AddCatalogueEntriesHandler : CatalogueUpdateHandler<AddCatalogueEntriesPacket> {
     override fun handle(packet: AddCatalogueEntriesPacket, data: ClientSpawnDataCatalogue) {
-        data.spawnDetailIds.addAll(packet.added.keys)
-        data.cachedSpawnData.putAll(packet.added)
+        data.add(packet.added)
     }
 }
 
 object RemoveCatalogueEntriesHandler : CatalogueUpdateHandler<RemoveCatalogueEntriesPacket> {
     override fun handle(packet: RemoveCatalogueEntriesPacket, data: ClientSpawnDataCatalogue) {
-        data.spawnDetailIds.removeAll(packet.removed)
-        data.cachedSpawnData.removeIf { (key, _) -> packet.removed.contains(key) }
+        data.remove(packet.removed)
     }
 }

@@ -3,10 +3,9 @@ package com.metacontent.cobblenav.storage.client
 import com.cobblemon.mod.common.api.storage.player.client.ClientInstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.readString
+import com.cobblemon.mod.common.util.removeIf
 import com.cobblemon.mod.common.util.writeString
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.gui.PokenavSignalManager
-import com.metacontent.cobblenav.client.gui.PokenavSignalManager.SPAWN_CATALOGUED_SIGNAL
 import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.storage.AbstractSpawnDataCatalogue
@@ -32,26 +31,22 @@ class ClientSpawnDataCatalogue(
                 }
             }
         }
-
-        fun incrementalAfterDecode(data: ClientInstancedPlayerData) {
-            (data as? ClientSpawnDataCatalogue)?.let {
-                PokenavSignalManager.add(SPAWN_CATALOGUED_SIGNAL.copy())
-                val current = CobblenavClient.spawnDataCatalogue.spawnDetailIds
-                val updated = it.spawnDetailIds
-                CobblenavClient.spawnDataCatalogue = it
-                CobblenavClient.spawnDataCatalogue.newlyCataloguedAmount += (updated.size - current.size).coerceAtLeast(0)
-
-                if (CobblenavClient.spawnDataCatalogue.missingCachedData().size > 100) {
-                    RequestCatalogueDataPacket(CobblenavClient.spawnDataCatalogue.missingCachedData()).sendToServer()
-                }
-            }
-        }
     }
 
+    val newEntries = mutableSetOf<String>()
     val cachedSpawnData = mutableMapOf<String, List<SpawnData>>()
 
-    var newlyCataloguedAmount = 0
-        internal set
+    internal fun add(entries: Map<String, List<SpawnData>>) {
+        spawnDetailIds.addAll(entries.keys)
+        newEntries.addAll(entries.keys)
+        cachedSpawnData.putAll(entries)
+    }
+
+    internal fun remove(ids: Set<String>) {
+        spawnDetailIds.removeAll(ids)
+        newEntries.removeAll(ids)
+        cachedSpawnData.removeIf { (key, _) -> ids.contains(key) }
+    }
 
     override fun encode(buf: RegistryFriendlyByteBuf) {
         buf.writeCollection(spawnDetailIds) { b, s -> b.writeString(s) }
