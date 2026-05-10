@@ -1,6 +1,7 @@
 package com.metacontent.cobblenav.client.gui.widget.spawndata
 
 import com.cobblemon.mod.common.api.gui.blitk
+import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
@@ -29,8 +30,8 @@ class CatalogueEntryWidget(
         const val INFO_X = 37
         const val INFO_Y = 31
         const val INFO_WIDTH = 13
-        const val NEW_X = 44
-        const val NEW_WIDTH = 16
+        const val NEW_X = 41
+        const val NEW_WIDTH = 20
         const val NEW_HEIGHT = 10
 
         val BACKGROUND = gui("catalogue/entry_bg")
@@ -55,11 +56,11 @@ class CatalogueEntryWidget(
             )
             drawScaledText(
                 context = guiGraphics,
-                text = translate("gui.cobblenav.spawn_data.new"),
-                x = x + NEW_X + 7,
+                text = translate("gui.cobblenav.spawn_data.new").bold(),
+                x = x + NEW_X + 10,
                 y = y + 3.5,
-                scale = 0.5f,
-                maxCharacterWidth = (NEW_WIDTH / 0.5f - 4).toInt()
+                scale = 0.6f,
+                maxCharacterWidth = (NEW_WIDTH / 0.6f - 4).toInt()
             )
         }
 
@@ -160,6 +161,7 @@ class CatalogueEntryWidget(
         if (super.mouseClicked(pMouseX, pMouseY, pButton)) return true
 
         return if (clicked(pMouseX, pMouseY) && isValidClickButton(pButton)) {
+            isNew = false
             displayer.selectedData = spawnData
             true
         } else {
