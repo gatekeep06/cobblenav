@@ -4,6 +4,9 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.storage.player.InstancedPlayerData
 import com.cobblemon.mod.common.net.messages.client.SetClientPlayerDataPacket
 import com.cobblemon.mod.common.util.getPlayer
+import com.metacontent.cobblenav.networking.packet.client.AddCatalogueEntriesPacket
+import com.metacontent.cobblenav.networking.packet.client.RemoveCatalogueEntriesPacket
+import com.metacontent.cobblenav.spawndata.SpawnDataHelper
 import com.metacontent.cobblenav.storage.client.ClientSpawnDataCatalogue
 import com.metacontent.cobblenav.util.getSpawnDataCatalogue
 import com.mojang.serialization.Codec
@@ -40,60 +43,71 @@ class SpawnDataCatalogue(
         }
     }
 
-    private val player: ServerPlayer? by lazy { uuid.getPlayer() }
+    private val player: ServerPlayer?
+        get() = uuid.getPlayer()
 
     fun catalogue(id: String): Boolean {
         return spawnDetailIds.add(id).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
+            if (it) onAdded(listOf(id))
         }
     }
 
     fun catalogue(ids: Iterable<String>): Boolean {
-        return spawnDetailIds.addAll(ids).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
-        }
-    }
-
-    fun remove(id: String): Boolean {
-        return spawnDetailIds.remove(id).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
-        }
-    }
-
-    fun remove(ids: Set<String>): Boolean {
-        return spawnDetailIds.removeAll(ids).also {
-            if (it) {
-                onCatalogueUpdated()
-            }
-        }
-    }
-
-    fun remove(ids: Iterable<String>): Boolean {
-        return remove(ids.toSet())
-    }
-
-    fun clear(): Boolean {
-        if (spawnDetailIds.isNotEmpty()) {
-            spawnDetailIds.clear()
-            onCatalogueUpdated()
+        val addedIds = ids.filter { spawnDetailIds.add(it) }
+        if (addedIds.isNotEmpty()) {
+            onAdded(addedIds)
             return true
         }
         return false
     }
 
-    private fun onCatalogueUpdated() {
+    fun remove(id: String): Boolean {
+        return spawnDetailIds.remove(id).also {
+            if (it) onRemoved(listOf(id))
+        }
+    }
+
+    fun remove(ids: Iterable<String>): Boolean {
+        val removedIds = mutableListOf<String>()
+        spawnDetailIds.removeAll { id ->
+            ids.contains(id).also {
+                if (it) removedIds.add(id)
+            }
+        }
+        if (removedIds.isNotEmpty()) {
+            onRemoved(removedIds)
+            return true
+        }
+        return false
+    }
+
+    fun clear(): Boolean {
+        if (spawnDetailIds.isNotEmpty()) {
+            spawnDetailIds.clear()
+            player?.let {
+                SetClientPlayerDataPacket(
+                    type = CobblenavDataStoreTypes.SPAWN_DATA,
+                    playerData = toClientData()
+                ).sendToPlayer(it)
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun onAdded(ids: Iterable<String>) {
         player?.let {
-            SetClientPlayerDataPacket(
-                type = CobblenavDataStoreTypes.SPAWN_DATA,
-                playerData = toClientData(),
-                isIncremental = true
+            AddCatalogueEntriesPacket(
+                added = ids.associateWith { id ->
+                    SpawnDataHelper.getSpawnData(id, it)
+                }
             ).sendToPlayer(it)
+        }
+    }
+
+    private fun onRemoved(ids: Iterable<String>) {
+        player?.let {
+            RemoveCatalogueEntriesPacket(removed = ids.toSet())
         }
     }
 

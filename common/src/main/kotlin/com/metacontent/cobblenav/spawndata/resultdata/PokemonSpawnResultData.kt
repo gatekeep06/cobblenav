@@ -13,7 +13,6 @@ import com.metacontent.cobblenav.client.gui.util.RGB
 import com.metacontent.cobblenav.client.gui.widget.TextWidget
 import com.metacontent.cobblenav.client.gui.widget.section.SectionWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
-import com.metacontent.cobblenav.util.createAndGetAsRenderable
 import com.metacontent.cobblenav.util.getKnowledge
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.AbstractWidget
@@ -38,7 +37,7 @@ class PokemonSpawnResultData(
                 return null
             }
 
-            val renderablePokemon = detail.pokemon.createAndGetAsRenderable(player.serverLevel(), player.onPos)
+            val renderablePokemon = detail.pokemon.asRenderablePokemon()
             val positionType = detail.spawnablePositionType.name
 
             val knowledge = player.pokedex().getKnowledge(renderablePokemon)
@@ -170,7 +169,8 @@ class PokemonSpawnResultData(
 
     override fun shouldRenderPlatform() = renderer.shouldRenderPlatform()
 
-    override fun shouldRenderPokeBall() = renderer.shouldRenderPokeBall() && pokemonKnowledge == PokedexEntryProgress.CAUGHT
+    override fun shouldRenderPokeBall() =
+        renderer.shouldRenderPokeBall() && pokemonKnowledge == PokedexEntryProgress.CAUGHT
 
     override fun getRotation() = renderer.rotation
 
