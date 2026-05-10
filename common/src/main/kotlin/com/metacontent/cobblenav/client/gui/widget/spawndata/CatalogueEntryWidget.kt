@@ -29,7 +29,7 @@ class CatalogueEntryWidget(
         const val INFO_X = 37
         const val INFO_Y = 31
         const val INFO_WIDTH = 13
-        const val NEW_X = 45
+        const val NEW_X = 44
         const val NEW_WIDTH = 16
         const val NEW_HEIGHT = 10
 
