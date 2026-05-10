@@ -36,9 +36,9 @@ class ClientSpawnDataCatalogue(
     val newEntries = mutableSetOf<String>()
     private val cachedSpawnData = mutableMapOf<String, List<SpawnData>>()
 
-    internal fun add(entries: Map<String, List<SpawnData>>) {
+    internal fun add(entries: Map<String, List<SpawnData>>, markAsNew: Boolean = false) {
         spawnDetailIds.addAll(entries.keys)
-        newEntries.addAll(entries.keys)
+        if (markAsNew) newEntries.addAll(entries.keys)
         cachedSpawnData.putAll(entries)
     }
 

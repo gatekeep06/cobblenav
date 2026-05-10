@@ -18,7 +18,7 @@ interface CatalogueUpdateHandler<T : CatalogueUpdatePacket<T>> : ClientNetworkPa
 
 object AddCatalogueEntriesHandler : CatalogueUpdateHandler<AddCatalogueEntriesPacket> {
     override fun handle(packet: AddCatalogueEntriesPacket, data: ClientSpawnDataCatalogue) {
-        data.add(packet.added)
+        data.add(packet.added, true)
     }
 }
 
