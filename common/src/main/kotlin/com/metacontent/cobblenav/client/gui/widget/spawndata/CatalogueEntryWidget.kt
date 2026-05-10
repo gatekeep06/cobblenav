@@ -15,7 +15,8 @@ import net.minecraft.client.gui.GuiGraphics
 
 class CatalogueEntryWidget(
     val spawnData: SpawnData,
-    private val displayer: SpawnDataDisplayer
+    private val displayer: SpawnDataDisplayer,
+    private var isNew: Boolean = false
 ) : SoundlessWidget(0, 0, WIDTH, HEIGHT, spawnData.result.getResultName()) {
     companion object {
         const val WIDTH = 87

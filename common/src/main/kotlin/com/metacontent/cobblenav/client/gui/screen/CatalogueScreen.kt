@@ -90,7 +90,11 @@ class CatalogueScreen(
         spawnData = CobblenavClient.spawnDataCatalogue.cached()
         val entries = spawnData!!.map { data ->
             ScrollableItemWidget(
-                child = CatalogueEntryWidget(data, this),
+                child = CatalogueEntryWidget(
+                    spawnData = data,
+                    displayer = this,
+                    isNew = CobblenavClient.spawnDataCatalogue.newEntries.contains(data.id)
+                ),
                 topEdge = scrollableView.y,
                 bottomEdge = scrollableView.y + scrollableView.height
             )
