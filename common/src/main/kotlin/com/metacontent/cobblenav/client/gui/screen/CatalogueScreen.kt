@@ -87,7 +87,7 @@ class CatalogueScreen(
     }
 
     fun populateCatalogue() {
-        spawnData = CobblenavClient.spawnDataCatalogue.cachedSpawnData.flatMap { it.value }
+        spawnData = CobblenavClient.spawnDataCatalogue.cached()
         val entries = spawnData!!.map { data ->
             ScrollableItemWidget(
                 child = CatalogueEntryWidget(data, this),

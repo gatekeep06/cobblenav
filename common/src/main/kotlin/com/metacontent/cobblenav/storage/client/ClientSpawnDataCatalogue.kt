@@ -34,7 +34,7 @@ class ClientSpawnDataCatalogue(
     }
 
     val newEntries = mutableSetOf<String>()
-    val cachedSpawnData = mutableMapOf<String, List<SpawnData>>()
+    private val cachedSpawnData = mutableMapOf<String, List<SpawnData>>()
 
     internal fun add(entries: Map<String, List<SpawnData>>) {
         spawnDetailIds.addAll(entries.keys)
@@ -57,4 +57,6 @@ class ClientSpawnDataCatalogue(
     } else {
         spawnDetailIds.filter { !cachedSpawnData.contains(it) }
     }
+
+    fun cached(): List<SpawnData> = cachedSpawnData.flatMap { it.value }
 }
