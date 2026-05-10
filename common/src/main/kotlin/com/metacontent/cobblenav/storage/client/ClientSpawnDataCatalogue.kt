@@ -27,7 +27,9 @@ class ClientSpawnDataCatalogue(
         fun afterDecode(data: ClientInstancedPlayerData) {
             (data as? ClientSpawnDataCatalogue)?.let {
                 CobblenavClient.spawnDataCatalogue = it
-                RequestCatalogueDataPacket(CobblenavClient.spawnDataCatalogue.missingCachedData()).sendToServer()
+                if (it.spawnDetailIds.isNotEmpty()) {
+                    RequestCatalogueDataPacket(CobblenavClient.spawnDataCatalogue.missingCachedData()).sendToServer()
+                }
             }
         }
 

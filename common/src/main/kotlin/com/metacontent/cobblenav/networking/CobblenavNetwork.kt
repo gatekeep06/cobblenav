@@ -25,6 +25,9 @@ object CobblenavNetwork {
         list.add(PacketRegisterInfo(CatalogueDataPacket.ID, CatalogueDataPacket::decode, CatalogueDataHandler))
         list.add(PacketRegisterInfo(ReloadSpawnPoolPacket.ID, ReloadSpawnPoolPacket::decode, ReloadSpawnPoolHandler))
 
+        list.add(PacketRegisterInfo(AddCatalogueEntriesPacket.ID, AddCatalogueEntriesPacket::decode, AddCatalogueEntriesHandler))
+        list.add(PacketRegisterInfo(RemoveCatalogueEntriesPacket.ID, RemoveCatalogueEntriesPacket::decode, RemoveCatalogueEntriesHandler))
+
         list.add(PacketRegisterInfo(LabelSyncPacket.ID, LabelSyncPacket::decode, DataRegistrySyncPacketHandler()))
         list.add(PacketRegisterInfo(EvYieldSyncPacket.ID, EvYieldSyncPacket::decode, DataRegistrySyncPacketHandler()))
 

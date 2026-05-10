@@ -10,7 +10,6 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableV
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.CatalogueEntryWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
-import com.metacontent.cobblenav.networking.packet.server.RequestCatalogueDataPacket
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
@@ -77,12 +76,7 @@ class CatalogueScreen(
             child = entryTableView
         ).also { addBlockableWidget(it) }
 
-        val ids = CobblenavClient.spawnDataCatalogue.missingCachedData()
-        if (ids.isEmpty()) {
-            populateCatalogue()
-        } else {
-            RequestCatalogueDataPacket(ids).sendToServer()
-        }
+        populateCatalogue()
 
         spawnDataDetails = SpawnDataDetailWidget(
             displayer = this,
