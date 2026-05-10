@@ -72,6 +72,7 @@
   "gui.cobblenav.spawn_data.knowledge.none": "none",
   "gui.cobblenav.spawn_data.knowledge.partly": "partly",
   "gui.cobblenav.spawn_data.knowledge.full": "full",
+  "gui.cobblenav.spawn_data.new": "N",
   "gui.cobblenav.spawn_data.pokemon": "Pokemon: ",
   "gui.cobblenav.spawn_data.pokemon_herd": "Pokemon: ",
   "gui.cobblenav.spawn_data.level": "Level: %s",

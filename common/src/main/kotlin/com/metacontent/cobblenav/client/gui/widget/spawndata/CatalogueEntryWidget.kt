@@ -29,9 +29,13 @@ class CatalogueEntryWidget(
         const val INFO_X = 37
         const val INFO_Y = 31
         const val INFO_WIDTH = 13
+        const val NEW_X = 45
+        const val NEW_WIDTH = 16
+        const val NEW_HEIGHT = 10
 
         val BACKGROUND = gui("catalogue/entry_bg")
         val ENTRY = gui("catalogue/entry")
+        val NEW_BACKGROUND = gui("catalogue/new_bg")
     }
 
     private val knowledge = spawnData.result.getResultKnowledge()
@@ -39,6 +43,25 @@ class CatalogueEntryWidget(
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()
         poseStack.pushPose()
+
+        if (isNew) {
+            blitk(
+                matrixStack = poseStack,
+                texture = NEW_BACKGROUND,
+                x = x + NEW_X,
+                y = y,
+                width = NEW_WIDTH,
+                height = NEW_HEIGHT
+            )
+            drawScaledText(
+                context = guiGraphics,
+                text = translate("gui.cobblenav.spawn_data.new"),
+                x = x + NEW_X + 7,
+                y = y + 3.5,
+                scale = 0.5f,
+                maxCharacterWidth = (NEW_WIDTH / 0.5f - 4).toInt()
+            )
+        }
 
         blitk(
             matrixStack = poseStack,
