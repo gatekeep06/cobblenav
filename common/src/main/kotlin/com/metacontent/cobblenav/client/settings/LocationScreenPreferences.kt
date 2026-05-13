@@ -1,8 +1,8 @@
 package com.metacontent.cobblenav.client.settings
 
-import com.metacontent.cobblenav.client.gui.util.Sorting
+import com.metacontent.cobblenav.client.settings.Sorting
 
-data class PokenavPreferences(
+data class LocationScreenPreferences(
     val bucketIndex: Int,
     val sorting: Sorting,
     val applyBucketChecked: Boolean

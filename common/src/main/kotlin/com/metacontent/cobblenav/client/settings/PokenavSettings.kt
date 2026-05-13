@@ -1,7 +1,5 @@
 package com.metacontent.cobblenav.client.settings
 
-import com.metacontent.cobblenav.client.gui.util.Sorting
-
 class PokenavSettings : Settings<PokenavSettings>() {
     companion object {
         const val NAME = "pokenav"
@@ -10,7 +8,7 @@ class PokenavSettings : Settings<PokenavSettings>() {
     @Transient
     override val name = NAME
 
-    var preferences = PokenavPreferences(
+    var locationPreferences = LocationScreenPreferences(
         bucketIndex = 0,
         sorting = Sorting.ASCENDING,
         applyBucketChecked = true
@@ -19,4 +17,9 @@ class PokenavSettings : Settings<PokenavSettings>() {
             changed = true
             field = value
         }
+
+    var cataloguePreferences = CatalogueScreenPreferences(
+        sortingTarget = CatalogueSortingTarget.NAME,
+        sorting = Sorting.ASCENDING
+    )
 }

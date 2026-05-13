@@ -10,6 +10,7 @@ import com.metacontent.cobblenav.client.gui.util.cobblenavScissor
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.literal
 import com.metacontent.cobblenav.client.gui.util.translate
+import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.spawndata.SpawnData
 import com.metacontent.cobblenav.spawndata.resultdata.getTypeName
 import net.minecraft.client.gui.GuiGraphics
@@ -17,7 +18,7 @@ import net.minecraft.client.gui.GuiGraphics
 class CatalogueEntryWidget(
     val spawnData: SpawnData,
     private val displayer: SpawnDataDisplayer,
-    private var isNew: Boolean = false
+    isNew: Boolean = false
 ) : SoundlessWidget(0, 0, WIDTH, HEIGHT, spawnData.result.getResultName()) {
     companion object {
         const val WIDTH = 87
@@ -40,6 +41,8 @@ class CatalogueEntryWidget(
     }
 
     private val knowledge = spawnData.result.getResultKnowledge()
+    var isNew = isNew
+        private set
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val poseStack = guiGraphics.pose()

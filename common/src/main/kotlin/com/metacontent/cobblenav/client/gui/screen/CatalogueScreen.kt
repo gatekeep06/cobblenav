@@ -10,6 +10,8 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableV
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.CatalogueEntryWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
+import com.metacontent.cobblenav.client.settings.CatalogueSortingTarget
+import com.metacontent.cobblenav.client.settings.Sorting
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
@@ -35,6 +37,18 @@ class CatalogueScreen(
     var viewX = 0
     var viewY = 0
     override val color = FastColor.ARGB32.color(255, 58, 150, 182)
+
+    private val preferences = CobblenavClient.pokenavSettings?.cataloguePreferences
+    private var sortingTarget = preferences?.sortingTarget ?: CatalogueSortingTarget.NAME
+        set(value) {
+            field = value
+            onSortingTargetChange()
+        }
+    private var sorting = preferences?.sorting ?: Sorting.ASCENDING
+        set(value) {
+            field = value
+            onSortingChange()
+        }
 
     private var spawnData: List<SpawnData>? = null
     override val displayedData: List<SpawnData>?
@@ -89,6 +103,7 @@ class CatalogueScreen(
     fun populateCatalogue() {
         spawnData = CobblenavClient.spawnDataCatalogue.cached()
         val newEntries = CobblenavClient.spawnDataCatalogue.newEntries
+        val extractor = getSortingTargetExtractor(sortingTarget)
         val entries = spawnData!!.map { data ->
             ScrollableItemWidget(
                 child = CatalogueEntryWidget(
@@ -99,7 +114,7 @@ class CatalogueScreen(
                 topEdge = scrollableView.y,
                 bottomEdge = scrollableView.y + scrollableView.height
             )
-        }
+        }.sortedWith { o1, o2 -> sorting.multiplier * compareValues(extractor(o1), extractor(o2)) }
         newEntries.clear()
         entryTableView.add(entries)
     }
@@ -117,4 +132,21 @@ class CatalogueScreen(
     }
 
     override fun isBlockingTooltip(): Boolean = blockWidgets
+
+    private fun getSortingTargetExtractor(target: CatalogueSortingTarget): (ScrollableItemWidget<CatalogueEntryWidget>) -> String {
+        return when (target) {
+            CatalogueSortingTarget.NAME -> { widget: ScrollableItemWidget<CatalogueEntryWidget> -> widget.child.spawnData.result.getResultName().string }
+            CatalogueSortingTarget.RESULT_TYPE -> { widget: ScrollableItemWidget<CatalogueEntryWidget> -> widget.child.spawnData.result.type }
+            CatalogueSortingTarget.BUCKET -> { widget: ScrollableItemWidget<CatalogueEntryWidget> -> widget.child.spawnData.bucket }
+        }
+    }
+
+    private fun onSortingTargetChange() {
+        sorting = Sorting.ASCENDING
+    }
+
+    private fun onSortingChange() {
+        val extractor = getSortingTargetExtractor(sortingTarget)
+        entryTableView.resort(sorting, extractor)
+    }
 }

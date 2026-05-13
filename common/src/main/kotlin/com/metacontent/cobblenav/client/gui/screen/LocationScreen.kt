@@ -4,7 +4,7 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.metacontent.cobblenav.client.CobblenavClient
-import com.metacontent.cobblenav.client.gui.util.Sorting
+import com.metacontent.cobblenav.client.settings.Sorting
 import com.metacontent.cobblenav.client.gui.util.Timer
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.util.pushAndPop
@@ -21,7 +21,7 @@ import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialMenuState
 import com.metacontent.cobblenav.client.gui.widget.radialmenu.RadialPopupMenu
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataWidget
-import com.metacontent.cobblenav.client.settings.PokenavPreferences
+import com.metacontent.cobblenav.client.settings.LocationScreenPreferences
 import com.metacontent.cobblenav.networking.packet.server.RequestLocationScreenInitDataPacket
 import com.metacontent.cobblenav.networking.packet.server.RequestSpawnMapPacket
 import com.metacontent.cobblenav.os.PokenavOS
@@ -180,7 +180,7 @@ class LocationScreen(
             width = CHECK_BOX_SIZE,
             text = Component.translatable("gui.cobblenav.apply_bucket"),
             texture = CheckBox.CHECK_BOX,
-            default = CobblenavClient.pokenavSettings?.preferences?.applyBucketChecked ?: false
+            default = CobblenavClient.pokenavSettings?.locationPreferences?.applyBucketChecked ?: false
         ) {
             tableView.applyToAll { child ->
                 child.child.spawnData.chanceMultiplier =
@@ -228,7 +228,7 @@ class LocationScreen(
 
     fun receiveInitData(buckets: List<String>, biome: String) {
         this.buckets = buckets
-        this.bucketIndex = CobblenavClient.pokenavSettings?.preferences?.bucketIndex ?: 0
+        this.bucketIndex = CobblenavClient.pokenavSettings?.locationPreferences?.bucketIndex ?: 0
         bucketSelector = BucketSelectorWidget(
             viewX, viewY - BucketSelectorWidget.HEIGHT,
             this
@@ -241,7 +241,7 @@ class LocationScreen(
             biome = this.biome
         ).also { addBlockableWidget(it) }
 
-        sorting = CobblenavClient.pokenavSettings?.preferences?.sorting ?: Sorting.ASCENDING
+        sorting = CobblenavClient.pokenavSettings?.locationPreferences?.sorting ?: Sorting.ASCENDING
         sortButton.disabled = false
 
         if (fixedAreaPoint != null) {
@@ -304,7 +304,7 @@ class LocationScreen(
 
     private fun savePreferences() {
         CobblenavClient.pokenavSettings?.let {
-            it.preferences = PokenavPreferences(
+            it.locationPreferences = LocationScreenPreferences(
                 bucketIndex = bucketIndex,
                 sorting = sorting,
                 applyBucketChecked = checkBox.checked()
