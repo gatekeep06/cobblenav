@@ -126,7 +126,6 @@ class CatalogueScreen(
     fun populateCatalogue() {
         spawnData = CobblenavClient.spawnDataCatalogue.cached()
         val newEntries = CobblenavClient.spawnDataCatalogue.newEntries
-        val extractor = getSortingTargetExtractor(sortingTarget)
         val entries = spawnData!!.map { data ->
             ScrollableItemWidget(
                 child = CatalogueEntryWidget(
@@ -137,7 +136,8 @@ class CatalogueScreen(
                 topEdge = scrollableView.y,
                 bottomEdge = scrollableView.y + scrollableView.height
             )
-        }.sortedWith { o1, o2 -> sorting.multiplier * compareValues(extractor(o1), extractor(o2)) }
+        }
+        onSortingChange()
         newEntries.clear()
         entryTableView.add(entries)
     }
