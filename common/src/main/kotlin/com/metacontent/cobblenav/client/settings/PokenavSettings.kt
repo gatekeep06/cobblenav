@@ -22,4 +22,8 @@ class PokenavSettings : Settings<PokenavSettings>() {
         sortingTarget = CatalogueSortingTarget.NAME,
         sorting = Sorting.ASCENDING
     )
+        set(value) {
+            changed = true
+            field = value
+        }
 }

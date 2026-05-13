@@ -10,6 +10,7 @@ import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableV
 import com.metacontent.cobblenav.client.gui.widget.location.BucketSelectorWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.CatalogueEntryWidget
 import com.metacontent.cobblenav.client.gui.widget.spawndata.SpawnDataDetailWidget
+import com.metacontent.cobblenav.client.settings.CatalogueScreenPreferences
 import com.metacontent.cobblenav.client.settings.CatalogueSortingTarget
 import com.metacontent.cobblenav.client.settings.Sorting
 import com.metacontent.cobblenav.os.PokenavOS
@@ -148,5 +149,18 @@ class CatalogueScreen(
     private fun onSortingChange() {
         val extractor = getSortingTargetExtractor(sortingTarget)
         entryTableView.resort(sorting, extractor)
+    }
+
+    private fun savePreferences() {
+        CobblenavClient.pokenavSettings?.let {
+            it.cataloguePreferences = CatalogueScreenPreferences(
+                sortingTarget = sortingTarget,
+                sorting = sorting
+            )
+        }
+    }
+
+    override fun onScreenChange() {
+        savePreferences()
     }
 }
