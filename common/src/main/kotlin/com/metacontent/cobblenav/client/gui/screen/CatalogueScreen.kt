@@ -170,6 +170,7 @@ class CatalogueScreen(
 
     private fun onSortingChange() {
         val extractor = getSortingTargetExtractor(sortingTarget)
+        entryTableView.resort(Sorting.ASCENDING) { it.child.spawnData.id }
         entryTableView.resort(sorting, extractor)
     }
 
