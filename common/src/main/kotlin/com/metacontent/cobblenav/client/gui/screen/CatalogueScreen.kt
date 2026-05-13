@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.metacontent.cobblenav.client.CobblenavClient
 import com.metacontent.cobblenav.client.gui.util.gui
 import com.metacontent.cobblenav.client.gui.widget.button.IconButton
+import com.metacontent.cobblenav.client.gui.widget.button.TextButton
 import com.metacontent.cobblenav.client.gui.widget.layout.TableView
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableItemWidget
 import com.metacontent.cobblenav.client.gui.widget.layout.scrollable.ScrollableView
@@ -16,6 +17,7 @@ import com.metacontent.cobblenav.client.settings.Sorting
 import com.metacontent.cobblenav.os.PokenavOS
 import com.metacontent.cobblenav.spawndata.CheckedSpawnData
 import com.metacontent.cobblenav.spawndata.SpawnData
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
@@ -99,6 +101,26 @@ class CatalogueScreen(
             x = screenX + VERTICAL_BORDER_DEPTH,
             y = screenY + HORIZONTAL_BORDER_DEPTH
         ).also { addUnblockableWidget(it) }
+
+        var sortButtonX = viewX
+        CatalogueSortingTarget.entries.forEach { target ->
+            val width = Minecraft.getInstance().font.width(target.displayName)
+            TextButton(
+                pX = sortButtonX,
+                pY = viewY - 10,
+                pWidth = width,
+                pHeight = 8,
+                text = target.displayName,
+                action = {
+                    if (sortingTarget == target) {
+                        sorting = if (sorting == Sorting.ASCENDING) Sorting.DESCENDING else Sorting.ASCENDING
+                    } else {
+                        sortingTarget = target
+                    }
+                }
+            ).also { addBlockableWidget(it) }
+            sortButtonX += width + 4
+        }
     }
 
     fun populateCatalogue() {
